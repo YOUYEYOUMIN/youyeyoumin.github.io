@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发展汉语中级口语1-15 生词闪卡</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif; 
+            max-width: 700px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            background-color: #f8f9fa; 
+        }
+        .title { 
+            text-align: center; 
+            color: #2d3436; 
+            margin-bottom: 35px; 
+            font-weight: 600; 
+            letter-spacing: 1px;
+        }
+        .flashcard { 
+            width: 100%; 
+            height: 450px; 
+            background-color: white; 
+            border-radius: 18px; 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.12); 
+            margin-bottom: 35px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 30px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            position: relative;
+        }
+        .flashcard:hover { 
+            transform: scale(1.02); 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15); 
+        }
+        .card-index { 
+            position: absolute; 
+            top: 20px; 
+            left: 25px; 
+            color: #636e72; 
+            font-size: 16px; 
+            font-weight: 500;
+        }
+        .front { 
+            text-align: center; 
+            width: 100%;
+        }
+        .word { 
+            font-size: 52px; 
+            font-weight: bold; 
+            color: #2d3436; 
+            margin-bottom: 15px; 
+        }
+        .pinyin { 
+            font-size: 28px; 
+            color: #636e72; 
+            letter-spacing: 0.5px;
+        }
+        .back { 
+            display: none; 
+            text-align: left; 
+            width: 100%; 
+            color: #2d3436;
+        }
+        .back h3 { 
+            font-size: 22px; 
+            margin: 15px 0 8px; 
+            color: #34495e; 
+            font-weight: 600;
+        }
+        .back p { 
+            font-size: 20px; 
+            line-height: 1.6; 
+            margin-bottom: 5px;
+        }
+        .nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .nav-btn { 
+            padding: 14px 30px; 
+            background-color: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 20px; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease; 
+            font-weight: 500;
+        }
+        .nav-btn:hover { 
+            background-color: #2980b9; 
+        }
+        .nav-btn:disabled { 
+            background-color: #b2bec3; 
+            cursor: not-allowed; 
+            transform: none;
+        }
+        .card-status {
+            font-size: 18px;
+            color: #636e72;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">发展汉语中级口语1-15 生词闪卡</h1>
+
+    <div class="flashcard" id="flashcard">
+        <div class="card-index" id="cardIndex">1/20</div>
+        <div class="front" id="cardFront">
+            <div class="word">开心</div>
+            <div class="pinyin">kāi xīn</div>
+        </div>
+        <div class="back" id="cardBack">
+            <h3>词性：形容词</h3>
+            <h3>常用短语：开心的事、感到开心、非常开心</h3>
+            <h3>短语解释：让人愉快的事；觉得快乐；快乐程度高</h3>
+            <h3>例句：收到礼物的时候，我特别开心。</h3>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button class="nav-btn" id="prevBtn" disabled>上一张</button>
+        <div class="card-status" id="cardStatus">第1张，共20张</div>
+        <button class="nav-btn" id="nextBtn">下一张</button>
+    </div>
+
+    <script>
+        // 发展汉语中级口语1-15 生词数据（含短语解释）
+        const vocabularyList = [
+            { 
+                word: "开心", 
+                pinyin: "kāi xīn", 
+                partOfSpeech: "形容词", 
+                phrases: "开心的事、感到开心、非常开心", 
+                phraseExplanation: "让人愉快的事；觉得快乐；快乐程度高", 
+                example: "收到礼物的时候，我特别开心。" 
+            },
+            { 
+                word: "不光", 
+                pinyin: "bù guāng", 
+                partOfSpeech: "连词", 
+                phrases: "不光……还……、不光……也……", 
+                phraseExplanation: "表示除了前者，还有后者；强调两者都存在", 
+                example: "他不光会唱歌，还会弹钢琴。" 
+            },
+            { 
+                word: "鸭子", 
+                pinyin: "yā zi", 
+                partOfSpeech: "名词", 
+                phrases: "小鸭子、鸭子游水、一群鸭子", 
+                phraseExplanation: "幼小的鸭；鸭在水里游动；数量多的鸭", 
+                example: "池塘里有几只鸭子在找食物。" 
+            },
+            { 
+                word: "有限", 
+                pinyin: "yǒu xiàn", 
+                partOfSpeech: "形容词", 
+                phrases: "时间有限、数量有限、能力有限", 
+                phraseExplanation: "时间不够多；数量不多；能力达不到高水准", 
+                example: "这次活动的名额有限，要早点报名。" 
+            },
+            { 
+                word: "地道", 
+                pinyin: "dì dào", 
+                partOfSpeech: "形容词", 
+                phrases: "地道的美食、说得地道、地道的方言", 
+                phraseExplanation: "味道正宗的美食；语言说得标准；本土正宗的方言", 
+                example: "这家店的饺子味道很地道。" 
+            },
+            { 
+                word: "揭短", 
+                pinyin: "jiē duǎn", 
+                partOfSpeech: "动词", 
+                phrases: "揭别人的短、怕被揭短、不要揭短", 
+                phraseExplanation: "指出别人的缺点；害怕别人说自己的缺点；提醒不要说别人缺点", 
+                example: "朋友之间不要随便揭短，会伤感情。" 
+            },
+            { 
+                word: "拿手", 
+                pinyin: "ná shǒu", 
+                partOfSpeech: "形容词", 
+                phrases: "拿手菜、拿手本领、最拿手", 
+                phraseExplanation: "擅长做的菜；擅长的技能；最擅长的事物", 
+                example: "妈妈的拿手菜是红烧肉，特别好吃。" 
+            },
+            { 
+                word: "种类", 
+                pinyin: "zhǒng lèi", 
+                partOfSpeech: "名词", 
+                phrases: "种类多、不同种类、种类齐全", 
+                phraseExplanation: "类别数量多；不一样的类别；各类别都有", 
+                example: "这家超市里的水果种类很丰富。" 
+            },
+            { 
+                word: "手艺", 
+                pinyin: "shǒu yì", 
+                partOfSpeech: "名词", 
+                phrases: "手艺好、传统手艺、学手艺", 
+                phraseExplanation: "手工技能水平高；流传下来的手工技能；学习手工技能", 
+                example: "爷爷的木工手艺非常棒，能做很多家具。" 
+            },
+            { 
+                word: "瞒", 
+                pinyin: "mán", 
+                partOfSpeech: "动词", 
+                phrases: "瞒着别人、瞒不住、不要瞒", 
+                phraseExplanation: "对别人隐藏事情；隐藏的事会被发现；提醒不要隐藏", 
+                example: "有事情要告诉家人，不要瞒着他们。" 
+            },
+            { 
+                word: "送行", 
+                pinyin: "sòng xíng", 
+                partOfSpeech: "动词", 
+                phrases: "去送行、为某人送行、送行的人", 
+                phraseExplanation: "前往送别；给特定的人送别；来送别的人", 
+                example: "明天我要去火车站为朋友送行。" 
+            },
+            { 
+                word: "医学", 
+                pinyin: "yī xué", 
+                partOfSpeech: "名词", 
+                phrases: "医学知识、医学专业、学习医学", 
+                phraseExplanation: "关于医疗的知识；大学中医疗相关专业；学习医疗知识", 
+                example: "他大学读的是医学专业，以后想当医生。" 
+            },
+            { 
+                word: "典型", 
+                pinyin: "diǎn xíng", 
+                partOfSpeech: "形容词/名词", 
+                phrases: "典型的例子、典型问题、很典型（形）；一个典型（名）", 
+                phraseExplanation: "有代表性的例子；有代表性的问题；具有代表性（形）；一个有代表性的人/事（名）", 
+                example: "这种情况是很典型的，很多人都遇到过。" 
+            },
+            { 
+                word: "微弱", 
+                pinyin: "wēi ruò", 
+                partOfSpeech: "形容词", 
+                phrases: "微弱的声音、微弱的灯光、气息微弱", 
+                phraseExplanation: "声音音量小；灯光亮度低；呼吸气息弱", 
+                example: "远处传来微弱的歌声，听得不太清楚。" 
+            },
+            { 
+                word: "亲耳", 
+                pinyin: "qīn ěr", 
+                partOfSpeech: "副词", 
+                phrases: "亲耳听到、亲耳听见", 
+                phraseExplanation: "自己用耳朵直接听到，不是间接得知", 
+                example: "我亲耳听到他说要去北京，不会错的。" 
+            },
+            { 
+                word: "听诊器", 
+                pinyin: "tīng zhěn qì", 
+                partOfSpeech: "名词", 
+                phrases: "用听诊器、医生的听诊器", 
+                phraseExplanation: "使用听诊器这个工具；医生拥有的听诊器", 
+                example: "医生拿着听诊器，仔细听病人的心跳。" 
+            },
+            { 
+                word: "难得", 
+                pinyin: "nán dé", 
+                partOfSpeech: "形容词", 
+                phrases: "难得的机会、难得见面、难得的好天气", 
+                phraseExplanation: "很少出现的机会；很少有见面的机会；很少遇到的好天气", 
+                example: "今天天气很好，是难得的休息日。" 
+            },
+            { 
+                word: "棉花", 
+                pinyin: "mián hua", 
+                partOfSpeech: "名词", 
+                phrases: "棉花糖、棉花衣服、采摘棉花", 
+                phraseExplanation: "用棉花做的糖；用棉花材料做的衣服；采摘棉花的动作", 
+                example: "秋天到了，田里的棉花都成熟了。" 
+            },
+            { 
+                word: "或许", 
+                pinyin: "huò xǔ", 
+                partOfSpeech: "副词", 
+                phrases: "或许会、或许可以、或许是", 
+                phraseExplanation: "表示有可能会发生；表示有可能可行；表示有可能是这样", 
+                example: "明天或许会下雨，出门要带伞。" 
+            },
+            { 
+                word: "同事", 
+                pinyin: "tóng shì", 
+                partOfSpeech: "名词", 
+                phrases: "办公室同事、新同事、帮助同事", 
+                phraseExplanation: "在办公室一起工作的人；刚入职的同事；帮助一起工作的人", 
+                example: "我和同事们一起完成了这个工作任务。" 
+            }
+        ];
+
+        // 初始化变量
+        let currentCardIndex = 0;
+        const totalCards = vocabularyList.length;
+        // 获取DOM元素
+        const flashcard = document.getElementById('flashcard');
+        const cardFront = document.getElementById('cardFront');
+        const cardBack = document.getElementById('cardBack');
+        const cardIndex = document.getElementById('cardIndex');
+        const cardStatus = document.getElementById('cardStatus');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // 更新闪卡内容
+        function updateFlashcard() {
+            const currentVocab = vocabularyList[currentCardIndex];
+            // 更新卡片正面（生词+拼音）
+            cardFront.innerHTML = `
+                <div class="word">${currentVocab.word}</div>
+                <div class="pinyin">${currentVocab.pinyin}</div>
+            `;
+            // 更新卡片背面（详情）
+            cardBack.innerHTML = `
+                <h3>词性：${currentVocab.partOfSpeech}</h3>
+                <h3>常用短语：${currentVocab.phrases}</h3>
+                <h3>短语解释：${currentVocab.phraseExplanation}</h3>
+                <h3>例句：${currentVocab.example}</h3>
+            `;
+            // 更新卡片序号和状态
+            cardIndex.textContent = `${currentCardIndex + 1}/${totalCards}`;
+            cardStatus.textContent = `第${currentCardIndex + 1}张，共${totalCards}张`;
+            // 重置为正面显示
+            cardFront.style.display = 'block';
+            cardBack.style.display = 'none';
+            // 更新按钮状态
+            prevBtn.disabled = currentCardIndex === 0;
+            nextBtn.disabled = currentCardIndex === totalCards - 1;
+        }
+
+        // 卡片翻转功能
+        flashcard.addEventListener('click', () => {
+            if (cardFront.style.display === 'block') {
+                cardFront.style.display = 'none';
+                cardBack.style.display = 'block';
+            } else {
+                cardFront.style.display = 'block';
+                cardBack.style.display = 'none';
+            }
+        });
+
+        // 上一张按钮事件
+        prevBtn.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateFlashcard();
+            }
+        });
+
+        // 下一张按钮事件
+        nextBtn.addEventListener('click', () => {
+            if (currentCardIndex < totalCards - 1) {
+                currentCardIndex++;
+                updateFlashcard();
+            }
+        });
+
+        // 初始化第一张卡片
+        updateFlashcard();
+    </script>
+</body>
+</html>

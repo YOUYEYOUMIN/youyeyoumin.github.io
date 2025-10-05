@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生词闪卡</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 20px auto; padding: 0 15px; background: #f5f5f5; }
+        .card { width: 100%; height: 400px; perspective: 1000px; margin-bottom: 30px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 12px; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .card-front { background: #4285f4; color: white; }
+        .card-back { background: white; color: #333; transform: rotateY(180deg); }
+        .word { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
+        .pinyin { font-size: 20px; opacity: 0.9; }
+        .detail { text-align: left; width: 100%; margin: 5px 0; font-size: 16px; }
+        .btn-group { display: flex; justify-content: space-between; width: 100%; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; background: #4285f4; color: white; font-size: 16px; cursor: pointer; }
+        .btn:hover { background: #3367d6; }
+    </style>
+</head>
+<body>
+    <div class="card" id="flashCard">
+        <div class="card-inner">
+            <div class="card-front" id="cardFront">
+                <div class="word" id="frontWord">频频</div>
+                <div class="pinyin" id="frontPinyin">pín pín</div>
+                <div style="margin-top: 20px; font-size: 18px;">点击卡片查看详情</div>
+            </div>
+            <div class="card-back" id="cardBack">
+                <div class="detail"><strong>词性：</strong><span id="backPart">副词</span></div>
+                <div class="detail"><strong>解释：</strong><span id="backMeaning">多次、屡次</span></div>
+                <div class="detail"><strong>词组：</strong><span id="backPhrase">频频点头、频频出现</span></div>
+                <div class="detail"><strong>例句：</strong><span id="backSentence">他在会上频频点头，表示同意。</span></div>
+                <div style="margin-top: 20px; font-size: 18px;">点击卡片返回</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn" id="prevBtn">上一张</button>
+        <button class="btn" id="nextBtn">下一张</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const wordsData = [
+            { word: "频频", pinyin: "pín pín", part: "副词", meaning: "多次、屡次", phrase: "频频点头、频频出现", sentence: "他在会上频频点头，表示同意。" },
+            { word: "报刊", pinyin: "bào kān", part: "名词", meaning: "报纸和刊物的统称", phrase: "订阅报刊、阅读报刊", sentence: "爷爷每天都会看报刊了解新闻。" },
+            { word: "自身", pinyin: "zì shēn", part: "代词", meaning: "自己、本人", phrase: "自身问题、自身利益", sentence: "我们要正视自身的不足并改进。" },
+            { word: "男才女貌", pinyin: "nán cái nǚ mào", part: "成语", meaning: "男的有才华，女的容貌好", phrase: "男才女貌的一对", sentence: "这对新人男才女貌，很般配。" },
+            { word: "会计", pinyin: "kuài jì", part: "名词", meaning: "管财务、算账的人", phrase: "公司会计、会计工作", sentence: "我姐姐是一家企业的会计。" },
+            { word: "深浅", pinyin: "shēn qiǎn", part: "名词", meaning: "深度，也指程度", phrase: "河水深浅、不知深浅", sentence: "他不知道这条河的深浅，不敢下水。" },
+            { word: "形势", pinyin: "xíng shì", part: "名词", meaning: "事物发展的状况", phrase: "形势大好、分析形势", sentence: "我们要根据当前形势调整计划。" },
+            { word: "蜗居", pinyin: "wō jū", part: "名词/动词", meaning: "小房子；住小房子", phrase: "蜗居生活、蜗居一角", sentence: "他在大城市里蜗居，努力打拼。" },
+            { word: "诡计", pinyin: "guǐ jì", part: "名词", meaning: "坏主意、狡诈的计策", phrase: "识破诡计、施展诡计", sentence: "警察识破了小偷的诡计，将其抓获。" },
+            { word: "舒适", pinyin: "shū shì", part: "形容词", meaning: "舒服、安逸", phrase: "舒适的沙发、生活舒适", sentence: "家里的沙发坐起来很舒适。" },
+            { word: "穿着", pinyin: "chuān zhuó", part: "名词/动词", meaning: "穿戴的衣物；穿戴", phrase: "穿着整洁、讲究穿着", sentence: "她今天的穿着很得体。" },
+            { word: "嫉妒", pinyin: "jí dù", part: "动词/名词", meaning: "因别人好而心生不满", phrase: "嫉妒别人、心生嫉妒", sentence: "不要嫉妒别人的成功，要自己努力。" },
+            { word: "修剪", pinyin: "xiū jiǎn", part: "动词", meaning: "修整、剪齐", phrase: "修剪头发、修剪树枝", sentence: "爸爸在周末修剪院子里的树枝。" },
+            { word: "草坪", pinyin: "cǎo píng", part: "名词", meaning: "长满草的平地", phrase: "公园草坪、小区草坪", sentence: "孩子们在草坪上放风筝。" },
+            { word: "风餐露宿", pinyin: "fēng cān lù sù", part: "成语", meaning: "在野外吃住，很辛苦", phrase: "风餐露宿赶路", sentence: "探险队风餐露宿，终于到达目的地。" },
+            { word: "扣除", pinyin: "kòu chú", part: "动词", meaning: "减去、扣除", phrase: "扣除工资、扣除费用", sentence: "工资会扣除社保后再发放。" },
+            { word: "丑话", pinyin: "chǒu huà", part: "名词", meaning: "不好听但实在的话", phrase: "丑话说在前头", sentence: "我们丑话说在前头，违反规定就要受罚。" },
+            { word: "抱怨", pinyin: "bào yuàn", part: "动词", meaning: "诉说不满、埋怨", phrase: "抱怨天气、抱怨工作", sentence: "他总抱怨工作太累，却不找解决办法。" },
+            { word: "拍马屁", pinyin: "pāi mǎ pì", part: "动词短语", meaning: "讨好、奉承别人", phrase: "喜欢拍马屁、拍马屁的人", sentence: "他总爱拍马屁，让人不喜欢。" },
+            { word: "融洽", pinyin: "róng qià", part: "形容词", meaning: "关系和睦、协调", phrase: "关系融洽、气氛融洽", sentence: "同事之间相处得很融洽。" },
+            { word: "气氛", pinyin: "qì fēn", part: "名词", meaning: "周围环境的氛围", phrase: "热闹的气氛、紧张的气氛", sentence: "生日会上的气氛很欢乐。" },
+            { word: "解雇", pinyin: "jiě gù", part: "动词", meaning: "开除、解除雇佣关系", phrase: "被解雇、解雇员工", sentence: "他因多次迟到被公司解雇了。" }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("flashCard");
+        const frontWord = document.getElementById("frontWord");
+        const frontPinyin = document.getElementById("frontPinyin");
+        const backPart = document.getElementById("backPart");
+        const backMeaning = document.getElementById("backMeaning");
+        const backPhrase = document.getElementById("backPhrase");
+        const backSentence = document.getElementById("backSentence");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        // 更新卡片内容
+        function updateCard() {
+            const data = wordsData[currentIndex];
+            frontWord.textContent = data.word;
+            frontPinyin.textContent = data.pinyin;
+            backPart.textContent = data.part;
+            backMeaning.textContent = data.meaning;
+            backPhrase.textContent = data.phrase;
+            backSentence.textContent = data.sentence;
+            // 重置卡片为正面
+            card.classList.remove("flipped");
+        }
+
+        // 翻卡功能
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        // 上一张
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + wordsData.length) % wordsData.length;
+            updateCard();
+        });
+
+        // 下一张
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % wordsData.length;
+            updateCard();
+        });
+
+        // 初始化第一张卡片
+        updateCard();
+    </script>
+</body>
+</html>

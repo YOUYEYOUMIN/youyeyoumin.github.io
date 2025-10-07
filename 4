@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4级模拟题（教师统计版-整数分数）</title>
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        .container { display: flex; gap: 30px; flex-wrap: wrap; }
+        .exam-section { flex: 1; min-width: 400px; }
+        .stats-section { flex: 1; min-width: 400px; background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .section { margin-bottom: 30px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .question { margin: 15px 0; padding: 15px; border-left: 4px solid #2c3e50; background: #f8f9fa; border-radius: 0 4px 4px 0; }
+        .options { margin: 10px 0 0 20px; }
+        .option { margin: 8px 0; cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.3s; }
+        .option:hover { background: #e9ecef; }
+        .option.selected { background: #d1ecf1; border: 1px solid #0c5460; }
+        .option.correct { background: #d4edda; border: 1px solid #155724; }
+        .option.incorrect { background: #f8d7da; border: 1px solid #721c24; }
+        .btn { padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #34495e; }
+        .student-form { margin-bottom: 20px; padding: 15px; background: #e9ecef; border-radius: 8px; }
+        .student-form input { padding: 8px; margin: 0 10px 0 5px; width: 180px; }
+        .student-record { padding: 10px; margin: 10px 0; border-radius: 4px; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .student-record.passed { border-left: 4px solid #28a745; }
+        .student-record.failed { border-left: 4px solid #dc3545; }
+        .stats-summary { padding: 15px; background: white; border-radius: 8px; margin-bottom: 20px; }
+        .stats-key { font-weight: bold; color: #2c3e50; }
+        .error-list { margin: 5px 0 0 15px; color: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #2c3e50;">HSK4级模拟题（教师统计版-整数分数）</h1>
+
+    <div class="container">
+        <!-- 左侧：考试答题区 -->
+        <div class="exam-section">
+            <!-- 学生信息录入 -->
+            <div class="student-form">
+                <label for="studentName">学生姓名：</label>
+                <input type="text" id="studentName" placeholder="请输入学生姓名">
+                <button class="btn" id="startExamBtn">开始答题</button>
+                <button class="btn" id="submitExamBtn" disabled>提交试卷</button>
+            </div>
+
+            <!-- 听力理解 -->
+            <div class="section">
+                <h2 style="color: #34495e;">一、听力理解（共3题，每题20分）</h2>
+                <div class="question" id="q1">
+                    <p><strong>第1题：</strong>男：今天下午的会议我可能要迟到半小时，路上堵车太严重了。<br>女：没关系，我们等你到了再开始，你注意安全。<br>问：他们下午会做什么？</p>
+                    <div class="options">
+                        <div class="option" data-q="1" data-ans="false">A. 一起堵车</div>
+                        <div class="option" data-q="1" data-ans="true">B. 开会议</div>
+                        <div class="option" data-q="1" data-ans="false">C. 等朋友吃饭</div>
+                        <div class="option" data-q="1" data-ans="false">D. 回家休息</div>
+                    </div>
+                </div>
+                <div class="question" id="q2">
+                    <p><strong>第2题：</strong>女：这件蓝色的裙子多少钱？我穿起来好看吗？<br>男：打完折180元，很适合你，颜色和你的皮肤很配。<br>问：他们现在在哪里？</p>
+                    <div class="options">
+                        <div class="option" data-q="2" data-ans="false">A. 医院</div>
+                        <div class="option" data-q="2" data-ans="false">B. 学校</div>
+                        <div class="option" data-q="2" data-ans="true">C. 服装店</div>
+                        <div class="option" data-q="2" data-ans="false">D. 图书馆</div>
+                    </div>
+                </div>
+                <div class="question" id="q3">
+                    <p><strong>第3题：</strong>男：明天要不要一起去公园跑步？早上6点出发，空气特别好。<br>女：6点太早了，我每天要7点才起床，下次吧。<br>问：女的为什么不去跑步？</p>
+                    <div class="options">
+                        <div class="option" data-q="3" data-ans="true">A. 起床时间太晚</div>
+                        <div class="option" data-q="3" data-ans="false">B. 不喜欢跑步</div>
+                        <div class="option" data-q="3" data-ans="false">C. 公园太远</div>
+                        <div class="option" data-q="3" data-ans="false">D. 明天要上班</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 阅读理解 -->
+            <div class="section">
+                <h2 style="color: #34495e;">二、阅读理解（共2题，每题20分）</h2>
+                <div class="question" id="q4">
+                    <p><strong>第4题：</strong>夏天的时候，很多人喜欢吃西瓜。西瓜水分多，味道甜，而且价格不贵，是很好的解暑水果。不过，西瓜不能吃太多，因为吃多了容易拉肚子。<br>问：关于西瓜，下面哪句话是对的？</p>
+                    <div class="options">
+                        <div class="option" data-q="4" data-ans="false">A. 西瓜冬天更便宜</div>
+                        <div class="option" data-q="4" data-ans="true">B. 西瓜能帮助解暑</div>
+                        <div class="option" data-q="4" data-ans="false">C. 吃多西瓜对身体没影响</div>
+                        <div class="option" data-q="4" data-ans="false">D. 西瓜水分很少</div>
+                    </div>
+                </div>
+                <div class="question" id="q5">
+                    <p><strong>第5题：</strong>小明每天晚上8点到9点都会看书。他喜欢看历史类的书，因为可以了解过去的事情，还能学到很多有用的知识。周末的时候，他会看更长时间，有时候会看到10点。<br>问：小明平时晚上看多久书？</p>
+                    <div class="options">
+                        <div class="option" data-q="5" data-ans="false">A. 1小时（周末）</div>
+                        <div class="option" data-q="5" data-ans="true">B. 1小时（平时）</div>
+                        <div class="option" data-q="5" data-ans="false">C. 2小时（平时）</div>
+                        <div class="option" data-q="5" data-ans="false">D. 3小时（周末）</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：统计分析区 -->
+        <div class="stats-section">
+            <h2 style="color: #34495e; border-bottom: 2px solid #e9ecef; padding-bottom: 10px;">学生成绩统计</h2>
+            
+            <!-- 统计汇总 -->
+            <div class="stats-summary">
+                <p><span class="stats-key">总参考人数：</span><span id="totalStudents">0</span> 人</p>
+                <p><span class="stats-key">及格人数（≥50分）：</span><span id="passedStudents">0</span> 人</p>
+                <p><span class="stats-key">不及格人数（<50分）：</span><span id="failedStudents">0</span> 人</p>
+                <p><span class="stats-key">及格率：</span><span id="passRate">0.00%</span></p>
+                <p><span class="stats-key">平均分（整数）：</span><span id="avgScore">0</span> 分</p>
+            </div>
+
+            <!-- 学生成绩记录列表 -->
+            <h3 style="color: #34495e;">学生答题详情（分数取整数）</h3>
+            <div id="studentRecordsList">
+                <p>暂无学生答题记录，请录入学生姓名并提交试卷</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量：存储所有学生成绩数据
+        let studentDataList = [];
+        const questionsTotal = 5; // 总题数
+        const scorePerQ = 20; // 每题分值
+        const passScore = 50; // 及格线
+
+        // DOM元素获取
+        const studentNameInput = document.getElementById('studentName');
+        const startExamBtn = document.getElementById('startExamBtn');
+        const submitExamBtn = document.getElementById('submitExamBtn');
+        const options = document.querySelectorAll('.option');
+        const totalStudentsEl = document.getElementById('totalStudents');
+        const passedStudentsEl = document.getElementById('passedStudents');
+        const failedStudentsEl = document.getElementById('failedStudents');
+        const passRateEl = document.getElementById('passRate');
+        const avgScoreEl = document.getElementById('avgScore');
+        const studentRecordsListEl = document.getElementById('studentRecordsList');
+
+        // 1. 开始答题：重置选项状态+启用提交按钮
+        startExamBtn.addEventListener('click', () => {
+            const studentName = studentNameInput.value.trim();
+            if (!studentName) {
+                alert('请先输入学生姓名！');
+                return;
+            }
+
+            // 重置所有选项状态
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // 启用提交按钮
+            submitExamBtn.disabled = false;
+            alert(`已为【${studentName}】重置答题界面，可以开始答题`);
+        });
+
+        // 2. 选项选择功能
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                const qId = option.getAttribute('data-q');
+                // 移除同一题其他选项的选中状态
+                document.querySelectorAll(`.option[data-q="${qId}"]`).forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                // 添加当前选项选中状态
+                option.classList.add('selected');
+            });
+        });
+
+        // 3. 提交试卷：批改+记录整数分数+更新统计
+        submitExamBtn.addEventListener('click', () => {
+            const studentName = studentNameInput.value.trim();
+            if (!studentName) {
+                alert('请先输入学生姓名！');
+                return;
+            }
+
+            // 检查是否所有题目都已作答
+            let unansweredQ = [];
+            for (let i = 1; i <= questionsTotal; i++) {
+                const hasSelected = document.querySelector(`.option[data-q="${i}"].selected`) !== null;
+                if (!hasSelected) unansweredQ.push(i);
+            }
+            if (unansweredQ.length > 0) {
+                if (!confirm(`【${studentName}】还有第${unansweredQ.join('、')}题未作答，是否确认提交？`)) {
+                    return;
+                }
+            }
+
+            // 批改计算：正确题数、错题列表、总分（整数）
+            let correctCount = 0;
+            let wrongQuestions = [];
+            options.forEach(option => {
+                const qId = option.getAttribute('data-q');
+                const isCorrect = option.getAttribute('data-ans') === 'true';
+                const isSelected = option.classList.contains('selected');
+
+                // 清除旧批改样式，添加新样式
+                option.classList.remove('correct', 'incorrect');
+                if (isSelected) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                        correctCount++;
+                    } else {
+                        option.classList.add('incorrect');
+                        wrongQuestions.push(qId); // 记录错题ID
+                    }
+                } else if (isCorrect) {
+                    option.classList.add('correct'); // 未选正确答案时标注正确项
+                }
+            });
+
+            // 计算总分（整数，此处虽为固定分值，仍保留四舍五入逻辑适配扩展场景）
+            let totalScore = correctCount * scorePerQ;
+            totalScore = Math.round(totalScore); // 分数取整数（四舍五入）
+            const isPassed = totalScore >= passScore;
+
+            // 存储当前学生成绩数据（分数为整数）
+            const studentData = {
+                name: studentName,
+                score: totalScore, // 整数分数
+                correctCount: correctCount,
+                wrongQuestions: wrongQuestions,
+                isPassed: isPassed,
+                submitTime: new Date().toLocaleString() // 提交时间
+            };
+            studentDataList.push(studentData);
+
+            // 4. 更新统计数据（含整数平均分）
+            updateStats();
+
+            // 5. 更新学生成绩记录列表（显示整数分数）
+            updateStudentRecordsList();
+
+            // 禁用提交按钮，防止重复提交
+            submitExamBtn.disabled = true;
+            alert(`【${studentName}】试卷提交成功！得分：${totalScore}分（整数），${isPassed ? '及格' : '不及格'}`);
+        });
+
+        // 6. 更新统计汇总数据（平均分取整数四舍五入）
+        function updateStats() {
+            const total = studentDataList.length;
+            if (total === 0) {
+                totalStudentsEl.textContent = 0;
+                passedStudentsEl.textContent = 0;
+                failedStudentsEl.textContent = 0;
+                passRateEl.textContent = '0.00%';
+                avgScoreEl.textContent = 0;
+                return;
+            }
+
+            // 计算及格人数、不及格人数
+            const passedCount = studentDataList.filter(data => data.isPassed).length;
+            const failedCount = total - passedCount;
+
+            // 计算平均分（先求和再取整，四舍五入）
+            const totalScoreSum = studentDataList.reduce((sum, data) => sum + data.score, 0);
+            const avgScore = Math.round(totalScoreSum / total); // 平均分取整数
+
+            // 计算及格率（保留两位小数）
+            const passRate = ((passedCount / total) * 100).toFixed(2) + '%';
+
+            // 更新DOM（所有分数均为整数）
+            totalStudentsEl.textContent = total;
+            passedStudentsEl.textContent = passedCount;
+            failedStudentsEl.textContent = failedCount;
+            passRateEl.textContent = passRate;
+            avgScoreEl.textContent = avgScore;
+        }
+
+        // 7. 更新学生成绩记录列表（显示整数分数）
+        function updateStudentRecordsList() {
+            if (studentDataList.length === 0) {
+                studentRecordsListEl.innerHTML = '<p>暂无学生答题记录，请录入学生姓名并提交试卷</p>';
+                return;
+            }
+
+            // 生成每条学生记录的HTML（分数显示为整数）
+            let recordsHtml = '';
+            studentDataList.forEach((data, index) => {
+                const wrongQText = data.wrongQuestions.length > 0 
+                   

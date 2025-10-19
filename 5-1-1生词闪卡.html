@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4级生词闪卡（正反页版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Arial", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        /* 闪卡容器：控制翻转动画 */
+        .card-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            perspective: 1000px; /* 3D透视效果 */
+            margin-bottom: 30px;
+        }
+        /* 闪卡外层：负责翻转 */
+        .flash-card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            cursor: pointer;
+        }
+        /* 卡片翻转状态 */
+        .flash-card.flipped {
+            transform: rotateY(180deg);
+        }
+        /* 卡片正反面通用样式 */
+        .card-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden; /* 隐藏背面 */
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 整体垂直居中 */
+        }
+        /* 卡片正面：重点调整文字居中与大小 */
+        .card-front {
+            background-color: white;
+            z-index: 2;
+            align-items: center; /* 水平居中 */
+            text-align: center; /* 文字内容居中 */
+        }
+        /* 卡片背面 */
+        .card-back {
+            background-color: #f8f9fa;
+            transform: rotateY(180deg); /* 初始背面朝上 */
+            z-index: 1;
+        }
+        /* 正面内容样式：放大字体并调整间距 */
+        .word {
+            font-size: 42px; /* 字体放大（原32px） */
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px; /* 增加与拼音的间距 */
+        }
+        .pinyin {
+            font-size: 26px; /* 字体放大（原20px） */
+            color: #7f8c8d;
+            margin-bottom: 25px; /* 增加与词性的间距 */
+        }
+        .part-of-speech {
+            font-size: 18px; /* 同步放大（原16px） */
+            background-color: #3498db;
+            color: white;
+            padding: 8px 16px; /* 扩大内边距 */
+            border-radius: 20px;
+            width: fit-content;
+        }
+        .flip-hint {
+            font-size: 14px;
+            color: #95a5a6;
+            margin-top: 30px; /* 拉开与词性的距离 */
+            text-align: center;
+        }
+        /* 背面内容样式（保持不变，确保与正面协调） */
+        .phrase {
+            font-size: 18px;
+            color: #2c3e50;
+            margin: 12px 0;
+        }
+        .phrase-explain {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+        .example {
+            font-size: 16px;
+            color: #34495e;
+            margin-top: 20px;
+            padding-left: 10px;
+            border-left: 3px solid #3498db;
+        }
+        /* 分页控制区（保持不变） */
+        .page-control {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .page-btn {
+            padding: 8px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .page-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .page-num {
+            font-size: 18px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪卡容器 -->
+    <div class="card-container">
+        <div class="flash-card" id="card1" onclick="flipCard(this)">
+            <!-- 正面：文字居中放大 -->
+            <div class="card-face card-front">
+                <div class="word">墓地</div>
+                <div class="pinyin">mù dì</div>
+                <div class="part-of-speech">名词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <!-- 背面 -->
+            <div class="card-face card-back">
+                <div class="phrase">公共墓地 <span class="phrase-explain">大家一起用的埋人地方</span></div>
+                <div class="phrase">家族墓地 <span class="phrase-explain">一个家族的埋人地方</span></div>
+                <div class="example">例句：这片墓地安葬了许多逝去的老人。</div>
+            </div>
+        </div>
+        <div class="flash-card" id="card2" style="display: none;" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                <div class="word">丧事</div>
+                <div class="pinyin">sāng shì</div>
+                <div class="part-of-speech">名词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phrase">办理丧事 <span class="phrase-explain">处理人死后的事</span></div>
+                <div class="phrase">丧事用品 <span class="phrase-explain">办丧事要用的东西</span></div>
+                <div class="example">例句：他正在忙着办理父亲的丧事。</div>
+            </div>
+        </div>
+        <div class="flash-card" id="card3" style="display: none;" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                <div class="word">跪拜</div>
+                <div class="pinyin">guì bài</div>
+                <div class="part-of-speech">动词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phrase">跪拜礼 <span class="phrase-explain">跪下磕头的礼节</span></div>
+                <div class="phrase">焚香跪拜 <span class="phrase-explain">点香后跪下磕头</span></div>
+                <div class="example">例句：人们在神像前虔诚地跪拜。</div>
+            </div>
+        </div>
+        <div class="flash-card" id="card4" style="display: none;" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                <div class="word">皱眉头</div>
+                <div class="pinyin">zhòu méi tóu</div>
+                <div class="part-of-speech">动词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phrase">皱起眉头 <span class="phrase-explain">把眉毛皱起来</span></div>
+                <div class="example">例句：他听到这个消息后，不禁皱起了眉头。</div>
+            </div>
+        </div>
+        <div class="flash-card" id="card5" style="display: none;" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                <div class="word">集市</div>
+                <div class="pinyin">jí shì</div>
+                <div class="part-of-speech">名词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phrase">农村集市 <span class="phrase-explain">农村定期卖东西的地方</span></div>
+                <div class="phrase">集市贸易 <span class="phrase-explain">在集市上买卖东西</span></div>
+                <div class="example">例句：每逢集市，村里就会热闹起来。</div>
+            </div>
+        </div>
+        <div class="flash-card" id="card6" style="display: none;" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                <div class="word">讨价还价</div>
+                <div class="pinyin">tǎo jià huán jià</div>
+                <div class="part-of-speech">动词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phrase">反复讨价还价 <span class="phrase-explain">来回商量价格</span></div>
+                <div class="example">例句：他在市场上和卖家讨价还价，想买到更便宜的水果。</div>
+            </div>
+        </div>
+        <div class="flash-card" id="card7" style="display: none;" onclick="flipCard(this)">
+            <div class="card-face card-front">
+                <div class="word">秩序</div>
+                <div class="pinyin">zhì xù</div>
+                <div class="part-of-speech">名词</div>
+                <div class="flip-hint">点击卡片查看详情</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phrase">公共秩序 <span class="phrase-explain">不混乱的公共状态</span></div>
+                <div class="phrase">维持秩序 <span class="phrase-explain">保持不混乱</span></div>
+                <div class="example">例句：我们要遵守图书馆的秩序，保持安静。</div>
+            </div>
+        </div>
+    </div>
+    <!-- 分页控制 -->
+    <div class="page-control">
+        <button class="page-btn" id="prevBtn" onclick="changePage(-1)" disabled>上一页</button>
+        <span class="page-num" id="pageNum">1 / 7</span>
+        <button class="page-btn" id="nextBtn" onclick="changePage(1)">下一页</button>
+    </div>
+    <script>
+        let currentPage = 1; // 当前页码
+        const totalPages = 7; // 总页数
+        // 卡片翻转功能
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+        // 切换页码（dir：-1=上一页，1=下一页）
+        function changePage(dir) {
+            // 隐藏当前页卡片
+            document.getElementById(`card${currentPage}`).style.display = 'none';
+            // 重置当前页卡片为正面（避免翻页后还是背面）
+            document.getElementById(`card${currentPage}`).classList.remove('flipped');
+            // 更新当前页码
+            currentPage += dir;
+            // 显示新页码卡片
+            document.getElementById(`card${currentPage}`).style.display = 'block';
+            // 更新页码显示
+            document.getElementById('pageNum').textContent = `${currentPage} / ${totalPages}`;
+            // 控制上一页/下一页按钮状态
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+    </script>
+</body>
+</html>

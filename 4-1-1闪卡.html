@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK四级生词闪卡（单页版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .card-wrapper {
+            max-width: 500px;
+            width: 100%;
+            margin: 30px 0;
+        }
+        .flashcard {
+            width: 100%;
+            height: 350px;
+            perspective: 1200px;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border-radius: 12px;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }
+        .flashcard-front {
+            background-color: #2563eb;
+            color: white;
+            align-items: center;
+            font-size: 52px;
+            font-weight: bold;
+        }
+        .flashcard-back {
+            background-color: white;
+            color: #333;
+            transform: rotateY(180deg);
+            font-size: 17px;
+            line-height: 2;
+        }
+        .back-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #2563eb;
+        }
+        .back-item {
+            margin-bottom: 10px;
+        }
+        .back-label {
+            font-weight: bold;
+            color: #555;
+        }
+        .nav-buttons {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 12px 24px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+        .page-indicator {
+            margin-top: 15px;
+            color: #666;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-wrapper">
+        <!-- 闪卡容器（默认只显示第1张） -->
+        <div class="flashcard" id="card-0" onclick="flipCard(0)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">办卡</div>
+                <div class="flashcard-back">
+                    <div class="back-title">办卡</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>bàn kǎ</div>
+                    <div class="back-item"><span class="back-label">词性：</span>动词短语</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>办银行卡、办会员卡</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>办理银行卡、会员卡等卡片的手续</div>
+                    <div class="back-item"><span class="back-label">例句：</span>我去银行办卡，方便日常存钱。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="card-1" style="display: none;" onclick="flipCard(1)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">专业</div>
+                <div class="flashcard-back">
+                    <div class="back-title">专业</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>zhuān yè</div>
+                    <div class="back-item"><span class="back-label">词性：</span>形容词/名词</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>专业知识、专业技能、很专业</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>（形容词）水平高、懂行；（名词）专门的学问或技能</div>
+                    <div class="back-item"><span class="back-label">例句：</span>这位老师的教学方法很专业。/ 他大学的专业是中文。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="card-2" style="display: none;" onclick="flipCard(2)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">要不</div>
+                <div class="flashcard-back">
+                    <div class="back-title">要不</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>yào bu</div>
+                    <div class="back-item"><span class="back-label">词性：</span>连词</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>要不……吧、要不就</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>表示建议或选择，相当于“或者”“不如”</div>
+                    <div class="back-item"><span class="back-label">例句：</span>要不我们明天再去图书馆吧？</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="card-3" style="display: none;" onclick="flipCard(3)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">填</div>
+                <div class="flashcard-back">
+                    <div class="back-title">填</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>tián</div>
+                    <div class="back-item"><span class="back-label">词性：</span>动词</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>填空、填表、填写</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>把文字、数字等写进空白处</div>
+                    <div class="back-item"><span class="back-label">例句：</span>请你填一下这张表格上的个人信息。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="card-4" style="display: none;" onclick="flipCard(4)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">可靠</div>
+                <div class="flashcard-back">
+                    <div class="back-title">可靠</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>kě kào</div>
+                    <div class="back-item"><span class="back-label">词性：</span>形容词</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>可靠的人、可靠的消息</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>值得信任，不会出问题</div>
+                    <div class="back-item"><span class="back-label">例句：</span>他是一个可靠的朋友，总会帮我。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="card-5" style="display: none;" onclick="flipCard(5)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">国有</div>
+                <div class="flashcard-back">
+                    <div class="back-title">国有</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>guó yǒu</div>
+                    <div class="back-item"><span class="back-label">词性：</span>形容词</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>国有企业、国有资产</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>属于国家所有的</div>
+                    <div class="back-item"><span class="back-label">例句：</span>这家公司是大型国有企业。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="card-6" style="display: none;" onclick="flipCard(6)">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">非</div>
+                <div class="flashcard-back">
+                    <div class="back-title">非</div>
+                    <div class="back-item"><span class="back-label">拼音：</span>fēi</div>
+                    <div class="back-item"><span class="back-label">词性：</span>副词/动词</div>
+                    <div class="back-item"><span class="back-label">常用短语：</span>非常、非……不可、是非</div>
+                    <div class="back-item"><span class="back-label">短语解释：</span>（副词）很、十分；（动词）正确与错误</div>
+                    <div class="back-item"><span class="back-label">例句：</span>今天天气非常好。/ 分清是与非很重要。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 翻页按钮与页码提示 -->
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="changePage(-1)" disabled>上一页</button>
+        <button class="nav-btn" id="nextBtn" onclick="changePage(1)">下一页</button>
+    </div>
+    <div class="page-indicator" id="pageInfo">第 1 页 / 共 7 页</div>
+
+    <script>
+        let currentPage = 0; // 当前页码（从0开始）
+        const totalPages = 7; // 总卡片数
+
+        // 翻转卡片功能
+        function flipCard(cardIndex) {
+            const card = document.getElementById(`card-${cardIndex}`);
+            card.classList.toggle('flipped');
+        }
+
+        // 切换页面功能
+        function changePage(direction) {
+            // 隐藏当前卡片
+            document.getElementById(`card-${currentPage}`).style.display = 'none';
+            // 重置当前卡片翻转状态（避免切换后仍保持翻面）
+            document.getElementById(`card-${currentPage}`).classList.remove('flipped');
+            
+            // 更新页码
+            currentPage += direction;
+            
+            // 显示新卡片
+            document.getElementById(`card-${currentPage}`).style.display = 'block';
+            
+            // 更新按钮状态（第一页禁用上一页，最后一页禁用下一页）
+            document.getElementById('prevBtn').disabled = currentPage === 0;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages - 1;
+            
+            // 更新页码提示
+            document.getElementById('pageInfo').textContent = `第 ${currentPage + 1} 页 / 共 ${totalPages} 页`;
+        }
+    </script>
+</body>
+</html>

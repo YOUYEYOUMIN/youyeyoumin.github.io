@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK四级生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 0;
+        }
+        .card-container {
+            width: 400px;
+            height: 550px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }
+        .card-front {
+            background-color: #fff;
+            align-items: center;
+            text-align: center;
+        }
+        .card-back {
+            background-color: #fafafa;
+            transform: rotateY(180deg);
+            line-height: 2;
+        }
+        .word {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .back-title {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .back-content {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .card-index {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="flashcard">
+            <!-- 卡片正面 -->
+            <div class="card-front">
+                <div class="word" id="front-word">酷爱</div>
+            </div>
+            <!-- 卡片背面 -->
+            <div class="card-back" id="card-back">
+                <div class="back-title">拼音：</div>
+                <div class="back-content" id="pinyin">kù ài</div>
+                <div class="back-title">词性：</div>
+                <div class="back-content" id="part-of-speech">动词</div>
+                <div class="back-title">常用短语：</div>
+                <div class="back-content" id="phrases">酷爱音乐、酷爱运动</div>
+                <div class="back-title">短语解释：</div>
+                <div class="back-content" id="phrase-explain">非常喜欢</div>
+                <div class="back-title">例句：</div>
+                <div class="back-content" id="example">他<strong>酷爱</strong>打篮球，每天都会去球场。</div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button id="prev-btn">上一张</button>
+        <button id="next-btn">下一张</button>
+    </div>
+    <div class="card-index" id="card-index">1 / 7</div>
+
+    <script>
+        // 生词数据
+        const wordsData = [
+            {
+                word: "酷爱",
+                pinyin: "kù ài",
+                pos: "动词",
+                phrases: "酷爱音乐、酷爱运动",
+                phraseExplain: "非常喜欢",
+                example: "他<strong>酷爱</strong>打篮球，每天都会去球场。"
+            },
+            {
+                word: "痒",
+                pinyin: "yǎng",
+                pos: "形容词",
+                phrases: "发痒、痒痒、皮肤痒",
+                phraseExplain: "想抓皮肤的感觉",
+                example: "蚊子咬了我一口，胳膊特别<strong>痒</strong>。"
+            },
+            {
+                word: "告状",
+                pinyin: "gào zhuàng",
+                pos: "动词",
+                phrases: "向老师告状、告状诉苦",
+                phraseExplain: "把别人的错告诉长辈或上级",
+                example: "弟弟做错事不承认，我只好向妈妈<strong>告状</strong>。"
+            },
+            {
+                word: "惩罚",
+                pinyin: "chéng fá",
+                pos: "动词",
+                phrases: "受到惩罚、惩罚错误",
+                phraseExplain: "处罚做错事的人",
+                example: "他因多次迟到，受到了老师的<strong>惩罚</strong>。"
+            },
+            {
+                word: "神",
+                pinyin: "shén",
+                pos: "名词",
+                phrases: "神仙、神话、精神",
+                phraseExplain: "神话中的超能力者；人的精力",
+                example: "传说中<strong>神</strong>能保佑人平安。/ 他今天<strong>精神</strong>很好。"
+            },
+            {
+                word: "伴侣",
+                pinyin: "bàn lǚ",
+                pos: "名词",
+                phrases: "人生伴侣、旅行伴侣",
+                phraseExplain: "一起陪伴的人",
+                example: "他和妻子是彼此最亲密的<strong>伴侣</strong>。"
+            },
+            {
+                word: "分享",
+                pinyin: "fēn xiǎng",
+                pos: "动词",
+                phrases: "分享快乐、分享经验、分享食物",
+                phraseExplain: "把东西或感受分给别人一起用",
+                example: "我愿意和好朋友<strong>分享</strong>玩具和有趣的故事。"
+            }
+        ];
+
+        // DOM元素
+        const card = document.getElementById('flashcard');
+        const frontWord = document.getElementById('front-word');
+        const pinyinEl = document.getElementById('pinyin');
+        const posEl = document.getElementById('part-of-speech');
+        const phrasesEl = document.getElementById('phrases');
+        const phraseExplainEl = document.getElementById('phrase-explain');
+        const exampleEl = document.getElementById('example');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const cardIndex = document.getElementById('card-index');
+
+        let currentIndex = 0;
+
+        // 更新卡片内容
+        function updateCard() {
+            const data = wordsData[currentIndex];
+            frontWord.textContent = data.word;
+            pinyinEl.textContent = data.pinyin;
+            posEl.textContent = data.pos;
+            phrasesEl.textContent = data.phrases;
+            phraseExplainEl.textContent = data.phraseExplain;
+            exampleEl.innerHTML = data.example;
+            cardIndex.textContent = `${currentIndex + 1} / ${wordsData.length}`;
+            // 重置卡片翻面状态
+            card.classList.remove('flipped');
+        }
+
+        // 翻面功能
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+
+        // 上一张
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + wordsData.length) % wordsData.length;
+            updateCard();
+        });
+
+        // 下一张
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % wordsData.length;
+            updateCard();
+        });
+
+        // 初始化第一张卡片
+        updateCard();
+    </script>
+</body>
+</html>

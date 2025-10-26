@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4 生词闪卡（课堂版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+        }
+        .card-container {
+            width: 90%;
+            max-width: 800px;
+            height: 500px; /* 增大卡片高度，适配课堂展示 */
+            position: relative;
+            perspective: 1200px;
+            margin-bottom: 30px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .card-front {
+            background-color: #fff;
+            z-index: 2;
+            align-items: center; /* 正面文字居中 */
+        }
+        .card-back {
+            background-color: #f8f9fa;
+            transform: rotateY(180deg);
+            z-index: 1;
+            align-items: flex-start; /* 背面文字左对齐，便于阅读 */
+        }
+        /* 正面样式：超大字号，突出生词 */
+        .word {
+            font-size: 80px; /* 大幅增大生词字号，教室后排清晰可见 */
+            font-weight: bold;
+            color: #222;
+        }
+        /* 背面样式：所有内容字号放大，间距增加 */
+        .pinyin {
+            font-size: 40px; /* 拼音字号放大 */
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .info-item {
+            margin-bottom: 20px; /* 增加行间距 */
+            font-size: 24px; /* 详情文字字号放大 */
+            line-height: 1.6;
+            width: 100%;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+        }
+        /* 按钮放大，适配教师操作 */
+        .btn-group {
+            display: flex;
+            gap: 30px;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 22px; /* 按钮文字放大 */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        /* 页码指示器放大 */
+        .page-indicator {
+            margin-bottom: 25px;
+            font-size: 24px; /* 页码字号放大 */
+            color: #666;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-indicator" id="pageIndicator">1 / 8</div>
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="card-front">
+                <div class="word">哈欠</div>
+            </div>
+            <div class="card-back">
+                <div class="pinyin">hā qian</div>
+                <div class="info-item"><span class="info-label">词性：</span>名词</div>
+                <div class="info-item"><span class="info-label">常用短语：</span>打哈欠</div>
+                <div class="info-item"><span class="info-label">短语解释：</span>困了的时候张嘴吸气的动作</div>
+                <div class="info-item"><span class="info-label">例句：</span>他很困，一直在打哈欠。</div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="btn" id="prevBtn">上一张</button>
+        <button class="btn" id="nextBtn">下一张</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const words = [
+            {
+                word: "哈欠",
+                pinyin: "hā qian",
+                partOfSpeech: "名词",
+                phrases: "打哈欠",
+                phraseExplanation: "困了的时候张嘴吸气的动作",
+                example: "他很困，一直在打哈欠。"
+            },
+            {
+                word: "期刊",
+                pinyin: "qī kān",
+                partOfSpeech: "名词",
+                phrases: "学术期刊、期刊杂志",
+                phraseExplanation: "按固定时间（比如每月）出的刊物",
+                example: "这本学术期刊里有很多新文章。"
+            },
+            {
+                word: "感染",
+                pinyin: "gǎn rǎn",
+                partOfSpeech: "动词",
+                phrases: "感染疾病、被感染",
+                phraseExplanation: "生病；被细菌/病毒找上",
+                example: "天冷不注意，容易感染病毒。"
+            },
+            {
+                word: "广泛",
+                pinyin: "guǎng fàn",
+                partOfSpeech: "形容词",
+                phrases: "广泛应用、广泛关注",
+                phraseExplanation: "涉及的范围很广",
+                example: "手机在日常生活中广泛应用。"
+            },
+            {
+                word: "配偶",
+                pinyin: "pèi ǒu",
+                partOfSpeech: "名词",
+                phrases: "配偶、夫妻配偶",
+                phraseExplanation: "夫妻中的老公或老婆",
+                example: "他和配偶一起去超市买东西。"
+            },
+            {
+                word: "社交",
+                pinyin: "shè jiāo",
+                partOfSpeech: "动词/名词",
+                phrases: "社交活动、社交",
+                phraseExplanation: "人和人之间的交往活动",
+                example: "她经常参加社交活动，认识了很多朋友。"
+            },
+            {
+                word: "几率",
+                pinyin: "jī lǜ",
+                partOfSpeech: "名词",
+                phrases: "几率大、成功几率",
+                phraseExplanation: "事情发生的可能性大小",
+                example: "每天练习，说好汉语的几率会变大。"
+            },
+            {
+                word: "扩散",
+                pinyin: "kuò sàn",
+                partOfSpeech: "动词",
+                phrases: "扩散消息、扩散",
+                phraseExplanation: "向周围传播、散开",
+                example: "不要随便扩散还没证实的消息。"
+            }
+        ];
+
+        const card = document.getElementById('card');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageIndicator = document.getElementById('pageIndicator');
+        let currentIndex = 0;
+
+        // 更新卡片内容
+        function updateCard() {
+            const currentWord = words[currentIndex];
+            const front = card.querySelector('.card-front');
+            const back = card.querySelector('.card-back');
+            
+            // 正面仅显示超大号生词
+            front.innerHTML = `<div class="word">${currentWord.word}</div>`;
+            
+            // 背面显示放大后的拼音及详情
+            back.innerHTML = `
+                <div class="pinyin">${currentWord.pinyin}</div>
+                <div class="info-item"><span class="info-label">词性：</span>${currentWord.partOfSpeech}</div>
+                <div class="info-item"><span class="info-label">常用短语：</span>${currentWord.phrases}</div>
+                <div class="info-item"><span class="info-label">短语解释：</span>${currentWord.phraseExplanation}</div>
+                <div class="info-item"><span class="info-label">例句：</span>${currentWord.example}</div>
+            `;
+            
+            pageIndicator.textContent = `${currentIndex + 1} / ${words.length}`;
+            card.classList.remove('flipped');
+        }
+
+        // 翻转卡片（点击即可）
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+
+        // 上一张/下一张切换
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            updateCard();
+        });
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % words.length;
+            updateCard();
+        });
+
+        // 初始化显示第一张
+        updateCard();
+    </script>
+</body>
+</html>

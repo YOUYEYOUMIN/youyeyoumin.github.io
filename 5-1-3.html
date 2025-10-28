@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK 4级生词闪卡</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .card {
+            width: 380px;
+            height: 520px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* 卡片内部整体垂直居中 */
+            padding: 30px;
+            margin-bottom: 35px;
+            position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        /* 正面样式：词语完全居中 */
+        .card-front {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center; /* 水平居中 */
+            justify-content: center; /* 垂直居中 */
+        }
+        .card-front h1 {
+            font-size: 72px;
+            color: #2d3436;
+            margin: 0;
+            letter-spacing: 2px;
+            text-align: center; /* 确保多字词语也居中 */
+        }
+        /* 背面样式（横排布局） */
+        .card-back {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px; /* 内容间距，横排更清晰 */
+            font-size: 19px;
+            color: #2d3436;
+        }
+        .card-back .info-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .card-back .label {
+            font-weight: 600;
+            color: #0984e3;
+            min-width: 100px; /* 固定标签宽度，横排对齐更整齐 */
+            font-size: 20px;
+        }
+        .card-back .content {
+            flex: 1; /* 内容部分占满剩余空间，横排显示 */
+            line-height: 1.6;
+            word-break: break-word;
+        }
+        /* 例句单独加样式，突出显示 */
+        .card-back .example-row {
+            padding-top: 8px;
+            border-top: 1px dashed #b2bec3;
+        }
+        .card-back .example-row .content {
+            color: #27ae60;
+            font-style: italic;
+        }
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 25px;
+        }
+        .nav-btn {
+            padding: 12px 30px;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-btn:disabled {
+            background-color: #b2bec3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background-color: #086fa1;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪卡容器 -->
+    <div class="card" id="flashcard" onclick="flipCard()">
+        <!-- 闪卡正面：词语居中 -->
+        <div class="card-front" id="cardFront">
+            <h1 id="cardWord">无意</h1>
+        </div>
+        <!-- 闪卡背面（横排布局） -->
+        <div class="card-back" id="cardBack">
+            <div class="info-row">
+                <span class="label">拼音：</span>
+                <span class="content" id="cardPinyin">wú yì</span>
+            </div>
+            <div class="info-row">
+                <span class="label">词性：</span>
+                <span class="content" id="cardPart">形容词</span>
+            </div>
+            <div class="info-row">
+                <span class="label">常用短语：</span>
+                <span class="content" id="cardPhrase">无意之中</span>
+            </div>
+            <div class="info-row">
+                <span class="label">短语解释：</span>
+                <span class="content" id="cardExplanation">没故意做，就是碰巧</span>
+            </div>
+            <div class="info-row example-row">
+                <span class="label">例句：</span>
+                <span class="content" id="cardExample">我收拾房间时，无意之中翻出了小时候的玩具。</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航按钮 -->
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="changeCard(-1)" disabled>上一张</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeCard(1)">下一张</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const vocabData = [
+            {
+                word: "无意",
+                pinyin: "wú yì",
+                part: "形容词",
+                phrase: "无意之中",
+                explanation: "没故意做，就是碰巧",
+                example: "我收拾房间时，无意之中翻出了小时候的玩具。"
+            },
+            {
+                word: "在乎",
+                pinyin: "zài hu",
+                part: "动词",
+                phrase: "在乎别人",
+                explanation: "心里看重别人的想法或感受",
+                example: "妹妹特别在乎同学对她新书包的评价。"
+            },
+            {
+                word: "支取",
+                pinyin: "zhī qǔ",
+                part: "动词",
+                phrase: "支取现金",
+                explanation: "从银行/账户里把钱拿出来",
+                example: "爸爸每月发薪后，会去银行支取一些现金当生活费。"
+            },
+            {
+                word: "存单",
+                pinyin: "cún dān",
+                part: "名词",
+                phrase: "银行存单",
+                explanation: "去银行存钱时给的凭证，证明你存了钱",
+                example: "妈妈把银行存单和身份证放在了同一个文件袋里。"
+            },
+            {
+                word: "遗忘",
+                pinyin: "yí wàng",
+                part: "动词",
+                phrase: "遗忘事情",
+                explanation: "忘了事儿，想不起来了",
+                example: "我昨天把要还图书馆的书忘在公司，完全遗忘这回事了。"
+            },
+            {
+                word: "雪中送炭",
+                pinyin: "xuě zhōng sòng tàn",
+                part: "成语（谓语/定语）",
+                phrase: "雪中送炭的帮助",
+                explanation: "别人难的时候，及时帮了一把",
+                example: "突然下雨没带伞，邻居阿姨塞给我一把，真是雪中送炭。"
+            },
+            {
+                word: "锦上添花",
+                pinyin: "jǐn shàng tiān huā",
+                part: "成语（谓语/定语）",
+                phrase: "锦上添花的事",
+                explanation: "本来就好，再加点好让它更好",
+                example: "妈妈做的红烧肉已经很香，撒点葱花就更锦上添花了。"
+            },
+            {
+                word: "噩梦",
+                pinyin: "è mèng",
+                part: "名词",
+                phrase: "做噩梦",
+                explanation: "梦见吓人的东西，醒来不舒服",
+                example: "我昨晚做噩梦梦见丢了钥匙，惊醒后赶紧摸了摸口袋。"
+            },
+            {
+                word: "征集",
+                pinyin: "zhēng jí",
+                part: "动词",
+                phrase: "征集意见",
+                explanation: "找大家要想法、提建议",
+                example: "小区物业在群里征集大家对绿化改造的意见。"
+            },
+            {
+                word: "口哨",
+                pinyin: "kǒu shào",
+                part: "名词",
+                phrase: "吹口哨",
+                explanation: "用嘴发出尖锐的声音",
+                example: "楼下的大爷遛狗时总爱吹口哨，狗狗一听就跟着走。"
+            },
+            {
+                word: "城堡",
+                pinyin: "chéng bǎo",
+                part: "名词",
+                phrase: "古老的城堡",
+                explanation: "古代用来防敌人的大建筑",
+                example: "弟弟看动画片时，总说想住到里面的古老城堡里。"
+            }
+        ];
+
+        let currentIndex = 0; // 当前卡片索引
+        let isFlipped = false; // 卡片是否翻转（正面/背面）
+
+        // 获取DOM元素
+        const cardFront = document.getElementById("cardFront");
+        const cardBack = document.getElementById("cardBack");
+        const cardWord = document.getElementById("cardWord");
+        const cardPinyin = document.getElementById("cardPinyin");
+        const cardPart = document.getElementById("cardPart");
+        const cardPhrase = document.getElementById("cardPhrase");
+        const cardExplanation = document.getElementById("cardExplanation");
+        const cardExample = document.getElementById("cardExample");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        // 初始化第一张卡片
+        updateCardContent();
+
+        // 翻转卡片（正面/背面切换）
+        function flipCard() {
+            isFlipped = !isFlipped;
+            cardFront.style.display = isFlipped ? "none" : "flex";
+            cardBack.style.display = isFlipped ? "flex" : "none";
+        }
+
+        // 切换上一张/下一张卡片
+        function changeCard(direction) {
+            // 切换卡片前先回到正面
+            if (isFlipped) {
+                flipCard();
+            }
+            // 更新索引
+            currentIndex += direction;
+            // 更新卡片内容
+            updateCardContent();
+            // 更新导航按钮状态
+            updateNavButtons();
+        }
+
+        // 更新卡片内容
+        function updateCardContent() {
+            const currentData = vocabData[currentIndex];
+            cardWord.textContent = currentData.word;
+            cardPinyin.textContent = currentData.pinyin;
+            cardPart.textContent = currentData.part;
+            cardPhrase.textContent = currentData.phrase;
+            cardExplanation.textContent = currentData.explanation;
+            cardExample.textContent = currentData.example;
+        }
+
+        // 更新导航按钮禁用/启用状态
+        function updateNavButtons() {
+            prevBtn.disabled = currentIndex === 0; // 第一页时禁用"上一张"
+            nextBtn.disabled = currentIndex === vocabData.length - 1; // 最后一页时禁用"下一张"
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK四级餐厅生词闪卡（带标点+生词标色版）</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        .card-container {
+            perspective: 1500px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 600px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .front {
+            background-color: #4285f4;
+            color: white;
+        }
+        .back {
+            background-color: white;
+            color: #333;
+            transform: rotateY(180deg);
+        }
+        .word {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .back-content {
+            font-size: 24px;
+            line-height: 1.8;
+            text-align: left;
+            width: 100%;
+        }
+        .back-title {
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .highlight-word {
+            color: #4285f4;
+            font-weight: bold;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 12px 24px;
+            font-size: 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #3367d6;
+        }
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face front">
+                <div class="word" id="front-word">香菜</div>
+            </div>
+            <div class="card-face back">
+                <div class="back-content">
+                    <span class="back-title">拼音：</span>xiāng cài<br>
+                    <span class="back-title">词性：</span>名词<br>
+                    <span class="back-title">常用短语：</span>放<span class="highlight-word">香菜</span>、加<span class="highlight-word">香菜</span><br>
+                    <span class="back-title">短语解释：</span>做菜或拌面时，加一点<span class="highlight-word">香菜</span>提味。<br>
+                    <span class="back-title">例句：</span>我吃面条时喜欢放一点<span class="highlight-word">香菜</span>。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prev-btn" disabled>上一张</button>
+        <button class="nav-btn" id="next-btn">下一张</button>
+    </div>
+
+    <script>
+        // 生词数据（补充标点+标注需高亮的生词）
+        const wordsData = [
+            {
+                word: "香菜",
+                pinyin: "xiāng cài",
+                partOfSpeech: "名词",
+                phrases: "放{{word}}、加{{word}}",
+                explanation: "做菜或拌面时，加一点{{word}}提味。",
+                example: "我吃面条时喜欢放一点{{word}}。"
+            },
+            {
+                word: "欢迎",
+                pinyin: "huān yíng",
+                partOfSpeech: "动词/形容词",
+                phrases: "{{word}}光临、{{word}}你",
+                explanation: "客人来的时候，客气地打招呼；或者高兴地接人。",
+                example: "服务员笑着对客人说“{{word}}光临”。"
+            },
+            {
+                word: "光临",
+                pinyin: "guāng lín",
+                partOfSpeech: "动词",
+                phrases: "欢迎{{word}}、承蒙{{word}}",
+                explanation: "客气地说“客人来了”，常用在开店或请客时。",
+                example: "感谢各位朋友{{word}}我的小店。"
+            },
+            {
+                word: "点菜",
+                pinyin: "diǎn cài",
+                partOfSpeech: "动词",
+                phrases: "{{word}}、帮忙{{word}}",
+                explanation: "在餐厅里选自己想吃的菜。",
+                example: "我们坐下后，就叫服务员过来{{word}}。"
+            },
+            {
+                word: "煮",
+                pinyin: "zhǔ",
+                partOfSpeech: "动词",
+                phrases: "{{word}}面条、{{word}}菜",
+                explanation: "用水加热，把食物做熟。",
+                example: "妈妈在厨房{{word}}面条，马上就好。"
+            },
+            {
+                word: "素菜",
+                pinyin: "sù cài",
+                partOfSpeech: "名词",
+                phrases: "点{{word}}、吃{{word}}",
+                explanation: "没有肉的菜，全是蔬菜做的。",
+                example: "我今天想点一道{{word}}，不想吃肉。"
+            },
+            {
+                word: "凉拌",
+                pinyin: "liáng bàn",
+                partOfSpeech: "动词",
+                phrases: "{{word}}黄瓜、{{word}}菜",
+                explanation: "把菜处理好后，用调料拌一拌，不用煮。",
+                example: "夏天吃{{word}}黄瓜很凉快，很爽口。"
+            },
+            {
+                word: "果汁",
+                pinyin: "guǒ zhī",
+                partOfSpeech: "名词",
+                phrases: "喝{{word}}、买{{word}}",
+                explanation: "喝水果榨出来的汁。",
+                example: "他每天早上都会喝一杯{{word}}。"
+            },
+            {
+                word: "忌口",
+                pinyin: "jì kǒu",
+                partOfSpeech: "动词",
+                phrases: "有{{word}}、吃{{word}}",
+                explanation: "因为身体原因，有些东西不能吃。",
+                example: "我吃辣有{{word}}，太辣的菜我不能吃。"
+            },
+            {
+                word: "稍等",
+                pinyin: "shāo děng",
+                partOfSpeech: "动词",
+                phrases: "请{{word}}、{{word}}一下",
+                explanation: "让别人等一小会儿，语气很客气。",
+                example: "服务员说：“您点的菜请{{word}}，马上就上。”"
+            },
+            {
+                word: "破费",
+                pinyin: "pò fèi",
+                partOfSpeech: "动词",
+                phrases: "让您{{word}}、别{{word}}",
+                explanation: "客气地说“让你花钱了”，不想让对方多花钱。",
+                example: "今天让您{{word}}了，真的很感谢！"
+            },
+            {
+                word: "接风",
+                pinyin: "jiē fēng",
+                partOfSpeech: "动词",
+                phrases: "{{word}}宴、办{{word}}",
+                explanation: "朋友刚从外地回来，请他吃饭，欢迎他。",
+                example: "我们为从北京回来的朋友准备了{{word}}宴。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById("flashcard");
+        const frontWord = document.getElementById("front-word");
+        const backContent = document.querySelector(".back-content");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        // 更新闪卡内容（替换{{word}}为带高亮样式的当前生词）
+        function updateCard() {
+            const data = wordsData[currentIndex];
+            const highlightTag = `<span class="highlight-word">${data.word}</span>`;
+            // 替换短语、解释、例句中的{{word}}
+            const formattedPhrases = data.phrases.replace(/{{word}}/g, highlightTag);
+            const formattedExplanation = data.explanation.replace(/{{word}}/g, highlightTag);
+            const formattedExample = data.example.replace(/{{word}}/g, highlightTag);
+
+            frontWord.textContent = data.word;
+            backContent.innerHTML = `
+                <span class="back-title">拼音：</span>${data.pinyin}<br>
+                <span class="back-title">词性：</span>${data.partOfSpeech}<br>
+                <span class="back-title">常用短语：</span>${formattedPhrases}<br>
+                <span class="back-title">短语解释：</span>${formattedExplanation}<br>
+                <span class="back-title">例句：</span>${formattedExample}
+            `;
+            // 重置卡片翻转状态
+            flashcard.classList.remove("flipped");
+            // 更新按钮状态
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === wordsData.length - 1;
+        }
+
+        // 翻转卡片
+        flashcard.addEventListener("click", () => {
+            flashcard.classList.toggle("flipped");
+        });
+
+        // 上一张按钮
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        // 下一张按钮
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < wordsData.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        // 初始化第一张卡片
+        updateCard();
+    </script>
+</body>
+</html>

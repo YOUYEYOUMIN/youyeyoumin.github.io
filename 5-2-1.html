@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK四级生词闪卡（带标点+生词标色版）</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        .card-container {
+            perspective: 1500px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 600px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .front {
+            background-color: #4285f4;
+            color: white;
+        }
+        .back {
+            background-color: white;
+            color: #333;
+            transform: rotateY(180deg);
+        }
+        .word {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .back-content {
+            font-size: 24px;
+            line-height: 1.8;
+            text-align: left;
+            width: 100%;
+        }
+        .back-title {
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .highlight-word {
+            color: #4285f4;
+            font-weight: bold;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 12px 24px;
+            font-size: 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #3367d6;
+        }
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face front">
+                <div class="word" id="front-word">同龄</div>
+            </div>
+            <div class="card-face back">
+                <div class="back-content">
+                    <span class="back-title">拼音：</span>tóng líng<br>
+                    <span class="back-title">词性：</span>形容词<br>
+                    <span class="back-title">常用短语：</span>{{word}}朋友、{{word}}学生<br>
+                    <span class="back-title">短语解释：</span>指年龄相同的人，比如{{word}}朋友就是年龄一样的朋友。<br>
+                    <span class="back-title">例句：</span>我有很多{{word}}朋友，我们经常一起玩。
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prev-btn" disabled>上一张</button>
+        <button class="nav-btn" id="next-btn">下一张</button>
+    </div>
+    <script>
+        // 10个生词数据（补充标点+标注需高亮的生词）
+        const wordsData = [
+            {
+                word: "同龄",
+                pinyin: "tóng líng",
+                partOfSpeech: "形容词",
+                phrases: "{{word}}朋友、{{word}}学生",
+                explanation: "指年龄相同的人，比如{{word}}朋友就是年龄一样的朋友。",
+                example: "我有很多{{word}}朋友，我们经常一起玩。"
+            },
+            {
+                word: "理科",
+                pinyin: "lǐ kē",
+                partOfSpeech: "名词",
+                phrases: "{{word}}学生、{{word}}科目",
+                explanation: "指数学、物理等注重逻辑和计算的学科，比如{{word}}科目包含数学。",
+                example: "他喜欢数学，所以选择学{{word}}。"
+            },
+            {
+                word: "文科",
+                pinyin: "wén kē",
+                partOfSpeech: "名词",
+                phrases: "{{word}}学生、{{word}}知识",
+                explanation: "指语文、历史等注重文字和文化的学科，比如{{word}}知识包含历史。",
+                example: "她对历史感兴趣，所以选了{{word}}。"
+            },
+            {
+                word: "国学典籍",
+                pinyin: "guó xué diǎn jí",
+                partOfSpeech: "名词",
+                phrases: "阅读{{word}}、学习{{word}}",
+                explanation: "指中国传统的经典书籍，比如《论语》就是{{word}}的一种。",
+                example: "老师让我们多阅读{{word}}，了解传统文化。"
+            },
+            {
+                word: "不得已",
+                pinyin: "bù dé yǐ",
+                partOfSpeech: "形容词",
+                phrases: "{{word}}的选择、{{word}}才做",
+                explanation: "指没有办法，只能这样做，比如{{word}}的选择就是没办法的选择。",
+                example: "因为家里有事，他{{word}}请假了。"
+            },
+            {
+                word: "退学",
+                pinyin: "tuì xué",
+                partOfSpeech: "动词",
+                phrases: "办理{{word}}、选择{{word}}",
+                explanation: "指离开学校，不再继续读书，比如身体不好时可能需要{{word}}。",
+                example: "他因为身体不好，不得不{{word}}。"
+            },
+            {
+                word: "全职",
+                pinyin: "quán zhí",
+                partOfSpeech: "形容词",
+                phrases: "{{word}}工作、{{word}}老师",
+                explanation: "指全部时间都用来做的工作，比如{{word}}老师就是全天都教书的老师。",
+                example: "她找了一份{{word}}工作，每天都很忙碌。"
+            },
+            {
+                word: "何尝",
+                pinyin: "hé cháng",
+                partOfSpeech: "副词",
+                phrases: "{{word}}不是、{{word}}不想",
+                explanation: "表示“其实也”，用来加强语气，比如“{{word}}不是”就是“其实也是”。",
+                example: "这样做，{{word}}不是一个好办法呢？"
+            },
+            {
+                word: "因材施教",
+                pinyin: "yīn cái shī jiào",
+                partOfSpeech: "动词短语",
+                phrases: "实行{{word}}、坚持{{word}}",
+                explanation: "指根据学生的不同情况教他们，比如老师会{{word}}，帮助每个学生进步。",
+                example: "好的老师会{{word}}，帮助每个学生进步。"
+            },
+            {
+                word: "何尝",
+                pinyin: "hé cháng",
+                partOfSpeech: "副词",
+                phrases: "{{word}}不是、{{word}}不想",
+                explanation: "表示“其实也”，用来加强语气，比如“我{{word}}不想去”就是“我其实也想去”。",
+                example: "他{{word}}不想赢这场比赛，只是没发挥好。"
+            }
+        ];
+        let currentIndex = 0;
+        const flashcard = document.getElementById("flashcard");
+        const frontWord = document.getElementById("front-word");
+        const backContent = document.querySelector(".back-content");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        // 更新闪卡内容（替换{{word}}为带高亮样式的当前生词）
+        function updateCard() {
+            const data = wordsData[currentIndex];
+            const highlightTag = `<span class="highlight-word">${data.word}</span>`;
+            // 替换短语、解释、例句中的{{word}}
+            const formattedPhrases = data.phrases.replace(/{{word}}/g, highlightTag);
+            const formattedExplanation = data.explanation.replace(/{{word}}/g, highlightTag);
+            const formattedExample = data.example.replace(/{{word}}/g, highlightTag);
+
+            frontWord.textContent = data.word;
+            backContent.innerHTML = `
+                <span class="back-title">拼音：</span>${data.pinyin}<br>
+                <span class="back-title">词性：</span>${data.partOfSpeech}<br>
+                <span class="back-title">常用短语：</span>${formattedPhrases}<br>
+                <span class="back-title">短语解释：</span>${formattedExplanation}<br>
+                <span class="back-title">例句：</span>${formattedExample}
+            `;
+
+            // 重置卡片翻转状态
+            flashcard.classList.remove("flipped");
+            // 更新按钮状态
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === wordsData.length - 1;
+        }
+
+        // 翻转卡片
+        flashcard.addEventListener("click", () => {
+            flashcard.classList.toggle("flipped");
+        });
+
+        // 上一张按钮
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        // 下一张按钮
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < wordsData.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        // 初始化第一张卡片
+        updateCard();
+    </script>
+</body>
+</html>

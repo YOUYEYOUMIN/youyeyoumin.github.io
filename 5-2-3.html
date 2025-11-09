@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK四级生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .card-container {
+            perspective: 1000px;
+            width: 90%;
+            max-width: 500px;
+            height: 350px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card-front {
+            background-color: #fff;
+            color: #333;
+            align-items: center;
+            text-align: center;
+        }
+        .card-back {
+            background-color: #fff; /* 改为白底 */
+            color: #333; /* 改为黑字 */
+            transform: rotateY(180deg);
+            border: 1px solid #eee; /* 增加边框区分 */
+        }
+        .word {
+            font-size: 60px; /* 放大生词字体，弥补拼音移除后的空缺 */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .back-item {
+            margin: 12px 0;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .back-item span {
+            font-weight: bold;
+            margin-right: 8px;
+            color: #4299e1; /* 关键词标蓝，提升可读性 */
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 12px 24px;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background-color: #3182ce;
+        }
+        .card-index {
+            margin-top: 10px;
+            color: #666;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HSK四级生词闪卡</h1>
+    <div class="card-container">
+        <div class="card" id="flashcard">
+            <div class="card-front">
+                <div class="word" id="front-word">学龄</div>
+                <p>点击卡片翻面</p>
+            </div>
+            <div class="card-back">
+                <div class="back-item"><span>拼音：</span>xué líng</div>
+                <div class="back-item"><span>词性：</span>名词</div>
+                <div class="back-item"><span>短语：</span>学龄儿童</div>
+                <div class="back-item"><span>解释：</span>该上学的年龄阶段的儿童</div>
+                <div class="back-item"><span>例句：</span>这个社区有很多学龄儿童，都在附近学校读书。</div>
+            </div>
+        </div>
+    </div>
+    <div class="card-index" id="card-index">1/9</div>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prev-btn" disabled>上一张</button>
+        <button class="nav-btn" id="next-btn">下一张</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const vocabData = [
+            {
+                word: "学龄",
+                pinyin: "xué líng",
+                partOfSpeech: "名词",
+                phrase: "学龄儿童",
+                explanation: "该上学的年龄阶段的儿童",
+                example: "这个社区有很多学龄儿童，都在附近学校读书。"
+            },
+            {
+                word: "公立",
+                pinyin: "gōng lì",
+                partOfSpeech: "形容词",
+                phrase: "公立学校",
+                explanation: "政府开办的学校",
+                example: "他选择了一所公立学校，学费很便宜。"
+            },
+            {
+                word: "私立",
+                pinyin: "sī lì",
+                partOfSpeech: "形容词",
+                phrase: "私立医院",
+                explanation: "私人开办的医院",
+                example: "这家私立医院的服务很好，看病不用等太久。"
+            },
+            {
+                word: "逐年",
+                pinyin: "zhú nián",
+                partOfSpeech: "副词",
+                phrase: "逐年增加",
+                explanation: "一年比一年多",
+                example: "这个城市的人口在逐年增加。"
+            },
+            {
+                word: "进度",
+                pinyin: "jìn dù",
+                partOfSpeech: "名词",
+                phrase: "学习进度",
+                explanation: "学习的推进程度",
+                example: "他每天坚持学习，学习进度比同学快。"
+            },
+            {
+                word: "备案",
+                pinyin: "bèi àn",
+                partOfSpeech: "动词",
+                phrase: "登记备案",
+                explanation: "记录信息留档",
+                example: "办理证件前，需要先到相关部门备案。"
+            },
+            {
+                word: "官员",
+                pinyin: "guān yuán",
+                partOfSpeech: "名词",
+                phrase: "政府官员",
+                explanation: "政府里任职的人",
+                example: "那位政府官员来我们社区了解情况。"
+            },
+            {
+                word: "抽查",
+                pinyin: "chōu chá",
+                partOfSpeech: "动词",
+                phrase: "随机抽查",
+                explanation: "随便选一些检查",
+                example: "老师会随机抽查学生的作业，督促大家认真做。"
+            },
+            {
+                word: "录取",
+                pinyin: "lù qǔ",
+                partOfSpeech: "动词",
+                phrase: "录取通知",
+                explanation: "通知被接受",
+                example: "他收到了大学的录取通知，非常开心。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("flashcard");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const cardIndex = document.getElementById("card-index");
+
+        // 更新卡片内容
+        function updateCard() {
+            const data = vocabData[currentIndex];
+            document.getElementById("front-word").textContent = data.word;
+            
+            const backItems = document.querySelectorAll(".card-back .back-item");
+            backItems[0].innerHTML = `<span>拼音：</span>${data.pinyin}`;
+            backItems[1].innerHTML = `<span>词性：</span>${data.partOfSpeech}`;
+            backItems[2].innerHTML = `<span>短语：</span>${data.phrase}`;
+            backItems[3].innerHTML = `<span>解释：</span>${data.explanation}`;
+            backItems[4].innerHTML = `<span>例句：</span>${data.example}`;
+            
+            card.classList.remove("flipped");
+            cardIndex.textContent = `${currentIndex + 1}/${vocabData.length}`;
+            
+            // 更新按钮状态
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === vocabData.length - 1;
+        }
+
+        // 卡片翻面
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        // 上一张
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        // 下一张
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < vocabData.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        // 初始化第一张卡片
+        updateCard();
+    </script>
+</body>
+</html>

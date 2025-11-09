@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK四级核心生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .card-container {
+            width: 100%;
+            max-width: 400px;
+            height: 500px;
+            position: relative;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        /* 正面样式：蓝底白字，仅居中超大汉字（无拼音） */
+        .card-front {
+            background-color: #4299e1;
+            color: #fff;
+        }
+        .front-word {
+            font-size: 70px; /* 加大汉字字号，更醒目 */
+            font-weight: bold;
+            text-align: center;
+        }
+        /* 背面样式：白底黑字，生词蓝色 */
+        .card-back {
+            background-color: #fff;
+            color: #333;
+            transform: rotateY(180deg);
+            align-items: flex-start; /* 左对齐内容 */
+        }
+        .back-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            color: #4299e1; /* 标题蓝色呼应正面 */
+        }
+        .info-item {
+            font-size: 16px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            width: 100%;
+        }
+        .info-label {
+            font-weight: bold;
+            margin-right: 8px;
+            color: #666;
+        }
+        .back-word {
+            color: #4299e1; /* 生词蓝色 */
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-btn {
+            padding: 12px 24px;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background-color: #3182ce;
+        }
+        .page-indicator {
+            font-size: 16px;
+            color: #666;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">HSK四级核心生词闪卡</h1>
+    <div class="card-container">
+        <div class="card" id="flashcard">
+            <div class="card-front">
+                <div class="front-word" id="front-word">迟早</div>
+            </div>
+            <div class="card-back">
+                <div class="back-title">词语详情</div>
+                <div class="back-word" id="back-word">迟早</div>
+                <div class="info-item"><span class="info-label">拼音：</span><span id="back-pinyin">chí zǎo</span></div>
+                <div class="info-item"><span class="info-label">词性：</span><span id="back-part">副词</span></div>
+                <div class="info-item"><span class="info-label">短语：</span><span id="back-phrase">迟早会</span></div>
+                <div class="info-item"><span class="info-label">释义：</span><span id="back-meaning">早晚一定会</span></div>
+                <div class="info-item"><span class="info-label">例句：</span><span id="back-example">他努力学习，迟早会成功。</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prev-btn" disabled>上一张</button>
+        <button class="nav-btn" id="next-btn">下一张</button>
+    </div>
+    <div class="page-indicator" id="page-info">1/12</div>
+
+    <script>
+        // 生词数据
+        const vocabData = [
+            {
+                word: "迟早",
+                pinyin: "chí zǎo",
+                part: "副词",
+                phrase: "迟早会",
+                meaning: "早晚一定会",
+                example: "他努力学习，迟早会成功。"
+            },
+            {
+                word: "力不从心",
+                pinyin: "lì bù cóng xīn",
+                part: "成语",
+                phrase: "感到力不从心",
+                meaning: "想做但能力不够",
+                example: "这件事太难，我有点力不从心。"
+            },
+            {
+                word: "督促",
+                pinyin: "dū cù",
+                part: "动词",
+                phrase: "督促某人做某事",
+                meaning: "提醒、催促别人做事",
+                example: "老师经常督促我们写作业。"
+            },
+            {
+                word: "私塾",
+                pinyin: "sī shú",
+                part: "名词",
+                phrase: "旧时的私塾",
+                meaning: "过去私人办的小学",
+                example: "爷爷小时候在私塾里读书。"
+            },
+            {
+                word: "模式",
+                pinyin: "mó shì",
+                part: "名词",
+                phrase: "一种模式",
+                meaning: "固定的方式、样子",
+                example: "这种学习模式很受学生欢迎。"
+            },
+            {
+                word: "多元化",
+                pinyin: "duō yuán huà",
+                part: "形容词",
+                phrase: "多元化发展",
+                meaning: "有多种类型、方向",
+                example: "现在的教育越来越多元化。"
+            },
+            {
+                word: "趋势",
+                pinyin: "qū shì",
+                part: "名词",
+                phrase: "发展趋势",
+                meaning: "事物变化的方向",
+                example: "环保是现在的发展趋势。"
+            },
+            {
+                word: "注册",
+                pinyin: "zhù cè",
+                part: "动词",
+                phrase: "注册账号",
+                meaning: "登记信息获得资格",
+                example: "我在网站上注册了一个账号。"
+            },
+            {
+                word: "规范",
+                pinyin: "guī fàn",
+                part: "动词/形容词",
+                phrase: "规范行为（动）/规范的制度（形）",
+                meaning: "使符合标准/符合标准的",
+                example: "我们要规范自己的日常行为。"
+            },
+            {
+                word: "无可奈何",
+                pinyin: "wú kě nài hé",
+                part: "成语",
+                phrase: "感到无可奈何",
+                meaning: "没有办法，只能接受",
+                example: "下雨了，我们无可奈何，只能取消野餐。"
+            },
+            {
+                word: "但凡",
+                pinyin: "dàn fán",
+                part: "连词",
+                phrase: "但凡努力",
+                meaning: "只要是、凡是",
+                example: "但凡认真做事的人，都会有收获。"
+            },
+            {
+                word: "各司其职",
+                pinyin: "gè sī qí zhí",
+                part: "成语",
+                phrase: "大家各司其职",
+                meaning: "每个人做好自己的工作",
+                example: "在团队里，我们要各司其职，互相配合。"
+            }
+        ];
+
+        // DOM元素
+        const card = document.getElementById('flashcard');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pageInfo = document.getElementById('page-info');
+        const frontWord = document.getElementById('front-word');
+        const backWord = document.getElementById('back-word');
+        const backPinyin = document.getElementById('back-pinyin');
+        const backPart = document.getElementById('back-part');
+        const backPhrase = document.getElementById('back-phrase');
+        const backMeaning = document.getElementById('back-meaning');
+        const backExample = document.getElementById('back-example');
+
+        let currentIndex = 0;
+
+        // 更新卡片内容
+        function updateCard() {
+            const data = vocabData[currentIndex];
+            frontWord.textContent = data.word;
+            backWord.textContent = data.word;
+            backPinyin.textContent = data.pinyin;
+            backPart.textContent = data.part;
+            backPhrase.textContent = data.phrase;
+            backMeaning.textContent = data.meaning;
+            backExample.textContent = data.example;
+            pageInfo.textContent = `${currentIndex + 1}/${vocabData.length}`;
+            
+            // 更新按钮状态
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === vocabData.length - 1;
+            
+            // 重置卡片为正面
+            card.classList.remove('flipped');
+        }
+
+        // 卡片翻转
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+
+        // 上一张
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        // 下一张
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < vocabData.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        // 初始化第一张卡片
+        updateCard();
+    </script>
+</body>
+</html>

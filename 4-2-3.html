@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5 生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            padding-bottom: 120px; /* 预留底部按钮空间 */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+        /* 卡片容器 */
+        .card-container {
+            perspective: 1500px;
+            width: 90%;
+            max-width: 700px;
+            height: 500px; /* 增大卡片高度 */
+            margin-bottom: 20px;
+        }
+        .card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        /* 卡片正面 */
+        .card-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: #4285f4;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .card-front span {
+            font-size: 80px; /* 放大生词字体 */
+            font-weight: bold;
+        }
+        /* 卡片背面 */
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: white;
+            color: #333;
+            border-radius: 12px;
+            transform: rotateY(180deg);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .back-title {
+            font-size: 36px; /* 放大背面标题 */
+            color: #4285f4;
+            font-weight: bold;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .back-item {
+            display: flex;
+            margin-bottom: 18px;
+            align-items: flex-start;
+        }
+        .back-label {
+            font-size: 22px; /* 放大标签字体 */
+            font-weight: bold;
+            color: #666;
+            min-width: 100px;
+        }
+        .back-content {
+            font-size: 21px; /* 放大内容字体 */
+            line-height: 1.6;
+            flex: 1;
+        }
+        /* 底部导航按钮 */
+        .nav-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            z-index: 100;
+        }
+        .nav-btn {
+            padding: 16px 40px; /* 增大按钮尺寸 */
+            font-size: 22px; /* 放大按钮字体 */
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 150px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(66,133,244,0.3);
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #3367d6;
+        }
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        /* 适配移动端 */
+        @media (max-width: 768px) {
+            .card-front span {
+                font-size: 60px;
+            }
+            .back-title {
+                font-size: 30px;
+            }
+            .back-label {
+                font-size: 20px;
+                min-width: 90px;
+            }
+            .back-content {
+                font-size: 19px;
+            }
+            .nav-btn {
+                padding: 14px 30px;
+                font-size: 20px;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>HSK4-5 生词闪卡</h1>
+    <div class="card-container">
+        <div class="card" id="card1">
+            <div class="card-front"><span>坟墓</span></div>
+            <div class="card-back">
+                <div class="back-title">坟墓</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">fén mù</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">名词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">上坟墓、修坟墓</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">去墓地祭拜；修理墓地</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">清明节的时候，他去坟墓前看了爷爷。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他卡片（默认隐藏） -->
+    <div class="card-container" style="display: none;" id="card2">
+        <div class="card">
+            <div class="card-front"><span>适用</span></div>
+            <div class="card-back">
+                <div class="back-title">适用</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">shì yòng</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">适用范围、适用规则</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">能用的范围；能遵守的规则</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">这个方法适用很多学习汉语的学生。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card3">
+        <div class="card">
+            <div class="card-front"><span>背叛</span></div>
+            <div class="card-back">
+                <div class="back-title">背叛</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">bèi pàn</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">背叛朋友、背叛承诺</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">对不起朋友；不遵守自己说的话</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">他从来不会背叛自己的好朋友。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card4">
+        <div class="card">
+            <div class="card-front"><span>惧怕</span></div>
+            <div class="card-back">
+                <div class="back-title">惧怕</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">jù pà</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">惧怕困难、惧怕黑暗</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">害怕困难；害怕黑</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">她小时候很惧怕黑暗，现在不怕了。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card5">
+        <div class="card">
+            <div class="card-front"><span>追求</span></div>
+            <div class="card-back">
+                <div class="back-title">追求</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">zhuī qiú</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">追求梦想、追求幸福</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">努力实现梦想；想要幸福</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">很多人都在追求简单又快乐的生活。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card6">
+        <div class="card">
+            <div class="card-front"><span>放弃</span></div>
+            <div class="card-back">
+                <div class="back-title">放弃</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">fàng qì</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">放弃机会、放弃努力</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">丢掉好机会；不再努力</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">遇到困难时，我们不要轻易放弃。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card7">
+        <div class="card">
+            <div class="card-front"><span>维持</span></div>
+            <div class="card-back">
+                <div class="back-title">维持</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">wéi chí</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">维持秩序、维持关系</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">保持整齐；让关系不变</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">老师会帮助学生维持课堂秩序。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card8">
+        <div class="card">
+            <div class="card-front"><span>体验</span></div>
+            <div class="card-back">
+                <div class="back-title">体验</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">tǐ yàn</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">体验生活、体验旅行</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">感受生活；感受旅行的快乐</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">他想去农村体验不一样的生活。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card9">
+        <div class="card">
+            <div class="card-front"><span>漫长</span></div>
+            <div class="back-title">漫长</div>
+            <div class="back-item">
+                <span class="back-label">拼音：</span>
+                <span class="back-content">màn cháng</span>
+            </div>
+            <div class="back-item">
+                <span class="back-label">词性：</span>
+                <span class="back-content">形容词</span>
+            </div>
+            <div class="back-item">
+                <span class="back-label">短语：</span>
+                <span class="back-content">漫长的等待、漫长的路</span>
+            </div>
+            <div class="back-item">
+                <span class="back-label">解释：</span>
+                <span class="back-content">等了很久；路很远</span>
+            </div>
+            <div class="back-item">
+                <span class="back-label">例句：</span>
+                <span class="back-content">经过漫长的努力，他终于学会了汉语。</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card10">
+        <div class="card">
+            <div class="card-front"><span>瞬间</span></div>
+            <div class="card-back">
+                <div class="back-title">瞬间</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">shùn jiān</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">名词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">一瞬间、瞬间忘记</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">很短的时间；马上忘记</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">烟花在夜空中瞬间绽放，非常美。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card11">
+        <div class="card">
+            <div class="card-front"><span>坠</span></div>
+            <div class="card-back">
+                <div class="back-title">坠</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">zhuì</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">坠落、坠下来</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">掉下来；落下来</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">苹果从树上坠下来，砸到了地上。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-container" style="display: none;" id="card12">
+        <div class="card">
+            <div class="card-front"><span>幻想</span></div>
+            <div class="card-back">
+                <div class="back-title">幻想</div>
+                <div class="back-item">
+                    <span class="back-label">拼音：</span>
+                    <span class="back-content">huàn xiǎng</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">词性：</span>
+                    <span class="back-content">动词/名词</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">短语：</span>
+                    <span class="back-content">幻想未来、充满幻想</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">解释：</span>
+                    <span class="back-content">想象未来的事；有很多想象</span>
+                </div>
+                <div class="back-item">
+                    <span class="back-label">例句：</span>
+                    <span class="back-content">他经常幻想自己能去很多国家旅行。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航按钮 -->
+    <div class="nav-container">
+        <button class="nav-btn" id="prevBtn" disabled>上一页</button>
+        <button class="nav-btn" id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        const cardContainers = document.querySelectorAll('.card-container');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentCardIndex = 0;
+
+        // 初始化：只显示第一张卡
+        cardContainers.forEach((container, index) => {
+            container.style.display = index === 0 ? 'block' : 'none';
+        });
+
+        // 卡片翻转功能
+        cardContainers.forEach(container => {
+            const card = container.querySelector('.card');
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        // 下一页按钮
+        nextBtn.addEventListener('click', () => {
+            if (currentCardIndex < cardContainers.length - 1) {
+                cardContainers[currentCardIndex].style.display = 'none';
+                currentCardIndex++;
+                cardContainers[currentCardIndex].style.display = 'block';
+                updateNavButtons();
+            }
+        });
+
+        // 上一页按钮
+        prevBtn.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                cardContainers[currentCardIndex].style.display = 'none';
+                currentCardIndex--;
+                cardContainers[currentCardIndex].style.display = 'block';
+                updateNavButtons();
+            }
+        });
+
+        // 更新按钮状态
+        function updateNavButtons() {
+            prevBtn.disabled = currentCardIndex === 0;
+            nextBtn.disabled = currentCardIndex === cardContainers.length - 1;
+        }
+    </script>
+</body>
+</html>

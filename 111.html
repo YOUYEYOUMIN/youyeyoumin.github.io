@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语国际教育本科毕业论文答辩PPT（进阶交互版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-bottom: 20px;
+            overflow: auto;
+        }
+        .slide h1 {
+            color: #c0392b;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+        .slide h2 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin: 20px 0;
+            border-left: 5px solid #c0392b;
+            padding-left: 15px;
+        }
+        .slide p, .slide li {
+            color: #34495e;
+            font-size: 20px;
+            line-height: 1.8;
+            margin: 10px 0;
+        }
+        .slide ul {
+            margin-left: 40px;
+        }
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 18px;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #2c3e50;
+        }
+        .nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #c0392b;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .img-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #f8f8f8;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #999;
+            font-size: 20px;
+        }
+        /* 偏误例句弹窗样式 */
+        .example-sentence {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #c0392b;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .example-sentence:hover {
+            background-color: #f1f1f1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            width: 60%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #c0392b;
+        }
+        .modal h3 {
+            color: #c0392b;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        .modal p {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 封面页 -->
+    <div class="slide" id="cover">
+        <h1>老挝大学生HSK5级连词习得偏误研究</h1>
+        <h2 style="text-align: center; margin-top: 80px;">本科毕业论文答辩</h2>
+        <div style="text-align: center; margin-top: 120px; font-size: 24px;">
+            <p>学生姓名：XXX</p>
+            <p>指导教师：XXX</p>
+            <p>专业：中文师范（汉语国际教育方向）</p>
+            <p>日期：XXXX年XX月XX日</p>
+        </div>
+    </div>
+
+    <!-- 目录页 -->
+    <div class="slide" id="index">
+        <h1>目录</h1>
+        <div class="nav">
+            <a href="#review">1. 研究回顾</a>
+            <a href="#process">2. 研究过程与方法</a>
+            <a href="#result">3. 核心结果与分析</a>
+            <a href="#conclusion">4. 研究结论与教学建议</a>
+            <a href="#outlook">5. 研究不足与未来展望</a>
+            <a href="#ref-thanks">6. 参考文献与致谢</a>
+        </div>
+    </div>
+
+    <!-- 1. 研究回顾 -->
+    <div class="slide" id="review">
+        <h1>研究回顾</h1>
+        <p><strong>研究背景</strong>：老挝国立大学孔子学院HSK5级教学中，连词偏误是学生汉语表达的主要障碍</p>
+        <p><strong>研究目标</strong>：分析老挝大学生HSK5级连词偏误类型及成因，提出针对性教学建议</p>
+        <p><strong>核心问题</strong>：1. 连词偏误的主要类型；2. 偏误产生的关键原因；3. 有效教学策略</p>
+        <p style="color: #7f8c8d; margin-top: 20px;">（汇报时长控制：1分钟内）</p>
+    </div>
+
+    <!-- 2. 研究过程与方法 -->
+    <div class="slide" id="process">
+        <h1>研究过程与方法</h1>
+        <h2>一、研究对象</h2>
+        <p>老挝国立大学孔子学院20XX级中文师范专业学生，共60人，HSK4级均已通过</p>
+        <h2>二、研究工具</h2>
+        <ul>
+            <li>语料库：收集学生期末作文、HSK模拟题作答语料共120篇</li>
+            <li>调查问卷：设计连词习得情况问卷，发放60份，回收有效问卷58份</li>
+            <li>访谈提纲：针对10名不同水平学生开展半结构化访谈</li>
+        </ul>
+        <div class="img-placeholder">
+            此处插入：研究对象基本信息统计表/访谈现场照片
+        </div>
+        <h2>三、研究步骤</h2>
+        <p>语料收集 → 偏误标注与分类 → 统计分析偏误频率 → 探讨成因 → 提出教学建议</p>
+    </div>
+
+    <!-- 3. 核心结果与分析 -->
+    <div class="slide" id="result">
+        <h1>核心结果与分析</h1>
+        <h2>一、偏误类型统计（占比）</h2>
+        <ul>
+            <li>遗漏偏误：40%（最主要类型，如遗漏“虽然…但是…”中的“但是”）</li>
+            <li>误代偏误：35%（如用“和”代替“并且”）</li>
+            <li>错序偏误：15%（如“我不但喜欢汉语”错序为“不但我喜欢汉语”）</li>
+            <li>过度泛化：10%（如滥用“所以”连接无因果关系的句子）</li>
+        </ul>
+        <div class="img-placeholder">
+            此处插入：偏误类型占比柱状图
+        </div>
+        <h2>二、典型偏误例句分析（点击查看详情）</h2>
+        <!-- 例句1 -->
+        <div class="example-sentence" onclick="openModal('modal1')">
+            <p><strong>学生原句</strong>：我喜欢吃米饭，<del>和</del>喜欢吃面条。</p>
+            <p><strong>修改后</strong>：我喜欢吃米饭，<ins>并且</ins>喜欢吃面条。</p>
+        </div>
+        <!-- 例句2 -->
+        <div class="example-sentence" onclick="openModal('modal2')">
+            <p><strong>学生原句</strong>：<del>虽然</del>他学习很努力，成绩很好。</p>
+            <p><strong>修改后</strong>：<ins>因为</ins>他学习很努力，成绩很好。</p>
+        </div>
+        <!-- 例句3 -->
+        <div class="example-sentence" onclick="openModal('modal3')">
+            <p><strong>学生原句</strong>：<del>不但我</del>喜欢汉语，还喜欢中国文化。</p>
+            <p><strong>修改后</strong>：我<ins>不但</ins>喜欢汉语，还喜欢中国文化。</p>
+        </div>
+    </div>
+
+    <!-- 4. 研究结论与教学建议 -->
+    <div class="slide" id="conclusion">
+        <h1>研究结论与教学建议</h1>
+        <h2>一、核心结论</h2>
+        <ul>
+            <li>老挝大学生HSK5级连词偏误以遗漏和误代为主，受母语负迁移影响显著</li>
+            <li>学生对成对连词（如“虽然…但是…”）的掌握弱于单个连词（如“并且”）</li>
+            <li>教材中连词讲解缺乏老挝语对比，是偏误产生的重要教学因素</li>
+        </ul>
+        <h2>二、教学建议</h2>
+        <ul>
+            <li>对比教学：增加汉语连词与老挝语对应表达的对比讲解</li>
+            <li>针对性练习：设计“补全成对连词”“辨析易混淆连词”专项练习</li>
+            <li>语料输入：补充老挝学生地道汉语表达的范文，强化正例示范</li>
+        </ul>
+        <div class="img-placeholder">
+            此处插入：设计的连词专项练习示例
+        </div>
+    </div>
+
+    <!-- 5. 研究不足与未来展望 -->
+    <div class="slide" id="outlook">
+        <h1>研究不足与未来展望</h1>
+        <h2>一、研究不足</h2>
+        <ul>
+            <li>样本量较小，仅选取本校60名学生，结论普适性有待验证</li>
+            <li>研究范围较窄，仅覆盖HSK5级大纲中的12个高频连词</li>
+            <li>未开展教学实验，教学建议的有效性缺乏实践检验</li>
+        </ul>
+        <h2>二、未来展望</h2>
+        <ul>
+            <li>扩大样本范围，纳入老挝其他高校汉语专业学生进行对比研究</li>
+            <li>拓展研究内容，涵盖HSK5级全部连词及不同学习阶段的习得规律</li>
+            <li>开展教学干预实验，验证本研究提出的教学建议的有效性</li>
+        </ul>
+    </div>
+
+    <!-- 6. 参考文献与致谢 -->
+    <div class="slide" id="ref-thanks">
+        <h1>参考文献与致谢</h1>
+        <h2>一、参考文献</h2>
+        <ul>
+            <li>[1] 张三. 东南亚留学生汉语连词习得研究[J]. 汉语学习,20XX(XX):XX-XX.</li>
+            <li>[2] 李四. HSK5级语法考点解析[M]. 北京: 北京语言大学出版社,20XX.</li>
+            <li>[3] 王五. 老挝留学生汉语习得偏误分析[J]. 世界汉语教学,20XX(XX):XX-XX.</li>
+        </ul>
+        <h2>二、致谢</h2>
+        <p>感谢指导教师在论文选题、研究设计与撰写过程中的悉心指导！</p>
+        <p>感谢老挝国立大学孔子学院提供的研究平台与调研支持！</p>
+        <p>感谢参与本次研究的所有学生！</p>
+    </div>
+
+    <!-- 偏误例句弹窗1 -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal1')">&times;</span>
+            <h3>偏误详情解析</h3>
+            <p><strong>偏误类型</strong>：误代偏误</p>
+            <p><strong>成因分析</strong>：老挝语中“和”与“并且”对应的词汇为同一个，学生受母语负迁移影响，无法区分二者在汉语中的用法差异——“和”多用于连接名词/名词短语，“并且”多用于连接动词/动词短语。</p>
+            <p><strong>教学启示</strong>：设计“连词+短语类型”匹配练习，让学生明确不同连词的搭配规则。</p>
+        </div>
+    </div>
+
+    <!-- 偏误例句弹窗2 -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal2')">&times;</span>
+            <h3>偏误详情解析</h3>
+            <p><strong>偏误类型</strong>：误代偏误+逻辑搭配错误</p>
+            <p><strong>成因分析</strong>：学生混淆了转折连词“虽然…但是…”与因果连词“因为…所以…”的逻辑关系，仅记住了成对连词的形式，未理解其内在逻辑语义。</p>
+            <p><strong>教学启示</strong>：结合语境讲解连词的逻辑关系，用例句对比转折与因果的语义差异。</p>
+        </div>
+    </div>
+
+    <!-- 偏误例句弹窗3 -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal3')">&times;</span>
+            <h3>偏误详情解析</h3>
+            <p><strong>偏误类型</strong>：错序偏误</p>
+            <p><strong>成因分析</strong>：汉语中“不但…还…”的结构规则为“主语+不但+谓语1+还+谓语2”，学生未掌握该语序规则，照搬母语语序导致偏误。</p>
+            <p><strong>教学启示</strong>：总结成对连词的语序公式，通过句型变换练习强化学生记忆。</p>
+        </div>
+    </div>
+
+    <script>
+        // 目录平滑跳转
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 弹窗打开函数
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // 弹窗关闭函数
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            if (event.target.className === "modal") {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

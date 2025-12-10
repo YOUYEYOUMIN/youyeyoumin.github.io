@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语国际教育本科开题/答辩PPT模板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SimSun", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            /* 防止页面横向滚动 */
+            overflow-x: hidden;
+        }
+        .slide {
+            /* 修改宽度为自适应，最大宽度限制1280px */
+            width: 95vw;
+            max-width: 1280px;
+            height: 720px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            /* 优化内边距，避免内容贴边 */
+            padding: 30px 40px;
+            margin-bottom: 20px;
+            /* 内容溢出时显示滚动条，不遮挡 */
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .slide h1 {
+            color: #c0392b; /* 孔子学院风格红色 */
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+        .slide h2 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin: 20px 0;
+            border-left: 5px solid #c0392b;
+            padding-left: 15px;
+        }
+        .slide p, .slide li {
+            color: #34495e;
+            font-size: 20px;
+            line-height: 1.8;
+            margin: 10px 0;
+            /* 防止文字过长溢出 */
+            word-wrap: break-word;
+        }
+        .slide ul {
+            margin-left: 40px;
+        }
+        .table-container {
+            margin: 20px 0;
+            /* 表格容器自适应，溢出时横向滚动 */
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 18px;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #2c3e50;
+        }
+        .nav {
+            text-align: center;
+            margin: 20px 0;
+            /* 导航栏换行适配 */
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #c0392b;
+            font-size: 20px;
+            font-weight: bold;
+            /* 导航链接内边距，点击区域更大 */
+            padding: 5px 8px;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .img-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #f8f8f8;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #999;
+            font-size: 20px;
+            /* 图片占位符文字换行 */
+            text-align: center;
+            padding: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 封面页 -->
+    <div class="slide" id="cover">
+        <h1>老挝大学生HSK5级连词习得偏误研究</h1>
+        <h2 style="text-align: center; margin-top: 80px;">本科毕业论文开题报告</h2>
+        <div style="text-align: center; margin-top: 120px; font-size: 24px;">
+            <p>学生姓名：XXX</p>
+            <p>指导教师：XXX</p>
+            <p>专业：中文师范（汉语国际教育方向）</p>
+            <p>日期：XXXX年XX月XX日</p>
+        </div>
+    </div>
+
+    <!-- 目录页 -->
+    <div class="slide" id="index">
+        <h1>目录</h1>
+        <div class="nav">
+            <a href="#background">1. 研究背景与意义</a>
+            <a href="#literature">2. 文献综述</a>
+            <a href="#objective">3. 研究目标与问题</a>
+            <a href="#method">4. 研究方法与思路</a>
+            <a href="#innovation">5. 研究创新点</a>
+            <a href="#schedule">6. 进度安排与预期成果</a>
+            <a href="#reference">7. 参考文献</a>
+        </div>
+    </div>
+
+    <!-- 1. 研究背景与意义 -->
+    <div class="slide" id="background">
+        <h1>研究背景与意义</h1>
+        <h2>一、研究背景</h2>
+        <p>1. 老挝国立大学孔子学院中文师范专业招生规模扩大，HSK5级通过率成为教学核心指标之一</p>
+        <p>2. 连词是HSK5级语法重点，老挝学生习得过程中偏误频发，影响汉语表达准确性</p>
+        <div class="img-placeholder">
+            此处插入：老挝孔子学院课堂照片/HSK5级真题连词部分截图
+        </div>
+        <h2>二、研究意义</h2>
+        <p><strong>理论意义</strong>：补充东南亚留学生汉语连词习得偏误研究的区域空白</p>
+        <p><strong>实践意义</strong>：为老挝孔子学院HSK5级连词教学提供针对性方案</p>
+    </div>
+
+    <!-- 2. 文献综述 -->
+    <div class="slide" id="literature">
+        <h1>文献综述</h1>
+        <p>1. 国内研究：聚焦汉语连词本体研究与欧美留学生习得偏误分析，成果丰富</p>
+        <p>2. 海外研究：东南亚地区以泰国、越南学生为主要对象，老挝学生相关研究较少</p>
+        <p>3. 研究空白：缺乏针对老挝本土汉语学习者HSK5级连词偏误的系统性研究</p>
+        <div class="img-placeholder">
+            此处插入：文献综述思维导图/核心文献对比表格
+        </div>
+    </div>
+
+    <!-- 3. 研究目标与问题 -->
+    <div class="slide" id="objective">
+        <h1>研究目标与问题</h1>
+        <h2>一、研究目标</h2>
+        <ul>
+            <li>梳理老挝大学生HSK5级连词习得的主要偏误类型</li>
+            <li>分析偏误产生的成因</li>
+            <li>提出适用于老挝本土的连词教学建议</li>
+        </ul>
+        <h2>二、核心研究问题</h2>
+        <ul>
+            <li>老挝大学生HSK5级连词偏误的具体类型有哪些？</li>
+            <li>母语负迁移、目的语规则泛化等因素对偏误的影响程度如何？</li>
+            <li>如何结合老挝学生的学习特点设计有效的连词教学策略？</li>
+        </ul>
+    </div>
+
+    <!-- 4. 研究方法与思路 -->
+    <div class="slide" id="method">
+        <h1>研究方法与思路</h1>
+        <h2>一、研究方法</h2>
+        <ul>
+            <li>语料库法：建立老挝国立大学中文师范专业学生作文语料库（50篇）</li>
+            <li>问卷调查法：设计连词习得情况问卷，发放100份</li>
+            <li>访谈法：选取10名不同水平学生进行半结构化访谈</li>
+        </ul>
+        <h2>二、研究思路</h2>
+        <p>语料收集 → 偏误标注与分类 → 统计分析偏误频率 → 探讨成因 → 提出教学建议</p>
+        <div class="img-placeholder">
+            此处插入：研究思路流程图
+        </div>
+    </div>
+
+    <!-- 5. 研究创新点 -->
+    <div class="slide" id="innovation">
+        <h1>研究创新点</h1>
+        <ul>
+            <li><strong>视角创新</strong>：聚焦老挝本土中文师范专业学生，区别于泛东南亚学生群体研究</li>
+            <li><strong>方法创新</strong>：结合定量统计（语料库）与定性分析（访谈），提升研究科学性</li>
+            <li><strong>应用创新</strong>：研究成果直接对接老挝孔子学院HSK5级教学实践</li>
+        </ul>
+    </div>
+
+    <!-- 6. 进度安排与预期成果 -->
+    <div class="slide" id="schedule">
+        <h1>进度安排与预期成果</h1>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>阶段</th>
+                    <th>时间节点</th>
+                    <th>具体任务</th>
+                </tr>
+                <tr>
+                    <td>第一阶段</td>
+                    <td>XXXX.XX-XXXX.XX</td>
+                    <td>完成文献收集与整理，确定研究框架</td>
+                </tr>
+                <tr>
+                    <td>第二阶段</td>
+                    <td>XXXX.XX-XXXX.XX</td>
+                    <td>开展语料收集、问卷调查与访谈</td>
+                </tr>
+                <tr>
+                    <td>第三阶段</td>
+                    <td>XXXX.XX-XXXX.XX</td>
+                    <td>数据分析与论文初稿撰写</td>
+                </tr>
+                <tr>
+                    <td>第四阶段</td>
+                    <td>XXXX.XX-XXXX.XX</td>
+                    <td>论文修改、定稿与答辩</td>
+                </tr>
+            </table>
+        </div>
+        <h2>预期成果</h2>
+        <ul>
+            <li>1篇符合要求的本科毕业论文</li>
+            <li>1套老挝大学生HSK5级连词教学建议方案</li>
+        </ul>
+    </div>
+
+    <!-- 7. 参考文献 -->
+    <div class="slide" id="reference">
+        <h1>参考文献</h1>
+        <ul>
+            <li>[1] 张三. 东南亚留学生汉语连词习得研究[J]. 汉语学习,20XX(XX):XX-XX.</li>
+            <li>[2] 李四. HSK5级语法考点解析[M]. 北京: 北京语言大学出版社,20XX.</li>
+            <li>[3] 王五. 老挝留学生汉语习得偏误分析[J]. 世界汉语教学,20XX(XX):XX-XX.</li>
+        </ul>
+    </div>
+
+    <!-- 致谢页 -->
+    <div class="slide" id="thanks">
+        <h1 style="margin-top: 200px;">致谢</h1>
+        <p style="text-align: center; font-size: 24px; margin-top: 80px;">感谢指导教师的悉心指导！</p>
+        <p style="text-align: center; font-size: 24px;">感谢老挝国立大学孔子学院提供的研究平台与支持！</p>
+    </div>
+
+    <script>
+        // 平滑跳转功能
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

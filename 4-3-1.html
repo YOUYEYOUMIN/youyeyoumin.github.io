@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级生词闪卡（完整版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+        }
+        /* 闪卡容器 */
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .card {
+            width: 100%;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card-front {
+            background-color: #fff;
+            color: #333;
+        }
+        .card-back {
+            background-color: #e8f4f8;
+            color: #333;
+            transform: rotateY(180deg);
+            text-align: left;
+            overflow-y: auto;
+        }
+        /* 字体样式 - 蓝色高亮 */
+        .word {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #4299e1;
+        }
+        .back-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        .highlight {
+            color: #4299e1;
+            font-weight: bold;
+        }
+        /* 翻页按钮样式 */
+        .nav-buttons {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 10px 25px;
+            font-size: 1.2rem;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #3182ce;
+        }
+        .nav-btn:disabled {
+            background-color: #a0c4ff;
+            cursor: not-allowed;
+        }
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .word {
+                font-size: 4rem;
+            }
+            .back-content {
+                font-size: 1rem;
+            }
+            .card {
+                height: 380px;
+            }
+            .nav-btn {
+                padding: 8px 20px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .word {
+                font-size: 3rem;
+            }
+            .back-content {
+                font-size: 0.9rem;
+            }
+            .card {
+                height: 350px;
+            }
+            .nav-buttons {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪卡容器 -->
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="flashcard">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="word" id="frontWord">透支</div>
+                </div>
+                <div class="card-back">
+                    <div class="back-content" id="backContent">
+                        拼音：tòu zhī<br>
+                        词性：动词/名词<br>
+                        常用短语：<span class="highlight">透支信用卡</span>、<span class="highlight">透支额度</span>、<span class="highlight">体力透支</span><br>
+                        短语解释：用信用卡提前花钱、可透支的数额、身体精力消耗过多<br>
+                        例句：1. 他不小心<span class="highlight">透支信用卡</span>买了新手机。2. 这张卡的<span class="highlight">透支额度</span>有一万元。3. 连续加班让他<span class="highlight">体力透支</span>，直接病倒了。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 翻页按钮 -->
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>上一页</button>
+        <button class="nav-btn" id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        // 新增生词数据
+        const wordData = [
+            {
+                word: "透支",
+                back: "拼音：tòu zhī<br>词性：动词/名词<br>常用短语：<span class='highlight'>透支信用卡</span>、<span class='highlight'>透支额度</span>、<span class='highlight'>体力透支</span><br>短语解释：用信用卡提前花钱、可透支的数额、身体精力消耗过多<br>例句：1. 他不小心<span class='highlight'>透支信用卡</span>买了新手机。2. 这张卡的<span class='highlight'>透支额度</span>有一万元。3. 连续加班让他<span class='highlight'>体力透支</span>，直接病倒了。"
+            },
+            {
+                word: "输",
+                back: "拼音：shū<br>词性：动词<br>常用短语：<span class='highlight'>输密码</span>、<span class='highlight'>输数据</span>、<span class='highlight'>输比赛</span><br>短语解释：录入密码、录入资料、比赛失败<br>例句：1. 取钱时需要在机器上<span class='highlight'>输密码</span>。2. 他正在给电脑<span class='highlight'>输数据</span>，准备做报表。3. 我们队因为失误<span class='highlight'>输比赛</span>了。"
+            },
+            {
+                word: "密码",
+                back: "拼音：mì mǎ<br>词性：名词<br>常用短语：<span class='highlight'>设密码</span>、<span class='highlight'>改密码</span>、<span class='highlight'>输密码</span><br>短语解释：设置密码、修改密码、录入密码<br>例句：1. 为了安全，我给手机<span class='highlight'>设密码</span>了。2. 忘记密码的话，可以去银行<span class='highlight'>改密码</span>。3. 登录账号前要先<span class='highlight'>输密码</span>验证身份。"
+            },
+            {
+                word: "窗口",
+                back: "拼音：chuāng kǒu<br>词性：名词<br>常用短语：<span class='highlight'>办事窗口</span>、<span class='highlight'>售票窗口</span>、<span class='highlight'>窗口服务</span><br>短语解释：办理业务的柜台、卖票的柜台、窗口提供的服务<br>例句：1. 我去银行的<span class='highlight'>办事窗口</span>办理转账。2. 火车站的<span class='highlight'>售票窗口</span>排了很多人。3. 这个银行的<span class='highlight'>窗口服务</span>很贴心。"
+            },
+            {
+                word: "原件",
+                back: "拼音：yuán jiàn<br>词性：名词<br>常用短语：<span class='highlight'>带原件</span>、<span class='highlight'>验原件</span>、<span class='highlight'>交原件</span><br>短语解释：携带原始文件、查验原始文件、提交原始文件<br>例句：1. 办业务时你需要<span class='highlight'>带原件</span>，复印件不行。2. 工作人员会<span class='highlight'>验原件</span>，确认文件真实性。3. 申请材料里要<span class='highlight'>交原件</span>，不能用扫描件。"
+            },
+            {
+                word: "复印件",
+                back: "拼音：fù yìn jiàn<br>词性：名词<br>常用短语：<span class='highlight'>印复印件</span>、<span class='highlight'>交复印件</span>、<span class='highlight'>留复印件</span><br>短语解释：打印复制的文件、提交复制的文件、留存复制的文件<br>例句：1. 我去打印店<span class='highlight'>印复印件</span>，准备办证件。2. 报名时需要<span class='highlight'>交复印件</span>，不用交原件。3. 公司会<span class='highlight'>留复印件</span>，存档备用。"
+            },
+            {
+                word: "资格",
+                back: "拼音：zī gé<br>词性：名词<br>常用短语：<span class='highlight'>有资格</span>、<span class='highlight'>考资格</span>、<span class='highlight'>资格审核</span><br>短语解释：具备相关条件、参加资格考试、审查资格是否合格<br>例句：1. 工作满三年你才<span class='highlight'>有资格</span>参加评选。2. 他打算明年<span class='highlight'>考资格</span>证，提升能力。3. 报名后要等官方<span class='highlight'>资格审核</span>，才能参加考试。"
+            },
+            {
+                word: "财力",
+                back: "拼音：cái lì<br>词性：名词<br>常用短语：<span class='highlight'>测财力</span>、<span class='highlight'>财力证明</span>、<span class='highlight'>财力雄厚</span><br>短语解释：评估经济能力、证明经济能力的材料、经济实力强<br>例句：1. 银行会<span class='highlight'>测财力</span>，判断贷款额度。2. 移民需要提供<span class='highlight'>财力证明</span>，证明经济状况。3. 这家企业<span class='highlight'>财力雄厚</span>，能承担大项目。"
+            },
+            {
+                word: "所得税",
+                back: "拼音：suǒ dé shuì<br>词性：名词<br>常用短语：<span class='highlight'>交所得税</span>、<span class='highlight'>报所得税</span>、<span class='highlight'>所得税申报</span><br>短语解释：缴纳所得税、申报所得税、申报所得税的流程<br>例句：1. 每个月公司会帮员工<span class='highlight'>交所得税</span>。2. 每年三月要向税务部门<span class='highlight'>报所得税</span>。3. 网上办理<span class='highlight'>所得税申报</span>很方便。"
+            },
+            {
+                word: "驾驶证",
+                back: "拼音：jià shǐ zhèng<br>词性：名词<br>常用短语：<span class='highlight'>考驾驶证</span>、<span class='highlight'>换驾驶证</span>、<span class='highlight'>查驾驶证</span><br>短语解释：参加驾驶证考试、更换驾驶证、查验驾驶证<br>例句：1. 他刚满十八就去<span class='highlight'>考驾驶证</span>了。2. 驾驶证到期前要去车管所<span class='highlight'>换驾驶证</span>。3. 交警拦下车辆，会<span class='highlight'>查驾驶证</span>和行驶证。"
+            },
+            {
+                word: "附",
+                back: "拼音：fù<br>词性：动词/介词<br>常用短语：<span class='highlight'>附文件</span>、<span class='highlight'>附说明</span>、<span class='highlight'>附照片</span><br>短语解释：附带文件、附带说明、附带照片<br>例句：1. 写邮件时请<span class='highlight'>附文件</span>，方便对方查看。2. 这份报告里<span class='highlight'>附说明</span>，解释数据来源。3. 报名表格需要<span class='highlight'>附照片</span>，要求是一寸的。"
+            },
+            {
+                word: "询问",
+                back: "拼音：xún wèn<br>词性：动词<br>常用短语：<span class='highlight'>询问信息</span>、<span class='highlight'>询问情况</span>、<span class='highlight'>询问结果</span><br>短语解释：打听信息、了解情况、打听结果<br>例句：1. 你可以去前台<span class='highlight'>询问信息</span>，找到会议室。2. 老师打电话<span class='highlight'>询问情况</span>，关心生病的学生。3. 他每天都去办公室<span class='highlight'>询问结果</span>，盼着录取通知。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById('flashcard');
+        const frontWord = document.getElementById('frontWord');
+        const backContent = document.getElementById('backContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // 更新闪卡内容
+        function updateCard() {
+            const currentWord = wordData[currentIndex];
+            frontWord.textContent = currentWord.word;
+            backContent.innerHTML = currentWord.back;
+            flashcard.classList.remove('flipped');
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === wordData.length - 1;
+        }
+
+        // 卡片翻面事件
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        // 翻页按钮事件
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < wordData.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        // 初始化
+        updateCard();
+    </script>
+</body>
+</html>

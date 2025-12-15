@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+        }
+        /* 翻页按钮样式 */
+        .nav-buttons {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* 调整为词卡下方间距 */
+        }
+        .nav-btn {
+            padding: 10px 25px;
+            font-size: 1.2rem;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #3182ce;
+        }
+        .nav-btn:disabled {
+            background-color: #a0c4ff;
+            cursor: not-allowed;
+        }
+        /* 闪卡容器 */
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .card {
+            width: 100%;
+            height: 350px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card-front {
+            background-color: #fff;
+            color: #333;
+        }
+        .card-back {
+            background-color: #e8f4f8;
+            color: #333;
+            transform: rotateY(180deg);
+            text-align: left;
+            overflow-y: auto;
+        }
+        /* 字体样式 - 蓝色 */
+        .word {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #4299e1;
+        }
+        .back-content {
+            font-size: 1.5rem;
+            line-height: 1.8;
+        }
+        .highlight {
+            color: #4299e1;
+            font-weight: bold;
+        }
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .word {
+                font-size: 4rem;
+            }
+            .back-content {
+                font-size: 1.2rem;
+            }
+            .card {
+                height: 320px;
+            }
+            .nav-btn {
+                padding: 8px 20px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .word {
+                font-size: 3rem;
+            }
+            .back-content {
+                font-size: 1rem;
+            }
+            .card {
+                height: 280px;
+            }
+            .nav-buttons {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪卡容器 -->
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="flashcard">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="word" id="frontWord">判定</div>
+                </div>
+                <div class="card-back">
+                    <div class="back-content" id="backContent">
+                        拼音：pàn dìng<br>
+                        词性：动词<br>
+                        常用短语：<span class='highlight'>判定结果</span>、<span class='highlight'>判定责任</span>、<span class='highlight'>判定胜负</span><br>
+                        短语解释：确定最终的结论、明确要承担的义务、决定比赛的输赢<br>
+                        例句：评委需要两天时间<span class='highlight'>判定结果</span>。工作人员正在<span class='highlight'>判定责任</span>归属。最后一个进球<span class='highlight'>判定胜负</span>，我们队赢了。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 翻页按钮 移到词卡下方 -->
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>上一页</button>
+        <button class="nav-btn" id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const wordData = [
+            {
+                word: "判定",
+                back: "拼音：pàn dìng<br>词性：动词<br>常用短语：<span class='highlight'>判定结果</span>、<span class='highlight'>判定责任</span>、<span class='highlight'>判定胜负</span><br>短语解释：确定最终的结论、明确要承担的义务、决定比赛的输赢<br>例句：评委需要两天时间<span class='highlight'>判定结果</span>。工作人员正在<span class='highlight'>判定责任</span>归属。最后一个进球<span class='highlight'>判定胜负</span>，我们队赢了。"
+            },
+            {
+                word: "借阅",
+                back: "拼音：jiè yuè<br>词性：动词<br>常用短语：<span class='highlight'>借阅图书</span>、<span class='highlight'>借阅资料</span>、<span class='highlight'>借阅手续</span><br>短语解释：借图书馆的书来看、借查阅用的材料、借书需要办的流程<br>例句：学生可以凭学生证<span class='highlight'>借阅图书</span>。我去档案室<span class='highlight'>借阅资料</span>，准备写报告。办理<span class='highlight'>借阅手续</span>只需要一分钟。"
+            },
+            {
+                word: "排行榜",
+                back: "拼音：pái háng bǎng<br>词性：名词<br>常用短语：<span class='highlight'>销量排行榜</span>、<span class='highlight'>人气排行榜</span>、<span class='highlight'>借阅排行榜</span><br>短语解释：按卖出数量排的名单、按受欢迎程度排的名单、按借书次数排的名单<br>例句：这本书连续三周登上<span class='highlight'>销量排行榜</span>第一。这位歌手的新歌冲进了<span class='highlight'>人气排行榜</span>前十。图书馆每月都会更新<span class='highlight'>借阅排行榜</span>。"
+            },
+            {
+                word: "首位",
+                back: "拼音：shǒu wèi<br>词性：名词<br>常用短语：<span class='highlight'>位居首位</span>、<span class='highlight'>名列首位</span>、<span class='highlight'>稳居首位</span><br>短语解释：处在第一的位置、名字排在第一位、一直保持第一的位置<br>例句：这个国家的咖啡产量<span class='highlight'>位居首位</span>。他的考试成绩<span class='highlight'>名列首位</span>。我们公司的产品质量<span class='highlight'>稳居首位</span>。"
+            },
+            {
+                word: "移民",
+                back: "拼音：yí mín<br>词性：动词/名词<br>常用短语：<span class='highlight'>技术移民</span>、<span class='highlight'>投资移民</span>、<span class='highlight'>申请移民</span><br>短语解释：靠专业技术移居他国、靠投资资金移居他国、提交材料申请移居<br>例句：他通过<span class='highlight'>技术移民</span>拿到了海外绿卡。很多企业家选择<span class='highlight'>投资移民</span>拓展业务。她正在准备材料<span class='highlight'>申请移民</span>。"
+            },
+            {
+                word: "黑社会",
+                back: "拼音：hēi shè huì<br>词性：名词<br>常用短语：<span class='highlight'>黑社会团伙</span>、<span class='highlight'>黑社会势力</span>、<span class='highlight'>打击黑社会</span><br>短语解释：从事违法活动的小团体、危害社会的违法力量、惩治违法的黑恶组织<br>例句：警方成功捣毁了一个<span class='highlight'>黑社会团伙</span>。政府坚决铲除<span class='highlight'>黑社会势力</span>。全社会都应该支持<span class='highlight'>打击黑社会</span>的行动。"
+            },
+            {
+                word: "有幸",
+                back: "拼音：yǒu xìng<br>词性：副词<br>常用短语：<span class='highlight'>有幸参加</span>、<span class='highlight'>有幸遇见</span>、<span class='highlight'>三生有幸</span><br>短语解释：有运气参与活动、有运气碰到某人、形容非常幸运<br>例句：我<span class='highlight'>有幸参加</span>了这次国际汉语教学研讨会。他<span class='highlight'>有幸遇见</span>了自己的偶像。能和你共事，真是<span class='highlight'>三生有幸</span>。"
+            },
+            {
+                word: "筛选",
+                back: "拼音：shāi xuǎn<br>词性：动词<br>常用短语：<span class='highlight'>筛选简历</span>、<span class='highlight'>筛选信息</span>、<span class='highlight'>筛选人才</span><br>短语解释：挑选符合要求的履历、挑选有用的消息、挑选有能力的人<br>例句：HR正在<span class='highlight'>筛选简历</span>，通知面试者。我们需要从海量信息里<span class='highlight'>筛选信息</span>。学校通过考试<span class='highlight'>筛选人才</span>，选拔优秀学生。"
+            },
+            {
+                word: "动机",
+                back: "拼音：dòng jī<br>词性：名词<br>常用短语：<span class='highlight'>作案动机</span>、<span class='highlight'>学习动机</span>、<span class='highlight'>犯罪动机</span><br>短语解释：犯罪的内在原因、推动学习的念头、实施犯罪的想法<br>例句：警察正在调查这起案件中嫌疑人的<span class='highlight'>作案动机</span>。培养孩子的<span class='highlight'>学习动机</span>很重要。检察官仔细分析了罪犯的<span class='highlight'>犯罪动机</span>。"
+            },
+            {
+                word: "信念",
+                back: "拼音：xìn niàn<br>词性：名词<br>常用短语：<span class='highlight'>坚守信念</span>、<span class='highlight'>坚定信念</span>、<span class='highlight'>人生信念</span><br>短语解释：坚定地保持自己的信仰、让自己的信仰更坚定、一生秉持的信仰<br>例句：无论遇到什么困难，他都<span class='highlight'>坚守信念</span>。面对挫折，我们要<span class='highlight'>坚定信念</span>。助人为乐是她的<span class='highlight'>人生信念</span>。"
+            },
+            {
+                word: "限定",
+                back: "拼音：xiàn dìng<br>词性：动词<br>常用短语：<span class='highlight'>限定人数</span>、<span class='highlight'>限定时间</span>、<span class='highlight'>限定范围</span><br>短语解释：规定参与的具体人数、规定完成的时间、规定活动的区域<br>例句：这次活动<span class='highlight'>限定人数</span>，报名要抓紧时间。老师<span class='highlight'>限定时间</span>让我们完成作业。本次优惠<span class='highlight'>限定范围</span>，仅在本市有效。"
+            },
+            {
+                word: "消防员",
+                back: "拼音：xiāo fáng yuán<br>词性：名词<br>常用短语：<span class='highlight'>志愿消防员</span>、<span class='highlight'>职业消防员</span>、<span class='highlight'>消防员装备</span><br>短语解释：自愿参与消防工作的人员、以消防为职业的人员、消防员使用的工具<br>例句：小区里有很多居民报名成为<span class='highlight'>志愿消防员</span>。他长大后想成为一名<span class='highlight'>职业消防员</span>。<span class='highlight'>消防员装备</span>需要定期检查和维护。"
+            },
+            {
+                word: "冒犯",
+                back: "拼音：mào fàn<br>词性：动词<br>常用短语：<span class='highlight'>冒犯他人</span>、<span class='highlight'>无意冒犯</span>、<span class='highlight'>言语冒犯</span><br>短语解释：言语或行为冲撞别人、不是故意冲撞别人、用话语冲撞别人<br>例句：他的无心之言<span class='highlight'>冒犯</span>了在场的老师。我刚才说的话若有<span class='highlight'>无意冒犯</span>，请多包涵。与人交流要礼貌，避免<span class='highlight'>言语冒犯</span>。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById('flashcard');
+        const frontWord = document.getElementById('frontWord');
+        const backContent = document.getElementById('backContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // 更新闪卡内容
+        function updateCard() {
+            const currentWord = wordData[currentIndex];
+            frontWord.textContent = currentWord.word;
+            backContent.innerHTML = currentWord.back;
+            // 切换后重置翻面状态
+            flashcard.classList.remove('flipped');
+            // 更新按钮状态
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === wordData.length - 1;
+        }
+
+        // 卡片翻面事件
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        // 上一页下一页事件
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < wordData.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        // 初始化
+        updateCard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 0;
+        }
+        .card-container {
+            width: 450px;
+            height: 300px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card-front {
+            background-color: #ffffff;
+        }
+        .word {
+            font-size: 48px;
+            color: #1e88e5;
+            font-weight: bold;
+        }
+        .card-back {
+            background-color: #fafafa;
+            transform: rotateY(180deg);
+            font-size: 14px;
+            line-height: 1.4; /* 调小行间距 */
+            text-align: left;
+        }
+        .back-content {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .back-content p {
+            margin-bottom: 4px; /* 缩小段落间距 */
+        }
+        .back-content strong {
+            color: #212121;
+        }
+        .btn-group {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1e88e5;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #1565c0;
+        }
+        .flipped {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="card-front">
+                <div class="word" id="front-word">赶</div>
+            </div>
+            <div class="card-back">
+                <div class="back-content" id="back-content"></div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="nav-btn" id="prev-btn">上一页</button>
+        <button class="nav-btn" id="next-btn">下一页</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const wordData = [
+            {
+                word: "赶",
+                detail: "拼音：gǎn<br>词性：动词<br>常用短语：<br>1. 赶路（抓紧时间走路，不耽误行程）<br>2. 赶集（到集市上买卖东西）<br>3. 赶时间（因时间紧而加快速度）<br>例句：<br>1. 天快黑了，我们得赶紧赶路。<br>2. 村里的人每月都会去镇上赶集。<br>3. 我今天早上赶时间，早饭都没吃。"
+            },
+            {
+                word: "鼓鼓囊囊",
+                detail: "拼音：gǔ gu náng náng<br>词性：形容词<br>常用短语：<br>1. 鼓鼓囊囊的包（包里东西多，凸起的样子）<br>2. 鼓鼓囊囊的口袋（口袋被塞满的样子）<br>3. 鼓鼓囊囊的书包（书包里装得很满）<br>例句：<br>1. 她提着一个鼓鼓囊囊的包，不知道装了什么。<br>2. 弟弟的口袋鼓鼓囊囊的，全是糖果。<br>3. 开学第一天，小明的书包鼓鼓囊囊的。"
+            },
+            {
+                word: "收银员",
+                detail: "拼音：shōu yín yuán<br>词性：名词<br>常用短语：<br>1. 超市收银员（超市里收钱的工作人员）<br>2. 收银员岗位（收钱的工作职位）<br>3. 新手收银员（刚做收钱工作的人）<br>例句：<br>1. 收银员微笑着接过了我的钱。<br>2. 这家商场正在招聘收银员。<br>3. 那个新手收银员动作还有点慢。"
+            },
+            {
+                word: "享受",
+                detail: "拼音：xiǎng shòu<br>词性：动词<br>常用短语：<br>1. 享受生活（体会生活的乐趣）<br>2. 享受美食（品尝美味的食物）<br>3. 享受假期（愉快地度过假期）<br>例句：<br>1. 我们应该放慢脚步，享受生活。<br>2. 周末和家人一起享受美食，很幸福。<br>3. 他正在海边享受美好的假期。"
+            },
+            {
+                word: "健身房",
+                detail: "拼音：jiàn shēn fáng<br>词性：名词<br>常用短语：<br>1. 去健身房（到健身的地方去）<br>2. 健身房会员（办了卡的健身者）<br>3. 健身房教练（指导健身的人）<br>例句：<br>1. 他每天晚上都去健身房锻炼。<br>2. 我是这家健身房的会员。<br>3. 健身房教练教了我正确的跑步姿势。"
+            },
+            {
+                word: "实惠",
+                detail: "拼音：shí huì<br>词性：形容词<br>常用短语：<br>1. 价格实惠（价格便宜，划算）<br>2. 经济实惠（省钱又实用）<br>3. 实惠的礼物（不贵但有用的礼物）<br>例句：<br>1. 这家餐厅的饭菜实惠又好吃。<br>2. 买这款车很经济实惠，油耗很低。<br>3. 妈妈喜欢送实惠的礼物给朋友。"
+            },
+            {
+                word: "赠送",
+                detail: "拼音：zèng sòng<br>词性：动词<br>常用短语：<br>1. 赠送礼物（免费送礼物）<br>2. 赠送样品（免费送试用的东西）<br>3. 赠送优惠券（免费送打折券）<br>例句：<br>1. 这家店开业，赠送了很多小礼品。<br>2. 购买这款护肤品，会赠送小样。<br>3. 消费满三百元，赠送五十元优惠券。"
+            },
+            {
+                word: "馅饼",
+                detail: "拼音：xiàn bǐng<br>词性：名词<br>常用短语：<br>1. 牛肉馅饼（用牛肉做馅的饼）<br>2. 素馅饼（用蔬菜做馅的饼）<br>3. 吃馅饼（享用馅饼这种食物）<br>例句：<br>1. 早餐我吃了两个牛肉馅饼。<br>2. 奶奶做的素馅饼特别香。<br>3. 我们晚上一起吃馅饼吧。"
+            },
+            {
+                word: "提醒",
+                detail: "拼音：tí xǐng<br>词性：动词<br>常用短语：<br>1. 提醒时间（告诉别人注意时间）<br>2. 提醒事项（告诉别人要做的事）<br>3. 提醒错误（告诉别人哪里错了）<br>例句：<br>1. 请你提醒我明天开会的时间。<br>2. 老师提醒我们要带好身份证。<br>3. 朋友提醒我，这道题的答案写错了。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("card");
+        const frontWord = document.getElementById("front-word");
+        const backContent = document.getElementById("back-content");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        // 初始化卡片内容
+        function initCard(index) {
+            card.classList.remove("flipped");
+            frontWord.textContent = wordData[index].word;
+            backContent.innerHTML = wordData[index].detail;
+        }
+
+        // 卡片翻面事件
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        // 上一页按钮事件
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            initCard(currentIndex);
+        });
+
+        // 下一页按钮事件
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            initCard(currentIndex);
+        });
+
+        // 页面加载时初始化第一张卡片
+        window.onload = () => {
+            initCard(0);
+        };
+    </script>
+</body>
+</html>

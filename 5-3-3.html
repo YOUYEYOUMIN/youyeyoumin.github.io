@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级 教室展示版生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 0;
+        }
+        .card-container {
+            width: 800px;
+            height: 500px;
+            perspective: 1500px;
+            margin-bottom: 40px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-radius: 16px;
+        }
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        .card-front {
+            background-color: #ffffff;
+        }
+        .word {
+            font-size: 80px;
+            font-weight: bold;
+            color: #4299e1; /* 正面生词统一蓝色 */
+        }
+        .card-back {
+            background-color: #f8f9fa;
+            transform: rotateY(180deg);
+            font-size: 22px;
+            line-height: 1.8;
+            text-align: left;
+        }
+        .back-content {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .back-content p {
+            margin-bottom: 12px;
+        }
+        .back-content strong {
+            color: #4299e1; /* 背面生词统一蓝色 */
+        }
+        .btn-group {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            background-color: #4299e1;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover {
+            background-color: #3182ce;
+        }
+        .flipped {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="card-front">
+                <div class="word" id="front-word">标签</div>
+            </div>
+            <div class="card-back">
+                <div class="back-content" id="back-content"></div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="nav-btn" id="prev-btn">上一页</button>
+        <button class="nav-btn" id="next-btn">下一页</button>
+    </div>
+
+    <script>
+        const wordData = [
+            {
+                word: "标签",
+                detail: "拼音：biāo qiān<br>词性：名词<br>常用短语：<br>1. <strong>商品标签</strong>（标注商品信息的小纸片）<br>2. <strong>价格标签</strong>（写着价格的标签）<br>3. <strong>贴标签</strong>（给物品贴标签的动作）<br>例句：<br>1. 这个瓶子上的<strong>标签</strong>写着生产日期。<br>2. 超市里的<strong>价格标签</strong>一定要看清楚。<br>3. 请你帮我给这些文件<strong>贴标签</strong>。"
+            },
+            {
+                word: "简介",
+                detail: "拼音：jiǎn jiè<br>词性：名词<br>常用短语：<br>1. <strong>书籍简介</strong>（介绍书籍内容的短文）<br>2. <strong>公司简介</strong>（介绍公司情况的文字）<br>3. <strong>个人简介</strong>（介绍自己的简单资料）<br>例句：<br>1. 这本书的<strong>简介</strong>很吸引人，我想买下来。<br>2. 我们可以在官网查看这家公司的<strong>简介</strong>。<br>3. 面试前，他准备了一份详细的<strong>个人简介</strong>。"
+            },
+            {
+                word: "以便",
+                detail: "拼音：yǐ biàn<br>词性：连词<br>常用短语：<br>1. <strong>以便参考</strong>（方便用来参考）<br>2. <strong>以便联系</strong>（方便进行联系）<br>3. <strong>以便查阅</strong>（方便查找翻阅）<br>例句：<br>1. 请把资料整理好，<strong>以便</strong>大家参考。<br>2. 留下你的电话号码，<strong>以便</strong>后续联系。<br>3. 这些文件要分类存档，<strong>以便</strong>日后查阅。"
+            },
+            {
+                word: "提交",
+                detail: "拼音：tí jiāo<br>词性：动词<br>常用短语：<br>1. <strong>提交申请</strong>（把申请交上去）<br>2. <strong>提交报告</strong>（把报告交上去）<br>3. <strong>提交作业</strong>（把作业交上去）<br>例句：<br>1. 明天之前，我们要<strong>提交</strong>出国的申请材料。<br>2. 他花了三天时间写报告，今天终于<strong>提交</strong>了。<br>3. 老师要求学生按时<strong>提交</strong>课后作业。"
+            },
+            {
+                word: "流程",
+                detail: "拼音：liú chéng<br>词性：名词<br>常用短语：<br>1. <strong>工作流程</strong>（工作的先后顺序）<br>2. <strong>报名流程</strong>（报名的步骤顺序）<br>3. <strong>审批流程</strong>（审批的办理顺序）<br>例句：<br>1. 优化<strong>工作流程</strong>能提高效率。<br>2. 网站上有详细的比赛<strong>报名流程</strong>。<br>3. 这份文件还在走<strong>审批流程</strong>，需要耐心等待。"
+            },
+            {
+                word: "书评",
+                detail: "拼音：shū píng<br>词性：名词<br>常用短语：<br>1. <strong>写书评</strong>（撰写评论书籍的文章）<br>2. <strong>读书评</strong>（阅读别人写的书籍评论）<br>3. <strong>发表书评</strong>（发布自己写的书籍评论）<br>例句：<br>1. 他喜欢在网上<strong>写书评</strong>分享阅读感受。<br>2. 买书前，我习惯先<strong>读书评</strong>了解书籍口碑。<br>3. 这本杂志每月都会<strong>发表</strong>优秀的<strong>书评</strong>。"
+            },
+            {
+                word: "参照",
+                detail: "拼音：cān zhào<br>词性：动词/名词<br>常用短语：<br>1. <strong>参照标准</strong>（按照标准来比对）<br>2. <strong>参照样本</strong>（照着样本去参考）<br>3. <strong>参照说明</strong>（依据说明来操作）<br>例句：<br>1. 这次考试的评分要<strong>参照</strong>统一标准。<br>2. 你可以<strong>参照</strong>这个样本完成自己的作品。<br>3. 使用新设备前，请<strong>参照</strong>说明书的步骤。"
+            },
+            {
+                word: "描述",
+                detail: "拼音：miáo shù<br>词性：动词<br>常用短语：<br>1. <strong>描述场景</strong>（描绘具体的场景画面）<br>2. <strong>描述感受</strong>（说出自己的内心感受）<br>3. <strong>详细描述</strong>（细致地进行描绘说明）<br>例句：<br>1. 作文里，他生动地<strong>描述</strong>了家乡的美景。<br>2. 请你<strong>描述</strong>一下当时的具体感受。<br>3. 目击者向警察<strong>详细描述</strong>了事件经过。"
+            },
+            {
+                word: "达人",
+                detail: "拼音：dá rén<br>词性：名词<br>常用短语：<br>1. <strong>美食达人</strong>（很懂美食的人）<br>2. <strong>健身达人</strong>（擅长健身的人）<br>3. <strong>旅行达人</strong>（经验丰富的旅行者）<br>例句：<br>1. 他是一位<strong>美食达人</strong>，知道很多好吃的餐厅。<br>2. 我的朋友是<strong>健身达人</strong>，身材保持得很好。<br>3. 这位<strong>旅行达人</strong>去过世界上很多国家。"
+            },
+            {
+                word: "检索",
+                detail: "拼音：jiǎn suǒ<br>词性：动词<br>常用短语：<br>1. <strong>检索资料</strong>（查找需要的资料）<br>2. <strong>检索信息</strong>（搜寻相关的信息）<br>3. <strong>关键词检索</strong>（用关键词查找内容）<br>例句：<br>1. 我们可以在图书馆<strong>检索</strong>需要的图书。<br>2. 这个软件能快速<strong>检索</strong>到我们需要的信息。<br>3. 请使用<strong>关键词检索</strong>的方式查找文件。"
+            },
+            {
+                word: "沟通",
+                detail: "拼音：gōu tōng<br>词性：动词<br>常用短语：<br>1. <strong>沟通问题</strong>（交流解决遇到的问题）<br>2. <strong>沟通感情</strong>（交流增进彼此的感情）<br>3. <strong>有效沟通</strong>（有效果的交流方式）<br>例句：<br>1. 遇到矛盾时，我们要及时<strong>沟通</strong>问题。<br>2. 家人之间应该多聊天，<strong>沟通</strong>感情。<br>3. 良好的团队合作离不开<strong>有效沟通</strong>。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("card");
+        const frontWord = document.getElementById("front-word");
+        const backContent = document.getElementById("back-content");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        function initCard(index) {
+            card.classList.remove("flipped");
+            frontWord.textContent = wordData[index].word;
+            backContent.innerHTML = wordData[index].detail;
+        }
+
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            initCard(currentIndex);
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            initCard(currentIndex);
+        });
+
+        window.onload = () => {
+            initCard(0);
+        };
+    </script>
+</body>
+</html>

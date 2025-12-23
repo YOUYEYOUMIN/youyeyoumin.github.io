@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .card-container {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+        }
+        .card-front {
+            font-size: 48px;
+            font-weight: bold;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            font-size: 16px;
+            line-height: 1.8;
+            overflow-y: auto;
+        }
+        .word {
+            color: #0066cc;
+        }
+        .btn-group {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0066cc;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004999;
+        }
+        .phrase-title {
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .example {
+            color: #555;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="card-front">
+                <span class="word" id="front-word">掏</span>
+            </div>
+            <div class="card-back" id="card-back">
+                <!-- 背面内容由JS加载 -->
+            </div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button id="prev-btn">上一页</button>
+        <button id="next-btn">下一页</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const wordData = [
+            {
+                word: "掏",
+                pinyin: "tāo",
+                pos: "动词",
+                phrases: [
+                    {name: "掏口袋", desc: "伸手到口袋里拿东西"},
+                    {name: "掏钱包", desc: "拿出钱包付钱"},
+                    {name: "掏心窝子", desc: "说出真心话"}
+                ],
+                examples: [
+                    "他从包里掏出来一把钥匙。",
+                    "妈妈让我掏钱包买水果。",
+                    "好朋友之间就该掏心窝子地聊天。"
+                ]
+            },
+            {
+                word: "应有尽有",
+                pinyin: "yīng yǒu jìn yǒu",
+                pos: "成语",
+                phrases: [
+                    {name: "商品应有尽有", desc: "商品种类很全"},
+                    {name: "物品应有尽有", desc: "需要的物品都有"},
+                    {name: "零食应有尽有", desc: "零食的种类齐全"}
+                ],
+                examples: [
+                    "这家超市的东西应有尽有，特别方便。",
+                    "旅游景区的纪念品店里，小玩意儿应有尽有。",
+                    "为了这次野餐，我们准备的食物应有尽有。"
+                ]
+            },
+            {
+                word: "烦恼",
+                pinyin: "fán nǎo",
+                pos: "名词",
+                phrases: [
+                    {name: "消除烦恼", desc: "去掉心里的不快"},
+                    {name: "增添烦恼", desc: "增加麻烦的事"},
+                    {name: "满心烦恼", desc: "心里全是烦心事"}
+                ],
+                examples: [
+                    "听音乐是他消除烦恼的好办法。",
+                    "别为小事增添烦恼，一切都会好的。",
+                    "最近工作不顺利，她满心都是烦恼。"
+                ]
+            },
+            {
+                word: "设置",
+                pinyin: "shè zhì",
+                pos: "动词",
+                phrases: [
+                    {name: "设置密码", desc: "设定保护账号的密码"},
+                    {name: "设置闹钟", desc: "设定闹钟的时间"},
+                    {name: "设置障碍", desc: "制造阻挡前进的东西"}
+                ],
+                examples: [
+                    "你需要给手机设置一个复杂的密码。",
+                    "我设置了明天早上七点的闹钟。",
+                    "比赛中，主办方在跑道上设置了很多障碍。"
+                ]
+            },
+            {
+                word: "作废",
+                pinyin: "zuò fèi",
+                pos: "动词",
+                phrases: [
+                    {name: "作废处理", desc: "当作无效来处理"},
+                    {name: "票据作废", desc: "票据失去效力"},
+                    {name: "证件作废", desc: "证件不能再使用"}
+                ],
+                examples: [
+                    "这张过期的优惠券要作废处理。",
+                    "票据一旦涂改，就会作废。",
+                    "补办新身份证后，旧的身份证会自动作废。"
+                ]
+            },
+            {
+                word: "忽悠",
+                pinyin: "hū you",
+                pos: "动词",
+                phrases: [
+                    {name: "忽悠别人", desc: "欺骗、糊弄他人"},
+                    {name: "被人忽悠", desc: "被别人欺骗"},
+                    {name: "别忽悠我", desc: "不要欺骗我"}
+                ],
+                examples: [
+                    "他总是喜欢忽悠别人，大家都不相信他。",
+                    "我昨天被人忽悠买了没用的东西。",
+                    "你说的话我不信，别忽悠我了。"
+                ]
+            },
+            {
+                word: "郁闷",
+                pinyin: "yù mèn",
+                pos: "形容词",
+                phrases: [
+                    {name: "感到郁闷", desc: "心里觉得不痛快"},
+                    {name: "心情郁闷", desc: "情绪低落"},
+                    {name: "郁闷的事", desc: "让人不开心的事情"}
+                ],
+                examples: [
+                    "今天下雨不能出去玩，他感到郁闷。",
+                    "最近考试没考好，她一直心情郁闷。",
+                    "遇到这种郁闷的事，你可以和朋友说说。"
+                ]
+            },
+            {
+                word: "插",
+                pinyin: "chā",
+                pos: "动词",
+                phrases: [
+                    {name: "插鲜花", desc: "把鲜花放进花瓶等容器"},
+                    {name: "插不上话", desc: "没机会说话"},
+                    {name: "插队买票", desc: "不排队直接到前面买票"}
+                ],
+                examples: [
+                    "她在客厅的花瓶里插了一束玫瑰。",
+                    "大家讨论得太热烈，我根本插不上话。",
+                    "排队的时候，不要插队买票。"
+                ]
+            },
+            {
+                word: "吞",
+                pinyin: "tūn",
+                pos: "动词",
+                phrases: [
+                    {name: "吞口水", desc: "把口水咽下去"},
+                    {name: "吞药片", desc: "把药片咽进肚子"},
+                    {name: "生吞活剥", desc: "生硬地模仿，不理解本质"}
+                ],
+                examples: [
+                    "看到美食，他忍不住吞了一下口水。",
+                    "吃药的时候，要喝温水吞下药片。",
+                    "学习知识不能生吞活剥，要理解意思。"
+                ]
+            },
+            {
+                word: "中圈套",
+                pinyin: "zhòng quān tào",
+                pos: "动词短语",
+                phrases: [
+                    {name: "不小心中圈套", desc: "意外陷入别人的计谋"},
+                    {name: "轻易中圈套", desc: "很容易被骗"},
+                    {name: "防止中圈套", desc: "避免陷入别人的陷阱"}
+                ],
+                examples: [
+                    "他不小心中圈套，损失了很多钱。",
+                    "遇到陌生人的诱惑，别轻易中圈套。",
+                    "出门在外，要提高警惕，防止中圈套。"
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("card");
+        const frontWord = document.getElementById("front-word");
+        const cardBack = document.getElementById("card-back");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+
+        // 加载卡片内容
+        function loadCard(index) {
+            const data = wordData[index];
+            frontWord.textContent = data.word;
+            
+            // 构建背面HTML
+            let backHTML = `
+                <div><strong>拼音：</strong>${data.pinyin}</div>
+                <div><strong>词性：</strong>${data.pos}</div>
+                <div class="phrase-title">短语及解释：</div>
+            `;
+            data.phrases.forEach(phrase => {
+                backHTML += `<div><strong>${phrase.name}</strong>：${phrase.desc}</div>`;
+            });
+            backHTML += `<div class="phrase-title">例句：</div>`;
+            data.examples.forEach(example => {
+                backHTML += `<div class="example">${example}</div>`;
+            });
+            cardBack.innerHTML = backHTML;
+            
+            // 重置卡片翻转状态
+            card.classList.remove("flipped");
+        }
+
+        // 卡片翻转事件
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        // 上一页按钮事件
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            loadCard(currentIndex);
+        });
+
+        // 下一页按钮事件
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            loadCard(currentIndex);
+        });
+
+        // 初始化第一张卡片
+        loadCard(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级 中文生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        .card-container {
+            width: 550px;
+            height: 600px;
+            position: relative;
+            perspective: 1200px;
+            margin: 30px 0;
+            cursor: pointer;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 40px;
+        }
+        .card-front {
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .word {
+            font-size: 80px;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        .card-back {
+            background-color: #f0f8ff;
+            transform: rotateY(180deg);
+            font-size: 18px;
+            line-height: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .back-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0066cc;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #cce5ff;
+        }
+        .back-section {
+            width: 100%;
+        }
+        .back-section strong {
+            color: #2d3748;
+        }
+        .btn-group {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 28px;
+            font-size: 18px;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004999;
+        }
+    </style>
+</head>
+<body>
+    <h1>HSK4-5级 中文生词闪卡</h1>
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="card">
+            <div class="card-front" id="cardFront">
+                <div class="word" id="wordText"></div>
+            </div>
+            <div class="card-back" id="cardBack"></div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button id="prevBtn">上一页</button>
+        <button id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        const wordData = [
+            {
+                word: "啃",
+                pinyin: "kěn",
+                pos: "动词",
+                phrases: [
+                    "啃老族：成年人靠父母生活",
+                    "啃骨头：用牙一点点咬骨头",
+                    "啃书本：刻苦地看书学习"
+                ],
+                sentences: [
+                    "1. 他都30岁了，还是个啃老族。",
+                    "2. 小狗蹲在地上啃骨头。",
+                    "3. 为了考HSK，他每天熬夜啃书本。"
+                ]
+            },
+            {
+                word: "端正",
+                pinyin: "duān zhèng",
+                pos: "形容词/动词",
+                phrases: [
+                    "五官端正：脸上的五官长得匀称",
+                    "态度端正：对待事情认真不马虎",
+                    "端正思想：让想法变得正确积极"
+                ],
+                sentences: [
+                    "1. 她五官端正，看着很亲切。",
+                    "2. 学汉语要态度端正，不能偷懒。",
+                    "3. 老师常提醒我们要端正思想。"
+                ]
+            },
+            {
+                word: "六亲不认",
+                pinyin: "liù qīn bù rèn",
+                pos: "成语",
+                phrases: [
+                    "六亲不认的人：不讲情面的人",
+                    "一翻脸六亲不认：一翻脸就不顾亲戚",
+                    "秉公断案六亲不认：办案公正不偏袒"
+                ],
+                sentences: [
+                    "1. 他发达后变成了六亲不认的人。",
+                    "2. 你得罪他，他会一翻脸六亲不认。",
+                    "3. 这位法官秉公断案六亲不认。"
+                ]
+            },
+            {
+                word: "任性",
+                pinyin: "rèn xìng",
+                pos: "形容词",
+                phrases: [
+                    "任性妄为：由着自己的性子做事",
+                    "过分任性：太由着自己的性子",
+                    "任性胡闹：由着性子瞎捣乱"
+                ],
+                sentences: [
+                    "1. 他被宠坏了，总是任性妄为。",
+                    "2. 过分任性的人，没人愿意和他交朋友。",
+                    "3. 弟弟总爱任性胡闹，让人头疼。"
+                ]
+            },
+            {
+                word: "逍遥",
+                pinyin: "xiāo yáo",
+                pos: "形容词",
+                phrases: [
+                    "逍遥自在：生活得无拘无束",
+                    "逍遥法外：犯了法却没受惩罚",
+                    "逍遥快活：过得轻松又快乐"
+                ],
+                sentences: [
+                    "1. 爷爷退休后过得逍遥自在。",
+                    "2. 任何坏人都不能逍遥法外。",
+                    "3. 我们在海边度假，逍遥快活极了。"
+                ]
+            },
+            {
+                word: "颠覆",
+                pinyin: "diān fù",
+                pos: "动词",
+                phrases: [
+                    "颠覆传统：打破老的规矩和做法",
+                    "颠覆认知：让想法发生根本改变",
+                    "颠覆政权：用非法手段推翻政府"
+                ],
+                sentences: [
+                    "1. 这款新设计颠覆传统，很受欢迎。",
+                    "2. 这个结果颠覆认知，让科学家们很惊讶。",
+                    "3. 颠覆政权的行为会受到法律的严惩。"
+                ]
+            },
+            {
+                word: "依赖",
+                pinyin: "yī lài",
+                pos: "动词",
+                phrases: [
+                    "依赖他人：靠别人帮忙做事",
+                    "依赖科技：靠科学技术解决问题",
+                    "摆脱依赖：不再靠别人或外物"
+                ],
+                sentences: [
+                    "1. 孩子长大了，不能总依赖他人。",
+                    "2. 现在的农业生产越来越依赖科技。",
+                    "3. 多练习汉语，才能摆脱对词典的依赖。"
+                ]
+            },
+            {
+                word: "面临",
+                pinyin: "miàn lín",
+                pos: "动词",
+                phrases: [
+                    "面临挑战：遇到要应对的难题",
+                    "面临困难：碰到要克服的麻烦",
+                    "面临选择：要做出决定选哪个"
+                ],
+                sentences: [
+                    "1. 考HSK5级，我们面临挑战也有机遇。",
+                    "2. 这家公司现在面临困难，需要大家一起努力。",
+                    "3. 大学毕业时，他面临选择工作还是继续学习。"
+                ]
+            },
+            {
+                word: "专利",
+                pinyin: "zhuān lì",
+                pos: "名词",
+                phrases: [
+                    "申请专利：向相关部门提出专属权利申请",
+                    "发明专利：拥有专属权利的创造发明",
+                    "专利技术：受专利保护的技术方法"
+                ],
+                sentences: [
+                    "1. 他发明了一种教具，打算申请专利。",
+                    "2. 这项发明专利，帮他解决了很多教学难题。",
+                    "3. 这家企业引进了国外的专利技术，提高了生产效率。"
+                ]
+            },
+            {
+                word: "景气",
+                pinyin: "jǐng qì",
+                pos: "形容词",
+                phrases: [
+                    "经济景气：国家或地区经济发展状况好",
+                    "生意景气：做生意的状况好、利润高",
+                    "市场景气：市场交易活跃、行情好"
+                ],
+                sentences: [
+                    "1. 最近几年，这个国家的经济景气，就业机会多。",
+                    "2. 春节期间，超市的生意很景气，顾客很多。",
+                    "3. 今年的电子产品市场景气，销量大幅增长。"
+                ]
+            },
+            {
+                word: "承担",
+                pinyin: "chéng dān",
+                pos: "动词",
+                phrases: [
+                    "承担责任：对自己的行为或工作负责",
+                    "承担费用：负责支付所需的相关费用",
+                    "承担任务：接受并负责完成分配的工作"
+                ],
+                sentences: [
+                    "1. 犯了错误就要承担责任，不能推卸。",
+                    "2. 这次旅行的费用，由公司承担。",
+                    "3. 老师让他承担组织中文角的任务，他很乐意。"
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("card");
+        const cardContainer = document.getElementById("cardContainer");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const wordText = document.getElementById("wordText");
+        const cardBack = document.getElementById("cardBack");
+
+        function loadWord(index) {
+            const data = wordData[index];
+            wordText.textContent = data.word;
+            let backContent = `
+                <div class="back-title">${data.word} ${data.pinyin}</div>
+                <div class="back-section"><strong>词性：</strong>${data.pos}</div>
+                <div class="back-section"><strong>短语及解释：</strong><br>${data.phrases.join("<br>")}</div>
+                <div class="back-section"><strong>例句：</strong><br>${data.sentences.join("<br>")}</div>
+            `;
+            cardBack.innerHTML = backContent;
+            card.classList.remove("flipped");
+        }
+
+        cardContainer.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            loadWord(currentIndex);
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            loadWord(currentIndex);
+        });
+
+        loadWord(0);
+    </script>
+</body>
+</html>

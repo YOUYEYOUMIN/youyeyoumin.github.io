@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级 新增生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        .card-container {
+            width: 550px;
+            height: 600px;
+            position: relative;
+            perspective: 1200px;
+            margin: 30px 0;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-front {
+            background-color: #fff;
+        }
+        .word {
+            font-size: 80px;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        .card-back {
+            background-color: #f0f8ff;
+            transform: rotateY(180deg);
+            font-size: 18px;
+            line-height: 2.2;
+            text-align: left;
+            gap: 15px;
+        }
+        .back-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0066cc;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #cce5ff;
+            width: 100%;
+        }
+        .back-section {
+            width: 100%;
+        }
+        .back-section strong {
+            color: #2d3748;
+        }
+        .btn-group {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 28px;
+            font-size: 18px;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004999;
+        }
+    </style>
+</head>
+<body>
+    <h1>HSK4-5级 新增生词闪卡</h1>
+    <div class="card-container" id="cardContainer">
+        <div class="card" id="card">
+            <div class="card-front" id="cardFront">
+                <div class="word" id="wordText"></div>
+            </div>
+            <div class="card-back" id="cardBack"></div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button id="prevBtn">上一页</button>
+        <button id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        const wordData = [
+            {
+                word: "站住脚",
+                pinyin: "zhàn zhù jiǎo",
+                pos: "动宾短语",
+                phrases: [
+                    "站住脚跟：在某地/某行业稳定立足",
+                    "难站住脚：很难稳定下来",
+                    "站稳脚跟：稳固自己的地位"
+                ],
+                sentences: [
+                    "1. 他刚到大城市打拼，还没站住脚跟。",
+                    "2. 这个观点缺乏证据，在辩论中难站住脚。",
+                    "3. 努力工作两年后，他终于在公司站稳脚跟。"
+                ]
+            },
+            {
+                word: "高薪",
+                pinyin: "gāo xīn",
+                pos: "名词/形容词",
+                phrases: [
+                    "拿高薪：领取高额薪水",
+                    "高薪工作：薪水高的工作",
+                    "高薪聘请：用高工资聘用人才"
+                ],
+                sentences: [
+                    "1. 他凭借专业技能，在外企拿高薪。",
+                    "2. 很多年轻人都想找一份高薪工作。",
+                    "3. 这家公司高薪聘请了技术专家。"
+                ]
+            },
+            {
+                word: "符合",
+                pinyin: "fú hé",
+                pos: "动词",
+                phrases: [
+                    "符合要求：满足规定的条件",
+                    "符合标准：达到设定的准则",
+                    "符合心意：和自己的想法一致"
+                ],
+                sentences: [
+                    "1. 他的简历完全符合公司的招聘要求。",
+                    "2. 这批产品质量符合国家检测标准。",
+                    "3. 这件礼物的款式很符合妈妈的心意。"
+                ]
+            },
+            {
+                word: "投资",
+                pinyin: "tóu zī",
+                pos: "动词/名词",
+                phrases: [
+                    "投资创业：投入资金创办事业",
+                    "风险投资：有风险的资金投入行为",
+                    "智力投资：在教育、学习上花钱"
+                ],
+                sentences: [
+                    "1. 他打算和朋友一起投资创业开餐厅。",
+                    "2. 这家科技公司获得了一笔风险投资。",
+                    "3. 父母在孩子的教育上要重视智力投资。"
+                ]
+            },
+            {
+                word: "培养",
+                pinyin: "péi yǎng",
+                pos: "动词",
+                phrases: [
+                    "培养兴趣：让兴趣慢慢发展起来",
+                    "培养人才：培育有能力的专业人员",
+                    "培养习惯：养成固定的行为模式"
+                ],
+                sentences: [
+                    "1. 家长要从小培养孩子的阅读兴趣。",
+                    "2. 这所大学为社会培养了很多优秀人才。",
+                    "3. 坚持每天练字，能培养良好的书写习惯。"
+                ]
+            },
+            {
+                word: "意识",
+                pinyin: "yì shí",
+                pos: "名词/动词",
+                phrases: [
+                    "安全意识：对安全的重视和认知",
+                    "增强意识：提高对某件事的认知程度",
+                    "环保意识：关注环境保护的观念"
+                ],
+                sentences: [
+                    "1. 工厂要定期培训，提高员工的安全意识。",
+                    "2. 我们要增强节约资源的意识。",
+                    "3. 现在越来越多的人有了环保意识。"
+                ]
+            },
+            {
+                word: "出人头地",
+                pinyin: "chū rén tóu dì",
+                pos: "动宾短语",
+                phrases: [
+                    "想出人头地：心里想要取得成功",
+                    "盼出人头地：盼望自己能有出息",
+                    "力争出人头地：努力争取获得成就"
+                ],
+                sentences: [
+                    "1. 他从小就想出人头地，改变家庭条件。",
+                    "2. 父母都盼着孩子能出人头地，过上好日子。",
+                    "3. 他在工作中刻苦钻研，力争出人头地。"
+                ]
+            },
+            {
+                word: "期望",
+                pinyin: "qī wàng",
+                pos: "名词/动词",
+                phrases: [
+                    "寄予期望：对某人寄托希望",
+                    "不负期望：不辜负别人的希望",
+                    "满怀期望：心里充满期待"
+                ],
+                sentences: [
+                    "1. 母校对即将毕业的学子寄予期望。",
+                    "2. 他刻苦训练，在比赛中不负期望获得冠军。",
+                    "3. 大家满怀期望地等待着比赛结果。"
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("card");
+        const cardContainer = document.getElementById("cardContainer");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const wordText = document.getElementById("wordText");
+        const cardBack = document.getElementById("cardBack");
+
+        function loadWord(index) {
+            const data = wordData[index];
+            wordText.textContent = data.word;
+            let backContent = `
+                <div class="back-title">${data.word} ${data.pinyin}</div>
+                <div class="back-section"><strong>词性：</strong>${data.pos}</div>
+                <div class="back-section"><strong>短语及解释：</strong><br>${data.phrases.join("<br>")}</div>
+                <div class="back-section"><strong>例句：</strong><br>${data.sentences.join("<br>")}</div>
+            `;
+            cardBack.innerHTML = backContent;
+            card.classList.remove("flipped");
+        }
+
+        cardContainer.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + wordData.length) % wordData.length;
+            loadWord(currentIndex);
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % wordData.length;
+            loadWord(currentIndex);
+        });
+
+        loadWord(0);
+    </script>
+</body>
+</html>

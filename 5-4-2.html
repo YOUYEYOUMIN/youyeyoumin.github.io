@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK生词闪卡（着迷-诱惑）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .card-container {
+            perspective: 1000px;
+            width: 350px;
+            height: 450px;
+            margin: 30px 0;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 15px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+        .card-front {
+            background-color: #ffffff;
+        }
+        .word-front {
+            color: #0066cc;
+            font-size: 65px;
+            font-weight: bold;
+        }
+        .card-back {
+            background-color: #f9f9f9;
+            transform: rotateY(180deg);
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: left;
+            overflow-y: auto;
+        }
+        .back-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .back-content > div {
+            margin-bottom: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            background-color: #0066cc;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0052a3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="flashCard">
+            <!-- 卡片正面 -->
+            <div class="card-front">
+                <div class="word-front" id="wordFront">着迷</div>
+            </div>
+            <!-- 卡片背面 -->
+            <div class="card-back" id="cardBack">
+                <div class="back-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button id="prevBtn" disabled>上一页</button>
+        <button id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        // 生词数据
+        const wordData = [
+            {
+                word: "着迷",
+                pinyin: "zháomí",
+                pos: "动词",
+                phrases: "对游戏着迷（对游戏产生强烈爱好）；为音乐着迷（为音乐入迷）；着迷于绘画（入迷于绘画）",
+                sentences: "1. 弟弟对游戏着迷，每天都会玩一会儿。<br>2. 她为古典音乐着迷，经常去听音乐会。<br>3. 他着迷于绘画，一画就是一下午。"
+            },
+            {
+                word: "过关",
+                pinyin: "guòguān",
+                pos: "动词",
+                phrases: "考试过关（考试通过考验）；游戏过关（游戏通过关卡）；面试过关（面试通过考查）",
+                sentences: "1. 他认真复习，终于让这次数学考试过关了。<br>2. 妹妹对着游戏关卡反复尝试，玩了半个多小时，才终于顺利过关。<br>3. 她准备充分，顺利让面试过关了。"
+            },
+            {
+                word: "升级",
+                pinyin: "shēngjí",
+                pos: "动词",
+                phrases: "软件升级（软件升到更高等级）；游戏升级（游戏角色升等级）；职位升级（职位升到更高等级）",
+                sentences: "1. 工程师正在给电脑的软件升级，提升使用体验。<br>2. 他打了两小时游戏，终于让角色升级了。<br>3. 她工作表现优秀，今年实现了职位升级。"
+            },
+            {
+                word: "沉闷",
+                pinyin: "chénmèn",
+                pos: "形容词",
+                phrases: "气氛沉闷（气氛沉重烦闷）；心情沉闷（心情不舒畅）；环境沉闷（环境让人觉得烦闷）",
+                sentences: "1. 会议室里没人说话，气氛沉闷极了。<br>2. 因为考试没考好，她这几天心情沉闷。<br>3. 这个房间没窗户，待久了会觉得环境沉闷。"
+            },
+            {
+                word: "发泄",
+                pinyin: "fāxiè",
+                pos: "动词",
+                phrases: "发泄情绪（释放内心不满）；发泄压力（释放心里的压力）；发泄怒火（释放心里的怒气）",
+                sentences: "1. 他心情不好时，会通过跑步发泄情绪。<br>2. 上班族可以通过运动来发泄工作的压力。<br>3. 他不该对着家人发泄怒火，这很伤人。"
+            },
+            {
+                word: "虚拟",
+                pinyin: "xūnǐ",
+                pos: "形容词",
+                phrases: "虚拟世界（凭想象编造的世界）；虚拟人物（虚构的人物）；虚拟场景（虚构的场景）",
+                sentences: "1. 很多年轻人喜欢在虚拟世界里交朋友。<br>2. 这个动画里的虚拟人物形象很可爱。<br>3. 游戏里的虚拟场景做得十分逼真。"
+            },
+            {
+                word: "尽情",
+                pinyin: "jìnqíng",
+                pos: "副词",
+                phrases: "尽情歌唱（不受拘束地唱歌）；尽情玩耍（不受拘束地玩）；尽情欢笑（不受拘束地笑）",
+                sentences: "1. 演唱会现场，观众们跟着歌手尽情歌唱。<br>2. 孩子们在游乐园里尽情玩耍，特别开心。<br>3. 朋友相聚时，大家尽情欢笑，忘掉了烦恼。"
+            },
+            {
+                word: "约束",
+                pinyin: "yuēshù",
+                pos: "动词",
+                phrases: "约束自己（限制自己的行为）；遵守约束（遵守限制规则）；解除约束（去掉限制）",
+                sentences: "1. 我们要学会约束自己，不做违反规则的事。<br>2. 在公共场合，每个人都要遵守约束，文明行事。<br>3. 比赛结束后，运动员们终于可以解除约束，放松下来。"
+            },
+            {
+                word: "迷恋",
+                pinyin: "míliàn",
+                pos: "动词",
+                phrases: "迷恋追星（过度爱好追星）；迷恋追剧（过度爱好追电视剧）；迷恋网购（过度爱好网购）",
+                sentences: "1. 老师提醒我们，不要过分迷恋追星，应该把更多精力投入到学习和生活中。<br>2. 她最近迷恋追剧，每天都看到很晚。<br>3. 有些老人迷恋网购，买了很多用不上的东西。"
+            },
+            {
+                word: "体制",
+                pinyin: "tǐzhì",
+                pos: "名词",
+                phrases: "教育体制（教育的组织制度）；体制改革（改革组织制度）；适应体制（适应组织制度）",
+                sentences: "1. 我国的教育体制在不断完善，更注重素质培养。<br>2. 公司进行了体制改革，提高了工作效率。<br>3. 刚入职的新人需要时间适应公司的体制。"
+            },
+            {
+                word: "前提",
+                pinyin: "qiántí",
+                pos: "名词",
+                phrases: "前提条件（事物发展的先决条件）；满足前提（满足先决条件）；明确前提（明确先决条件）",
+                sentences: "1. 努力学习是取得好成绩的前提条件。<br>2. 只有满足这个前提，我们才能继续推进项目。<br>3. 合作前，双方要先明确前提，避免后续矛盾。"
+            },
+            {
+                word: "参与",
+                pinyin: "cānyù",
+                pos: "动词",
+                phrases: "参与活动（参加活动）；参与讨论（参加讨论）；参与比赛（参加比赛）",
+                sentences: "1. 学校组织了志愿活动，很多同学都积极参与活动。<br>2. 开会时，大家可以大胆参与讨论，提出想法。<br>3. 他报名参与比赛，想锻炼一下自己。"
+            },
+            {
+                word: "诱惑",
+                pinyin: "yòuhuò",
+                pos: "动词",
+                phrases: "抵挡诱惑（抵抗吸引）；面对诱惑（面对吸引）；充满诱惑（满是吸引）",
+                sentences: "1. 我们要学会抵挡诱惑，不沉迷网络游戏。<br>2. 生活中有很多陷阱，我们要理智面对诱惑。<br>3. 海边小城的沙滩和日落特别美，这样的风景对游客来说充满诱惑。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById("flashCard");
+        const wordFront = document.getElementById("wordFront");
+        const cardBack = document.getElementById("cardBack");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        // 渲染卡片内容
+        function renderCard() {
+            const data = wordData[currentIndex];
+            wordFront.textContent = data.word;
+            cardBack.innerHTML = `
+                <div class="back-title">${data.word}</div>
+                <div><strong>拼音：</strong>${data.pinyin}</div>
+                <div><strong>词性：</strong>${data.pos}</div>
+                <div><strong>常用短语及解释：</strong>${data.phrases}</div>
+                <div><strong>例句：</strong>${data.sentences}</div>
+            `;
+            card.classList.remove("flipped");
+            // 更新按钮状态
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === wordData.length - 1;
+        }
+
+        // 卡片翻转事件
+        card.addEventListener("click", () => {
+            card.classList.toggle("flipped");
+        });
+
+        // 翻页按钮事件
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < wordData.length - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        });
+
+        // 初始化
+        renderCard();
+    </script>
+</body>
+</html>

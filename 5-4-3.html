@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK4-5 生词闪卡（带上下页）</title>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+  body {
+    background: #f2f7ff;
+    padding: 20px;
+  }
+  .container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .flashcard {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    padding: 40px 20px;
+    cursor: pointer;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .front {
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+  }
+  .back {
+    font-size: 24px;
+    line-height: 1.8;
+    display: none;
+  }
+  .pinyin {
+    font-size: 28px;
+    color: #0066cc;
+    margin: 10px 0;
+  }
+  .label {
+    font-weight: bold;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 10px;
+  }
+  button {
+    flex: 1;
+    padding: 16px;
+    font-size: 20px;
+    border: none;
+    border-radius: 12px;
+    background: #0066cc;
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  .page-info {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 18px;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>HSK4–5 生词闪卡</h1>
+
+  <div class="flashcard" id="card" onclick="flip()">
+    <div id="front" class="front"></div>
+    <div id="back" class="back"></div>
+  </div>
+
+  <div class="nav">
+    <button id="prev" onclick="prevCard()">上一页</button>
+    <button id="next" onclick="nextCard()">下一页</button>
+  </div>
+
+  <div class="page-info" id="pageInfo"></div>
+</div>
+
+<script>
+  // 单词数据
+  const words = [
+    {
+      word: "上瘾",
+      pinyin: "shàng yǐn",
+      explain: "特别喜欢，停不下来",
+      phrase: "玩手机上瘾、抽烟上瘾、喝酒上瘾",
+      example: "他玩手机太久，很快就上瘾了。"
+    },
+    {
+      word: "赌博",
+      pinyin: "dǔ bó",
+      explain: "用钱赌输赢，很危险",
+      phrase: "禁止赌博、远离赌博、喜欢赌博",
+      example: "我们一定要远离赌博。"
+    },
+    {
+      word: "吸毒",
+      pinyin: "xī dú",
+      explain: "吸食毒品，违法",
+      phrase: "拒绝吸毒、吸毒违法、吸毒害人",
+      example: "吸毒害人害己，是违法的。"
+    },
+    {
+      word: "沉迷",
+      pinyin: "chén mí",
+      explain: "深深地陷入，无法专心",
+      phrase: "沉迷游戏、沉迷手机、沉迷网络",
+      example: "他沉迷游戏，不认真学习。"
+    },
+    {
+      word: "自拔",
+      pinyin: "zì bá",
+      explain: "自己从坏情况里走出来",
+      phrase: "无法自拔、难以自拔、不能自拔",
+      example: "他一玩游戏就无法自拔。"
+    },
+    {
+      word: "现状",
+      pinyin: "xiàn zhuàng",
+      explain: "现在的情况",
+      phrase: "改变现状、面对现状、现状不好",
+      example: "我们要努力改变现状。"
+    },
+    {
+      word: "反常",
+      pinyin: "fǎn cháng",
+      explain: "和平时不一样，不正常",
+      phrase: "行为反常、态度反常、样子反常",
+      example: "他今天不说话，有点反常。"
+    },
+    {
+      word: "烦躁",
+      pinyin: "fán zào",
+      explain: "心里又烦又急",
+      phrase: "心情烦躁、特别烦躁、感觉烦躁",
+      example: "没睡好，我今天很烦躁。"
+    }
+  ];
+
+  let current = 0;
+  let isFront = true;
+
+  // 显示当前卡片
+  function showCard() {
+    const w = words[current];
+    document.getElementById("front").innerText = w.word;
+    document.getElementById("back").innerHTML = `
+      <div class="pinyin">${w.pinyin}</div>
+      <div><span class="label">解释：</span>${w.explain}</div>
+      <div><span class="label">常用短语：</span>${w.phrase}</div>
+      <div><span class="label">例句：</span>${w.example}</div>
+    `;
+    // 翻回正面
+    document.getElementById("front").style.display = "block";
+    document.getElementById("back").style.display = "none";
+    isFront = true;
+    updateBtn();
+    updatePageInfo();
+  }
+
+  // 翻面
+  function flip() {
+    if (isFront) {
+      document.getElementById("front").style.display = "none";
+      document.getElementById("back").style.display = "block";
+    } else {
+      document.getElementById("front").style.display = "block";
+      document.getElementById("back").style.display = "none";
+    }
+    isFront = !isFront;
+  }
+
+  // 上一页
+  function prevCard() {
+    if (current > 0) {
+      current--;
+      showCard();
+    }
+  }
+
+  // 下一页
+  function nextCard() {
+    if (current < words.length - 1) {
+      current++;
+      showCard();
+    }
+  }
+
+  // 更新按钮状态
+  function updateBtn() {
+    document.getElementById("prev").disabled = current === 0;
+    document.getElementById("next").disabled = current === words.length - 1;
+  }
+
+  // 更新页码
+  function updatePageInfo() {
+    document.getElementById("pageInfo").innerText =
+      `第 ${current + 1} / ${words.length} 个词`;
+  }
+
+  // 初始化
+  showCard();
+</script>
+</body>
+</html>

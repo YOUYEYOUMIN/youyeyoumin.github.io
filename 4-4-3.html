@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK4-5 生词闪卡（上下页版）</title>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+  body {
+    background: #f7f9fc;
+    padding: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+  }
+  .flashcard {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 40px 25px;
+    cursor: pointer;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .front {
+    font-size: 46px;
+    font-weight: bold;
+    text-align: center;
+    color: #222;
+    display: block;
+  }
+  .back {
+    font-size: 24px;
+    line-height: 1.8;
+    color: #333;
+    display: none;
+  }
+  .pinyin {
+    font-size: 30px;
+    color: #0066cc;
+    margin: 10px 0;
+  }
+  .title {
+    font-weight: bold;
+    margin-top: 12px;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  button {
+    flex: 1;
+    padding: 18px;
+    font-size: 22px;
+    border: none;
+    border-radius: 14px;
+    background: #0066cc;
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  .page {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 19px;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>HSK4–5 生词闪卡</h1>
+
+  <div class="flashcard" onclick="flip()">
+    <div id="front" class="front"></div>
+    <div id="back" class="back"></div>
+  </div>
+
+  <div class="nav">
+    <button id="prev" onclick="prevCard()">上一页</button>
+    <button id="next" onclick="nextCard()">下一页</button>
+  </div>
+
+  <div class="page" id="pageInfo"></div>
+</div>
+
+<script>
+  // 单词数据
+  const words = [
+    {
+      word: "造成",
+      pinyin: "zào chéng",
+      explain: "引起，导致",
+      phrase: "造成麻烦、造成损失、造成影响",
+      example: "粗心大意会造成严重的错误。"
+    },
+    {
+      word: "有色眼镜",
+      pinyin: "yǒu sè yǎn jìng",
+      explain: "对人有偏见",
+      phrase: "戴有色眼镜、摘掉有色眼镜、带着有色眼镜",
+      example: "我们不应该戴有色眼镜看待别人。"
+    },
+    {
+      word: "悲哀",
+      pinyin: "bēi āi",
+      explain: "伤心，难过",
+      phrase: "感到悲哀、十分悲哀、内心悲哀",
+      example: "看到这样的事，我觉得很悲哀。"
+    },
+    {
+      word: "完善",
+      pinyin: "wán shàn",
+      explain: "使更好、更完整",
+      phrase: "完善制度、完善体系、完善计划",
+      example: "我们要不断完善学习方法。"
+    },
+    {
+      word: "保障",
+      pinyin: "bǎo zhàng",
+      explain: "保护，保证",
+      phrase: "保障安全、保障生活、保障权利",
+      example: "国家努力保障人民的幸福生活。"
+    },
+    {
+      word: "体系",
+      pinyin: "tǐ xì",
+      explain: "系统，整体",
+      phrase: "教育体系、保障体系、管理体系",
+      example: "学校的管理体系越来越完善。"
+    },
+    {
+      word: "指责",
+      pinyin: "zhǐ zé",
+      explain: "批评，责备",
+      phrase: "受到指责、互相指责、指责别人",
+      example: "不了解情况就不要随便指责他人。"
+    },
+    {
+      word: "一无所有",
+      pinyin: "yī wú suǒ yǒu",
+      explain: "什么都没有",
+      phrase: "变得一无所有、几乎一无所有、一无所有地生活",
+      example: "他失败后，几乎一无所有。"
+    },
+    {
+      word: "暂时",
+      pinyin: "zàn shí",
+      explain: "短时间内",
+      phrase: "暂时离开、暂时解决、暂时停止",
+      example: "我暂时不能答应你的要求。"
+    },
+    {
+      word: "忽视",
+      pinyin: "hū shì",
+      explain: "不注意，不理",
+      phrase: "忽视问题、忽视安全、忽视困难",
+      example: "我们不能忽视身边的小问题。"
+    }
+  ];
+
+  let current = 0;
+  let isFront = true;
+
+  // 显示当前卡片
+  function showCard() {
+    const w = words[current];
+    document.getElementById("front").innerText = w.word;
+    document.getElementById("back").innerHTML = `
+      <div class="pinyin">${w.pinyin}</div>
+      <div class="title">解释：</div>${w.explain}
+      <div class="title">常用短语：</div>${w.phrase}
+      <div class="title">例句：</div>${w.example}
+    `;
+    // 默认显示正面
+    document.getElementById("front").style.display = "block";
+    document.getElementById("back").style.display = "none";
+    isFront = true;
+    updateBtn();
+    updatePage();
+  }
+
+  // 翻面
+  function flip() {
+    if (isFront) {
+      document.getElementById("front").style.display = "none";
+      document.getElementById("back").style.display = "block";
+    } else {
+      document.getElementById("front").style.display = "block";
+      document.getElementById("back").style.display = "none";
+    }
+    isFront = !isFront;
+  }
+
+  // 上一页
+  function prevCard() {
+    if (current > 0) {
+      current--;
+      showCard();
+    }
+  }
+
+  // 下一页
+  function nextCard() {
+    if (current < words.length - 1) {
+      current++;
+      showCard();
+    }
+  }
+
+  // 更新按钮
+  function updateBtn() {
+    document.getElementById("prev").disabled = current === 0;
+    document.getElementById("next").disabled = current === words.length - 1;
+  }
+
+  // 更新页码
+  function updatePage() {
+    document.getElementById("pageInfo").innerText =
+      `第 ${current + 1} / ${words.length} 个词`;
+  }
+
+  // 初始化
+  showCard();
+</script>
+
+</body>
+</html>

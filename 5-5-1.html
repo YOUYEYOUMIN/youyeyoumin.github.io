@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f8ff;
+            padding: 20px;
+        }
+        .flashcard-container {
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 20px;
+            text-align: center;
+        }
+        .front {
+            background-color: #ffffff;
+            font-size: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .back {
+            background-color: #ffffff;
+            color: #2c3e50;
+            transform: rotateY(180deg);
+            font-size: 18px;
+            line-height: 2;
+            text-align: left;
+            padding: 30px 25px;
+            justify-content: flex-start;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2980b9;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1a5276;
+        }
+        .progress {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face front" id="front"></div>
+            <div class="card-face back" id="back"></div>
+        </div>
+    </div>
+    <div class="controls">
+        <button id="prev">上一页</button>
+        <button id="next">下一页</button>
+    </div>
+    <div class="progress" id="progress"></div>
+    <script>
+        const words = [
+            { word: "变迁", pinyin: "biànqiān", pos: "动", syn: "变化、变动", phrases: "时代变迁、社会变迁、历史变迁", example: "随着时代的变迁，人们的生活方式发生了很大改变。" },
+            { word: "无异", pinyin: "wúyì", pos: "动", syn: "等同、相同", phrases: "无异于、与…无异、毫无异致", example: "这种做法无异于掩耳盗铃，解决不了根本问题。" },
+            { word: "衡量", pinyin: "héngliáng", pos: "动", syn: "考量、权衡", phrases: "衡量利弊、衡量得失、衡量标准", example: "我们要全面衡量这件事的影响，再做决定。" },
+            { word: "替代", pinyin: "tìdài", pos: "动", syn: "代替、替换", phrases: "替代方案、不可替代、相互替代", example: "新能源正在逐步替代传统的化石能源。" },
+            { word: "拥堵", pinyin: "yōngdǔ", pos: "动", syn: "堵塞、拥挤", phrases: "交通拥堵、道路拥堵、拥堵路段", example: "早高峰时，这条主干道常常拥堵不堪。" },
+            { word: "加剧", pinyin: "jiājù", pos: "动", syn: "加重、加深", phrases: "加剧矛盾、加剧危机、加剧污染", example: "极端天气加剧了当地的粮食短缺问题。" },
+            { word: "恶化", pinyin: "èhuà", pos: "动", syn: "变坏、衰退", phrases: "病情恶化、环境恶化、局势恶化", example: "如果不及时治理，空气质量会继续恶化。" },
+            { word: "紧缺", pinyin: "jǐnquē", pos: "形", syn: "短缺、匮乏", phrases: "资源紧缺、人才紧缺、物资紧缺", example: "夏季用电高峰时，部分地区出现电力紧缺。" },
+            { word: "推崇", pinyin: "tuīchóng", pos: "动", syn: "尊崇、重视", phrases: "备受推崇、推崇备至、极力推崇", example: "中国传统文化中的“和”思想备受世界推崇。" }
+        ];
+        let currentIndex = 0;
+        const flashcard = document.getElementById("flashcard");
+        const front = document.getElementById("front");
+        const back = document.getElementById("back");
+        const progress = document.getElementById("progress");
+
+        function updateCard() {
+            const current = words[currentIndex];
+            front.textContent = current.word;
+            // 这里已经去掉背面的生词，只保留拼音开始
+            back.innerHTML = `
+                拼音：${current.pinyin}<br>
+                词性：${current.pos}<br>
+                同义词：${current.syn}<br>
+                常用短语：${current.phrases}<br>
+                例句：${current.example}
+            `;
+            progress.textContent = `第 ${currentIndex + 1} / ${words.length} 张`;
+            flashcard.classList.remove("flipped");
+        }
+
+        document.getElementById("next").addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % words.length;
+            updateCard();
+        });
+
+        document.getElementById("prev").addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            updateCard();
+        });
+
+        flashcard.addEventListener("click", () => {
+            flashcard.classList.toggle("flipped");
+        });
+
+        updateCard();
+    </script>
+</body>
+</html>

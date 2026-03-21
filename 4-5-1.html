@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK5生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .flashcard-container {
+            width: 95%;
+            max-width: 700px;
+            height: 500px;
+            perspective: 1200px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            border: 2px solid #e8e8e8;
+            border-radius: 16px;
+            background-color: #ffffff;
+            padding: 40px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .card-front {
+            align-items: center;
+            font-size: 56px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            font-size: 22px;
+            color: #4a5568;
+            line-height: 2;
+            word-wrap: break-word;
+            overflow-y: auto;
+        }
+        .card-back strong {
+            color: #2b6cb0;
+            font-weight: 600;
+        }
+        .button-group {
+            display: flex;
+            gap: 24px;
+        }
+        button {
+            padding: 14px 32px;
+            font-size: 20px;
+            font-weight: 500;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2c5282;
+        }
+        button:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face card-front" id="front"></div>
+            <div class="card-face card-back" id="back"></div>
+        </div>
+    </div>
+    <div class="button-group">
+        <button id="prevBtn">上一页</button>
+        <button id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        const words = [
+            { word: "博物馆", pinyin: "bówùguǎn", pos: "名词", synonyms: "展览馆、陈列馆", phrases: "国家博物馆、参观博物馆、博物馆展览", sentence: "周末我和同学一起去国家博物馆参观古代文物。" },
+            { word: "报刊亭", pinyin: "bàokāntíng", pos: "名词", synonyms: "书报摊、报亭", phrases: "街角报刊亭、买报纸的报刊亭、社区报刊亭", sentence: "我每天早上都会在楼下的报刊亭买一份早报。" },
+            { word: "评论员", pinyin: "pínglùnyuán", pos: "名词", synonyms: "评论者、解说员", phrases: "体育评论员、时事评论员、特约评论员", sentence: "这位体育评论员的解说风格幽默又专业。" },
+            { word: "乘客", pinyin: "chéngkè", pos: "名词", synonyms: "旅客、搭客", phrases: "地铁乘客、飞机乘客、乘客须知", sentence: "公交车上的乘客们都在安静地看手机。" },
+            { word: "侃", pinyin: "kǎn", pos: "动词", synonyms: "聊、闲聊", phrases: "侃大山、侃天儿、侃几句", sentence: "他总爱和朋友们在茶馆里侃大山。" },
+            { word: "褪色", pinyin: "tuìsè", pos: "动词", synonyms: "掉色、变淡", phrases: "衣服褪色、颜色褪色、逐渐褪色", sentence: "这件蓝色的衬衫洗了几次就开始褪色了。" },
+            { word: "忙碌", pinyin: "mánglù", pos: "形容词", synonyms: "繁忙、劳碌", phrases: "忙碌的生活、忙碌的工作、忙碌的一天", sentence: "毕业季的同学们都在为找工作而忙碌。" },
+            { word: "心思", pinyin: "xīnsi", pos: "名词", synonyms: "心绪、心神", phrases: "没心思、有心思、心思细腻", sentence: "我现在没心思看电影，只想早点休息。" },
+            { word: "押金", pinyin: "yājīn", pos: "名词", synonyms: "保证金、押金", phrases: "交押金、退还押金、租房押金", sentence: "租这套公寓需要先支付两个月的房租作为押金。" },
+            { word: "保证金", pinyin: "bǎozhèngjīn", pos: "名词", synonyms: "担保金、押金", phrases: "缴纳保证金、保证金退还、合同保证金", sentence: "签订这份合作协议时，我们需要支付10%的保证金。" },
+            { word: "罚单", pinyin: "fádān", pos: "名词", synonyms: "罚款单、违章单", phrases: "收到罚单、交通罚单、缴纳罚单", sentence: "他因为超速行驶被交警开了一张罚单。" },
+            { word: "哎哟", pinyin: "āiyō", pos: "叹词", synonyms: "哎呀、哎呦", phrases: "哎哟喂、哎哟一声、哎哟好疼", sentence: "哎哟，你走路怎么这么不小心，差点撞到我！" }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById("flashcard");
+        const front = document.getElementById("front");
+        const back = document.getElementById("back");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        function renderCard() {
+            const currentWord = words[currentIndex];
+            front.textContent = currentWord.word;
+            back.innerHTML = `
+                <strong>拼音：</strong>${currentWord.pinyin}<br>
+                <strong>词性：</strong>${currentWord.pos}<br>
+                <strong>同义词：</strong>${currentWord.synonyms}<br>
+                <strong>常用短语：</strong>${currentWord.phrases}<br>
+                <strong>例句：</strong>${currentWord.sentence}
+            `;
+            flashcard.classList.remove("flipped");
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === words.length - 1;
+        }
+
+        flashcard.addEventListener("click", () => {
+            flashcard.classList.toggle("flipped");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < words.length - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        });
+
+        renderCard();
+    </script>
+</body>
+</html>

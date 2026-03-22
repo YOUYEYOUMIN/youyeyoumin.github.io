@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK 5 生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .flashcard-container {
+            width: 90%;
+            max-width: 600px;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+            overflow-y: auto;
+        }
+        .front {
+            background-color: #ffffff;
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .back {
+            background-color: #e8f4f8;
+            transform: rotateY(180deg);
+            font-size: 18px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .back p {
+            margin: 8px 0;
+            text-align: left;
+            width: 100%;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face front" id="front"></div>
+            <div class="card-face back" id="back"></div>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn" disabled>上一页</button>
+        <button id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        const words = [
+            {
+                word: "征收",
+                pinyin: "zhēngshōu",
+                pos: "（动）",
+                synonyms: "收取、征用",
+                phrases: "征收税款、征收土地、征收费用",
+                example: "政府将依法向企业征收环保税。"
+            },
+            {
+                word: "借鉴",
+                pinyin: "jièjiàn",
+                pos: "（动）",
+                synonyms: "参考、汲取",
+                phrases: "借鉴经验、借鉴方法、借鉴教训",
+                example: "我们可以借鉴国外的先进技术来发展自己。"
+            },
+            {
+                word: "门庭若市",
+                pinyin: "méntíng ruò shì",
+                pos: "（成）",
+                synonyms: "宾客盈门、车水马龙",
+                phrases: "门庭若市的景象、变得门庭若市、门庭若市的店铺",
+                example: "这家网红店开业后，每天都门庭若市。"
+            },
+            {
+                word: "就餐",
+                pinyin: "jiùcān",
+                pos: "（动）",
+                synonyms: "用餐、吃饭",
+                phrases: "就餐环境、自助就餐、集体就餐",
+                example: "请大家在指定区域有序就餐。"
+            },
+            {
+                word: "缓解",
+                pinyin: "huǎnjiě",
+                pos: "（动）",
+                synonyms: "减轻、缓和",
+                phrases: "缓解压力、缓解疼痛、缓解矛盾",
+                example: "听音乐能有效缓解工作带来的疲劳。"
+            },
+            {
+                word: "分流",
+                pinyin: "fēnliú",
+                pos: "（动）",
+                synonyms: "分散、疏导",
+                phrases: "交通分流、人员分流、资源分流",
+                example: "高峰期地铁会采取分流措施，避免拥挤。"
+            },
+            {
+                word: "拓宽",
+                pinyin: "tuòkuān",
+                pos: "（动）",
+                synonyms: "拓展、加宽",
+                phrases: "拓宽道路、拓宽视野、拓宽渠道",
+                example: "政府计划拓宽这条主干道以缓解拥堵。"
+            },
+            {
+                word: "快捷",
+                pinyin: "kuàijié",
+                pos: "（形）",
+                synonyms: "迅速、便捷",
+                phrases: "快捷方式、快捷服务、快捷交通",
+                example: "现在的快递服务非常快捷方便。"
+            },
+            {
+                word: "轻轨",
+                pinyin: "qīngguǐ",
+                pos: "（名）",
+                synonyms: "城铁、轻铁",
+                phrases: "轻轨列车、轻轨线路、轻轨站点",
+                example: "我每天坐轻轨去上班，既准时又环保。"
+            },
+            {
+                word: "蜘蛛",
+                pinyin: "zhīzhū",
+                pos: "（名）",
+                synonyms: "—",
+                phrases: "蜘蛛结网、毒蜘蛛、小蜘蛛",
+                example: "墙角的蜘蛛正在结网捕捉飞虫。"
+            },
+            {
+                word: "延伸",
+                pinyin: "yánshēn",
+                pos: "（动）",
+                synonyms: "延长、延展",
+                phrases: "延伸线路、延伸范围、延伸意义",
+                example: "这条铁路将延伸到边境城市。"
+            },
+            {
+                word: "枢纽",
+                pinyin: "shūniǔ",
+                pos: "（名）",
+                synonyms: "中心、关键",
+                phrases: "交通枢纽、物流枢纽、核心枢纽",
+                example: "这里是连接南北的重要交通枢纽。"
+            },
+            {
+                word: "高昂",
+                pinyin: "gāo'áng",
+                pos: "（形）",
+                synonyms: "昂贵、高涨",
+                phrases: "价格高昂、情绪高昂、斗志高昂",
+                example: "由于原材料短缺，这类商品的价格变得高昂。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById('flashcard');
+        const front = document.getElementById('front');
+        const back = document.getElementById('back');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function renderCard() {
+            const wordData = words[currentIndex];
+            front.textContent = wordData.word;
+            back.innerHTML = `
+                <p><strong>拼音：</strong>${wordData.pinyin}</p>
+                <p><strong>词性：</strong>${wordData.pos}</p>
+                <p><strong>同义词：</strong>${wordData.synonyms}</p>
+                <p><strong>常用短语：</strong>${wordData.phrases}</p>
+                <p><strong>例句：</strong>${wordData.example}</p>
+            `;
+            flashcard.classList.remove('flipped');
+            updateButtons();
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === words.length - 1;
+        }
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < words.length - 1) {
+                currentIndex++;
+                renderCard();
+            }
+        });
+
+        renderCard();
+    </script>
+</body>
+</html>

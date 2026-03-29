@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK5 生词闪卡</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Microsoft YaHei",sans-serif;
+}
+body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    background-color:#f5f5f5;
+    padding:20px;
+}
+.flashcard-container{
+    width:100%;
+    max-width:600px;
+    height:420px;
+    perspective:1000px;
+    margin-bottom:30px;
+}
+.flashcard{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform 0.6s;
+    cursor:pointer;
+}
+.flashcard.flipped{
+    transform:rotateY(180deg);
+}
+.card-face{
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    background:#fff;
+}
+.front{
+    font-size:48px;
+    font-weight:bold;
+    color:#2c3e50;
+}
+.back{
+    transform:rotateY(180deg);
+    color:#2c3e50;
+    text-align:left;
+    line-height:1.8;
+}
+.back h3{
+    font-size:26px;
+    margin-bottom:12px;
+}
+.back p{
+    font-size:18px;
+    margin:8px 0;
+}
+.controls{
+    display:flex;
+    gap:20px;
+}
+button{
+    padding:12px 28px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    background-color:#2ecc71;
+    color:white;
+    cursor:pointer;
+}
+button:disabled{
+    background-color:#bdc3c7;
+    cursor:not-allowed;
+}
+</style>
+</head>
+<body>
+
+<div class="flashcard-container">
+    <div class="flashcard" id="flashcard">
+        <div class="card-face front" id="front"></div>
+        <div class="card-face back" id="back"></div>
+    </div>
+</div>
+
+<div class="controls">
+    <button id="prevBtn">上一页</button>
+    <button id="nextBtn">下一页</button>
+</div>
+
+<script>
+const flashcards = [
+    {
+        word: "现场",
+        pinyin: "xiànchǎng",
+        pos: "名词",
+        synonyms: "当场",
+        phrases: "事故现场、现场表演、现场采访",
+        example: "记者们第一时间赶到了事故现场。"
+    },
+    {
+        word: "饮料",
+        pinyin: "yǐnliào",
+        pos: "名词",
+        synonyms: "饮品",
+        phrases: "碳酸饮料、健康饮料、冰镇饮料",
+        example: "夏天我喜欢喝冰镇的饮料。"
+    },
+    {
+        word: "摇滚",
+        pinyin: "yáogǔn",
+        pos: "名词",
+        synonyms: "",
+        phrases: "摇滚乐队、摇滚演唱会、摇滚风格",
+        example: "他特别喜欢听摇滚音乐。"
+    },
+    {
+        word: "出场",
+        pinyin: "chūchǎng",
+        pos: "动词",
+        synonyms: "登场",
+        phrases: "依次出场、精彩出场、首次出场",
+        example: "这位明星一出场，观众就欢呼起来。"
+    },
+    {
+        word: "打鼓",
+        pinyin: "dǎgǔ",
+        pos: "动词",
+        synonyms: "敲鼓",
+        phrases: "心里打鼓、打鼓助威、打鼓伴奏",
+        example: "第一次上台演讲，我心里直打鼓。"
+    },
+    {
+        word: "车道",
+        pinyin: "chēdào",
+        pos: "名词",
+        synonyms: "行车道",
+        phrases: "快车道、慢车道、公交车道",
+        example: "请不要在应急车道上停车。"
+    },
+    {
+        word: "并线",
+        pinyin: "bìngxiàn",
+        pos: "动词",
+        synonyms: "变道",
+        phrases: "安全并线、提前并线、缓慢并线",
+        example: "开车并线时一定要打转向灯。"
+    },
+    {
+        word: "特殊",
+        pinyin: "tèshū",
+        pos: "形容词",
+        synonyms: "特别",
+        phrases: "特殊情况、特殊待遇、特殊任务",
+        example: "因为有特殊原因，他今天请假了。"
+    }
+];
+
+let currentIndex = 0;
+const flashcard = document.getElementById("flashcard");
+const front = document.getElementById("front");
+const back = document.getElementById("back");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function renderCard() {
+    const card = flashcards[currentIndex];
+    front.textContent = card.word;
+    back.innerHTML = `
+        <h3>${card.word} (${card.pinyin})</h3>
+        <p><strong>词性：</strong>${card.pos}</p>
+        <p><strong>同义词：</strong>${card.synonyms || "无"}</p>
+        <p><strong>常用短语：</strong>${card.phrases}</p>
+        <p><strong>例句：</strong>${card.example}</p>
+    `;
+    flashcard.classList.remove("flipped");
+    updateButtons();
+}
+
+function updateButtons() {
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === flashcards.length - 1;
+}
+
+flashcard.addEventListener("click", () => {
+    flashcard.classList.toggle("flipped");
+});
+
+prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+    }
+});
+
+nextBtn.addEventListener("click", () => {
+    if (currentIndex < flashcards.length - 1) {
+        currentIndex++;
+        renderCard();
+    }
+});
+
+renderCard();
+</script>
+</body>
+</html>

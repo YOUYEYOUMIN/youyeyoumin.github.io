@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK 4-5级生词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .flashcard-container {
+            width: 90%;
+            max-width: 800px;
+            height: 500px;
+            perspective: 1000px;
+            position: relative;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+        .front-face {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .back-face {
+            transform: rotateY(180deg);
+            font-size: 20px;
+            color: #34495e;
+            text-align: left;
+            line-height: 1.8;
+        }
+        .back-face h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .back-face p {
+            margin: 8px 0;
+        }
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+        }
+        .btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face front-face" id="front">
+                <span id="word">应酬</span>
+            </div>
+            <div class="card-face back-face" id="back">
+                <h3 id="back-word">应酬 (yìngchou)</h3>
+                <p><strong>词性：</strong><span id="pos">动词</span></p>
+                <p><strong>同义词：</strong><span id="synonyms">交际、往来</span></p>
+                <p><strong>常用短语：</strong><span id="phrases">商务应酬、应酬场合、推掉应酬</span></p>
+                <p><strong>例句：</strong><span id="sentence">他最近因为工作应酬太多，总是很晚回家。</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="controls">
+        <button class="btn" id="prevBtn">上一页</button>
+        <button class="btn" id="nextBtn">下一页</button>
+    </div>
+
+    <script>
+        const words = [
+            {
+                word: "应酬",
+                pinyin: "yìngchou",
+                pos: "动词",
+                synonyms: "交际、往来",
+                phrases: "商务应酬、应酬场合、推掉应酬",
+                sentence: "他最近因为工作应酬太多，总是很晚回家。"
+            },
+            {
+                word: "应运而生",
+                pinyin: "yìng yùn ér shēng",
+                pos: "成语",
+                synonyms: "应时而生、顺势而生",
+                phrases: "应运而生的行业、应运而生的产品、应运而生的制度",
+                sentence: "随着电商的发展，物流行业应运而生。"
+            },
+            {
+                word: "规范",
+                pinyin: "guīfàn",
+                pos: "动词/形容词",
+                synonyms: "标准、规矩",
+                phrases: "规范行为、规范市场、行业规范",
+                sentence: "我们需要规范操作流程，避免出现错误。"
+            },
+            {
+                word: "受理",
+                pinyin: "shòulǐ",
+                pos: "动词",
+                synonyms: "接受、办理",
+                phrases: "受理申请、受理投诉、受理案件",
+                sentence: "这家银行从周一到周五都受理个人业务。"
+            },
+            {
+                word: "时不时",
+                pinyin: "shíbùshí",
+                pos: "副词",
+                synonyms: "时常、偶尔",
+                phrases: "时不时想起、时不时出现、时不时提醒",
+                sentence: "她时不时会给远方的父母打个电话。"
+            },
+            {
+                word: "帖子",
+                pinyin: "tiězi",
+                pos: "名词",
+                synonyms: "留言、帖子",
+                phrases: "发布帖子、删除帖子、热门帖子",
+                sentence: "他在论坛上发了一篇关于旅行的帖子。"
+            },
+            {
+                word: "公开",
+                pinyin: "gōngkāi",
+                pos: "形容词/动词",
+                synonyms: "公布、透明",
+                phrases: "公开信息、公开比赛、公开道歉",
+                sentence: "公司决定公开这次会议的全部内容。"
+            },
+            {
+                word: "税务",
+                pinyin: "shuìwù",
+                pos: "名词",
+                synonyms: "税收、赋税",
+                phrases: "税务部门、税务申报、税务咨询",
+                sentence: "他在税务所工作，负责处理企业报税。"
+            },
+            {
+                word: "纠纷",
+                pinyin: "jiūfēn",
+                pos: "名词",
+                synonyms: "争执、矛盾",
+                phrases: "民事纠纷、解决纠纷、邻里纠纷",
+                sentence: "两家公司因为合同问题产生了纠纷。"
+            },
+            {
+                word: "担保",
+                pinyin: "dānbǎo",
+                pos: "动词",
+                synonyms: "保证、担保",
+                phrases: "提供担保、担保贷款、担保责任",
+                sentence: "我可以担保他一定会按时完成这项任务。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById("flashcard");
+        const wordEl = document.getElementById("word");
+        const backWordEl = document.getElementById("back-word");
+        const posEl = document.getElementById("pos");
+        const synonymsEl = document.getElementById("synonyms");
+        const phrasesEl = document.getElementById("phrases");
+        const sentenceEl = document.getElementById("sentence");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        function updateCard() {
+            const currentWord = words[currentIndex];
+            wordEl.textContent = currentWord.word;
+            backWordEl.textContent = `${currentWord.word} (${currentWord.pinyin})`;
+            posEl.textContent = currentWord.pos;
+            synonymsEl.textContent = currentWord.synonyms;
+            phrasesEl.textContent = currentWord.phrases;
+            sentenceEl.textContent = currentWord.sentence;
+            flashcard.classList.remove("flipped");
+        }
+
+        flashcard.addEventListener("click", () => {
+            flashcard.classList.toggle("flipped");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            updateCard();
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % words.length;
+            updateCard();
+        });
+
+        updateCard();
+    </script>
+</body>
+</html>

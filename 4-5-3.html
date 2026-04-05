@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK4-5生词闪卡</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Microsoft YaHei",sans-serif;
+}
+body{
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:20px;
+}
+.flashcard-container{
+    width:90%;
+    max-width:750px;
+    height:550px;
+    position:relative;
+    perspective:1200px;
+    margin-bottom:30px;
+}
+.flashcard{
+    width:100%;
+    height:100%;
+    position:absolute;
+    transform-style:preserve-3d;
+    transition:transform 0.6s ease;
+    cursor:pointer;
+}
+.flashcard.flipped{
+    transform:rotateY(180deg);
+}
+.card-face{
+    width:100%;
+    height:100%;
+    position:absolute;
+    backface-visibility:hidden;
+    border-radius:16px;
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    background:#fff;
+    border:1px solid #e0e0e0;
+}
+.card-back{
+    transform:rotateY(180deg);
+    align-items:flex-start;
+    text-align:left;
+    overflow-y:auto;
+}
+.word-front{
+    font-size:52px;
+    font-weight:bold;
+    color:#2c3e50;
+}
+.info-item{
+    margin:14px 0;
+    font-size:24px;
+    line-height:1.7;
+    color:#34495e;
+}
+.info-label{
+    font-weight:bold;
+    color:#2980b9;
+    margin-right:10px;
+}
+.phrase-list{
+    margin-left:24px;
+    line-height:1.8;
+    font-size:24px;
+}
+.nav-buttons{
+    display:flex;
+    gap:24px;
+}
+.nav-btn{
+    padding:14px 36px;
+    font-size:24px;
+    border:none;
+    border-radius:10px;
+    background:#3498db;
+    color:#fff;
+    cursor:pointer;
+}
+.nav-btn:disabled{
+    background:#bdc3c7;
+}
+.counter{
+    font-size:22px;
+    color:#7f8c8d;
+    margin-bottom:16px;
+}
+</style>
+</head>
+<body>
+
+<div class="counter" id="counter">1/10</div>
+
+<div class="flashcard-container">
+  <div class="flashcard" id="flashcard">
+    <div class="card-face card-front">
+      <div class="word-front" id="front-word">不言而喻</div>
+    </div>
+    <div class="card-face card-back">
+      <div class="info-item"><span class="info-label">拼音：</span><span id="pinyin"></span></div>
+      <div class="info-item"><span class="info-label">词性：</span><span id="pos"></span></div>
+      <div class="info-item"><span class="info-label">同义词：</span><span id="synonyms"></span></div>
+      <div class="info-item"><span class="info-label">常用短语：</span>
+        <ul class="phrase-list" id="phrases"></ul>
+      </div>
+      <div class="info-item"><span class="info-label">例句：</span><span id="example"></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-buttons">
+  <button class="nav-btn" id="prev">上一页</button>
+  <button class="nav-btn" id="next">下一页</button>
+</div>
+
+<script>
+const words = [
+{
+  word:"不言而喻",
+  pinyin:"bù yán ér yù",
+  pos:"成语",
+  synonyms:"显而易见、不言自明",
+  phrases:["不言而喻的事实","不言而喻的道理","结果不言而喻"],
+  example:"健康对每个人的重要性是不言而喻的。"
+},
+{
+  word:"执照",
+  pinyin:"zhízhào",
+  pos:"名词",
+  synonyms:"许可证、牌照",
+  phrases:["驾驶执照","营业执照","申请执照"],
+  example:"开车上路必须携带有效的驾驶执照。"
+},
+{
+  word:"具备",
+  pinyin:"jùbèi",
+  pos:"动词",
+  synonyms:"拥有、具有",
+  phrases:["具备条件","具备能力","具备经验"],
+  example:"做这份工作需要具备良好的沟通能力。"
+},
+{
+  word:"财产",
+  pinyin:"cáichǎn",
+  pos:"名词",
+  synonyms:"资产、财物",
+  phrases:["个人财产","公共财产","保护财产"],
+  example:"我们要注意保护自己的生命和财产安全。"
+},
+{
+  word:"严厉",
+  pinyin:"yánlì",
+  pos:"形容词",
+  synonyms:"严格、严肃",
+  phrases:["严厉批评","严厉处罚","态度严厉"],
+  example:"老师对学生非常严厉。"
+},
+{
+  word:"处罚",
+  pinyin:"chǔfá",
+  pos:"动词/名词",
+  synonyms:"惩罚、惩处",
+  phrases:["受到处罚","从轻处罚","严厉处罚"],
+  example:"违反规则的人会受到相应的处罚。"
+},
+{
+  word:"儿戏",
+  pinyin:"érxì",
+  pos:"名词",
+  synonyms:"小事、玩笑",
+  phrases:["视同儿戏","绝非儿戏","不当儿戏"],
+  example:"安全问题不是儿戏，一定要认真对待。"
+},
+{
+  word:"鉴于",
+  pinyin:"jiànyú",
+  pos:"介词",
+  synonyms:"考虑到、由于",
+  phrases:["鉴于此","鉴于情况","鉴于以上"],
+  example:"鉴于最近天气不好，我们改变了出行计划。"
+},
+{
+  word:"吊销",
+  pinyin:"diàoxiāo",
+  pos:"动词",
+  synonyms:"撤销、注销",
+  phrases:["吊销执照","吊销证件","被吊销执照"],
+  example:"酒后开车会被吊销驾驶执照。"
+},
+{
+  word:"有效",
+  pinyin:"yǒuxiào",
+  pos:"形容词",
+  synonyms:"管用、生效",
+  phrases:["有效方法","有效证件","措施有效"],
+  example:"这种学习方法对提高成绩很有效。"
+}
+];
+
+let idx = 0;
+const card = document.getElementById("flashcard");
+
+function showCard(){
+  const w = words[idx];
+  document.getElementById("front-word").textContent = w.word;
+  document.getElementById("pinyin").textContent = w.pinyin;
+  document.getElementById("pos").textContent = w.pos;
+  document.getElementById("synonyms").textContent = w.synonyms;
+  document.getElementById("example").textContent = w.example;
+
+  const phrEl = document.getElementById("phrases");
+  phrEl.innerHTML = w.phrases.map(p=>`<li>${p}</li>`).join("");
+
+  document.getElementById("counter").textContent = `${idx+1}/${words.length}`;
+  document.getElementById("prev").disabled = idx === 0;
+  document.getElementById("next").disabled = idx === words.length - 1;
+  card.classList.remove("flipped");
+}
+
+card.addEventListener("click",()=>{
+  card.classList.toggle("flipped");
+});
+
+document.getElementById("prev").onclick = ()=>{
+  idx--;
+  showCard();
+};
+
+document.getElementById("next").onclick = ()=>{
+  idx++;
+  showCard();
+};
+
+showCard();
+</script>
+</body>
+</html>

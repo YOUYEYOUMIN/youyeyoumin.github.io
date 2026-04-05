@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK4-5级汉语闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .flashcard-container {
+            width: 90%;
+            max-width: 750px;
+            height: 550px;
+            position: relative;
+            perspective: 1200px;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            cursor: pointer;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            align-items: flex-start;
+            text-align: left;
+            overflow-y: auto;
+        }
+        .word-front {
+            font-size: 52px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .info-item {
+            margin: 14px 0;
+            font-size: 24px;
+            line-height: 1.7;
+            color: #34495e;
+        }
+        .info-label {
+            font-weight: 700;
+            color: #2980b9;
+            margin-right: 10px;
+        }
+        .phrase-list {
+            margin-left: 24px;
+            line-height: 1.8;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 24px;
+        }
+        .nav-btn {
+            padding: 14px 36px;
+            font-size: 24px;
+            border: none;
+            border-radius: 10px;
+            background-color: #3498db;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .counter {
+            font-size: 22px;
+            color: #7f8c8d;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="counter" id="counter">1 / 10</div>
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face card-front">
+                <div class="word-front" id="front-word">诞辰</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="info-item"><span class="info-label">拼音：</span><span id="pinyin">dànchén</span></div>
+                <div class="info-item"><span class="info-label">词性：</span><span id="pos">名词</span></div>
+                <div class="info-item"><span class="info-label">同义词：</span><span id="synonyms">寿辰、生日</span></div>
+                <div class="info-item"><span class="info-label">常用短语：</span>
+                    <ul class="phrase-list" id="phrases"></ul>
+                </div>
+                <div class="info-item"><span class="info-label">例句：</span><span id="example"></span></div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prev-btn" disabled>上一页</button>
+        <button class="nav-btn" id="next-btn">下一页</button>
+    </div>
+
+    <script>
+        const words = [
+            {
+                word: "诞辰",
+                pinyin: "dànchén",
+                pos: "名词",
+                synonyms: "寿辰、生日",
+                phrases: ["伟人诞辰", "纪念诞辰", "庆祝诞辰"],
+                example: "今天是这位伟大作家的诞辰，我们举办了纪念活动。"
+            },
+            {
+                word: "拎",
+                pinyin: "līn",
+                pos: "动词",
+                synonyms: "提、拿",
+                phrases: ["拎包", "拎行李", "拎东西"],
+                example: "出门前，我帮妈妈拎着买好的菜。"
+            },
+            {
+                word: "覆盖",
+                pinyin: "fùgài",
+                pos: "动词",
+                synonyms: "遮盖、笼罩",
+                phrases: ["覆盖大地", "被雪覆盖", "全面覆盖"],
+                example: "大雪覆盖了整个城市，到处都是白色的。"
+            },
+            {
+                word: "足以",
+                pinyin: "zúyǐ",
+                pos: "副词",
+                synonyms: "足够、完全可以",
+                phrases: ["足以证明", "足以说明", "足以应对"],
+                example: "这些证据足以证明他说的是实话。"
+            },
+            {
+                word: "低廉",
+                pinyin: "dīlián",
+                pos: "形容词",
+                synonyms: "便宜、廉价",
+                phrases: ["价格低廉", "成本低廉", "收费低廉"],
+                example: "这家超市的商品价格低廉，很受大家欢迎。"
+            },
+            {
+                word: "罪过",
+                pinyin: "zuìguo",
+                pos: "名词",
+                synonyms: "过失、过错",
+                phrases: ["承认罪过", "弥补罪过", "犯下罪过"],
+                example: "他主动承认了自己的罪过，得到了大家的原谅。"
+            },
+            {
+                word: "视觉",
+                pinyin: "shìjué",
+                pos: "名词",
+                synonyms: "视力、观感",
+                phrases: ["视觉效果", "视觉疲劳", "视觉冲击"],
+                example: "长时间看手机会造成视觉疲劳，要注意休息。"
+            },
+            {
+                word: "漂浮",
+                pinyin: "piāofú",
+                pos: "动词",
+                synonyms: "飘浮、悬浮",
+                phrases: ["漂浮水面", "漂浮在空中", "漂浮的云"],
+                example: "小船漂浮在平静的湖面上，特别好看。"
+            },
+            {
+                word: "堪称",
+                pinyin: "kānchēng",
+                pos: "动词",
+                synonyms: "称得上、可谓",
+                phrases: ["堪称经典", "堪称奇迹", "堪称典范"],
+                example: "这座古老的建筑堪称建筑史上的奇迹。"
+            },
+            {
+                word: "杀手",
+                pinyin: "shāshǒu",
+                pos: "名词",
+                synonyms: "危害、致命因素",
+                phrases: ["健康杀手", "隐形杀手", "时间杀手"],
+                example: "吸烟是危害健康的隐形杀手，一定要远离。"
+            }
+        ];
+
+        let currentIndex = 0;
+        const flashcard = document.getElementById("flashcard");
+        const frontWord = document.getElementById("front-word");
+        const pinyinEl = document.getElementById("pinyin");
+        const posEl = document.getElementById("pos");
+        const synonymsEl = document.getElementById("synonyms");
+        const phrasesEl = document.getElementById("phrases");
+        const exampleEl = document.getElementById("example");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const counter = document.getElementById("counter");
+
+        function updateCard() {
+            const word = words[currentIndex];
+            frontWord.textContent = word.word;
+            pinyinEl.textContent = word.pinyin;
+            posEl.textContent = word.pos;
+            synonymsEl.textContent = word.synonyms;
+
+            phrasesEl.innerHTML = "";
+            word.phrases.forEach(phrase => {
+                const li = document.createElement("li");
+                li.textContent = phrase;
+                phrasesEl.appendChild(li);
+            });
+
+            exampleEl.textContent = word.example;
+            counter.textContent = `${currentIndex + 1} / ${words.length}`;
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === words.length - 1;
+            flashcard.classList.remove("flipped");
+        }
+
+        flashcard.addEventListener("click", () => {
+            flashcard.classList.toggle("flipped");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < words.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        updateCard();
+    </script>
+</body>
+</html>

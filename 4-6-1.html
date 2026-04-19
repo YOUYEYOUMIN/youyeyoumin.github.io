@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>HSK汉语生词闪卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",sans-serif}
+body{background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:30px}
+/* 卡片盒子 */
+.card-box{width:340px;height:460px;perspective:1000px;cursor:pointer}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:0.6s ease}
+.card.flip{transform:rotateY(180deg)}
+/* 正反面 */
+.front,.back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:18px;background:#f8f9fa;border:1px solid #eee;display:flex;align-items:center;justify-content:center;padding:25px;font-size:38px;font-weight:bold;color:#222;text-align:center}
+.back{transform:rotateY(180deg);font-size:22px;line-height:1.8;text-align:left}
+/* 按钮 */
+.btn-group{display:flex;gap:20px}
+button{padding:12px 26px;font-size:18px;border:none;background:#4477ee;color:#fff;border-radius:10px;cursor:pointer}
+button:active{background:#2255cc}
+</style>
+</head>
+<body>
+
+<div class="card-box" onclick="flipCard()">
+<div class="card" id="card">
+<div class="front" id="frontTxt">哲学家</div>
+<div class="back" id="backTxt"></div>
+</div>
+</div>
+
+<div class="btn-group">
+<button onclick="prevWord()">上一页</button>
+<button onclick="nextWord()">下一页</button>
+</div>
+
+<script>
+//生词库
+const wordList = [
+{front:"哲学家",back:"拼音：zhéxuéjiā<br>词性：名词<br>近义词：思想家、学者<br>搭配：著名哲学家、古代哲学家<br>例句：他喜欢研究哲学家的思想。"},
+{front:"传颂",back:"拼音：chuánsòng<br>词性：动词<br>近义词：流传、称赞<br>搭配：代代传颂、故事传颂<br>例句：好人好事一直被大家传颂。"},
+{front:"堪称",back:"拼音：kānchēng<br>词性：动词<br>近义词：算得上、可称为<br>搭配：堪称完美、堪称一流<br>例句：这里风景堪称美丽。"},
+{front:"经典",back:"拼音：jīngdiǎn<br>词性：名/形<br>近义词：名作、经典款<br>搭配：经典歌曲、经典电影<br>例句：这是一首很经典的音乐。"},
+{front:"温馨",back:"拼音：wēnxīn<br>词性：形容词<br>近义词：温暖、暖心<br>搭配：温馨家庭、温馨画面<br>例句：家里气氛十分温馨。"},
+{front:"无可争议",back:"拼音：wú kě zhēng yì<br>词性：成语<br>近义词：毫无疑问、没有争议<br>搭配：实力无可争议、无可争议的第一<br>例句：他的成绩优秀，是无可争议的第一。"},
+{front:"摇篮曲",back:"拼音：yáo lán qǔ<br>词性：名词<br>近义词：安眠曲、儿歌<br>搭配：一首摇篮曲、听摇篮曲<br>例句：妈妈唱摇篮曲哄宝宝睡觉。"},
+{front:"伴侣",back:"拼音：bàn lǚ<br>词性：名词<br>近义词：伙伴、同伴<br>搭配：人生伴侣、亲密伴侣<br>例句：他是我最好的生活伴侣。"},
+{front:"手舞足蹈",back:"拼音：shǒu wǔ zú dǎo<br>词性：成语<br>近义词：十分开心、高兴极了<br>搭配：高兴得手舞足蹈<br>例句：听到好消息他开心得手舞足蹈。"},
+{front:"婴儿",back:"拼音：yīng ér<br>词性：名词<br>近义词：宝宝、孩童<br>搭配：可爱婴儿、婴儿用品<br>例句：这个婴儿长得十分可爱。"},
+{front:"流浪",back:"拼音：liú làng<br>词性：动词<br>近义词：漂泊、游荡<br>搭配：流浪动物、流浪生活<br>例句：路边有很多流浪的小猫。"},
+{front:"灵魂",back:"拼音：líng hún<br>词性：名词<br>近义词：心灵、内心<br>搭配：灵魂深处、美丽灵魂<br>例句：善良是人最美的灵魂。"}
+];
+
+let index=0;
+const card=document.getElementById("card");
+const front=document.getElementById("frontTxt");
+const back=document.getElementById("backTxt");
+
+function showWord(){
+front.innerText=wordList[index].front;
+back.innerHTML=wordList[index].back;
+card.classList.remove("flip");
+}
+function flipCard(){card.classList.toggle("flip");}
+function prevWord(){index=(index-1+wordList.length)%wordList.length;showWord();}
+function nextWord(){index=(index+1)%wordList.length;showWord();}
+
+showWord();
+</script>
+</body>
+</html>

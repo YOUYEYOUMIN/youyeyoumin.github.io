@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生词闪卡</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+
+  body {
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-box {
+    width: 100%;
+    max-width: 700px;
+    height: 450px;
+    position: relative;
+    margin: 20px 0;
+  }
+
+  .card {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    cursor: pointer;
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 30px;
+  }
+
+  .back {
+    transform: rotateY(180deg);
+  }
+
+  .word-front {
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 120px;
+  }
+
+  .back .line {
+    font-size: 22px;
+    margin: 10px 0;
+    line-height: 1.6;
+    text-align: left;
+  }
+
+  .index {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 30px;
+  }
+
+  button {
+    padding: 12px 26px;
+    font-size: 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1677ff;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: #ccc;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: #0f66d9;
+  }
+</style>
+</head>
+
+<body>
+  <div class="index" id="cardInfo">1 / 14</div>
+
+  <div class="card-box">
+    <div class="card" id="flashcard">
+      <div class="front">
+        <div class="word-front" id="frontWord"></div>
+      </div>
+
+      <div class="back">
+        <div class="line"><strong>单词：</strong><span id="w"></span></div>
+        <div class="line"><strong>拼音：</strong><span id="p"></span></div>
+        <div class="line"><strong>词性：</strong><span id="c"></span></div>
+        <div class="line"><strong>同义词：</strong><span id="s"></span></div>
+        <div class="line"><strong>常用短语：</strong><span id="ph"></span></div>
+        <div class="line"><strong>例句：</strong><span id="e"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button id="prevBtn">上一页</button>
+    <button id="nextBtn">下一页</button>
+  </div>
+
+<script>
+  const wordList = [
+    {
+      word: "以至于",
+      pinyin: "yì zhì yú",
+      ci: "连词",
+      syno: "以致、乃至",
+      phrase: "以至于忘记、以至于来不及",
+      eg: "今天地铁人太多，我等了三趟车才挤上去，以至于上班都迟到了。"
+    },
+    {
+      word: "锋利",
+      pinyin: "fēng lì",
+      ci: "形容词",
+      syno: "锐利、犀利",
+      phrase: "刀刃锋利、目光锋利",
+      eg: "这把厨房刀特别锋利，切菜很快，但用的时候一定要小心手。"
+    },
+    {
+      word: "双刃剑",
+      pinyin: "shuāng rèn jiàn",
+      ci: "名词",
+      syno: "两面刃、双面刃",
+      phrase: "成为双刃剑、双刃剑效应",
+      eg: "手机支付是一把双刃剑，既方便了生活，也让我们更容易忘记带现金。"
+    },
+    {
+      word: "无底洞",
+      pinyin: "wú dǐ dòng",
+      ci: "名词",
+      syno: "无底坑、深不见底",
+      phrase: "填无底洞、花钱如无底洞",
+      eg: "养宠物就像个无底洞，买粮食、玩具和看病都要花很多钱。"
+    },
+    {
+      word: "益处",
+      pinyin: "yì chù",
+      ci: "名词",
+      syno: "好处、裨益",
+      phrase: "获得益处、大有裨益",
+      eg: "每天坚持运动半小时，对身体健康有很大的益处。"
+    },
+    {
+      word: "瞬息万变",
+      pinyin: "shùn xī wàn biàn",
+      ci: "成语",
+      syno: "千变万化、变幻莫测",
+      phrase: "局势瞬息万变、天气瞬息万变",
+      eg: "旅游景点的天气瞬息万变，出门一定要记得带上雨伞和外套。"
+    },
+    {
+      word: "便捷",
+      pinyin: "biàn jié",
+      ci: "形容词",
+      syno: "简便、方便",
+      phrase: "操作便捷、交通便捷",
+      eg: "现在的外卖平台很便捷，十几分钟就能把热乎的饭菜送到家。"
+    },
+    {
+      word: "备",
+      pinyin: "bèi",
+      ci: "副词",
+      syno: "格外、十分",
+      phrase: "备感温暖、备受关注",
+      eg: "听到这个好消息，大家备感开心，纷纷鼓掌庆祝。"
+    },
+    {
+      word: "青睐",
+      pinyin: "qīng lài",
+      ci: "动词",
+      syno: "垂青、赏识",
+      phrase: "备受青睐、赢得青睐",
+      eg: "这款设计简约实用的水杯，在市场上很受消费者青睐。"
+    },
+    {
+      word: "辐射",
+      pinyin: "fú shè",
+      ci: "动词/名词",
+      syno: "扩散、传播",
+      phrase: "辐射范围、减少辐射",
+      eg: "长时间对着电脑，要注意远离辐射，多起身看看远处。"
+    },
+    {
+      word: "定论",
+      pinyin: "dìng lùn",
+      ci: "名词",
+      syno: "结论、定局",
+      phrase: "尚无定论、下定论",
+      eg: "关于哪种学习方法最有效，目前还没有定论，适合自己的最好。"
+    },
+    {
+      word: "克隆",
+      pinyin: "kè lóng",
+      ci: "动词/名词",
+      syno: "复制、复刻",
+      phrase: "克隆技术、克隆动物",
+      eg: "科学家通过克隆技术培育新品种植物，大大提高了产量。"
+    },
+    {
+      word: "伦理",
+      pinyin: "lún lǐ",
+      ci: "名词",
+      syno: "道德、道义",
+      phrase: "伦理道德、伦理规范",
+      eg: "做任何工作都要遵守伦理规范，不能为了利益违背良心。"
+    },
+    {
+      word: "严峻",
+      pinyin: "yán jùn",
+      ci: "形容词",
+      syno: "严酷、严重",
+      phrase: "形势严峻、考验严峻",
+      eg: "面对严峻的就业形势，大学生们都在努力提升专业能力。"
+    }
+  ];
+
+  const card = document.getElementById("flashcard");
+  let current = 0;
+
+  function showCard() {
+    const item = wordList[current];
+    document.getElementById("frontWord").innerText = item.word;
+    document.getElementById("w").innerText = item.word;
+    document.getElementById("p").innerText = item.pinyin;
+    document.getElementById("c").innerText = item.ci;
+    document.getElementById("s").innerText = item.syno;
+    document.getElementById("ph").innerText = item.phrase;
+    document.getElementById("e").innerText = item.eg;
+    document.getElementById("cardInfo").innerText = (current + 1) + " / " + wordList.length;
+    card.classList.remove("flipped");
+    document.getElementById("prevBtn").disabled = current === 0;
+    document.getElementById("nextBtn").disabled = current === wordList.length - 1;
+  }
+
+  card.addEventListener("click", function () {
+    card.classList.toggle("flipped");
+  });
+
+  document.getElementById("prevBtn").onclick = function () {
+    current--;
+    showCard();
+  };
+
+  document.getElementById("nextBtn").onclick = function () {
+    current++;
+    showCard();
+  };
+
+  showCard();
+</script>
+</body>
+</html>

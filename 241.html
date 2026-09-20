@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI‑241 课堂签到</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui, sans-serif}
+body{max-width:720px;margin:12px auto;padding:10px;background:#f7f8fa}
+h2{text-align:center;margin-bottom:12px;color:#222}
+.info{background:#fff;padding:10px;border-radius:8px;margin-bottom:12px;box-shadow:0 1px 3px #0002}
+.ctrl{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+button{padding:9px 14px;border:none;border-radius:6px;font-size:15px;cursor:pointer}
+.btn-open{background:#28a745;color:white}
+.btn-close{background:#dc3545;color:white}
+.btn-reset{background:#ff9800;color:white}
+.btn-export{background:#007bff;color:white}
+.item-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.stu-btn{padding:12px;border:1px solid #ccc;background:#fff;border-radius:8px;font-size:15px}
+.stu-btn.can{background:#ffffff}
+.stu-btn.done{background:#b7e1cd;color:#086b21}
+.stu-btn.disabled{background:#eee;color:#888;cursor:not-allowed}
+.tip{margin-top:12px;color:#c00;font-weight:bold;text-align:center}
+</style>
+</head>
+<body>
+<h2>CI‑241 课堂签到</h2>
+<div class="info">
+  <div>总人数：<span id="total">0</span>｜已签到：<span id="checked">0</span>｜未签到：<span id="unchecked">0</span></div>
+  <div>签到状态：<span id="signStatus">未开启</span></div>
+</div>
+<div class="ctrl">
+  <button class="btn-open" onclick="openSign()">开启签到</button>
+  <button class="btn-close" onclick="closeSign()">关闭签到</button>
+  <button class="btn-reset" onclick="resetAll()">重置本节课签到</button>
+  <button class="btn-export" onclick="exportCsv()">导出考勤CSV</button>
+</div>
+<div id="deviceWarn" class="tip"></div>
+<div id="listWrap" class="item-list"></div>
+
+<script>
+// ========== 完整CI‑241学生中文名单 ==========
+const studentList = [
+"周苏为","娣娜拉","张美丽","潘吉悦","宋家贤","李米蒂","金晶","康乐",
+"苏光明","阿丽莎","连丽","安迪南","孙田","江家燕","迪雄","唐楷辞",
+"彭佩兰","杨依慈","李品玉","王杰","文思","王土星","乔旺","郑卿媛",
+"宋沙文","林子湛","张文军","阳洋","李丽","陶晚","魏然","孔薇兰","苏婉"
+];
+
+let signEnable = false;
+let signRecord = {};
+
+// 获取url课时参数，每节课换 ?lesson=数字，自动隔离设备签到标记
+const urlParams = new URLSearchParams(window.location.search);
+const lessonId = urlParams.get('lesson') || "default";
+const STORAGE_KEY = "ci241_device_signed_" + lessonId;
+
+function getDeviceSigned(){
+  const v = localStorage.getItem(STORAGE_KEY);
+  return v === "1";
+}
+function markDeviceSigned(){
+  localStorage.setItem(STORAGE_KEY,"1");
+}
+
+function render(){
+  const wrap = document.getElementById("listWrap");
+  wrap.innerHTML = "";
+  let checkedCount = 0;
+  studentList.forEach(name=>{
+    const btn = document.createElement("button");
+    btn.className = "stu-btn";
+    btn.innerText = name;
+    const isDone = !!signRecord[name];
+    if(isDone){
+      btn.classList.add("done");
+      checkedCount++;
+      btn.disabled = true;
+    }else{
+      btn.classList.add("can");
+      if(!signEnable || getDeviceSigned()){
+        btn.classList.add("disabled");
+        btn.disabled = true;
+      }else{
+        btn.onclick = ()=>doSign(name);
+      }
+    }
+    wrap.appendChild(btn);
+  });
+  const total = studentList.length;
+  document.getElementById("total").innerText = total;
+  document.getElementById("checked").innerText = checkedCount;
+  document.getElementById("unchecked").innerText = total - checkedCount;
+  document.getElementById("signStatus").innerText = signEnable?"✅签到进行中":"❌签到已关闭";
+  const warnDom = document.getElementById("deviceWarn");
+  if(getDeviceSigned()){
+    warnDom.innerText="⚠️本台手机本节课已经签到，不可再签其他人";
+  }else{
+    warnDom.innerText="";
+  }
+}
+
+function doSign(name){
+  if(!signEnable) return;
+  if(getDeviceSigned()) return;
+  const now = new Date().toLocaleString();
+  signRecord[name] = now;
+  markDeviceSigned();
+  render();
+  alert(`签到成功：${name}`);
+}
+
+function openSign(){
+  signEnable = true;
+  render();
+}
+function closeSign(){
+  signEnable = false;
+  render();
+}
+
+function resetAll(){
+  if(!confirm("确定重置本节课签到？老师端记录清空。")) return;
+  signRecord = {};
+  signEnable = false;
+  render();
+}
+
+function exportCsv(){
+  let csv = "姓名,签到状态,签到时间\n";
+  studentList.forEach(name=>{
+    if(signRecord[name]){
+      csv += `${name},已签到,${signRecord[name]}\n`;
+    }else{
+      csv += `${name},未签到,\n`;
+    }
+  });
+  const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "CI241_考勤_"+new Date().toLocaleDateString()+".csv";
+  a.click();
+}
+
+render();
+</script>
+</body>
+</html>

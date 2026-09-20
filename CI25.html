@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孔子学院课堂签到</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+body {
+background-color: #f5f7fa;
+padding: 20px;
+}
+.container {
+max-width: 800px;
+margin: 0 auto;
+}
+/* 班级切换标签 */
+.class-tabs {
+display: flex;
+gap: 10px;
+margin-bottom: 20px;
+flex-wrap: wrap;
+}
+.tab-btn {
+flex: 1;
+min-width: 120px;
+padding: 12px 16px;
+border: none;
+border-radius: 10px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+background: #fff;
+color: #6b7280;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.tab-btn.active {
+background: #3b82f6;
+color: white;
+box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+.tab-btn:hover:not(.active) {
+background: #f9fafb;
+transform: translateY(-1px);
+}
+.header {
+background: #fff;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+margin-bottom: 20px;
+}
+h1 {
+font-size: 24px;
+color: #1f2937;
+margin-bottom: 10px;
+text-align: center;
+}
+.info {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 15px;
+flex-wrap: wrap;
+gap: 10px;
+}
+.info-item {
+font-size: 14px;
+color: #4b5563;
+}
+.status {
+padding: 6px 12px;
+border-radius: 20px;
+font-weight: 500;
+font-size: 14px;
+}
+.status.open {
+background: #dcfce7;
+color: #166534;
+}
+.status.closed {
+background: #fee2e2;
+color: #991b1b;
+}
+.controls {
+display: flex;
+gap: 10px;
+margin-top: 15px;
+flex-wrap: wrap;
+}
+button {
+flex: 1;
+min-width: 120px;
+padding: 10px 16px;
+border: none;
+border-radius: 8px;
+font-size: 14px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s;
+}
+.btn-primary {
+background: #3b82f6;
+color: white;
+}
+.btn-primary:hover {
+background: #2563eb;
+}
+.btn-success {
+background: #10b981;
+color: white;
+}
+.btn-success:hover {
+background: #059669;
+}
+.btn-danger {
+background: #ef4444;
+color: white;
+}
+.btn-danger:hover {
+background: #dc2626;
+}
+.student-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+gap: 12px;
+}
+.student-card {
+background: #fff;
+border-radius: 10px;
+padding: 16px 12px;
+text-align: center;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+cursor: pointer;
+transition: all 0.2s;
+border: 2px solid transparent;
+}
+.student-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.student-card.signed {
+background: #dcfce7;
+border-color: #166534;
+color: #166534;
+}
+.student-card:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+transform: none;
+}
+.student-name {
+font-size: 16px;
+font-weight: 500;
+}
+.signed-info {
+font-size: 12px;
+margin-top: 4px;
+opacity: 0.8;
+}
+.stats {
+background: #fff;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+margin-top: 20px;
+}
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 15px;
+text-align: center;
+}
+.stat-item {
+padding: 10px;
+}
+.stat-value {
+font-size: 28px;
+font-weight: 700;
+color: #1f2937;
+}
+.stat-label {
+font-size: 14px;
+color: #6b7280;
+margin-top: 4px;
+}
+.toast {
+position: fixed;
+top: 20px;
+left: 50%;
+transform: translateX(-50%);
+background: #1f2937;
+color: white;
+padding: 12px 24px;
+border-radius: 8px;
+font-size: 14px;
+z-index: 1000;
+opacity: 0;
+transition: opacity 0.3s;
+}
+.toast.show {
+opacity: 1;
+}
+.toast.success {
+background: #10b981;
+}
+.toast.error {
+background: #ef4444;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<!-- 班级切换标签 -->
+<div class="class-tabs">
+<button class="tab-btn active" onclick="switchClass('251')">CI-251</button>
+<button class="tab-btn" onclick="switchClass('252')">CI-252</button>
+<button class="tab-btn" onclick="switchClass('253')">CI-253</button>
+</div>
+
+<div class="header">
+<h1 id="class-title">CI-251 班课堂签到</h1>
+<div class="info">
+<div class="info-item" id="current-time">2026-09-20 00:00</div>
+<div class="status open" id="sign-status">签到进行中</div>
+</div>
+<div class="controls">
+<button class="btn-success" id="export-btn">导出考勤表</button>
+<button class="btn-danger" id="close-btn">关闭签到</button>
+<button class="btn-primary" id="reset-btn">重置签到</button>
+</div>
+</div>
+<div class="stats">
+<div class="stats-grid">
+<div class="stat-item">
+<div class="stat-value" id="total-count">0</div>
+<div class="stat-label">总人数</div>
+</div>
+<div class="stat-item">
+<div class="stat-value" id="signed-count">0</div>
+<div class="stat-label">已签到</div>
+</div>
+<div class="stat-item">
+<div class="stat-value" id="absent-count">0</div>
+<div class="stat-label">未签到</div>
+</div>
+</div>
+</div>
+<div class="student-grid" id="student-grid">
+<!-- 学生卡片将由JavaScript动态生成 -->
+</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// 三个班级完整学生名单（从Excel提取）
+const classData = {
+"251": {
+name: "CI-251",
+students: ['王赛', '李璐芳', '袁心怡', '阳海宏', '张伟', '洪舜云', '王飞鸿', '罗朗', '王铃兰', '李永芳', '莫康', '张爱玲', '李月琳', '李小萍', '韩立', '安心', '杨杜', '田福安', '张慧美', '宋希', '杨劲飞', '高佳雪', '张雅婷', '钱玉琪', '尹萱明', '宁月珠', '李欣欣', '王丽', '李明辉', '赵福强', '赵妍', '凯琳']
+},
+"252": {
+name: "CI-252",
+students: ['林颖书', '刘星', '马沙文', '宋雅文', '宋宴', '绅挥', '诚证', '杨云鹏', '张菲菲', '顾思文', '李美丽', '培盛', '吴俊', '苏琳奕', '苏莎莎', '李惠明', '任畅', '安宁', '文惠灵', '张书博', '占心丽', '安冰冰', '苏帕琳', '兰婷妲', '杨香香', '李妍', '贺明', '周斌', '王文', '林珍珠', '彭山', '苏娜莲', '赵宏天']
+},
+"253": {
+name: "CI-253",
+students: ['林暮', '梅雅', '阿丽亚', '宋赛文', '林凤珠', '洛菲菲', '王飞龙', '宁心', '李陵', '谢锦秀', '万宁', '北楠', '丁梦', '罗小沙', '张沙万', '唐阳', '王达', '张小月', '陈坚如', '王小丽', '袁丽文', '李洋', '赵晓怡', '乔思迪', '杨丹娜', '林晓星', '夏星河', '宋小顾', '苏嘉艺', '赵灵稳', '李德', '张孟帝', '李阳新', '罗羽鸿', '谷晓']
+}
+};
+
+// 全局状态管理
+let currentClassId = "251";
+let signState = {
+isOpen: true,
+signedList: {},
+deviceId: ''
+};
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+// 生成设备ID（防止同一设备多次签到）
+signState.deviceId = Math.random().toString(16).substring(2, 15);
+// 渲染当前班级学生列表
+renderStudentList();
+// 更新时间
+updateCurrentTime();
+setInterval(updateCurrentTime, 1000);
+// 更新统计
+updateStats();
+// 绑定按钮事件
+document.getElementById('export-btn').addEventListener('click', exportAttendance);
+document.getElementById('close-btn').addEventListener('click', toggleSignStatus);
+document.getElementById('reset-btn').addEventListener('click', resetAttendance);
+});
+
+// 班级切换功能
+function switchClass(classId) {
+currentClassId = classId;
+// 切换标签样式
+document.querySelectorAll('.tab-btn').forEach(btn => {
+btn.classList.remove('active');
+});
+event.target.classList.add('active');
+// 更新页面标题
+document.getElementById('class-title').textContent = `${classData[classId].name} 班课堂签到`;
+// 重置当前班级签到状态
+signState.signedList = {};
+signState.isOpen = true;
+// 重新渲染学生列表
+renderStudentList();
+updateStats();
+// 重置签到状态显示
+document.getElementById('sign-status').textContent = '签到进行中';
+document.getElementById('sign-status').className = 'status open';
+document.getElementById('close-btn').textContent = '关闭签到';
+document.getElementById('close-btn').className = 'btn-danger';
+}
+
+// 渲染学生列表
+function renderStudentList() {
+const grid = document.getElementById('student-grid');
+grid.innerHTML = '';
+const studentNames = classData[currentClassId].students;
+studentNames.forEach(name => {
+const card = document.createElement('div');
+card.className = 'student-card';
+card.dataset.name = name;
+card.innerHTML = `
+<div class="student-name">${name}</div>
+<div class="signed-info"></div>
+`;
+card.addEventListener('click', () => signIn(name, card));
+grid.appendChild(card);
+});
+}
+
+// 签到功能
+function signIn(name, card) {
+if (!signState.isOpen) {
+showToast('签到已关闭', 'error');
+return;
+}
+// 检查该学生是否已签到
+if (signState.signedList[name]) {
+showToast('该学生已签到', 'error');
+return;
+}
+// 记录签到信息
+signState.signedList[name] = {
+time: new Date().toLocaleString('zh-CN'),
+deviceId: signState.deviceId
+};
+// 更新卡片样式
+card.classList.add('signed');
+card.querySelector('.signed-info').textContent = '已签到';
+card.disabled = true;
+// 更新统计
+updateStats();
+showToast(`${name} 签到成功`, 'success');
+}
+
+// 更新统计数据
+function updateStats() {
+const studentNames = classData[currentClassId].students;
+const total = studentNames.length;
+const signed = Object.keys(signState.signedList).length;
+const absent = total - signed;
+document.getElementById('total-count').textContent = total;
+document.getElementById('signed-count').textContent = signed;
+document.getElementById('absent-count').textContent = absent;
+}
+
+// 切换签到状态
+function toggleSignStatus() {
+signState.isOpen = !signState.isOpen;
+const statusEl = document.getElementById('sign-status');
+const btn = document.getElementById('close-btn');
+if (signState.isOpen) {
+statusEl.textContent = '签到进行中';
+statusEl.className = 'status open';
+btn.textContent = '关闭签到';
+btn.className = 'btn-danger';
+// 恢复所有未签到卡片的点击事件
+document.querySelectorAll('.student-card').forEach(card => {
+if (!signState.signedList[card.dataset.name]) {
+card.disabled = false;
+}
+});
+} else {
+statusEl.textContent = '签到已关闭';
+statusEl.className = 'status closed';
+btn.textContent = '开启签到';
+btn.className = 'btn-primary';
+// 禁用所有未签到卡片
+document.querySelectorAll('.student-card').forEach(card => {
+if (!signState.signedList[card.dataset.name]) {
+card.disabled = true;
+}
+});
+}
+}
+
+// 重置签到
+function resetAttendance() {
+if (confirm(`确定要重置${classData[currentClassId].name}班所有签到记录吗？`)) {
+signState.signedList = {};
+signState.isOpen = true;
+renderStudentList();
+updateStats();
+// 重置状态
+document.getElementById('sign-status').textContent = '签到进行中';
+document.getElementById('sign-status').className = 'status open';
+document.getElementById('close-btn').textContent = '关闭签到';
+document.getElementById('close-btn').className = 'btn-danger';
+showToast('签到已重置', 'success');
+}
+}
+
+// 导出考勤表
+function exportAttendance() {
+const studentNames = classData[currentClassId].students;
+// 生成CSV内容
+let csvContent = '姓名,签到状态,签到时间\n';
+studentNames.forEach(name => {
+if (signState.signedList[name]) {
+csvContent += `${name},已签到,${signState.signedList[name].time}\n`;
+} else {
+csvContent += `${name},未签到,\n`;
+}
+});
+// 下载CSV文件
+const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+const link = document.createElement('a');
+const url = URL.createObjectURL(blob);
+link.setAttribute('href', url);
+link.setAttribute('download', `${classData[currentClassId].name}班考勤表_${new Date().toLocaleDateString('zh-CN')}.csv`);
+link.style.visibility = 'hidden';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+showToast('考勤表已导出', 'success');
+}
+
+// 更新当前时间
+function updateCurrentTime() {
+const now = new Date();
+document.getElementById('current-time').textContent = now.toLocaleString('zh-CN');
+}
+
+// 显示提示消息
+function showToast(message, type = 'success') {
+const toast = document.getElementById('toast');
+toast.textContent = message;
+toast.className = `toast ${type} show`;
+setTimeout(() => {
+toast.className = 'toast';
+}, 2000);
+}
+</script>
+</body>
+</html>

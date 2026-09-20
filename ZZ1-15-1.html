@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZ 1-15-1</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+        body {
+            background-color: #f7f9fc;
+            padding: 24px 16px;
+        }
+        h1 {
+            text-align: center;
+            color: #002b5c;
+            margin-bottom: 28px;
+            font-size: clamp(22px,4vw,28px);
+        }
+        .wrap {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .flashcard {
+            background: #ffffff;
+            border-radius: 20px;
+            min-height: 460px;
+            padding: 32px 20px;
+            box-shadow: 0 4px 14px rgba(0,43,92,0.12);
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            cursor:pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 6px 20px rgba(0,43,92,0.18);
+        }
+        .front-text {
+            font-size: clamp(42px, 10vw, 60px);
+            font-weight:bold;
+            color:#002b5c;
+            text-align:center;
+        }
+        .back-text {
+            font-size: clamp(18px,3vw,22px);
+            color:#002b5c;
+            line-height:1.8;
+            display:none;
+            width:100%;
+        }
+        .back-inner {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            padding-left: 24px;
+        }
+        .back-row{
+            display:flex;
+            gap:16px;
+            align-items:center;
+            flex-wrap: wrap;
+            justify-content:flex-start;
+        }
+        .card-img{
+            width: min(220px, 70vw);
+            height:160px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+        .text-part{
+            flex:1;
+            min-width:200px;
+        }
+        .text-part p {
+            margin: 4px 0;
+        }
+        .sentence-line{
+            width:100%;
+            margin-top:18px;
+            text-align:center;
+        }
+        .btn-group {
+            display:flex;
+            justify-content: center;
+            gap:14px;
+            margin-top:26px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding:12px 24px;
+            border:none;
+            border-radius:10px;
+            background:#002b5c;
+            color:#ffffff;
+            font-size: clamp(16px,3vw,20px);
+            cursor:pointer;
+        }
+        button:hover {
+            opacity:0.85;
+        }
+        .page-info {
+            text-align:center;
+            margin-top:16px;
+            color:#002b5c;
+            font-size: clamp(16px,3vw,20px);
+        }
+    </style>
+</head>
+<body>
+    <h1>ZZ 1-15-1</h1>
+    <div class="wrap">
+        <div class="flashcard" id="card">
+            <div class="front-text" id="front">屋顶</div>
+            <div class="back-text" id="back">
+            </div>
+        </div>
+        <div class="page-info">
+            <span id="current">1</span> / <span id="total">13</span>
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一张</button>
+            <button id="next">下一张</button>
+            <button id="shuffle">随机洗牌</button>
+        </div>
+    </div>
+
+<script>
+const cardList = [
+    {
+        front:"屋顶",
+        img:"wuding.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="wuding.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>wū dǐng（名词）</p>
+                    <p>白色的屋顶</p>
+                    <p>屋顶倾斜</p>
+                    <p>爬上屋顶</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：他站在屋顶看远处的山。</div>
+        </div>`
+    },
+    {
+        front:"水泥",
+        img:"shuini.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="shuini.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>shuǐ ní（名词）</p>
+                    <p>潮湿的水泥</p>
+                    <p>搬运水泥</p>
+                    <p>水泥凝固</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：工人用水泥修建马路。</div>
+        </div>`
+    },
+    {
+        front:"体验",
+        img:"tiyan.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="tiyan.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>tǐ yàn（动词）</p>
+                    <p>体验民俗</p>
+                    <p>亲身体验</p>
+                    <p>特别的体验</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：来老挝可以体验当地风俗。</div>
+        </div>`
+    },
+    {
+        front:"乐趣",
+        img:"lequ.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="lequ.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>lè qù（名词）</p>
+                    <p>读书的乐趣</p>
+                    <p>乐趣很多</p>
+                    <p>寻找乐趣</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：学习汉语给我带来很多乐趣。</div>
+        </div>`
+    },
+    {
+        front:"实现",
+        img:"shixian.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="shixian.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>shí xiàn（动词）</p>
+                    <p>实现目标</p>
+                    <p>努力实现</p>
+                    <p>实现得顺利</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：坚持努力，就能实现你的目标。</div>
+        </div>`
+    },
+    {
+        front:"软件",
+        img:"ruanjian.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="ruanjian.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>ruǎn jiàn（名词）</p>
+                    <p>学习软件</p>
+                    <p>软件更新</p>
+                    <p>安装软件</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：这个软件帮助我们练习汉语。</div>
+        </div>`
+    },
+    {
+        front:"晕",
+        img:"yun.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="yun.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>yūn（形容词）</p>
+                    <p>头脑发晕</p>
+                    <p>有点晕</p>
+                    <p>晕得厉害</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：坐车太久，我感觉有点晕。</div>
+        </div>`
+    },
+    {
+        front:"恶心",
+        img:"exin.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="exin.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>ě xin（形容词）</p>
+                    <p>气味恶心</p>
+                    <p>非常恶心</p>
+                    <p>恶心到想吐</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：闻到这个味道，我觉得恶心。</div>
+        </div>`
+    },
+    {
+        front:"视力",
+        img:"shili.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="shili.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>shì lì（名词）</p>
+                    <p>良好的视力</p>
+                    <p>视力下降</p>
+                    <p>保护视力</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：少看手机，保护我们的视力。</div>
+        </div>`
+    },
+    {
+        front:"模糊",
+        img:"mohu.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="mohu.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>mó hu（形容词）</p>
+                    <p>字迹模糊</p>
+                    <p>渐渐模糊</p>
+                    <p>模糊得看不清</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：眼睛疲劳的时候，看东西会模糊。</div>
+        </div>`
+    },
+    {
+        front:"检查",
+        img:"jiancha.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="jiancha.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>jiǎn chá（动词）</p>
+                    <p>检查作业</p>
+                    <p>仔细检查</p>
+                    <p>检查完毕</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：医生帮我检查身体。</div>
+        </div>`
+    },
+    {
+        front:"综合征",
+        img:"zonghezheng.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="zonghezheng.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>zōng hé zhēng（名词）</p>
+                    <p>疲劳综合征</p>
+                    <p>综合征发作</p>
+                    <p>预防综合征</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：长期熬夜容易引发疲劳综合征。</div>
+        </div>`
+    },
+    {
+        front:"有效",
+        img:"youxiao.jpg",
+        back:`<div class="back-inner">
+            <div class="back-row">
+                <img class="card-img" src="youxiao.jpg" alt="生词配图" onerror="this.style.display='none'">
+                <div class="text-part">
+                    <p>yǒu xiào（形容词）</p>
+                    <p>办法有效</p>
+                    <p>十分有效</p>
+                    <p>有效的办法</p>
+                </div>
+            </div>
+            <div class="sentence-line">例句：这是练习汉语很有效的方法。</div>
+        </div>`
+    }
+];
+
+let currentIndex = 0;
+let isShowBack = false;
+let cards = [...cardList];
+
+const frontDom = document.getElementById("front");
+const backDom = document.getElementById("back");
+const cardDom = document.getElementById("card");
+const currentPage = document.getElementById("current");
+const totalPage = document.getElementById("total");
+totalPage.innerText = cards.length;
+
+function renderCard(){
+    const item = cards[currentIndex];
+    frontDom.innerText = item.front;
+    backDom.innerHTML = item.back;
+
+    if(isShowBack){
+        frontDom.style.display="none";
+        backDom.style.display="block";
+    }else{
+        frontDom.style.display="block";
+        backDom.style.display="none";
+    }
+    currentPage.innerText = currentIndex +1;
+}
+
+//点击卡片翻面
+cardDom.addEventListener("click",()=>{
+    isShowBack = !isShowBack;
+    renderCard();
+})
+
+//上一张
+document.getElementById("prev").addEventListener("click",()=>{
+    if(currentIndex>0){
+        currentIndex--;
+        isShowBack=false;
+        renderCard();
+    }
+})
+
+//下一张
+document.getElementById("next").addEventListener("click",()=>{
+    if(currentIndex < cards.length -1){
+        currentIndex++;
+        isShowBack=false;
+        renderCard();
+    }
+})
+
+//洗牌随机顺序
+document.getElementById("shuffle").addEventListener("click",()=>{
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    currentIndex = 0;
+    isShowBack = false;
+    renderCard();
+})
+
+renderCard();
+</script>
+</body>
+</html>

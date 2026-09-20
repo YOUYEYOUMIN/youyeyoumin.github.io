@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI-241 班课堂签到</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-item {
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .status.open {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status.closed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .student-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-card.signed {
+            background: #dcfce7;
+            border-color: #166534;
+            color: #166534;
+        }
+
+        .student-card:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .student-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .signed-info {
+            font-size: 12px;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .stats {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: #10b981;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CI-241 班课堂签到</h1>
+            <div class="info">
+                <div class="info-item" id="current-time">2026-09-20 00:00</div>
+                <div class="status open" id="sign-status">签到进行中</div>
+            </div>
+            <div class="controls">
+                <button class="btn-success" id="export-btn">导出考勤表</button>
+                <button class="btn-danger" id="close-btn">关闭签到</button>
+                <button class="btn-primary" id="reset-btn">重置签到</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-count">33</div>
+                    <div class="stat-label">总人数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="signed-count">0</div>
+                    <div class="stat-label">已签到</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="absent-count">33</div>
+                    <div class="stat-label">未签到</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="student-grid" id="student-grid">
+            <!-- 学生卡片将由JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // 学生名单数据
+        const studentNames = ['周苏为', '娣娜拉', '张美丽', '潘吉悦', '宋家贤', '李米蒂', '金晶', '康乐', '苏光明', '阿丽莎', '连丽', '安迪南', '孙田', '江家燕', '迪雄', '唐楷辞', '彭佩兰', '杨依慈', '李品玉', '王杰', '文思', '王土星', '乔旺', '郑卿媛', '宋沙文', '林子湛', '张文军', '阳洋', '李丽', '陶晚', '魏然', '孔薇兰', '苏婉'];
+        
+        // 签到状态管理
+        let signState = {
+            isOpen: true,
+            signedList: {},
+            deviceId: ''
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成设备ID（防止同一设备多次签到）
+            signState.deviceId = Math.random().toString(16).substring(2, 15);
+            
+            // 渲染学生列表
+            renderStudentList();
+            
+            // 更新时间
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            // 更新统计
+            updateStats();
+            
+            // 绑定按钮事件
+            document.getElementById('export-btn').addEventListener('click', exportAttendance);
+            document.getElementById('close-btn').addEventListener('click', toggleSignStatus);
+            document.getElementById('reset-btn').addEventListener('click', resetAttendance);
+        });
+
+        // 渲染学生列表
+        function renderStudentList() {
+            const grid = document.getElementById('student-grid');
+            grid.innerHTML = '';
+            
+            studentNames.forEach(name => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.dataset.name = name;
+                card.innerHTML = `
+                    <div class="student-name">${name}</div>
+                    <div class="signed-info"></div>
+                `;
+                card.addEventListener('click', () => signIn(name, card));
+                grid.appendChild(card);
+            });
+        }
+
+        // 签到功能
+        function signIn(name, card) {
+            if (!signState.isOpen) {
+                showToast('签到已关闭', 'error');
+                return;
+            }
+
+            // 检查该学生是否已签到
+            if (signState.signedList[name]) {
+                showToast('该学生已签到', 'error');
+                return;
+            }
+
+            // 记录签到信息
+            signState.signedList[name] = {
+                time: new Date().toLocaleString('zh-CN'),
+                deviceId: signState.deviceId
+            };
+
+            // 更新卡片样式
+            card.classList.add('signed');
+            card.querySelector('.signed-info').textContent = '已签到';
+            card.disabled = true;
+
+            // 更新统计
+            updateStats();
+
+            showToast(`${name} 签到成功`, 'success');
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            const total = studentNames.length;
+            const signed = Object.keys(signState.signedList).length;
+            const absent = total - signed;
+
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('signed-count').textContent = signed;
+            document.getElementById('absent-count').textContent = absent;
+        }
+
+        // 切换签到状态
+        function toggleSignStatus() {
+            signState.isOpen = !signState.isOpen;
+            const statusEl = document.getElementById('sign-status');
+            const btn = document.getElementById('close-btn');
+
+            if (signState.isOpen) {
+                statusEl.textContent = '签到进行中';
+                statusEl.className = 'status open';
+                btn.textContent = '关闭签到';
+                btn.className = 'btn-danger';
+                // 恢复所有未签到卡片的点击事件
+                document.querySelectorAll('.student-card').forEach(card => {
+                    if (!signState.signedList[card.dataset.name]) {
+                        card.disabled = false;
+                    }
+                });
+            } else {
+                statusEl.textContent = '签到已关闭';
+                statusEl.className = 'status closed';
+                btn.textContent = '开启签到';
+                btn.className = 'btn-primary';
+                // 禁用所有未签到卡片
+                document.querySelectorAll('.student-card').forEach(card => {
+                    if (!signState.signedList[card.dataset.name]) {
+                        card.disabled = true;
+                    }
+                });
+            }
+        }
+
+        // 重置签到
+        function resetAttendance() {
+            if (confirm('确定要重置所有签到记录吗？')) {
+                signState.signedList = {};
+                signState.isOpen = true;
+                renderStudentList();
+                updateStats();
+                // 重置状态
+                document.getElementById('sign-status').textContent = '签到进行中';
+                document.getElementById('sign-status').className = 'status open';
+                document.getElementById('close-btn').textContent = '关闭签到';
+                document.getElementById('close-btn').className = 'btn-danger';
+                showToast('签到已重置', 'success');
+            }
+        }
+
+        // 导出考勤表
+        function exportAttendance() {
+            // 生成CSV内容
+            let csvContent = '姓名,签到状态,签到时间\n';
+            
+            studentNames.forEach(name => {
+                if (signState.signedList[name]) {
+                    csvContent += `${name},已签到,${signState.signedList[name].time}\n`;
+                } else {
+                    csvContent += `${name},未签到,\n`;
+                }
+            });
+
+            // 下载CSV文件
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `CI-241班考勤表_${new Date().toLocaleDateString('zh-CN')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast('考勤表已导出', 'success');
+        }
+
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString('zh-CN');
+        }
+
+        // 显示提示消息
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

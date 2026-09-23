@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZZ1‑15‑2</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, sans-serif;
+    }
+    body {
+        background-color: #f7f9fc;
+        padding: 24px 16px;
+    }
+    h1 {
+        text-align: center;
+        color: #002b5c;
+        margin-bottom: 28px;
+        font-size: clamp(22px, 4vw, 28px);
+    }
+    .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .flashcard {
+        background: #ffffff;
+        border-radius: 20px;
+        min-height: 460px;
+        padding: 32px 20px;
+        box-shadow: 0 4px 14px rgba(0, 43, 92, 0.12);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .flashcard:hover {
+        box-shadow: 0 6px 20px rgba(0, 43, 92, 0.18);
+    }
+    .front-text {
+        font-size: clamp(42px, 10vw, 60px);
+        font-weight: bold;
+        color: #002b5c;
+        text-align: center;
+    }
+    .back-text {
+        font-size: clamp(18px, 3vw, 22px);
+        color: #002b5c;
+        line-height: 1.8;
+        display: none;
+        width: 100%;
+    }
+    .back-inner {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+    .back-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .card-img {
+        width: min(220px, 70vw);
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #eef2f7;
+    }
+    .text-part {
+        flex: 1;
+        min-width: 200px;
+    }
+    .text-part p {
+        margin: 4px 0;
+    }
+    .sentence-line {
+        width: 100%;
+        margin-top: 18px;
+        text-align: center;
+    }
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 26px;
+        flex-wrap: wrap;
+    }
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: #002b5c;
+        color: #ffffff;
+        font-size: clamp(16px, 3vw, 20px);
+        cursor: pointer;
+    }
+    button:hover {
+        opacity: 0.85;
+    }
+    .page-info {
+        text-align: center;
+        margin-top: 16px;
+        color: #002b5c;
+        font-size: clamp(16px, 3vw, 20px);
+    }
+</style>
+</head>
+<body>
+<h1>ZZ1‑15‑2</h1>
+<div class="wrap">
+    <div class="flashcard" id="card">
+        <div class="front-text" id="front">组织</div>
+        <div class="back-text" id="back"></div>
+    </div>
+    <div class="page-info">
+        <span id="current">1</span> / <span id="total">13</span>
+    </div>
+    <div class="btn-group">
+        <button id="prev">上一张</button>
+        <button id="next">下一张</button>
+        <button id="shuffle">随机洗牌</button>
+    </div>
+</div>
+<script>
+    const cardList = [
+        {
+            front: "组织",
+            img: "./15‑2/zuzhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/zuzhi.jpg" alt="组织" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zǔ zhī（动词）</p>
+                            <p>组织活动</p>
+                            <p>精心组织</p>
+                            <p>组织有序</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：老师组织我们去田野参观。</div>
+                </div>
+            `
+        },
+        {
+            front: "田野",
+            img: "./15‑2/tianye.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/tianye.jpg" alt="田野" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>tián yě（名词）</p>
+                            <p>广阔的田野</p>
+                            <p>走进田野</p>
+                            <p>田野辽阔</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：春天的田野到处都是绿色。</div>
+                </div>
+            `
+        },
+        {
+            front: "议论",
+            img: "./15‑2/yilun.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/yilun.jpg" alt="议论" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yì lùn（动词）</p>
+                            <p>议论事情</p>
+                            <p>纷纷议论</p>
+                            <p>大家议论</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：同学们在议论周末的活动。</div>
+                </div>
+            `
+        },
+        {
+            front: "乡下",
+            img: "./15‑2/xiangxia.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/xiangxia.jpg" alt="乡下" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>xiāng xia（名词）</p>
+                            <p>美丽的乡下</p>
+                            <p>回到乡下</p>
+                            <p>乡下安静</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：放假以后我要回乡下看爷爷奶奶。</div>
+                </div>
+            `
+        },
+        {
+            front: "种植",
+            img: "./15‑2/zhongzhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/zhongzhi.jpg" alt="种植" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhòng zhí（动词）</p>
+                            <p>种植庄稼</p>
+                            <p>大量种植</p>
+                            <p>农民种植</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：农民在地里种植各种各样的蔬菜。</div>
+                </div>
+            `
+        },
+        {
+            front: "现实",
+            img: "./15‑2/xianshi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/xianshi.jpg" alt="现实" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>xiàn shí（名词）</p>
+                            <p>残酷的现实</p>
+                            <p>面对现实</p>
+                            <p>现实残酷</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们应该勇敢地面对现实。</div>
+                </div>
+            `
+        },
+        {
+            front: "种子",
+            img: "./15‑2/zhongzi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/zhongzi.jpg" alt="种子" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhǒng zi（名词）</p>
+                            <p>饱满的种子</p>
+                            <p>播撒种子</p>
+                            <p>种子发芽</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：春天把种子埋进土里，它就会生长。</div>
+                </div>
+            `
+        },
+        {
+            front: "肥料",
+            img: "./15‑2/feiliao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/feiliao.jpg" alt="肥料" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>féi liào（名词）</p>
+                            <p>天然的肥料</p>
+                            <p>施加肥料</p>
+                            <p>肥料充足</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：给庄稼加上肥料，庄稼会长得更好。</div>
+                </div>
+            `
+        },
+        {
+            front: "公寓",
+            img: "./15‑2/gongyu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/gongyu.jpg" alt="公寓" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>gōng yù（名词）</p>
+                            <p>新式公寓</p>
+                            <p>租住公寓</p>
+                            <p>公寓宽敞</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我在城市里租了一间小公寓。</div>
+                </div>
+            `
+        },
+        {
+            front: "铺",
+            img: "./15‑2/pu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/pu.jpg" alt="铺" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>pū（动词）</p>
+                            <p>铺地板</p>
+                            <p>均匀地铺</p>
+                            <p>工人铺</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：妈妈在地上铺了一块新地毯。</div>
+                </div>
+            `
+        },
+        {
+            front: "厚",
+            img: "./15‑2/hou.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/hou.jpg" alt="厚" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>hòu（形容词）</p>
+                            <p>厚厚的被子</p>
+                            <p>做得很厚</p>
+                            <p>积雪很厚</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：冬天，床上要盖很厚的被子。</div>
+                </div>
+            `
+        },
+        {
+            front: "苗",
+            img: "./15‑2/miao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/miao.jpg" alt="苗" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>miáo（名词）</p>
+                            <p>嫩绿的苗</p>
+                            <p>培育禾苗</p>
+                            <p>禾苗长高</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：雨水过后，田里的苗长得很快。</div>
+                </div>
+            `
+        },
+        {
+            front: "青色",
+            img: "./15‑2/qingshe.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./15‑2/qingshe.jpg" alt="青色" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qīng sè（名词）</p>
+                            <p>青色的叶子</p>
+                            <p>变成青色</p>
+                            <p>草木青色</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：春天，树上长出一片片青色的嫩叶。</div>
+                </div>
+            `
+        }
+    ];
+    let currentIndex = 0;
+    let isShowBack = false;
+    let cards = [...cardList];
+    const frontDom = document.getElementById("front");
+    const backDom = document.getElementById("back");
+    const cardDom = document.getElementById("card");
+    const currentPage = document.getElementById("current");
+    const totalPage = document.getElementById("total");
+    totalPage.innerText = cards.length;
+    function renderCard() {
+        const item = cards[currentIndex];
+        frontDom.innerText = item.front;
+        backDom.innerHTML = item.back;
+        if (isShowBack) {
+            frontDom.style.display = "none";
+            backDom.style.display = "block";
+        } else {
+            frontDom.style.display = "block";
+            backDom.style.display = "none";
+        }
+        currentPage.innerText = currentIndex + 1;
+    }
+    cardDom.addEventListener("click", () => {
+        isShowBack = !isShowBack;
+        renderCard();
+    });
+    document.getElementById("prev").addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("next").addEventListener("click", () => {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("shuffle").addEventListener("click", () => {
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        currentIndex = 0;
+        isShowBack = false;
+        renderCard();
+    });
+    renderCard();
+</script>
+</body>
+</html>

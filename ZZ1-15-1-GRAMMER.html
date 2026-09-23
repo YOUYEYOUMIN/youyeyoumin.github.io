@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZ1‑15‑1‑GRAMMAR</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+        body {
+            background-color: #f7f9fc;
+            padding: 24px 16px;
+        }
+        h1 {
+            text-align: center;
+            color: #002b5c;
+            margin-bottom: 28px;
+            font-size: clamp(22px,4vw,28px);
+        }
+        .wrap {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .flashcard {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            min-height: 520px;
+            padding: 36px 30px;
+            box-shadow: 0 4px 14px rgba(0,43,92,0.12);
+            display:flex;
+            flex-direction:column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            cursor:pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 6px 20px rgba(0,43,92,0.18);
+        }
+        .front-text {
+            font-size: clamp(36px,7vw,52px);
+            font-weight:bold;
+            color:#002b5c;
+            text-align: left;
+            width:100%;
+            margin-top:40px;
+        }
+        .back-text {
+            font-size: clamp(19px,3vw,22px);
+            color:#002b5c;
+            line-height:1.9;
+            display:none;
+            width:100%;
+        }
+        .back-inner{
+            width:100%;
+        }
+        .block{
+            margin-bottom:16px;
+        }
+        .tip{
+            color:#2b4b80;
+        }
+        .exercise{
+            margin-top:20px;
+        }
+        .btn-group {
+            display:flex;
+            justify-content: center;
+            gap:14px;
+            margin-top:26px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding:12px 24px;
+            border:none;
+            border-radius:10px;
+            background:#002b5c;
+            color:#ffffff;
+            font-size: clamp(16px,3vw,19px);
+            cursor:pointer;
+        }
+        button:hover {
+            opacity:0.85;
+        }
+        .page-info {
+            text-align:center;
+            margin-top:16px;
+            color:#002b5c;
+            font-size: clamp(16px,3vw,19px);
+        }
+    </style>
+</head>
+<body>
+    <h1>ZZ1‑15‑1‑GRAMMAR</h1>
+    <div class="wrap">
+        <div class="flashcard" id="card">
+            <div class="front-text" id="front">谁不……呢？</div>
+            <div class="back-text" id="back"></div>
+        </div>
+        <div class="page-info">
+            <span id="current">1</span> / <span id="total">6</span>
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一张</button>
+            <button id="next">下一张</button>
+            <button id="shuffle">随机洗牌</button>
+        </div>
+    </div>
+<script>
+const cardList = [
+    {
+        front:"谁不……呢？",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：反问句，意思是“所有人都……”，加强肯定的语气。</div>
+            <div class="block">课文原句：长期生活在城市的“水泥森林”中，谁不想体验一下自己动手种菜的乐趣呢？</div>
+            <div class="exercise block">练习（改写句子）：
+                <div>1. 大家都喜欢绿色植物。→ 谁不________________呢？</div>
+                <div>2. 每个人都想亲近大自然。→ 谁不________________呢？</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"简直是……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：用来强调事情的程度，带有感叹语气，觉得这件事很难实现。</div>
+            <div class="block">课文原句：想在寸土寸金的都市里种菜，那简直是在做白日梦。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 一天读完这本厚书，简直是________________。</div>
+                <div>2. 在小小的阳台种大树，简直是________________。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"不仅……，还……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：递进关系，表示除了前面一件事，还有另外更好的结果。</div>
+            <div class="block">课文原句：不仅让城里人实现了自己在都市里种出绿色蔬菜的梦想，还美化了都市的环境呢！</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 种绿植______可以保护眼睛，______可以美化房间。</div>
+                <div>2. 学汉语______能交朋友，______能找到好工作。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"由于……，……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：说明原因，“由于”后面写原因，后面写带来的结果。</div>
+            <div class="block">课文原句：由于每天坐在电脑前盯着屏幕，再加上夜里经常加班，时间一长，她就感到两眼疼痛。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. ______长时间看电脑，他的眼睛不舒服。</div>
+                <div>2. ______缺少运动，他常常觉得很累。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"一……，就……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：表示两件事紧紧相连，做完第一件，马上出现第二个结果。</div>
+            <div class="block">课文原句：时间一长，她就感到两眼疼痛，而且头晕、恶心。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 我______看很久电脑，眼睛______疼。</div>
+                <div>2. ______到周末，我______想去公园。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"最有效的……就是……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：用来介绍最好、效果最好的办法。</div>
+            <div class="block">课文原句：最有效的治疗方法就是经常到大自然中走一走，多看一些绿色植物。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 学习汉语，最有效的办法就是________________。</div>
+                <div>2. 保护眼睛，最有效的方法就是________________。</div>
+            </div>
+        </div>`
+    }
+];
+
+let currentIndex = 0;
+let isShowBack = false;
+let cards = [...cardList];
+const frontDom = document.getElementById("front");
+const backDom = document.getElementById("back");
+const cardDom = document.getElementById("card");
+const currentPage = document.getElementById("current");
+const totalPage = document.getElementById("total");
+totalPage.innerText = cards.length;
+
+function renderCard(){
+    const item = cards[currentIndex];
+    frontDom.innerText = item.front;
+    backDom.innerHTML = item.back;
+    if(isShowBack){
+        frontDom.style.display="none";
+        backDom.style.display="block";
+    }else{
+        frontDom.style.display="block";
+        backDom.style.display="none";
+    }
+    currentPage.innerText = currentIndex +1;
+}
+
+cardDom.addEventListener("click",()=>{
+    isShowBack = !isShowBack;
+    renderCard();
+})
+
+document.getElementById("prev").addEventListener("click",()=>{
+    if(currentIndex>0){
+        currentIndex--;
+        isShowBack=false;
+        renderCard();
+    }
+})
+
+document.getElementById("next").addEventListener("click",()=>{
+    if(currentIndex < cards.length -1){
+        currentIndex++;
+        isShowBack=false;
+        renderCard();
+    }
+})
+
+document.getElementById("shuffle").addEventListener("click",()=>{
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    currentIndex = 0;
+    isShowBack = false;
+    renderCard();
+})
+
+renderCard();
+</script>
+</body>
+</html>

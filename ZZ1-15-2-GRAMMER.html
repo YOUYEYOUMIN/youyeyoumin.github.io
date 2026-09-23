@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZ1‑15‑2‑GRAMMAR</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+        body {
+            background-color: #f7f9fc;
+            padding: 24px 16px;
+        }
+        h1 {
+            text-align: center;
+            color: #002b5c;
+            margin-bottom: 28px;
+            font-size: clamp(22px,4vw,28px);
+        }
+        .wrap {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .flashcard {
+            background: #ffffff;
+            border-radius: 20px;
+            /* 固定卡片尺寸，正反面长宽完全一致 */
+            width: 100%;
+            min-height: 520px;
+            padding: 36px 30px;
+            box-shadow: 0 4px 14px rgba(0,43,92,0.12);
+            display:flex;
+            flex-direction:column;
+            justify-content: flex‑start;
+            align-items: flex‑start;
+            cursor:pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 6px 20px rgba(0,43,92,0.18);
+        }
+        .front-text {
+            font-size: clamp(36px,7vw,52px);
+            font-weight:bold;
+            color:#002b5c;
+            text-align: left;
+            width:100%;
+            margin-top:40px;
+        }
+        .back-text {
+            font-size: clamp(19px,3vw,22px);
+            color:#002b5c;
+            line-height:1.9;
+            display:none;
+            width:100%;
+        }
+        .back-inner{
+            width:100%;
+        }
+        .block{
+            margin-bottom:16px;
+        }
+        .tip{
+            color:#2b4b80;
+        }
+        .exercise{
+            margin-top:20px;
+        }
+        .btn-group {
+            display:flex;
+            justify-content: center;
+            gap:14px;
+            margin-top:26px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding:12px 24px;
+            border:none;
+            border-radius:10px;
+            background:#002b5c;
+            color:#ffffff;
+            font-size: clamp(16px,3vw,19px);
+            cursor:pointer;
+        }
+        button:hover {
+            opacity:0.85;
+        }
+        .page-info {
+            text-align:center;
+            margin-top:16px;
+            color:#002b5c;
+            font-size: clamp(16px,3vw,19px);
+        }
+    </style>
+</head>
+<body>
+    <h1>ZZ1‑15‑2‑GRAMMAR</h1>
+    <div class="wrap">
+        <div class="flashcard" id="card">
+            <div class="front-text" id="front">要是……，那该多好呀 / 要是……就好了</div>
+            <div class="back-text" id="back"></div>
+        </div>
+        <div class="page-info">
+            <span id="current">1</span> / <span id="total">12</span>
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一张</button>
+            <button id="next">下一张</button>
+            <button id="shuffle">随机洗牌</button>
+        </div>
+    </div>
+<script>
+const cardList = [
+    {
+        front:"要是……，那该多好呀 / 要是……就好了",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：用于表达心中美好的愿望，多是现在还没有实现的事情。</div>
+            <div class="block">课文原句：要是能到乡下生活，那该多好呀！</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 要是每天都能呼吸新鲜空气，____________________！</div>
+                <div>2. 要是我有一块地，____________________。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"既没有……，也没有……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：同时否定两样事物，说明两样东西都不具备。</div>
+            <div class="block">课文原句：城里既没有土地，也没有种子和肥料。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 这个小房间______窗户，______阳台。</div>
+                <div>2. 他______时间，______钱，不能去乡下。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"A是A，B是B",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：用来区分两件不同的事物，提醒不要把二者混在一起。</div>
+            <div class="block">课文原句：理想是理想，现实是现实。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 故事______故事，生活______生活，不要弄混。</div>
+                <div>2. 想法______想法，行动______行动。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"不是……吗？ / 不就……吗？",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：反问句式，不需要对方回答，用来加强肯定的语气。</div>
+            <div class="block">课文原句：不是有一大片空地吗？不就可以种植花草和瓜果了吗？</div>
+            <div class="exercise block">练习（改写句子）：
+                <div>1. 楼顶有空地。→ ________________________？</div>
+                <div>2. 铺上土就可以种菜。→ ________________________？</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"说干就干",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：口语表达，指下定决心之后马上行动，不拖延。</div>
+            <div class="block">课文原句：说干就干。</div>
+            <div class="exercise block">练习（填空）：
+                <div>大家决定种菜，________，马上开始准备泥土。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"把A变成B",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：把字句，表示对事物加以改变，让A转变成为B。</div>
+            <div class="block">课文原句：她就把自己的小楼顶变成了一个“小菜园”。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 我把阳台______________小菜园。</div>
+                <div>2. 她把空房间______________书房。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"再也没有比……更……了",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：最高级表达，强调某一样事物在范围内是最好的。</div>
+            <div class="block">课文原句：再也没有比红红的小草莓更好种的了！</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 再也没有比自己种的水果______________。</div>
+                <div>2. 再也没有比乡下的空气______________。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"由A变B",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：描写事物的变化过程，从A的状态逐步过渡到B的状态。</div>
+            <div class="block">课文原句：然后小果子由青变红。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 树叶秋天____绿____黄。</div>
+                <div>2. 果子慢慢____青____红。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"比……+形容词+多了",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：差比句，对比两件事物，突出二者的差距很大。</div>
+            <div class="block">课文原句：哇，比市场上的草莓好吃多了!</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 自己种的蔬菜____超市的蔬菜新鲜多了。</div>
+                <div>2. 乡下的空气____城市里好____。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"……不说，还……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：递进关系，除了前面提到的好处，还有另外一层收获。</div>
+            <div class="block">课文原句：楼顶变漂亮了不说，还吃到了自己亲手种的绿色食品！</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 这个菜园好看____，还能吃到新鲜蔬菜。</div>
+                <div>2. 学汉语有趣____，还可以认识很多朋友。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"干脆（副词）",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：表示索性、直接，做出干脆利落的决定。</div>
+            <div class="block">课文原句：有时自己吃不完，就干脆送给同事和朋友。</div>
+            <div class="exercise block">练习（填空）：
+                <div>东西太多拿不动，____放在这里。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"可是（表强调）",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：重读“可是”，不是转折，用来加强语气，强调事情真实。</div>
+            <div class="block">课文原句：这可是我亲手种的。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 这____我亲手做的饭菜！</div>
+                <div>2. 这____一个好机会，不要错过。</div>
+            </div>
+        </div>`
+    }
+];
+
+let currentIndex = 0;
+let isShowBack = false;
+let cards = [...cardList];
+const frontDom = document.getElementById("front");
+const backDom = document.getElementById("back");
+const cardDom = document.getElementById("card");
+const currentPage = document.getElementById("current");
+const totalPage = document.getElementById("total");
+totalPage.innerText = cards.length;
+
+function renderCard(){
+    const item = cards[currentIndex];
+    frontDom.innerText = item.front;
+    backDom.innerHTML = item.back;
+    if(isShowBack){
+        frontDom.style.display="none";
+        backDom.style.display="block";
+    }else{
+        frontDom.style.display="block";
+        backDom.style.display="none";
+    }
+    currentPage.innerText = currentIndex +1;
+}
+
+cardDom.addEventListener("click",()=>{
+    isShowBack = !isShowBack;
+    renderCard();
+})
+
+document.getElementById("prev").addEventListener("click",()=>{
+    if(currentIndex>0){
+        currentIndex--;
+        isShowBack=false;
+        renderCard();
+    }
+})
+
+document.getElementById("next").addEventListener("click",()=>{
+    if(currentIndex < cards.length -1){
+        currentIndex++;
+        isShowBack=false;
+        renderCard();
+    }
+})
+
+document.getElementById("shuffle").addEventListener("click",()=>{
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    currentIndex = 0;
+    isShowBack = false;
+    renderCard();
+})
+
+renderCard();
+</script>
+</body>
+</html>

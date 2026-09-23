@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>速读练习｜哈尔滨冰灯</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            color: #000066; /*深蓝色字体*/
+            background-color: #f8f9fa;
+            padding:20px;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        .container{
+            background:#fff;
+            border-radius:16px;
+            padding:28px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.12);
+        }
+        .title{
+            text-align:center;
+            font-size:26px;
+            margin-bottom:16px;
+        }
+        .timer-box{
+            font-size:22px;
+            text-align:center;
+            color:#c00;
+            margin-bottom:20px;
+            font-weight:bold;
+        }
+        .article{
+            font-size:18px;
+            line-height:1.7;
+            margin-bottom:24px;
+        }
+        .btn{
+            padding:12px 24px;
+            font-size:18px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            background:#1e40af;
+            color:white;
+            margin:6px;
+        }
+        .question-block{
+            margin:24px 0;
+        }
+        .q-text{
+            font-size:19px;
+            margin-bottom:10px;
+        }
+        .opt{
+            padding:12px 16px;
+            margin:8px 0;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:17px;
+        }
+        .opt:hover{background:#eef2ff;}
+        .opt.selected{background:#dbeafe; border-color:#1e40af;}
+        .result-final{
+            font-size:22px;
+            text-align:center;
+            margin-top:30px;
+        }
+        .input-name{
+            width:100%;
+            padding:12px;
+            font-size:18px;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            margin-bottom:20px;
+        }
+        .page{display:none;}
+        .page.active{display:block;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <!--页面1：速读阅读页+倒计时-->
+    <div id="pageRead" class="page active">
+        <h1 class="title">速读练习：哈尔滨冰灯</h1>
+        <div class="timer-box">剩余时间：<span id="time">03:00</span></div>
+        <div class="article">
+            <p>哈尔滨是中国东北一座美丽的大城市，被人们称做“冰城”。这里每年冬天都会举办冰雪节。每到这个时候，冰雕艺术家们就会把冰块做成长城、故宫、天坛等各种各样的建筑，还有桂林山水、苏州园林、版纳风光。一盏盏冰灯，组成了一个七彩的世界。一座座冰雕，展现出了一片晶莹的艺术天地。</p>
+            <br>
+            <p>哈尔滨人喜爱冰雪，他们把冰雪看作大自然送给他们的礼物，也是展现自己才华的材料。参加冰雕创作的，有专业艺术家，也有普通青年学生。在他们的手中，又硬又冷的冰块好像有了生气，有了灵性。一座座冰雕表达了创作者的心声和情感，也美化了这座寒冷的城市。</p>
+            <br>
+            <p>冰灯、冰雕已经成为冰城特有的文化。傍晚，当你走在哈尔滨的大街上，你会看到冰灯和冰雕发出多彩、温暖的灯光，你会感到冬天的哈尔滨是那么美丽。</p>
+        </div>
+        <button class="btn" id="readFinish">阅读完成，开始答题</button>
+    </div>
+
+    <!--页面2：答题页面-->
+    <div id="pageQuiz" class="page">
+        <h1 class="title">练习题</h1>
+        <input class="input-name" id="stuName" placeholder="请输入你的姓名">
+        <div id="quizBox"></div>
+        <button class="btn" id="submitAll">提交全部答案</button>
+        <div class="result-final" id="finalResult"></div>
+    </div>
+</div>
+
+<script>
+// ========== 配置（最新链接） ==========
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfFKJqnSayyzS23XBZ0ygpl353NwmS9IcxtskreR0-ZRQ7DAtJ6GiR5S_k-OhAFcj3hw/exec";
+const READ_SECONDS = 180; //阅读限时：180秒=3分钟
+let remainTime = READ_SECONDS;
+let timer;
+let score = 0;
+let quizAnswered = [];
+
+//题目库（单选+判断）
+const questions = [
+    {type:"single", q:"1.哈尔滨在中国的哪个地区？", opts:["A.中国南部","B.中国东北","C.中国西北","D.中国西南"], ans:1},
+    {type:"single", q:"2.哈尔滨被人们叫做什么？", opts:["A.山城","B.春城","C.冰城","D.花城"], ans:2},
+    {type:"single", q:"3.哈尔滨的冰雪节在哪个季节举办？", opts:["A.春天","B.夏天","C.秋天","D.冬天"], ans:3},
+    {type:"single", q:"4.冰雕艺术家拿什么材料做冰雕？", opts:["A.冰块","B.鲜花","C.小动物","D.木头"], ans:0},
+    {type:"single", q:"5.下面哪一个不是冰雕可以做成的样子？", opts:["A.长城","B.故宫","C.金字塔","D.天坛"], ans:2},
+    {type:"judge", q:"6.哈尔滨是中国东北一座美丽的大城市。", ans:true},
+    {type:"judge", q:"7.哈尔滨冰雪节在夏天举办。", ans:false},
+    {type:"judge", q:"8.冰雕作品可以做成长城、故宫、天坛的样子。", ans:true},
+    {type:"judge", q:"9.冰灯是黑色和白色的。", ans:false},
+    {type:"judge", q:"10.傍晚哈尔滨的冰灯会发出多彩温暖的灯光。", ans:true},
+];
+
+const pageRead = document.getElementById("pageRead");
+const pageQuiz = document.getElementById("pageQuiz");
+const timeSpan = document.getElementById("time");
+const readFinishBtn = document.getElementById("readFinish");
+const quizBox = document.getElementById("quizBox");
+const submitBtn = document.getElementById("submitAll");
+const finalResult = document.getElementById("finalResult");
+const stuNameInput = document.getElementById("stuName");
+
+//倒计时格式化
+function formatTime(s){
+    let m = Math.floor(s/60);
+    let sec = s % 60;
+    return String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+}
+//启动倒计时
+function startTimer(){
+    timer = setInterval(()=>{
+        remainTime--;
+        timeSpan.innerText = formatTime(remainTime);
+        if(remainTime <=0){
+            clearInterval(timer);
+            goQuiz();
+        }
+    },1000);
+}
+//切换答题页面，阅读页面永久隐藏
+function goQuiz(){
+    clearInterval(timer);
+    pageRead.classList.remove("active");
+    pageQuiz.classList.add("active");
+    renderQuiz();
+}
+readFinishBtn.onclick = goQuiz;
+
+//渲染所有题目
+function renderQuiz(){
+    quizBox.innerHTML = "";
+    quizAnswered = Array(questions.length).fill(null);
+    questions.forEach((item, idx)=>{
+        const wrap = document.createElement("div");
+        wrap.className = "question-block";
+        const qEl = document.createElement("div");
+        qEl.className = "q-text";
+        qEl.innerText = item.q;
+        wrap.appendChild(qEl);
+        const optWrap = document.createElement("div");
+        if(item.type==="single"){
+            item.opts.forEach((opt, oIdx)=>{
+                const div = document.createElement("div");
+                div.className = "opt";
+                div.innerText = opt;
+                div.onclick = ()=>{
+                    quizAnswered[idx] = oIdx;
+                    document.querySelectorAll(`.q${idx}`).forEach(e=>e.classList.remove("selected"));
+                    div.classList.add("selected");
+                }
+                div.classList.add(`q${idx}`);
+                optWrap.appendChild(div);
+            })
+        }else{
+            //判断题
+            const tBtn = document.createElement("div");
+            tBtn.className = "opt";
+            tBtn.innerText = "T 正确";
+            tBtn.onclick = ()=>{quizAnswered[idx]=true;document.querySelectorAll(`.q${idx}`).forEach(e=>e.classList.remove("selected"));tBtn.classList.add("selected");};
+            tBtn.classList.add(`q${idx}`);
+            optWrap.appendChild(tBtn);
+
+            const fBtn = document.createElement("div");
+            fBtn.className = "opt";
+            fBtn.innerText = "F 错误";
+            fBtn.onclick = ()=>{quizAnswered[idx]=false;document.querySelectorAll(`.q${idx}`).forEach(e=>e.classList.remove("selected"));fBtn.classList.add("selected");};
+            fBtn.classList.add(`q${idx}`);
+            optWrap.appendChild(fBtn);
+        }
+        wrap.appendChild(optWrap);
+        quizBox.appendChild(wrap);
+    })
+}
+
+//提交答案，发送数据到谷歌表格
+submitBtn.onclick = async function(){
+    score=0;
+    questions.forEach((item,idx)=>{
+        const userAns = quizAnswered[idx];
+        if(userAns === null) return;
+        if(item.type==="single"){
+            if(userAns === item.ans) score +=10;
+        }else{
+            if(userAns === item.ans) score +=10;
+        }
+    })
+    const name = stuNameInput.value.trim();
+    if(!name){
+        alert("请输入你的姓名！");
+        return;
+    }
+    const payload = {
+        name: name,
+        score: score,
+        answers: quizAnswered
+    }
+    try{
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method:"POST",
+            mode:"no-cors",
+            body:JSON.stringify(payload)
+        })
+        finalResult.innerText = `提交成功！你的总分：${score} / 100`;
+    }catch(e){
+        finalResult.innerText = `本地得分：${score}，网络提交失败`;
+    }
+}
+
+//页面加载启动倒计时
+startTimer();
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZ1‑15‑3‑GRAMMER</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+        body {
+            background-color: #f7f9fc;
+            padding: 24px 16px;
+        }
+        h1 {
+            text-align: center;
+            color: #002b5c;
+            margin-bottom: 28px;
+            font-size: clamp(22px,4vw,28px);
+        }
+        .wrap {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .flashcard {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            min-height: 520px;
+            padding: 36px 30px;
+            box-shadow: 0 4px 14px rgba(0,43,92,0.12);
+            display:flex;
+            flex-direction:column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            cursor:pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 6px 20px rgba(0,43,92,0.18);
+        }
+        .front-text {
+            font-size: clamp(36px,7vw,52px);
+            font-weight:bold;
+            color:#002b5c;
+            text-align: left;
+            width:100%;
+            margin-top:40px;
+        }
+        .back-text {
+            font-size: clamp(19px,3vw,22px);
+            color:#002b5c;
+            line-height:1.9;
+            display:none;
+            width:100%;
+        }
+        .back-inner{
+            width:100%;
+        }
+        .block{
+            margin-bottom:16px;
+        }
+        .tip{
+            color:#2b4b80;
+        }
+        .exercise{
+            margin-top:20px;
+        }
+        .btn-group {
+            display:flex;
+            justify-content: center;
+            gap:14px;
+            margin-top:26px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding:12px 24px;
+            border:none;
+            border-radius:10px;
+            background:#002b5c;
+            color:#ffffff;
+            font-size: clamp(16px,3vw,19px);
+            cursor:pointer;
+        }
+        button:hover {
+            opacity:0.85;
+        }
+        .page-info {
+            text-align:center;
+            margin-top:16px;
+            color:#002b5c;
+            font-size: clamp(16px,3vw,19px);
+        }
+    </style>
+</head>
+<body>
+    <h1>ZZ1‑15‑3‑GRAMMER</h1>
+    <div class="wrap">
+        <div class="flashcard" id="card">
+            <div class="front-text" id="front">难道……吗？</div>
+            <div class="back-text" id="back"></div>
+        </div>
+        <div class="page-info">
+            <span id="current">1</span> / <span id="total">6</span>
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一张</button>
+            <button id="next">下一张</button>
+            <button id="shuffle">随机洗牌</button>
+        </div>
+    </div>
+<script>
+const cardList = [
+    {
+        front:"难道……吗？",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：反问句，加强语气，意思是“当然……”，不是真正提问。</div>
+            <div class="block">例句：城市里难道就不能拥有一片绿色吗？</div>
+            <div class="exercise block">练习（改写反问句）：
+                <div>1. 城市种菜当然是一件快乐的事。→ 城市里难道________________吗？</div>
+                <div>2. 多看绿色当然对眼睛有好处。→ 多看绿色难道________________吗？</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"越是……，越……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：表示程度跟着条件变化，“越A就越B”。</div>
+            <div class="block">例句：工作越是忙碌，我们越需要亲近大自然。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 眼睛______疲劳，______要看一看绿色植物。</div>
+                <div>2. ______压力大，______要出去走一走。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"之所以……，是因为……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：先说结果，再解释造成这个结果的原因。</div>
+            <div class="block">例句：人们之所以喜欢阳台种菜，是因为想要更多绿色。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 她______眼睛疼，______每天长时间看电脑。</div>
+                <div>2. ______很多人喜欢公园，______那里空气很好。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"不管……，都……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：条件不受限制，无论什么情况结果不变。</div>
+            <div class="block">例句：不管工作多忙，我们都应该爱护自己的眼睛。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. ______天气好不好，我______想在家里种点花草。</div>
+                <div>2. ______有多累，他______坚持每天看看绿植。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"即使……，也……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：假设让步，就算出现某种情况，结果也不会改变。</div>
+            <div class="block">例句：即使家里空间很小，也可以在阳台种一些小菜。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. ______学习很忙，我们______要休息眼睛。</div>
+                <div>2. ______城市土地很少，______可以找到绿色。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"与其……不如……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：两件事情对比，选择后面更好的那一个。</div>
+            <div class="block">例句：与其一直待在房间看屏幕，不如出门看看大自然。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. ______一直玩手机，______去阳台看看花草。</div>
+                <div>2. ______在家躺着，______到公园里走一走。</div>
+            </div>
+        </div>`
+    }
+];
+let currentIndex = 0;
+let isShowBack = false;
+let cards = [...cardList];
+const frontDom = document.getElementById("front");
+const backDom = document.getElementById("back");
+const cardDom = document.getElementById("card");
+const currentPage = document.getElementById("current");
+const totalPage = document.getElementById("total");
+totalPage.innerText = cards.length;
+function renderCard(){
+    const item = cards[currentIndex];
+    frontDom.innerText = item.front;
+    backDom.innerHTML = item.back;
+    if(isShowBack){
+        frontDom.style.display="none";
+        backDom.style.display="block";
+    }else{
+        frontDom.style.display="block";
+        backDom.style.display="none";
+    }
+    currentPage.innerText = currentIndex +1;
+}
+cardDom.addEventListener("click",()=>{
+    isShowBack = !isShowBack;
+    renderCard();
+})
+document.getElementById("prev").addEventListener("click",()=>{
+    if(currentIndex>0){
+        currentIndex--;
+        isShowBack=false;
+        renderCard();
+    }
+})
+document.getElementById("next").addEventListener("click",()=>{
+    if(currentIndex < cards.length -1){
+        currentIndex++;
+        isShowBack=false;
+        renderCard();
+    }
+})
+document.getElementById("shuffle").addEventListener("click",()=>{
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    currentIndex = 0;
+    isShowBack = false;
+    renderCard();
+})
+renderCard();
+</script>
+</body>
+</html>

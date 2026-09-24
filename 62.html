@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西安大雁塔｜四段阅读训练</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            color: #000066; /*深蓝色字体*/
+            background-color: #f8f9fa;
+            padding:20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container{
+            background:#fff;
+            border-radius:16px;
+            padding:28px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.12);
+        }
+        .title{
+            text-align:center;
+            font-size:28px;
+            margin-bottom:18px;
+        }
+        .stage-title{
+            font-size:24px;
+            color:#1e40af;
+            margin:14px 0;
+        }
+        .timer-box{
+            font-size:24px;
+            text-align:center;
+            color:#c00;
+            margin-bottom:22px;
+            font-weight:bold;
+        }
+        .article{
+            font-size:20px;
+            line-height:1.8; /*加大行间距*/
+            margin-bottom:26px;
+        }
+        .article-firstline{
+            font-size:20px;
+            line-height:1.8;
+            margin-bottom:26px;
+        }
+        .btn{
+            padding:14px 26px;
+            font-size:20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            background:#1e40af;
+            color:white;
+            margin:8px 6px;
+        }
+        .question-block{
+            margin:28px 0;
+        }
+        .q-text{
+            font-size:21px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .opt{
+            padding:14px 18px;
+            margin:10px 0;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:19px;
+            line-height:1.6;
+        }
+        .opt:hover{background:#eef2ff;}
+        .opt.selected{background:#dbeafe; border-color:#1e40af;}
+        .result-final{
+            font-size:23px;
+            text-align:center;
+            margin-top:32px;
+            line-height:1.7;
+        }
+        .input-name{
+            width:100%;
+            padding:14px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            margin-bottom:22px;
+        }
+        .fill-input{
+            width:100%;
+            padding:12px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:8px;
+            margin:10px 0;
+        }
+        .page{display:none;}
+        .page.active{display:block;}
+        /*=====新增语法页样式=====*/
+        .grammar-wrap{
+            display:flex;
+            gap:24px;
+            margin-top:20px;
+        }
+        .grammar-left{
+            flex:1;
+            position: relative;
+            overflow:hidden;
+        }
+        .grammar-right{
+            flex:1;
+            position: relative;
+            overflow:hidden;
+        }
+        /* 满版透明水印：有业游民 */
+        .grammar-left::before,
+        .grammar-right::before{
+            content:"有业游民 有业游民 有业游民";
+            position:absolute;
+            inset:0;
+            z-index:0;
+            font-size:26px;
+            color:rgba(30, 64, 175, 0.11);
+            font-weight:bold;
+            line-height:2.4;
+            letter-spacing:6px;
+            white-space:pre‑wrap;
+            transform:rotate(-12deg);
+            pointer-events:none;
+            user-select:none;
+        }
+        /* 提高正文层级，防止被水印遮挡 */
+        .grammar-left > *,
+        .grammar-right > *{
+            position:relative;
+            z-index:1;
+        }
+        .grammar-red{
+            color:#d62828;
+            font-weight:bold;
+        }
+        .vocab-blue{
+            color:#1e40af;
+            font-weight:bold;
+        }
+        .grammar-item{
+            margin-bottom:20px;
+            padding:16px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+        }
+        .grammar-desc{
+            font-size:18px;
+            line-height:1.7;
+            margin-bottom:10px;
+        }
+        .grammar-exercise-text{
+            font-size:17px;
+            margin:8px 0;
+        }
+        .ans-hint{
+            color:#16a34a;
+            margin-top:6px;
+            display:none;
+        }
+        .bg-info-block{
+            margin-top:28px;
+            padding:18px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+        }
+        .bg-info-block h4{
+            font-size:20px;
+            margin-bottom:12px;
+            color:#1e40af;
+        }
+        .bg-text{
+            font-size:17px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .video-link{
+            font-size:17px;
+            color:#1e40af;
+        }
+        /*小屏幕适配，手机改为上下排列*/
+        @media(max-width:768px){
+            .grammar-wrap{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title">西安大雁塔｜四段阅读训练</h1>
+    <input class="input-name" id="stuName" placeholder="请输入你的姓名">
+    <button class="btn" id="btnGoStage1">开始</button>
+    <!-- ==========阶段1｜原文1：仅每段首句，限时30秒 ========== -->
+    <div id="stage1Read" class="page">
+        <h2 class="stage-title">阶段1：速读（限时30秒，只读每段第一句）</h2>
+        <div class="timer-box">剩余时间：<span id="t1">00:30</span></div>
+        <div class="article-firstline">
+            <p>大雁塔是西安非常有名的古代佛塔。它位于西安市大慈恩寺内。</p>
+            <p>公元652年，玄奘法师主持修建了大雁塔。</p>
+            <p>大雁塔一共有七层，高度大约64.5米。</p>
+            <p>2014年大雁塔被列入《世界遗产名录》。</p>
+        </div>
+        <button class="btn" id="s1End">时间到，进入题目</button>
+    </div>
+    <div id="stage1Q" class="page">
+        <h2 class="stage-title">阶段1 题目（1分）</h2>
+        <div class="question-block">
+            <div class="q-text">本篇文章的主题是什么？</div>
+            <div class="opt" data-ans="0">A.西安大雁塔</div>
+            <div class="opt" data-ans="1">B.秦始皇兵马俑</div>
+            <div class="opt" data-ans="2">C.北京长城</div>
+        </div>
+        <button class="btn" id="s1Submit">提交本小题</button>
+        <div id="s1Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段2｜原文2：完整全文，限时2分钟，单选5题 ========== -->
+    <div id="stage2PreQ" class="page">
+        <h2 class="stage-title">阶段2：细节阅读（先看全部题目）</h2>
+        <div class="q-text">阅读前，请先浏览下面5道细节题：</div>
+        <div class="question-block">
+            <p>1.大雁塔在什么地方？</p>
+            <p>2.谁主持修建了大雁塔？</p>
+            <p>3.修建大雁塔主要的目的是什么？</p>
+            <p>4.现在的大雁塔一共有几层？</p>
+            <p>5.大雁塔哪一年成为世界文化遗产？</p>
+        </div>
+        <button class="btn" id="s2Start">记住题目，开始2分钟阅读全文</button>
+    </div>
+    <div id="stage2Read" class="page">
+        <h2 class="stage-title">阶段2 阅读全文（限时2分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t2">02:00</span></div>
+        <div class="article">
+            <p>大雁塔是西安非常有名的古代佛塔。它位于西安市城南的大慈恩寺内，也是西安的城市标志。</p>
+            <br>
+            <p>公元652年，著名的玄奘法师主持修建了大雁塔。玄奘沿着丝绸之路，从印度带回很多经书和佛像。修建这座塔，就是为了保存这些珍贵的佛经与佛像。</p>
+            <br>
+            <p>大雁塔最开始只有五层，后来经过多次重建和修理，现在一共有七层，塔高大约64.5米。千百年来，很多文人来到这里登高写诗，留下了许多优美的古诗。</p>
+            <br>
+            <p>2014年，大雁塔被联合国教科文组织批准列入《世界遗产名录》，每年都有大量游客来这里参观。</p>
+        </div>
+        <button class="btn" id="s2End">阅读结束，开始答题</button>
+    </div>
+    <div id="stage2Q" class="page">
+        <h2 class="stage-title">阶段2 细节选择题（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.大雁塔在什么地方？</div>
+            <div class="opt" data-ans="0">A.西安大慈恩寺内</div>
+            <div class="opt" data-ans="1">B.西安市中心的公园</div>
+            <div class="opt" data-ans="2">C.西安城外的山上</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.谁主持修建了大雁塔？</div>
+            <div class="opt" data-ans="0">A.玄奘法师</div>
+            <div class="opt" data-ans="1">B.秦始皇</div>
+            <div class="opt" data-ans="2">C.唐代的诗人</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.修建大雁塔主要的目的是什么？</div>
+            <div class="opt" data-ans="0">A.保存经书和佛像</div>
+            <div class="opt" data-ans="1">B.让游客登高看风景</div>
+            <div class="opt" data-ans="2">C.用来存放士兵兵器</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.现在的大雁塔一共有几层？</div>
+            <div class="opt" data-ans="0">A.七层</div>
+            <div class="opt" data-ans="1">B.五层</div>
+            <div class="opt" data-ans="2">C.九层</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.大雁塔哪一年成为世界文化遗产？</div>
+            <div class="opt" data-ans="0">A.2014年</div>
+            <div class="opt" data-ans="1">B.652年</div>
+            <div class="opt" data-ans="2">C.1987年</div>
+        </div>
+        <button class="btn" id="s2Submit">提交这5道题</button>
+        <div id="s2Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段3｜原文3：完整全文，限时3分钟，判断5题 ========== -->
+    <div id="stage3Read" class="page">
+        <h2 class="stage-title">阶段3 阅读全文（限时3分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t3">03:00</span></div>
+        <div class="article">
+            <p>大雁塔是西安非常有名的古代佛塔。它位于西安市城南的大慈恩寺内，也是西安的城市标志。</p>
+            <br>
+            <p>公元652年，著名的玄奘法师主持修建了大雁塔。玄奘沿着丝绸之路，从印度带回很多经书和佛像。修建这座塔，就是为了保存这些珍贵的佛经与佛像。</p>
+            <br>
+            <p>大雁塔最开始只有五层，后来经过多次重建和修理，现在一共有七层，塔高大约64.5米。千百年来，很多文人来到这里登高写诗，留下了许多优美的古诗。</p>
+            <br>
+            <p>2014年，大雁塔被联合国教科文组织批准列入《世界遗产名录》，每年都有大量游客来这里参观。</p>
+        </div>
+        <button class="btn" id="s3End">阅读结束，开始做判断题</button>
+    </div>
+    <div id="stage3Q" class="page">
+        <h2 class="stage-title">阶段3 判断正误（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.大雁塔坐落在西安大慈恩寺里面。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">修建大雁塔，是为了存放士兵的武器。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">大雁塔现在一共有七层。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">古代没有文人到大雁塔写诗。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">大雁塔是世界文化遗产。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <button class="btn" id="s3Submit">提交判断题</button>
+        <div id="s3Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段4｜原文4：完整全文，限时30秒，填空 ========== -->
+    <div id="stage4Read" class="page">
+        <h2 class="stage-title">阶段4：速读全文（限时30秒）</h2>
+        <div class="timer-box">剩余时间：<span id="t4">00:30</span></div>
+        <div class="article">
+            <p>大雁塔是西安非常有名的古代佛塔。它位于西安市城南的大慈恩寺内，也是西安的城市标志。</p>
+            <br>
+            <p>公元652年，著名的玄奘法师主持修建了大雁塔。玄奘沿着丝绸之路，从印度带回很多经书和佛像。修建这座塔，就是为了保存这些珍贵的佛经与佛像。</p>
+            <br>
+            <p>大雁塔最开始只有五层，后来经过多次重建和修理，现在一共有七层，塔高大约64.5米。千百年来，很多文人来到这里登高写诗，留下了许多优美的古诗。</p>
+            <br>
+            <p>2014年，大雁塔被联合国教科文组织批准列入《世界遗产名录》，每年都有大量游客来这里参观。</p>
+        </div>
+        <button class="btn" id="s4End">阅读结束，进入概括填空题</button>
+    </div>
+    <div id="stage4Q" class="page">
+        <h2 class="stage-title">阶段4 段落简写填空（每题1分，共3分）</h2>
+        <div class="q-text">1.大雁塔位于西安的____寺内。</div>
+        <input class="fill-input" id="fill1" placeholder="填写答案">
+        <div class="q-text">2.____法师主持修建大雁塔，用来保存经书佛像。</div>
+        <input class="fill-input" id="fill2" placeholder="填写答案">
+        <div class="q-text">3.大雁塔在____年被列入世界遗产名录。</div>
+        <input class="fill-input" id="fill3" placeholder="填写答案">
+        <button class="btn" id="s4Submit">提交填空</button>
+        <div id="s4Res" class="result-final"></div>
+    </div>
+    <!-- 总分页面，提交到SheetDB -->
+    <div id="finalPage" class="page">
+        <h2 class="stage-title">✅全部完成！</h2>
+        <div class="result-final">你的总分：<span id="totalScore">0</span> /14</div>
+        <button class="btn" id="finalSubmit">提交本次成绩记录</button>
+        <button class="btn" id="goGrammar">查看本篇词汇、语法讲解</button>
+        <div id="finalMsg" class="result-final"></div>
+    </div>
+    <!-- ============新增：语法&词汇解析页面 左右分栏============ -->
+    <div id="grammarPage" class="page">
+        <h2 class="stage-title">📖词汇、语法点解析练习 & 文化背景</h2>
+        <button class="btn" id="backFinal">返回成绩页</button>
+        <div class="grammar-wrap">
+            <div class="grammar-left">
+                <h3>课文原文（语法<span class="grammar-red">红色</span>；生词<span class="vocab-blue">蓝色</span>）</h3>
+                <div class="article">
+                    <p><span class="vocab-blue">大雁塔</span>是西安非常有名的古代<span class="vocab-blue">佛塔</span>。它<span class="grammar-red">位于</span>西安市城南的<span class="vocab-blue">大慈恩寺</span>内，也是西安的城市标志。</p>
+                    <br>
+                    <p>公元652年，著名的<span class="vocab-blue">玄奘</span>法师<span class="grammar-red">主持</span>修建了大雁塔。玄奘<span class="grammar-red">沿着</span><span class="vocab-blue">丝绸之路</span>，从印度带回很多<span class="vocab-blue">经书</span>和佛像。修建这座塔，就是<span class="grammar-red">为了</span>保存这些珍贵的佛经与佛像。</p>
+                    <br>
+                    <p>大雁塔最开始只有五层，后来<span class="grammar-red">经过</span>多次重建和修理，现在一共有七层，塔高大约64.5米。千百年来，很多<span class="vocab-blue">文人</span>来到这里登高写诗，留下了许多优美的古诗。</p>
+                    <br>
+                    <p>2014年，大雁塔被联合国教科文组织批准<span class="grammar-red">列入</span>《世界遗产名录》，每年都有大量游客来这里参观。</p>
+                </div>
+            </div>
+            <div class="grammar-right">
+                <!--=====重点生词（蓝色字体，HSK4重点）=====-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b class="vocab-blue">【重点生词】</b></div>
+                    <div class="grammar-desc"><span class="vocab-blue">佛塔 (fó tǎ)</span>：用来和佛教有关的塔形古代建筑。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">主持 (zhǔ chí)</span>：负责组织、完成一件工程或者活动。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">经书 (jīng shū)</span>：宗教的经典书籍。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">丝绸之路 (sī chóu zhī lù)</span>：古代中国通往外国的贸易、文化道路。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">文人 (wén rén)</span>：读书、会写诗作文的人。</div>
+                </div>
+                <!--语法点1-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法1：位于 + 地点</b><br>含义：表示建筑、地方的地理位置。例句：大雁塔位于西安市城南。</div>
+                    <div class="grammar-exercise-text">练习：西湖____杭州市。</div>
+                    <input class="fill-input" id="g1">
+                    <button class="btn" data-key="g1" data-answer="位于">显示答案</button>
+                    <div class="ans-hint">答案：位于</div>
+                </div>
+                <!--语法点2-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法2：为了 + 目的</b><br>含义：说明做一件事的目的。例句：修建这座塔，就是为了保存经书。</div>
+                    <div class="grammar-exercise-text">练习：他努力学习，____通过HSK5考试。</div>
+                    <input class="fill-input" id="g2">
+                    <button class="btn" data-key="g2" data-answer="为了">显示答案</button>
+                    <div class="ans-hint">答案：为了</div>
+                </div>
+                <!--语法点3-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法3：沿着 + 道路/路线</b><br>含义：顺着一条路前进。例句：沿着丝绸之路，从印度带回经书。</div>
+                    <div class="grammar-exercise-text">练习：我们____河边慢慢散步。</div>
+                    <input class="fill-input" id="g3">
+                    <button class="btn" data-key="g3" data-answer="沿着">显示答案</button>
+                    <div class="ans-hint">答案：沿着</div>
+                </div>
+                <!--语法点4-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法4：经过 + 过程</b><br>含义：经历某个过程之后，得到新结果。例句：经过多次重建和修理。</div>
+                    <div class="grammar-exercise-text">练习：____大家的努力，任务终于完成。</div>
+                    <input class="fill-input" id="g4">
+                    <button class="btn" data-key="g4" data-answer="经过">显示答案</button>
+                    <div class="ans-hint">答案：经过</div>
+                </div>
+                <!--惯用表达5-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>惯用表达5：列入 + 名录</b><br>含义：收入正式的名单当中。例句：列入《世界遗产名录》。</div>
+                    <div class="grammar-exercise-text">练习：这座古塔被____保护名单。</div>
+                    <input class="fill-input" id="g5">
+                    <button class="btn" data-key="g5" data-answer="列入">显示答案</button>
+                    <div class="ans-hint">答案：列入</div>
+                </div>
+                <!-- 知识背景板块 -->
+                <div class="bg-info-block">
+                    <h4>📚文化知识背景：西安大雁塔</h4>
+                    <div class="bg-text">
+                        大雁塔在西安大慈恩寺里面，公元652年由玄奘法师主持修建。玄奘走丝绸之路去印度求取佛经，回来以后建造这座塔保存经书佛像。
+                        <br><br>
+                        塔最初五层，多次维修后成为七层，高64.5米。古代很多诗人登上大雁塔写下著名诗歌。2014年，大雁塔成为世界文化遗产，是西安的城市象征。
+                        <br><br>
+                        观看简短介绍视频：
+                        <br>
+                        <a class="video-link" href="https://www.bilibili.com/video/BV1xx411c7mZ/" target="_blank">B站｜大雁塔科普短片</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const SHEETDB_URL = "https://sheetdb.io/api/v1/1ul2tw93jh57i";
+let totalScore = 0;
+let timers = {};
+function hideAll(){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+}
+function show(id){
+    hideAll();
+    document.getElementById(id).classList.add("active");
+}
+function formatTime(s){
+    let m = Math.floor(s/60);
+    let sec = s % 60;
+    return String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+}
+// 修改：倒计时到0只停止，不会自动跳转页面
+function startTimer(elId, seconds){
+    let remain = seconds;
+    const el = document.getElementById(elId);
+    el.innerText = formatTime(remain);
+    timers[elId] = setInterval(()=>{
+        remain--;
+        el.innerText = formatTime(remain);
+        if(remain <= 0){
+            clearInterval(timers[elId]);
+        }
+    },1000);
+}
+// ==========阶段1：必须填姓名才可以进入阅读==========
+document.getElementById("btnGoStage1").onclick = function(){
+    const nameVal = document.getElementById("stuName").value.trim();
+    if(!nameVal){
+        alert("请不要留空");
+        return;
+    }
+    show("stage1Read");
+    startTimer("t1",30);
+};
+document.getElementById("s1End").onclick = ()=>{
+    clearInterval(timers.t1);
+    show("stage1Q");
+};
+let s1Ans = null;
+document.querySelectorAll("#stage1Q .opt").forEach(opt=>{
+    opt.onclick = ()=>{
+        document.querySelectorAll("#stage1Q .opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s1Ans = opt.dataset.ans;
+    }
+})
+document.getElementById("s1Submit").onclick = ()=>{
+    if(s1Ans === null){
+        alert("请不要留空");
+        return;
+    }
+    if(s1Ans == 0){
+        totalScore +=1;
+        document.getElementById("s1Res").innerText = "✅正确，+1分";
+    }else{
+        document.getElementById("s1Res").innerText = "❌错误";
+    }
+    setTimeout(()=>show("stage2PreQ"),1200);
+}
+// ==========阶段2==========
+document.getElementById("s2Start").onclick = ()=>{
+    show("stage2Read");
+    startTimer("t2",120);
+}
+document.getElementById("s2End").onclick = ()=>{
+    clearInterval(timers.t2);
+    show("stage2Q");
+};
+let s2 = [null,null,null,null,null];
+const s2Opts = document.querySelectorAll("#stage2Q .opt");
+s2Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/3);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s2[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s2Submit").onclick = ()=>{
+    for(let i=0;i<5;i++){
+        if(s2[i]===null){
+            alert("请不要留空");
+            return;
+        }
+    }
+    let add = 0;
+    const right = ["0","0","0","0","0"];
+    for(let i=0;i<5;i++){
+        if(s2[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s2Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage3Read"),1200);
+}
+// ==========阶段3、阶段4：重写show钩子，进入阅读页自动开启计时 ==========
+const origShow = show;
+show = function(id){
+    origShow(id);
+    if(id === "stage3Read"){
+        startTimer("t3",180);
+    }
+    if(id === "stage4Read"){
+        startTimer("t4",30);
+    }
+}
+document.getElementById("s3End").onclick = ()=>{
+    clearInterval(timers.t3);
+    show("stage3Q");
+};
+let s3 = [null,null,null,null,null];
+const s3Opts = document.querySelectorAll("#stage3Q .opt");
+s3Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/2);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s3[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s3Submit").onclick = ()=>{
+    for(let i=0;i<5;i++){
+        if(s3[i]===null){
+            alert("请不要留空");
+            return;
+        }
+    }
+    let add = 0;
+    const right = ["true","false","true","false","true"];
+    for(let i=0;i<5;i++){
+        if(s3[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s3Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage4Read"),1200);
+}
+// ==========阶段4==========
+document.getElementById("s4End").onclick = ()=>{
+    clearInterval(timers.t4);
+    show("stage4Q");
+};
+document.getElementById("s4Submit").onclick = ()=>{
+    const a1 = document.getElementById("fill1").value.trim();
+    const a2 = document.getElementById("fill2").value.trim();
+    const a3 = document.getElementById("fill3").value.trim();
+    if(!a1 || !a2 || !a3){
+        alert("请不要留空");
+        return;
+    }
+    let add = 0;
+    if(a1 === "大慈恩") add++;
+    if(a2 === "玄奘") add++;
+    if(a3 === "2014") add++;
+    totalScore += add;
+    document.getElementById("s4Res").innerText = `答对${add}题，+${add}分`;
+    document.getElementById("totalScore").innerText = totalScore;
+    setTimeout(()=>show("finalPage"),1200);
+}
+//提交成绩到谷歌表格
+document.getElementById("finalSubmit").onclick = async ()=>{
+    const name = document.getElementById("stuName").value.trim();
+    if(!name){alert("请不要留空");return;}
+    const data = {
+        time: new Date().toLocaleString(),
+        name: name,
+        score: totalScore
+    }
+    try{
+        const res = await fetch(SHEETDB_URL,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data)
+        })
+        if(res.ok){
+            document.getElementById("finalMsg").innerText = "✅成绩提交成功！";
+        }else{
+            document.getElementById("finalMsg").innerText = "❌提交失败，请重试";
+        }
+    }catch(err){
+        document.getElementById("finalMsg").innerText = "❌网络错误，提交失败";
+    }
+}
+//========语法页面跳转与显示答案逻辑========
+document.getElementById("goGrammar").onclick = ()=>{ show("grammarPage"); }
+document.getElementById("backFinal").onclick = ()=>{ show("finalPage"); }
+//显示答案按钮
+document.querySelectorAll("#grammarPage button[data-answer]").forEach(btn=>{
+    btn.onclick = function(){
+        const hintDom = this.nextElementSibling;
+        hintDom.style.display = hintDom.style.display === "block" ? "none" : "block";
+    }
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哈尔滨冰灯｜四段阅读训练</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            color: #000066; /*深蓝色字体*/
+            background-color: #f8f9fa;
+            padding:20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container{
+            background:#fff;
+            border-radius:16px;
+            padding:28px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.12);
+        }
+        .title{
+            text-align:center;
+            font-size:28px;
+            margin-bottom:18px;
+        }
+        .stage-title{
+            font-size:24px;
+            color:#1e40af;
+            margin:14px 0;
+        }
+        .timer-box{
+            font-size:24px;
+            text-align:center;
+            color:#c00;
+            margin-bottom:22px;
+            font-weight:bold;
+        }
+        .article{
+            font-size:20px;
+            line-height:1.8; /*加大行间距*/
+            margin-bottom:26px;
+        }
+        .article-firstline{
+            font-size:20px;
+            line-height:1.8;
+            margin-bottom:26px;
+        }
+        .btn{
+            padding:14px 26px;
+            font-size:20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            background:#1e40af;
+            color:white;
+            margin:8px 6px;
+        }
+        .question-block{
+            margin:28px 0;
+        }
+        .q-text{
+            font-size:21px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .opt{
+            padding:14px 18px;
+            margin:10px 0;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:19px;
+            line-height:1.6;
+        }
+        .opt:hover{background:#eef2ff;}
+        .opt.selected{background:#dbeafe; border-color:#1e40af;}
+        .result-final{
+            font-size:23px;
+            text-align:center;
+            margin-top:32px;
+            line-height:1.7;
+        }
+        .input-name{
+            width:100%;
+            padding:14px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            margin-bottom:22px;
+        }
+        .fill-input{
+            width:100%;
+            padding:12px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:8px;
+            margin:10px 0;
+        }
+        .page{display:none;}
+        .page.active{display:block;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title">哈尔滨冰灯｜四段阅读训练</h1>
+    <input class="input-name" id="stuName" placeholder="请输入你的姓名">
+
+    <!-- ==========阶段1｜原文1：仅每段首句，限时30秒 ========== -->
+    <div id="stage1Read" class="page active">
+        <h2 class="stage-title">阶段1：速读（限时30秒，只读每段第一句）</h2>
+        <div class="timer-box">剩余时间：<span id="t1">00:30</span></div>
+        <div class="article-firstline">
+            <p>哈尔滨是中国东北一座美丽的大城市，被人们称做“冰城”。</p>
+            <p>哈尔滨人喜爱冰雪，他们把冰雪看做是大自然给他们的礼物。</p>
+            <p>冰灯、冰雕已经成为冰城人特有的艺术表现形式。</p>
+        </div>
+        <button class="btn" id="s1End">时间到，进入题目</button>
+    </div>
+    <div id="stage1Q" class="page">
+        <h2 class="stage-title">阶段1 题目（1分）</h2>
+        <div class="question-block">
+            <div class="q-text">本篇文章的主题是什么？</div>
+            <div class="opt" data-ans="0">A.哈尔滨的冰灯冰雕</div>
+            <div class="opt" data-ans="1">B.哈尔滨冬天的美食</div>
+            <div class="opt" data-ans="2">C.上海的城市风光</div>
+        </div>
+        <button class="btn" id="s1Submit">提交本小题</button>
+        <div id="s1Res" class="result-final"></div>
+    </div>
+
+    <!-- ==========阶段2｜原文2：完整全文，限时2分钟，单选5题 ========== -->
+    <div id="stage2PreQ" class="page">
+        <h2 class="stage-title">阶段2：细节阅读（先看全部题目）</h2>
+        <div class="q-text">阅读前，请先浏览下面5道细节题：</div>
+        <div class="question-block">
+            <p>1.文中冰雕作品，没有提到哪一个景物？</p>
+            <p>2.冰雕艺术家用什么来创作冰雕作品？</p>
+            <p>3.冰灯冰雕组成了一个什么样的世界？</p>
+            <p>4.作者说冰雕展现出一片____的艺术天地。</p>
+            <p>5.下面哪一项不是冰雕可以模仿的景色？</p>
+        </div>
+        <button class="btn" id="s2Start">记住题目，开始2分钟阅读全文</button>
+    </div>
+    <div id="stage2Read" class="page">
+        <h2 class="stage-title">阶段2 阅读全文（限时2分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t2">02:00</span></div>
+        <div class="article">
+            <p>哈尔滨是中国东北一座美丽的大城市，被人们称做“冰城”。这里每年冬天都要举办冰雪节。每到这个时候，冰雕艺术家们都会把他们丰富的想象力表现在一座座生动有趣的冰雕作品中。在这里，人们能看到“长城”“故宫”“天坛”，还能找到“桂林山水”“苏州园林”“版纳风光”。一盏盏冰灯，组成了一个七彩的世界。一座座冰雕，展现出了一片晶莹的艺术天地。</p>
+            <br>
+            <p>哈尔滨人喜爱冰雪，他们把冰雪看做是大自然给他们的礼物，也是展现自己才华的材料。参加冰雕制作的，有艺术家，也有不少青年学生。在他们的手中，又硬又冷的冰雪好像有了生气，有了灵性。一座座冰雕表达了创作者的心声和情感，也美化了冰城人的生活。</p>
+            <br>
+            <p>冰灯、冰雕已经成为冰城人特有的艺术表现形式。傍晚，当你走在这座城市的大街上，你会看到一座座冰灯和冰雕在雪中发出多彩、温暖的灯光，你会感到冬天的冰城是那么美丽。</p>
+        </div>
+        <button class="btn" id="s2End">阅读结束，开始答题</button>
+    </div>
+    <div id="stage2Q" class="page">
+        <h2 class="stage-title">阶段2 细节选择题（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.文中冰雕作品，没有提到哪一个景物？</div>
+            <div class="opt" data-ans="0">A.金字塔</div>
+            <div class="opt" data-ans="1">B.长城</div>
+            <div class="opt" data-ans="2">C.故宫</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.冰雕艺术家用什么来创作冰雕作品？</div>
+            <div class="opt" data-ans="0">A.冰雪</div>
+            <div class="opt" data-ans="1">B.石头</div>
+            <div class="opt" data-ans="2">C.木头</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.冰灯冰雕组成了一个什么样的世界？</div>
+            <div class="opt" data-ans="0">A.七彩的世界</div>
+            <div class="opt" data-ans="1">B.黑色的世界</div>
+            <div class="opt" data-ans="2">C.安静的世界</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.作者说冰雕展现出一片____的艺术天地。</div>
+            <div class="opt" data-ans="0">A.晶莹</div>
+            <div class="opt" data-ans="1">B.火红</div>
+            <div class="opt" data-ans="2">C.巨大</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.下面哪一项不是冰雕可以模仿的景色？</div>
+            <div class="opt" data-ans="0">A.黄山云海</div>
+            <div class="opt" data-ans="1">B.苏州园林</div>
+            <div class="opt" data-ans="2">C.版纳风光</div>
+        </div>
+        <button class="btn" id="s2Submit">提交这5道题</button>
+        <div id="s2Res" class="result-final"></div>
+    </div>
+
+    <!-- ==========阶段3｜原文3：完整全文，限时3分钟，判断5题 ========== -->
+    <div id="stage3Read" class="page">
+        <h2 class="stage-title">阶段3 阅读全文（限时3分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t3">03:00</span></div>
+        <div class="article">
+            <p>哈尔滨是中国东北一座美丽的大城市，被人们称做“冰城”。这里每年冬天都要举办冰雪节。每到这个时候，冰雕艺术家们都会把他们丰富的想象力表现在一座座生动有趣的冰雕作品中。在这里，人们能看到“长城”“故宫”“天坛”，还能找到“桂林山水”“苏州园林”“版纳风光”。一盏盏冰灯，组成了一个七彩的世界。一座座冰雕，展现出了一片晶莹的艺术天地。</p>
+            <br>
+            <p>哈尔滨人喜爱冰雪，他们把冰雪看做是大自然给他们的礼物，也是展现自己才华的材料。参加冰雕制作的，有艺术家，也有不少青年学生。在他们的手中，又硬又冷的冰雪好像有了生气，有了灵性。一座座冰雕表达了创作者的心声和情感，也美化了冰城人的生活。</p>
+            <br>
+            <p>冰灯、冰雕已经成为冰城人特有的艺术表现形式。傍晚，当你走在这座城市的大街上，你会看到一座座冰灯和冰雕在雪中发出多彩、温暖的灯光，你会感到冬天的冰城是那么美丽。</p>
+        </div>
+        <button class="btn" id="s3End">阅读结束，开始做判断题</button>
+    </div>
+    <div id="stage3Q" class="page">
+        <h2 class="stage-title">阶段3 判断正误（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.哈尔滨在中国东北，被叫做冰城。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.参加冰雕制作的只有专业艺术家。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.冰雪在创作者手里，仿佛有了生气和灵性。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.冰灯在中午大街上发出多彩温暖的灯光。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.冰雕作品可以表达创作者的心声和情感。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <button class="btn" id="s3Submit">提交判断题</button>
+        <div id="s3Res" class="result-final"></div>
+    </div>
+
+    <!-- ==========阶段4｜原文4：完整全文，限时30秒，填空 ========== -->
+    <div id="stage4Read" class="page">
+        <h2 class="stage-title">阶段4：速读全文（限时30秒）</h2>
+        <div class="timer-box">剩余时间：<span id="t4">00:30</span></div>
+        <div class="article">
+            <p>哈尔滨是中国东北一座美丽的大城市，被人们称做“冰城”。这里每年冬天都要举办冰雪节。每到这个时候，冰雕艺术家们都会把他们丰富的想象力表现在一座座生动有趣的冰雕作品中。在这里，人们能看到“长城”“故宫”“天坛”，还能找到“桂林山水”“苏州园林”“版纳风光”。一盏盏冰灯，组成了一个七彩的世界。一座座冰雕，展现出了一片晶莹的艺术天地。</p>
+            <br>
+            <p>哈尔滨人喜爱冰雪，他们把冰雪看做是大自然给他们的礼物，也是展现自己才华的材料。参加冰雕制作的，有艺术家，也有不少青年学生。在他们的手中，又硬又冷的冰雪好像有了生气，有了灵性。一座座冰雕表达了创作者的心声和情感，也美化了冰城人的生活。</p>
+            <br>
+            <p>冰灯、冰雕已经成为冰城人特有的艺术表现形式。傍晚，当你走在这座城市的大街上，你会看到一座座冰灯和冰雕在雪中发出多彩、温暖的灯光，你会感到冬天的冰城是那么美丽。</p>
+        </div>
+        <button class="btn" id="s4End">阅读结束，进入概括填空题</button>
+    </div>
+    <div id="stage4Q" class="page">
+        <h2 class="stage-title">阶段4 段落简写填空（每题1分，共3分）</h2>
+        <div class="q-text">1.第1段简写：哈尔滨又叫____，冬天举办冰雪节，艺术家制作各种冰雕。</div>
+        <input class="fill-input" id="fill1" placeholder="填写答案">
+        <div class="q-text">2.第2段简写：哈尔滨人喜爱冰雪，冰雪是大自然的____，很多人一起制作冰雕。</div>
+        <input class="fill-input" id="fill2" placeholder="填写答案">
+        <div class="q-text">3.第3段简写：冰灯冰雕是冰城特有的艺术形式，傍晚灯光____。</div>
+        <input class="fill-input" id="fill3" placeholder="填写答案">
+        <button class="btn" id="s4Submit">提交填空</button>
+        <div id="s4Res" class="result-final"></div>
+    </div>
+
+    <!-- 总分页面，提交到SheetDB -->
+    <div id="finalPage" class="page">
+        <h2 class="stage-title">✅全部完成！</h2>
+        <div class="result-final">你的总分：<span id="totalScore">0</span> /14</div>
+        <button class="btn" id="finalSubmit">提交本次成绩记录</button>
+        <div id="finalMsg" class="result-final"></div>
+    </div>
+</div>
+
+<script>
+// 已经填好你的API地址
+const SHEETDB_URL = "https://sheetdb.io/api/v1/1ul2tw93jh57i";
+let totalScore = 0;
+let timers = {};
+
+// 页面切换
+function hideAll(){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+}
+function show(id){
+    hideAll();
+    document.getElementById(id).classList.add("active");
+}
+// 倒计时格式化
+function formatTime(s){
+    let m = Math.floor(s/60);
+    let sec = s % 60;
+    return String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+}
+function startTimer(elId, seconds, nextPage){
+    let remain = seconds;
+    const el = document.getElementById(elId);
+    el.innerText = formatTime(remain);
+    timers[elId] = setInterval(()=>{
+        remain--;
+        el.innerText = formatTime(remain);
+        if(remain <= 0){
+            clearInterval(timers[elId]);
+            show(nextPage);
+        }
+    },1000);
+}
+
+// ==========阶段1==========
+startTimer("t1",30,"stage1Q");
+document.getElementById("s1End").onclick = ()=>{clearInterval(timers.t1); show("stage1Q");};
+let s1Ans = null;
+document.querySelectorAll("#stage1Q .opt").forEach(opt=>{
+    opt.onclick = ()=>{
+        document.querySelectorAll("#stage1Q .opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s1Ans = opt.dataset.ans;
+    }
+})
+document.getElementById("s1Submit").onclick = ()=>{
+    if(s1Ans === null){alert("请选择答案");return;}
+    if(s1Ans == 0){
+        totalScore +=1;
+        document.getElementById("s1Res").innerText = "✅正确，+1分";
+    }else{
+        document.getElementById("s1Res").innerText = "❌错误";
+    }
+    setTimeout(()=>show("stage2PreQ"),1200);
+}
+
+// ==========阶段2==========
+document.getElementById("s2Start").onclick = ()=>{
+    show("stage2Read");
+    startTimer("t2",120,"stage2Q");
+}
+document.getElementById("s2End").onclick = ()=>{clearInterval(timers.t2); show("stage2Q");};
+let s2 = [null,null,null,null,null];
+const s2Opts = document.querySelectorAll("#stage2Q .opt");
+s2Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/3);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s2[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s2Submit").onclick = ()=>{
+    let add = 0;
+    const right = ["0","0","0","0","0"];
+    for(let i=0;i<5;i++){
+        if(s2[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s2Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage3Read"),1200);
+}
+
+// ==========阶段3==========
+startTimer("t3",180,"stage3Q");
+document.getElementById("s3End").onclick = ()=>{clearInterval(timers.t3); show("stage3Q");};
+let s3 = [null,null,null,null,null];
+const s3Opts = document.querySelectorAll("#stage3Q .opt");
+s3Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/2);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s3[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s3Submit").onclick = ()=>{
+    let add = 0;
+    const right = ["true","false","true","false","true"];
+    for(let i=0;i<5;i++){
+        if(s3[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s3Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage4Read"),1200);
+}
+
+// ==========阶段4==========
+startTimer("t4",30,"stage4Q");
+document.getElementById("s4End").onclick = ()=>{clearInterval(timers.t4); show("stage4Q");};
+document.getElementById("s4Submit").onclick = ()=>{
+    let add = 0;
+    const a1 = document.getElementById("fill1").value.trim();
+    const a2 = document.getElementById("fill2").value.trim();
+    const a3 = document.getElementById("fill3").value.trim();
+    if(a1 === "冰城") add++;
+    if(a2 === "礼物") add++;
+    if(a3 === "多彩温暖") add++;
+    totalScore += add;
+    document.getElementById("s4Res").innerText = `答对${add}题，+${add}分`;
+    document.getElementById("totalScore").innerText = totalScore;
+    setTimeout(()=>show("finalPage"),1200);
+}
+
+//提交成绩到谷歌表格
+document.getElementById("finalSubmit").onclick = async ()=>{
+    const name = document.getElementById("stuName").value.trim();
+    if(!name){alert("请先填写你的姓名！");return;}
+    const data = {
+        time: new Date().toLocaleString(),
+        name: name,
+        score: totalScore
+    }
+    try{
+        const res = await fetch(SHEETDB_URL,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data)
+        })
+        if(res.ok){
+            document.getElementById("finalMsg").innerText = "✅成绩提交成功！";
+        }else{
+            document.getElementById("finalMsg").innerText = "❌提交失败，请重试";
+        }
+    }catch(err){
+        document.getElementById("finalMsg").innerText = "❌网络错误，提交失败";
+    }
+}
+</script>
+</body>
+</html>

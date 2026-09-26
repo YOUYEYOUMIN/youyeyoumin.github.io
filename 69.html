@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK & HSKK3.0 中文学习测试中心</title>
+<!-- 引入SheetJS支持xlsx/xls/csv读取 -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;}
+body{background:#f3f4f6;color:#1f2937;min-height:100vh;padding:16px;}
+:root{
+    --mori-blue:#a7c9d1;
+    --mori-rose:#d8b4b1;
+    --mori-green:#b8cdb1;
+    --mori-beige:#d9c9a3;
+    --mori-text:#374151;
+    --mori-light:#f7f3ea;
+    --mori-gray:#e5e7eb;
+}
+.wrap-center{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 10% 10%,rgba(167,201,209,0.14),transparent 28%),
+    radial-gradient(circle at 90% 20%,rgba(216,180,177,0.14),transparent 28%),
+    radial-gradient(circle at 50% 90%,rgba(184,205,177,0.14),transparent 28%);
+    padding:24px 16px;
+}
+.card-login{
+    background:#fff;max-width:480px;width:100%;border-radius:28px;
+    padding:40px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    border:1px solid var(--mori-gray);
+}
+.card-login h1{text-align:center;font-size:22px;color:var(--mori-text);margin-bottom:24px;}
+.input-item{width:100%;padding:12px 14px;font-size:16px;border:1px solid var(--mori-gray);
+border-radius:12px;margin:6px 0;background:#f9fafb;color:var(--mori-text);}
+.btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:12px;margin:6px 0;cursor:pointer;font-weight:500;}
+.btn-primary{background:var(--mori-blue);color:#111;}
+.btn-secondary{background:var(--mori-beige);color:#111;}
+.tip-small{font-size:13px;color:#9ca3af;margin-top:12px;text-align:center;}
+
+.page{display:none;max-width:980px;margin:0 auto;}
+.page.active{display:block;}
+
+.section-title{font-size:20px;font-weight:bold;margin:28px 0 16px 0;color:var(--mori-text);border-bottom:1px solid var(--mori-gray);padding-bottom:8px;}
+
+.grid-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+.icon-card{
+    aspect-ratio:2.2/1;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:20px;font-size:20px;font-weight:600;cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,0.07);
+    transition:0.2s;
+    text-align:center;
+    padding:10px;
+}
+.icon-card:hover{transform:translateY(-2px);}
+.level1{background:#e2edf2;}
+.level2{background:#e8f2e2;}
+.level3{background:#f3e6e6;}
+.pub-res{background:#f7f3ea;}
+
+.box-panel{background:#fff;border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+textarea,select{width:100%;padding:12px;border:1px solid var(--mori-gray);border-radius:12px;font-size:15px;margin:8px 0;}
+.link-row{display:grid;grid-template-columns:1fr 2fr auto;gap:10px;align-items:center;margin:10px 0;}
+
+.nav-bar{
+    display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+    background:var(--mori-light);
+    padding:12px;border-radius:16px;
+}
+.nav-bar button{
+    padding:12px 18px;border-radius:12px;border:1px solid var(--mori-gray);
+    background:#fff;cursor:pointer;font-size:17px;font-weight:500;
+}
+.nav-bar button:hover{opacity:0.85;}
+
+.wrong-table{width:100%;border-collapse:collapse;margin:12px 0;}
+.wrong-table th,.wrong-table td{border:1px solid var(--mori-gray);padding:10px;text-align:left;}
+.wrong-table th{background:var(--mori-light);font-weight:600;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:99;}
+.modal.show{display:flex;}
+.modal-content{background:#fff;border-radius:20px;padding:28px;max-width:420px;width:100%;}
+
+.sub-title{font-size:17px;font-weight:bold;margin:14px 0 8px 0;color:var(--mori-text);}
+.link-item-card{
+    padding:10px 14px;border:1px solid var(--mori-gray);border-radius:12px;margin:8px 0;
+}
+.link-item-card a{color:#2b5482;font-weight:500;text-decoration:none;}
+.link-item-card a:hover{text-decoration:underline;}
+.file-input{width:100%;padding:8px 0;}
+</style>
+</head>
+<body>
+
+<div id="page-login" class="wrap-center">
+<div class="card-login">
+<h1>HSK & HSKK3.0 中文学习测试中心</h1>
+<input class="input-item" id="inp-username" placeholder="请输入姓名">
+<input class="input-item" id="inp-pwd" type="password" placeholder="请输入密码">
+<button class="btn btn-primary" id="btn-student-login">学生登录</button>
+<button class="btn btn-secondary" id="btn-teacher-login">教师登录</button>
+<button class="btn btn-secondary" id="btn-guest">访客浏览</button>
+<div class="tip-small">访客模式不会保存任何个人做题数据</div>
+</div>
+</div>
+
+<div id="page-student" class="page">
+<div class="nav-bar">
+<button onclick="goStudentHome()">首页</button>
+<button onclick="openMyWrongSet()">我的错题集</button>
+<button onclick="openMyCollect()">我的收藏</button>
+<button onclick="openStudyLog()">学习日志</button>
+<button onclick="logout()">退出登录</button>
+</div>
+
+<h2>学生学习中心</h2>
+
+<div class="section-title">第一部分：基础语言根基</div>
+<div class="grid-group">
+<div class="icon-card level1" onclick="jumpModule('vocab')">词汇</div>
+<div class="icon-card level1" onclick="jumpModule('grammar')">语法</div>
+</div>
+
+<div class="section-title">第二部分：六大专项技能训练</div>
+<div class="grid-group">
+<div class="icon-card level2" onclick="jumpModule('listening')">听力训练</div>
+<div class="icon-card level2" onclick="jumpModule('speaking')">口语训练</div>
+<div class="icon-card level2" onclick="jumpModule('reading')">阅读训练</div>
+<div class="icon-card level2" onclick="jumpModule('writing')">写作训练</div>
+<div class="icon-card level2" onclick="jumpModule('translate')">翻译训练</div>
+<div class="icon-card level2" onclick="jumpModule('culture')">文化训练</div>
+</div>
+
+<div class="section-title">第三部分：测评闭环体系</div>
+<div class="grid-group">
+<div class="icon-card level3" onclick="jumpModule('test')">模拟小测试</div>
+<div class="icon-card level3" onclick="openMyWrongSet()">错题集</div>
+</div>
+
+<div class="section-title">第四部分：公共资源区</div>
+<div class="grid-group">
+<div class="icon-card pub-res" onclick="jumpModule('lib')">电子阅览室</div>
+</div>
+
+<div id="module-container"></div>
+</div>
+
+<div id="page-teacher" class="page">
+<div class="nav-bar">
+<button onclick="goTeacherHome()">教师首页</button>
+<button onclick="openAccountManage()">账号管理中心</button>
+<button onclick="openResLib()">分层素材资源管理</button>
+<button onclick="openNotice()">公告&班级通知</button>
+<button onclick="openStudyData()">学情数据中心</button>
+<button onclick="openBackup()">数据备份导出</button>
+<button onclick="logout()">退出登录</button>
+</div>
+<h2>教师备课工作台</h2>
+<div id="teacher-container"></div>
+</div>
+
+<div id="modal" class="modal">
+<div class="modal-content">
+<div id="modal-text"></div>
+<br>
+<button class="btn btn-primary" onclick="closeModal()">确定</button>
+</div>
+</div>
+
+<script>
+const WPS_COLLECT_URL = "https://yunbiz.wps.cn/c/collect/ckU0XGaDN79";
+const presetStudentList = ["夏婕"];
+const presetTeacherList = ["夏婕"];
+const PWD_FIX = "123456";
+
+const categoryList = [
+    {key:"vocab",name:"词汇"},
+    {key:"grammar",name:"语法"},
+    {key:"listening",name:"听力训练"},
+    {key:"speaking",name:"口语训练"},
+    {key:"reading",name:"阅读训练"},
+    {key:"writing",name:"写作训练"},
+    {key:"translate",name:"翻译训练"},
+    {key:"culture",name:"文化训练"},
+    {key:"test",name:"模拟小测试"},
+    {key:"lib",name:"电子阅览室"},
+];
+
+let currentLoginUser = null;
+let isGuestMode = false;
+
+// 解析Excel/CSV通用函数
+function parseExcelFile(file,callback){
+    let reader = new FileReader();
+    reader.onload = function(e){
+        let data = new Uint8Array(e.target.result);
+        let workbook = XLSX.read(data,{type:'array'});
+        let sheetName = workbook.SheetNames[0];
+        let sheet = workbook.Sheets[sheetName];
+        let json = XLSX.utils.sheet_to_json(sheet);
+        callback(json);
+    }
+    reader.readAsArrayBuffer(file);
+}
+
+// 导出完整备份JSON
+function exportFullBackup(){
+    const data = getStorage();
+    const text = JSON.stringify(data,null,2);
+    downloadFile(text,`系统备份_${new Date().toLocaleDateString()}.json`,"application/json");
+    showModal("✅备份文件已下载完成");
+}
+
+// 导入备份JSON
+function importFullBackup(file){
+    let reader = new FileReader();
+    reader.onload=function(e){
+        try{
+            const restoreData = JSON.parse(e.target.result);
+            setStorage(restoreData);
+            showModal("✅备份导入成功，页面将刷新");
+            setTimeout(()=>location.reload(),800);
+        }catch(err){
+            showModal("❌文件解析失败，请选择正确的备份json文件");
+        }
+    }
+    reader.readAsText(file);
+}
+
+function getStorage(){
+    let raw = localStorage.getItem("hsk30_data");
+    if(!raw){
+        let initData = {studentUsers:{},teacherUsers:{}};
+        categoryList.forEach(cat=>{
+            initData[cat.key] = [];
+        })
+        return initData;
+    }
+    return JSON.parse(raw);
+}
+function setStorage(d){
+    localStorage.setItem("hsk30_data",JSON.stringify(d));
+}
+
+function showModal(text){
+    document.getElementById("modal-text").innerText = text;
+    document.getElementById("modal").classList.add("show");
+}
+function closeModal(){
+    document.getElementById("modal").classList.remove("show");
+}
+
+document.getElementById("btn-student-login").onclick = function(){
+    let name = document.getElementById("inp-username").value.trim();
+    let pwd = document.getElementById("inp-pwd").value.trim();
+    if(!name){showModal("请不要留空");return;}
+    let data = getStorage();
+    if(!data.studentUsers["夏婕"]){
+        data.studentUsers["夏婕"] = {pwd:PWD_FIX,wrongList:[],collect:[],studyLog:[]};
+    }
+    setStorage(data);
+    let user = data.studentUsers[name];
+    if(!user){showModal("该学生不在名单内，请联系教师导入名单");return;}
+    if(user.pwd !== pwd){showModal("密码错误");return;}
+    currentLoginUser = {name:name,role:"student"};
+    isGuestMode = false;
+    renderStudentPage();
+}
+
+document.getElementById("btn-teacher-login").onclick = function(){
+    let name = document.getElementById("inp-username").value.trim();
+    let pwd = document.getElementById("inp-pwd").value.trim();
+    if(!name){showModal("请不要留空");return;}
+    let data = getStorage();
+    if(!data.teacherUsers["夏婕"]){
+        data.teacherUsers["夏婕"] = {pwd:PWD_FIX};
+    }
+    setStorage(data);
+    let t = data.teacherUsers[name];
+    if(!t){showModal("教师账号不存在");return;}
+    if(t.pwd !== pwd){showModal("密码错误");return;}
+    currentLoginUser = {name:name,role:"teacher"};
+    isGuestMode = false;
+    renderTeacherPage();
+}
+
+document.getElementById("btn-guest").onclick = function(){
+    isGuestMode = true;
+    currentLoginUser = {name:"访客",role:"guest"};
+    renderStudentPage();
+}
+
+function logout(){
+    currentLoginUser=null;isGuestMode=false;
+    document.getElementById("page-login").style.display="flex";
+    document.getElementById("page-student").classList.remove("active");
+    document.getElementById("page-teacher").classList.remove("active");
+    document.getElementById("inp-username").value="";
+    document.getElementById("inp-pwd").value="";
+}
+
+function renderStudentPage(){
+    document.getElementById("page-login").style.display="none";
+    document.getElementById("page-student").classList.add("active");
+    document.getElementById("page-teacher").classList.remove("active");
+    goStudentHome();
+}
+function renderTeacherPage(){
+    document.getElementById("page-login").style.display="none";
+    document.getElementById("page-teacher").classList.add("active");
+    document.getElementById("page-student").classList.remove("active");
+    goTeacherHome();
+}
+
+function goStudentHome(){
+    document.getElementById("module-container").innerHTML="";
+}
+function goTeacherHome(){
+    document.getElementById("teacher-container").innerHTML="<div class='box-panel'><h3>欢迎进入教师备课工作台</h3><p>请使用上方导航栏进入各个管理模块</p></div>";
+}
+
+function jumpModule(moduleKey){
+    let data = getStorage();
+    let list = data[moduleKey] || [];
+    let html = `<div class="box-panel"><h3>练习列表</h3>`;
+    if(list.length===0){
+        html += `<p>该板块暂无练习资源，请教师在后台录入GitHub练习链接。</p>`;
+    }else{
+        list.forEach(item=>{
+            html +=`
+            <div class="link-item-card">
+                <a target="_blank" href="${item.url}">${item.name}</a>
+            </div>`
+        })
+    }
+    html += `<br><button class="btn btn-secondary" onclick="goStudentHome()">返回首页</button></div>`;
+    document.getElementById("module-container").innerHTML = html;
+}
+
+window.saveWrongItem = function(module, questionContent, studentAnswer, correctAnswer){
+    if(isGuestMode || !currentLoginUser?.name) return;
+    let nowTime = new Date().toLocaleString();
+    let data = getStorage();
+    let user = data.studentUsers[currentLoginUser.name];
+    if(!user) return;
+    let wrongItem = {
+        studentName: currentLoginUser.name,
+        finishTime: nowTime,
+        module: module,
+        questionContent: questionContent,
+        studentAnswer: studentAnswer,
+        correctAnswer: correctAnswer
+    };
+    user.wrongList.push(wrongItem);
+    setStorage(data);
+    return wrongItem;
+}
+
+function submitMockTest(userName, wrongList, pdfTitle){
+    let csvHeader = "学生姓名,做题时间,所属板块,错题题目,学生答案,标准答案\n";
+    let csvBody = wrongList.map(item => {
+        return `${item.studentName},${item.finishTime},${item.module},${item.questionContent},${item.studentAnswer},${item.correctAnswer}`;
+    }).join("\n");
+    let csvText = csvHeader + csvBody;
+    downloadFile(csvText,`测试记录_${userName}.csv`,"text/csv;charset=utf-8");
+    exportPdfReport(pdfTitle, wrongList);
+    if(WPS_COLLECT_URL && WPS_COLLECT_URL.length>5){
+        window.open(WPS_COLLECT_URL,"_blank");
+    }
+    showModal("✅测试已完成，请提交测试结果，生成你的专属报告。");
+}
+
+function downloadFile(content,filename,mime){
+    let blob = new Blob([content],{type:mime});
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+function exportPdfReport(titleText, wrongList){
+    let printWin = window.open("","_blank");
+    let wrongTableHtml = `
+        <table border="1" style="width:100%;border-collapse:collapse;margin-top:20px;">
+            <tr style="background:#f7f3ea;">
+                <th>做题时间</th>
+                <th>所属板块</th>
+                <th>错题题目</th>
+                <th>我的答案</th>
+                <th>标准答案</th>
+            </tr>
+            ${wrongList.map(item => `
+                <tr>
+                    <td>${item.finishTime}</td>
+                    <td>${item.module}</td>
+                    <td>${item.questionContent}</td>
+                    <td>${item.studentAnswer}</td>
+                    <td>${item.correctAnswer}</td>
+                </tr>
+            `).join("")}
+        </table>
+    `;
+    printWin.document.write(`
+    <html><head><meta charset="utf-8"><title>${titleText}</title>
+    <style>body{padding:30px;font-size:14px;line-height:1.6;}table{font-size:12px;}th,td{padding:8px;}</style>
+    </head>
+    <body>
+    <h2>${titleText}</h2>
+    <p>学生姓名：${currentLoginUser?.name || "访客"}</p>
+    <p>生成时间：${new Date().toLocaleString()}</p>
+    <hr>
+    <h3>本次错题明细</h3>
+    ${wrongTableHtml}
+    <p style="margin-top:20px;">请使用浏览器打印功能，另存为PDF保存本报告。</p>
+    </body></html>`);
+    printWin.document.close();
+    setTimeout(()=>{printWin.print();},300);
+}
+
+function openMyWrongSet(){
+    if(isGuestMode){showModal("访客模式无法查看错题集，请先登录学生账号");return;}
+    let data = getStorage();
+    let user = data.studentUsers[currentLoginUser.name];
+    if(!user || user.wrongList.length===0){
+        document.getElementById("module-container").innerHTML="<div class='box-panel'><h3>我的错题集</h3><p>暂无错题记录</p></div>";
+        return;
+    }
+    let tableHtml = `
+        <table class="wrong-table">
+            <tr>
+                <th>做题时间</th>
+                <th>所属板块</th>
+                <th>错题题目</th>
+                <th>我的答案</th>
+                <th>标准答案</th>
+            </tr>
+            ${user.wrongList.map(item => `
+                <tr>
+                    <td>${item.finishTime}</td>
+                    <td>${item.module}</td>
+                    <td>${item.questionContent}</td>
+                    <td>${item.studentAnswer}</td>
+                    <td>${item.correctAnswer}</td>
+                </tr>
+            `).join("")}
+        </table>
+    `;
+    document.getElementById("module-container").innerHTML=`
+        <div class="box-panel">
+        <h3>我的错题集（共${user.wrongList.length}条）</h3>
+        ${tableHtml}
+        <button class="btn btn-primary" onclick="exportAllWrong()">导出全部错题CSV</button>
+        </div>
+    `;
+}
+
+function exportAllWrong(){
+    let data = getStorage();
+    let user = data.studentUsers[currentLoginUser.name];
+    if(!user || user.wrongList.length===0){showModal("暂无错题可导出");return;}
+    let csvHeader = "学生姓名,做题时间,所属板块,错题题目,学生答案,标准答案\n";
+    let csvBody = user.wrongList.map(item => {
+        return `${item.studentName},${item.finishTime},${item.module},${item.questionContent},${item.studentAnswer},${item.correctAnswer}`;
+    }).join("\n");
+    downloadFile(csvHeader+csvBody,`全部错题_${currentLoginUser.name}.csv`,"text/csv;charset=utf-8");
+    showModal("错题CSV已下载");
+}
+
+function openMyCollect(){showModal("我的收藏占位页面");}
+function openStudyLog(){showModal("学习日志占位页面");}
+
+function openAccountManage(){
+    document.getElementById("teacher-container").innerHTML=`
+    <div class="box-panel">
+    <h3>账号管理中心</h3>
+    <p>上传学生名单（支持xlsx/xls/csv）：<input type="file" class="file-input" id="file-student-list"></p>
+    <p>上传教师名单（支持xlsx/xls/csv）：<input type="file" class="file-input" id="file-teacher-list"></p>
+    </div>`;
+
+    //学生名单上传监听
+    document.getElementById("file-student-list").onchange=function(e){
+        let f = e.target.files[0];
+        if(!f) return;
+        parseExcelFile(f,function(jsonArr){
+            let data = getStorage();
+            jsonArr.forEach(row=>{
+                let name = (row["姓名"]||row["name"]||"").toString().trim();
+                if(name){
+                    data.studentUsers[name]={pwd:PWD_FIX,wrongList:[],collect:[],studyLog:[]};
+                }
+            })
+            setStorage(data);
+            showModal("✅学生名单导入完成");
+        })
+    }
+    //教师名单上传监听
+    document.getElementById("file-teacher-list").onchange=function(e){
+        let f = e.target.files[0];
+        if(!f) return;
+        parseExcelFile(f,function(jsonArr){
+            let data = getStorage();
+            jsonArr.forEach(row=>{
+                let name = (row["姓名"]||row["name"]||"").toString().trim();
+                if(name){
+                    data.teacherUsers[name]={pwd:PWD_FIX};
+                }
+            })
+            setStorage(data);
+            showModal("✅教师名单导入完成");
+        })
+    }
+}
+
+function openResLib(){
+    let data = getStorage();
+    let html = `<div class="box-panel"><h3>分层素材资源管理</h3><p>为各个板块录入【显示名称】+【GitHub练习链接】，学生端对应模块直接读取使用</p>`;
+
+    categoryList.forEach(cat=>{
+        let list = data[cat.key] || [];
+        html += `<div class="sub-title">${cat.name}（模块key:${cat.key}）</div>`;
+        list.forEach((item,idx)=>{
+            html += `
+            <div class="link-row">
+                <input class="input-item" value="${item.name}" placeholder="显示名称">
+                <input class="input-item" value="${item.url}" placeholder="粘贴GitHub链接">
+                <button class="btn btn-secondary" onclick="delCatLink('${cat.key}',${idx})">删除</button>
+            </div>`
+        })
+        html += `
+        <div class="link-row">
+            <input class="input-item" id="add_name_${cat.key}" placeholder="新增‑显示名称">
+            <input class="input-item" id="add_url_${cat.key}" placeholder="新增‑GitHub链接">
+            <button class="btn btn-primary" onclick="addCatLink('${cat.key}')">添加</button>
+        </div>
+        `;
+    })
+
+    html += `<br><button class="btn btn-primary" onclick="showModal('所有链接已保存到本地存储')">保存全部</button></div>`;
+    document.getElementById("teacher-container").innerHTML = html;
+}
+
+window.addCatLink = function(catKey){
+    let nameDom = document.getElementById(`add_name_${catKey}`);
+    let urlDom = document.getElementById(`add_url_${catKey}`);
+    let n = nameDom.value.trim();
+    let u = urlDom.value.trim();
+    if(!n||!u){showModal("名称和链接不能为空");return;}
+    let data = getStorage();
+    if(!Array.isArray(data[catKey])) data[catKey]=[];
+    data[catKey].push({name:n,url:u});
+    setStorage(data);
+    openResLib();
+}
+
+window.delCatLink = function(catKey,index){
+    let data = getStorage();
+    data[catKey].splice(index,1);
+    setStorage(data);
+    openResLib();
+}
+
+function openNotice(){
+    document.getElementById("teacher-container").innerHTML=`
+    <div class="box-panel">
+    <h3>公告&班级通知</h3>
+    <textarea placeholder="编辑公告内容"></textarea>
+    <button class="btn btn-primary">发布公告</button>
+    </div>`;
+}
+function openStudyData(){
+    document.getElementById("teacher-container").innerHTML=`
+    <div class="box-panel">
+    <h3>学情数据中心</h3>
+    <p>批量导入学生上交测试报告（支持xlsx/xls/csv）：<input type="file" class="file-input" id="file-report"></p>
+    <p>支持字段：学生姓名、做题时间、所属板块、错题题目、学生答案、标准答案</p>
+    </div>`;
+}
+
+function openBackup(){
+    document.getElementById("teacher-container").innerHTML=`
+    <div class="box-panel">
+    <h3>数据备份导出</h3>
+    <p>⚠️备份保存全部账号、素材链接、学生错题，更换浏览器前务必导出备份。</p>
+    <button class="btn btn-primary" onclick="exportFullBackup()">导出全部系统JSON备份</button>
+    <br><br>
+    <p>从备份文件恢复导入：<input type="file" class="file-input" id="file-restore"></p>
+    </div>`;
+
+    document.getElementById("file-restore").onchange=function(e){
+        const f = e.target.files[0];
+        if(!f) return;
+        importFullBackup(f);
+    }
+}
+</script>
+</body>
+</html>

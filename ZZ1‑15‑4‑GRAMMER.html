@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZ1‑15‑4‑GRAMMER</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+        body {
+            background-color: #f7f9fc;
+            padding: 24px 16px;
+        }
+        h1 {
+            text-align: center;
+            color: #002b5c;
+            margin-bottom: 28px;
+            font-size: clamp(22px,4vw,28px);
+        }
+        .wrap {
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .flashcard {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            min-height: 520px;
+            padding: 36px 30px;
+            box-shadow: 0 4px 14px rgba(0,43,92,0.12);
+            display:flex;
+            flex-direction:column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            cursor:pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 6px 20px rgba(0,43,92,0.18);
+        }
+        .front-text {
+            font-size: clamp(36px,7vw,52px);
+            font-weight:bold;
+            color:#002b5c;
+            text-align: left;
+            width:100%;
+            margin-top:40px;
+        }
+        .back-text {
+            font-size: clamp(19px,3vw,22px);
+            color:#002b5c;
+            line-height:1.9;
+            display:none;
+            width:100%;
+        }
+        .back-inner{
+            width:100%;
+        }
+        .block{
+            margin-bottom:16px;
+        }
+        .tip{
+            color:#2b4b80;
+        }
+        .exercise{
+            margin-top:20px;
+        }
+        .btn-group {
+            display:flex;
+            justify-content: center;
+            gap:14px;
+            margin-top:26px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding:12px 24px;
+            border:none;
+            border-radius:10px;
+            background:#002b5c;
+            color:#ffffff;
+            font-size: clamp(16px,3vw,19px);
+            cursor:pointer;
+        }
+        button:hover {
+            opacity:0.85;
+        }
+        .page-info {
+            text-align:center;
+            margin-top:16px;
+            color:#002b5c;
+            font-size: clamp(16px,3vw,19px);
+        }
+    </style>
+</head>
+<body>
+    <h1>ZZ1‑15‑4‑GRAMMER</h1>
+    <div class="wrap">
+        <div class="flashcard" id="card">
+            <div class="front-text" id="front">以至于</div>
+            <div class="back-text" id="back"></div>
+        </div>
+        <div class="page-info">
+            <span id="current">1</span> / <span id="total">8</span>
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一张</button>
+            <button id="next">下一张</button>
+            <button id="shuffle">随机洗牌</button>
+        </div>
+    </div>
+<script>
+const cardList = [
+    {
+        front:"以至于",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：连词。前半句说明程度很深，后半句引出由此造成的结果；好结果、坏结果都能用。<br>格式：……，以至于+结果句子。</div>
+            <div class="block">课文原句：后来活儿太多了，以至于“清新”干脆辞去了工作。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 他忙得停不下来，______忘记了吃饭。</div>
+                <div>2. 路上堵车严重，______很多人上班迟到。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"干脆",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：副词。表示果断、直接，不想再纠结；放在动词前面。口语书面都常用。<br>格式：干脆 + 动词短语</div>
+            <div class="block">课文原句：后来活儿太多了，以至于“清新”干脆辞去了工作。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 下雨出门不方便，我们______在家休息。</div>
+                <div>2. 修不好就______换一个新的吧。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"由于……，……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：书面原因句式。“由于”后面接原因，逗号后写结果；不能用于主观推测的结论。<br>格式：由于+原因，+结果。</div>
+            <div class="block">课文原句：由于服务周到，她的“绿色屋顶公司”渐渐有了名气。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. ______交通方便，很多人愿意住在这里。</div>
+                <div>2. ______准备充分，这次项目完成得很顺利。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"和……相比",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：对比句式，用来比较两件事物，突出后者的特点。<br>格式：和A相比，B……</div>
+            <div class="block">课文原句：和传统的绿化方式相比，这种方式在都市里更有优越性。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. ______冬天相比，夏天白天更长。</div>
+                <div>2. ______小城市相比，大城市就业机会更多。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"一方面……，另一方面……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：并列结构，用来介绍一件事物的两个方面、两个理由。书面高频。<br>格式：一方面……，另一方面……</div>
+            <div class="block">课文原句：一方面它能美化环境，改善空气质量，节约土地；另一方面，“屋顶农场”在给人们提供绿色食品的同时，还能使人体验到劳动的快乐。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 学汉语，______要多阅读，______要多开口说。</div>
+                <div>2. 这份工作______收入不错，______压力比较大。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"在……的同时，还……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：两件事同步发生，做A事的过程当中，同时实现B。<br>格式：在+动作A的同时，还+动作B</div>
+            <div class="block">课文原句：“屋顶农场”在给人们提供绿色食品的同时，还能使人体验到劳动的快乐。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. 我们______学习知识______，______要学会思考。</div>
+                <div>2. 他______工作______，______坚持锻炼身体。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"越来越+形容词",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：表示程度不断加深。<br>格式：越来越 + 形容词；近义词结构：越……越……</div>
+            <div class="block">课文原句：公司的客户越来越多，生意也越做越大。</div>
+            <div class="exercise block">练习（填空）：
+                <div>1. 春天来了，天气______暖和。</div>
+                <div>2. 练习多了，他的中文______流利。</div>
+            </div>
+        </div>`
+    },
+    {
+        front:"当……的时候，……",
+        back:`<div class="back-inner">
+            <div class="block tip">使用范围与含义：时间状语句式，引出某个时间场景，后面写此时发生的事。<br>格式：当……的时候，主句</div>
+            <div class="block">课文原句：当一个个屋顶都变成一座座绿色农场的时候，“清新生活”将不再是梦想。</div>
+            <div class="exercise block">练习（补全句子）：
+                <div>1. ______我______年轻______，我很喜欢旅行。</div>
+                <div>2. ______太阳______升起______，大地慢慢暖和起来。</div>
+            </div>
+        </div>`
+    }
+];
+let currentIndex = 0;
+let isShowBack = false;
+let cards = [...cardList];
+const frontDom = document.getElementById("front");
+const backDom = document.getElementById("back");
+const cardDom = document.getElementById("card");
+const currentPage = document.getElementById("current");
+const totalPage = document.getElementById("total");
+totalPage.innerText = cards.length;
+function renderCard(){
+    const item = cards[currentIndex];
+    frontDom.innerText = item.front;
+    backDom.innerHTML = item.back;
+    if(isShowBack){
+        frontDom.style.display="none";
+        backDom.style.display="block";
+    }else{
+        frontDom.style.display="block";
+        backDom.style.display="none";
+    }
+    currentPage.innerText = currentIndex +1;
+}
+cardDom.addEventListener("click",()=>{
+    isShowBack = !isShowBack;
+    renderCard();
+})
+document.getElementById("prev").addEventListener("click",()=>{
+    if(currentIndex>0){
+        currentIndex--;
+        isShowBack=false;
+        renderCard();
+    }
+})
+document.getElementById("next").addEventListener("click",()=>{
+    if(currentIndex < cards.length -1){
+        currentIndex++;
+        isShowBack=false;
+        renderCard();
+    }
+})
+document.getElementById("shuffle").addEventListener("click",()=>{
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    currentIndex = 0;
+    isShowBack = false;
+    renderCard();
+})
+renderCard();
+</script>
+</body>
+</html>

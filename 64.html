@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国人的吃饭讲究｜四段阅读训练</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            color: #000066; /*深蓝色字体*/
+            background-color: #f8f9fa;
+            padding:20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container{
+            background:#fff;
+            border-radius:16px;
+            padding:28px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.12);
+        }
+        .title{
+            text-align:center;
+            font-size:28px;
+            margin-bottom:18px;
+        }
+        .stage-title{
+            font-size:24px;
+            color:#1e40af;
+            margin:14px 0;
+        }
+        .timer-box{
+            font-size:24px;
+            text-align:center;
+            color:#c00;
+            margin-bottom:22px;
+            font-weight:bold;
+        }
+        .article{
+            font-size:20px;
+            line-height:1.8; /*加大行间距*/
+            margin-bottom:26px;
+        }
+        .article-firstline{
+            font-size:20px;
+            line-height:1.8;
+            margin-bottom:26px;
+        }
+        .btn{
+            padding:14px 26px;
+            font-size:20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            background:#1e40af;
+            color:white;
+            margin:8px 6px;
+        }
+        .question-block{
+            margin:28px 0;
+        }
+        .q-text{
+            font-size:21px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .opt{
+            padding:14px 18px;
+            margin:10px 0;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:19px;
+            line-height:1.6;
+        }
+        .opt:hover{background:#eef2ff;}
+        .opt.selected{background:#dbeafe; border-color:#1e40af;}
+        .result-final{
+            font-size:23px;
+            text-align:center;
+            margin-top:32px;
+            line-height:1.7;
+        }
+        .input-name{
+            width:100%;
+            padding:14px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            margin-bottom:22px;
+        }
+        .fill-input{
+            width:100%;
+            padding:12px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:8px;
+            margin:10px 0;
+        }
+        .page{display:none;}
+        .page.active{display:block;}
+        /*=====新增语法页样式=====*/
+        .grammar-wrap{
+            display:flex;
+            gap:24px;
+            margin-top:20px;
+        }
+        .grammar-left{
+            flex:1;
+        }
+        .grammar-right{
+            flex:1;
+        }
+        .grammar-red{
+            color:#d62828;
+            font-weight:bold;
+        }
+        .vocab-blue{
+            color:#1e40af;
+            font-weight:bold;
+        }
+        .grammar-item{
+            margin-bottom:20px;
+            padding:16px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+        }
+        .grammar-desc{
+            font-size:18px;
+            line-height:1.7;
+            margin-bottom:10px;
+        }
+        .grammar-exercise-text{
+            font-size:17px;
+            margin:8px 0;
+        }
+        .ans-hint{
+            color:#16a34a;
+            margin-top:6px;
+            display:none;
+        }
+        .bg-info-block{
+            margin-top:28px;
+            padding:18px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+        }
+        .bg-info-block h4{
+            font-size:20px;
+            margin-bottom:12px;
+            color:#1e40af;
+        }
+        .bg-text{
+            font-size:17px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .video-link{
+            font-size:17px;
+            color:#1e40af;
+        }
+        /*小屏幕适配，手机改为上下排列*/
+        @media(max-width:768px){
+            .grammar-wrap{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title">中国人的吃饭讲究｜四段阅读训练</h1>
+    <input class="input-name" id="stuName" placeholder="请输入你的姓名">
+    <button class="btn" id="btnGoStage1">开始</button>
+    <!-- ==========阶段1｜原文1：仅每段首句，限时30秒 ========== -->
+    <div id="stage1Read" class="page">
+        <h2 class="stage-title">阶段1：速读（限时30秒，只读每段第一句）</h2>
+        <div class="timer-box">剩余时间：<span id="t1">00:30</span></div>
+        <div class="article-firstline">
+            <p>学习汉语，除了学习词语和语法以外，也需要了解中国的饮食文化。</p>
+            <p>中国人吃饭，不只是为了吃饱肚子，还有很多特别的讲究。</p>
+            <p>在中国，“鱼”是餐桌上很受欢迎的一道菜。</p>
+            <p>过年的时候，饺子也是不能少的食物。</p>
+            <p>有没有吃饭方面需要注意的事情呢？</p>
+            <p>这些吃饭的习惯，也是中国文化的一部分。</p>
+        </div>
+        <button class="btn" id="s1End">时间到，进入题目</button>
+    </div>
+    <div id="stage1Q" class="page">
+        <h2 class="stage-title">阶段1 题目（1分）</h2>
+        <div class="question-block">
+            <div class="q-text">本篇文章的主题是什么？</div>
+            <div class="opt" data-ans="0">A．中国人吃饭的文化与讲究</div>
+            <div class="opt" data-ans="1">B．中国各地有名的菜谱大全</div>
+            <div class="opt" data-ans="2">C．学习做饭的简单方法</div>
+        </div>
+        <button class="btn" id="s1Submit">提交本小题</button>
+        <div id="s1Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段2｜原文2：完整全文，限时2分钟，单选5题 ========== -->
+    <div id="stage2PreQ" class="page">
+        <h2 class="stage-title">阶段2：细节阅读（先看全部题目）</h2>
+        <div class="q-text">阅读前，请先浏览下面5道细节题：</div>
+        <div class="question-block">
+            <p>1.中国人吃鱼，“鱼”的谐音是什么？</p>
+            <p>2.过年吃鱼代表什么样的愿望？</p>
+            <p>3.过年吃饺子象征什么？</p>
+            <p>4.吃饭的时候，为什么不要把筷子插在饭上？</p>
+            <p>5.学习汉语除语言之外，还需要了解什么？</p>
+        </div>
+        <button class="btn" id="s2Start">记住题目，开始2分钟阅读全文</button>
+    </div>
+    <div id="stage2Read" class="page">
+        <h2 class="stage-title">阶段2 阅读全文（限时2分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t2">02:00</span></div>
+        <div class="article">
+            <p>学习汉语，除了学习词语和语法以外，也需要了解中国的饮食文化。只有这样，才能更好地理解中国人的生活。</p>
+            <br>
+            <p>中国人吃饭，不只是为了吃饱肚子，还有很多特别的讲究。特别是过节请客吃饭的时候，这些习惯就更加明显。</p>
+            <br>
+            <p>在中国，“鱼”是餐桌上很受欢迎的一道菜。“鱼”和“余”谐音，代表年年有余。如果过年的餐桌上有鱼，那就代表人们希望每年都有多余的财富和食物。</p>
+            <br>
+            <p>过年的时候，饺子也是不能少的食物。饺子的样子很像古代的钱币，因此吃饺子象征着发财、有好运气。</p>
+            <br>
+            <p>有没有吃饭方面需要注意的事情呢？有，不要把筷子直直插在米饭上面。这样的样子很不吉利，所以大部分中国人都会避免这样做。</p>
+            <br>
+            <p>这些吃饭的习惯，也是中国文化的一部分。不同国家吃饭的习惯并不一样，所以在学习汉语的同时，还应该了解这些生活文化。</p>
+        </div>
+        <button class="btn" id="s2End">阅读结束，开始答题</button>
+    </div>
+    <div id="stage2Q" class="page">
+        <h2 class="stage-title">阶段2 细节选择题（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.“鱼”和下面哪个字谐音？</div>
+            <div class="opt" data-ans="0">A.余</div>
+            <div class="opt" data-ans="1">B.于</div>
+            <div class="opt" data-ans="2">C.雨</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.过年吃鱼代表什么愿望？</div>
+            <div class="opt" data-ans="0">A.年年有余</div>
+            <div class="opt" data-ans="1">B.身体健康</div>
+            <div class="opt" data-ans="2">C.工作顺利</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.过年吃饺子象征？</div>
+            <div class="opt" data-ans="0">A.发财，好运气</div>
+            <div class="opt" data-ans="1">B.快快长大</div>
+            <div class="opt" data-ans="2">C.平安出行</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.为什么不要把筷子插在米饭上？</div>
+            <div class="opt" data-ans="0">A.样子不吉利</div>
+            <div class="opt" data-ans="1">B.筷子容易坏掉</div>
+            <div class="opt" data-ans="2">C.米饭会变凉</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.学好汉语，除语言知识还需要了解？</div>
+            <div class="opt" data-ans="0">A.中国生活文化</div>
+            <div class="opt" data-ans="1">B.全部中国菜谱</div>
+            <div class="opt" data-ans="2">C.做饭的手艺</div>
+        </div>
+        <button class="btn" id="s2Submit">提交这5道题</button>
+        <div id="s2Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段3｜原文3：完整全文，限时3分钟，判断5题 ========== -->
+    <div id="stage3Read" class="page">
+        <h2 class="stage-title">阶段3 阅读全文（限时3分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t3">03:00</span></div>
+        <div class="article">
+            <p>学习汉语，除了学习词语和语法以外，也需要了解中国的饮食文化。只有这样，才能更好地理解中国人的生活。</p>
+            <br>
+            <p>中国人吃饭，不只是为了吃饱肚子，还有很多特别的讲究。特别是过节请客吃饭的时候，这些习惯就更加明显。</p>
+            <br>
+            <p>在中国，“鱼”是餐桌上很受欢迎的一道菜。“鱼”和“余”谐音，代表年年有余。如果过年的餐桌上有鱼，那就代表人们希望每年都有多余的财富和食物。</p>
+            <br>
+            <p>过年的时候，饺子也是不能少的食物。饺子的样子很像古代的钱币，因此吃饺子象征着发财、有好运气。</p>
+            <br>
+            <p>有没有吃饭方面需要注意的事情呢？有，不要把筷子直直插在米饭上面。这样的样子很不吉利，所以大部分中国人都会避免这样做。</p>
+            <br>
+            <p>这些吃饭的习惯，也是中国文化的一部分。不同国家吃饭的习惯并不一样，所以在学习汉语的同时，还应该了解这些生活文化。</p>
+        </div>
+        <button class="btn" id="s3End">阅读结束，开始做判断题</button>
+    </div>
+    <div id="stage3Q" class="page">
+        <h2 class="stage-title">阶段3 判断正误（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.“鱼”和“余”读音相近，代表年年有余。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.过年的时候，中国人几乎不吃鱼。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.过年吃饺子象征发财和好运气。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.中国人喜欢把筷子直接插在米饭上面。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.不同国家吃饭的习惯不完全一样。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <button class="btn" id="s3Submit">提交判断题</button>
+        <div id="s3Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段4｜原文4：完整全文，限时30秒，填空 ========== -->
+    <div id="stage4Read" class="page">
+        <h2 class="stage-title">阶段4：速读全文（限时30秒）</h2>
+        <div class="timer-box">剩余时间：<span id="t4">00:30</span></div>
+        <div class="article">
+            <p>学习汉语，除了学习词语和语法以外，也需要了解中国的饮食文化。只有这样，才能更好地理解中国人的生活。</p>
+            <br>
+            <p>中国人吃饭，不只是为了吃饱肚子，还有很多特别的讲究。特别是过节请客吃饭的时候，这些习惯就更加明显。</p>
+            <br>
+            <p>在中国，“鱼”是餐桌上很受欢迎的一道菜。“鱼”和“余”谐音，代表年年有余。如果过年的餐桌上有鱼，那就代表人们希望每年都有多余的财富和食物。</p>
+            <br>
+            <p>过年的时候，饺子也是不能少的食物。饺子的样子很像古代的钱币，因此吃饺子象征着发财、有好运气。</p>
+            <br>
+            <p>有没有吃饭方面需要注意的事情呢？有，不要把筷子直直插在米饭上面。这样的样子很不吉利，所以大部分中国人都会避免这样做。</p>
+            <br>
+            <p>这些吃饭的习惯，也是中国文化的一部分。不同国家吃饭的习惯并不一样，所以在学习汉语的同时，还应该了解这些生活文化。</p>
+        </div>
+        <button class="btn" id="s4End">阅读结束，进入概括填空题</button>
+    </div>
+    <div id="stage4Q" class="page">
+        <h2 class="stage-title">阶段4 段落简写填空（每题1分，共3分）</h2>
+        <div class="q-text">1.“鱼”和____谐音，代表年年有余。</div>
+        <input class="fill-input" id="fill1" placeholder="填写答案">
+        <div class="q-text">2.过年吃饺子，象征发财和____。</div>
+        <input class="fill-input" id="fill2" placeholder="填写答案">
+        <div class="q-text">3.学汉语，除语言之外，还要了解中国____文化。</div>
+        <input class="fill-input" id="fill3" placeholder="填写答案">
+        <button class="btn" id="s4Submit">提交填空</button>
+        <div id="s4Res" class="result-final"></div>
+    </div>
+    <!-- 总分页面，提交到SheetDB -->
+    <div id="finalPage" class="page">
+        <h2 class="stage-title">✅全部完成！</h2>
+        <div class="result-final">你的总分：<span id="totalScore">0</span> /14</div>
+        <button class="btn" id="finalSubmit">提交本次成绩记录</button>
+        <button class="btn" id="goGrammar">查看本篇词汇、语法讲解</button>
+        <div id="finalMsg" class="result-final"></div>
+    </div>
+    <!-- ============新增：语法&词汇解析页面 左右分栏============ -->
+    <div id="grammarPage" class="page">
+        <h2 class="stage-title">📖词汇、语法点解析练习 & 文化背景</h2>
+        <button class="btn" id="backFinal">返回成绩页</button>
+        <div class="grammar-wrap">
+            <div class="grammar-left">
+                <h3>课文原文（语法<span class="grammar-red">红色</span>；生词<span class="vocab-blue">蓝色</span>）</h3>
+                <div class="article">
+                    <p>学习汉语，<span class="grammar-red">除了</span>学习词语和语法<span class="grammar-red">以外，也需要</span>了解中国的<span class="vocab-blue">饮食</span>文化。<span class="grammar-red">只有这样，才能</span>更好地理解中国人的生活。</p>
+                    <br>
+                    <p>中国人吃饭，不只是为了吃饱肚子，还有很多特别的<span class="vocab-blue">讲究</span>。<span class="grammar-red">特别是</span>过节请客吃饭的时候，这些习惯就更加明显。</p>
+                    <br>
+                    <p><span class="grammar-red">如果……那就……</span>过年的餐桌上有鱼，那就代表人们希望每年都有多余的财富和食物。</p>
+                    <br>
+                    <p>饺子的样子很像古代的钱币，<span class="grammar-red">因此</span>吃饺子<span class="vocab-blue">象征</span>着发财、有好运气。</p>
+                    <br>
+                    <p><span class="grammar-red">有没有……呢？</span>有，不要把筷子直直插在米饭上面。不同国家吃饭的习惯并不一样，<span class="grammar-red">在……的同时，还……</span>，还应该了解这些生活文化。</p>
+                </div>
+            </div>
+            <div class="grammar-right">
+                <!--=====重点生词（蓝色字体，HSK4‑5重点）=====-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b class="vocab-blue">【重点生词】</b></div>
+                    <div class="grammar-desc"><span class="vocab-blue">饮食 (yǐn shí)</span>：吃的、喝的，吃饭相关。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">讲究 (jiǎng jiu)</span>：要注意的习惯、规矩。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">象征 (xiàng zhēng)</span>：代表某种美好的含义。</div>
+                </div>
+                <!--语法点1-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法1：除了……以外，也需要……</b><br>含义：表示除一件事之外，还需要做另一件。例句：除了学习词语以外，也需要了解饮食文化。</div>
+                    <div class="grammar-exercise-text">练习：除了上课以外，也需要______。</div>
+                    <input class="fill-input" id="g1">
+                    <button class="btn" data-key="g1" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：多练习口语</div>
+                </div>
+                <!--语法点2-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法2：只有这样，才能……</b><br>含义：做到前面条件，才可以实现后面结果。例句：只有这样，才能更好地理解中国人的生活。</div>
+                    <div class="grammar-exercise-text">练习：多阅读，只有这样，才能______。</div>
+                    <input class="fill-input" id="g2">
+                    <button class="btn" data-key="g2" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：扩大词汇量</div>
+                </div>
+                <!--语法点3-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法3：特别是</b><br>含义：着重强调、举出突出情况。例句：特别是过节请客吃饭的时候。</div>
+                    <div class="grammar-exercise-text">练习：很多人喜欢水果，特别是______。</div>
+                    <input class="fill-input" id="g3">
+                    <button class="btn" data-key="g3" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：苹果</div>
+                </div>
+                <!--语法点4-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法4：如果……那就……</b><br>含义：假设，假如出现A情况，就会有B结果。例句：如果过年的餐桌上有鱼，那就代表好的希望。</div>
+                    <div class="grammar-exercise-text">练习：如果明天不下雨，那就______。</div>
+                    <input class="fill-input" id="g4">
+                    <button class="btn" data-key="g4" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：出去散步</div>
+                </div>
+                <!--语法点5-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法5：因此</b><br>含义：因果连词，“所以”。例句：饺子像古钱币，因此吃饺子象征发财。</div>
+                    <div class="grammar-exercise-text">练习：他每天坚持读书，因此______。</div>
+                    <input class="fill-input" id="g5">
+                    <button class="btn" data-key="g5" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：知识很丰富</div>
+                </div>
+                <!-- 知识背景板块 -->
+                <div class="bg-info-block">
+                    <h4>📚文化知识背景：中国餐桌小文化</h4>
+                    <div class="bg-text">
+                        中国人吃饭不只是填饱肚子，还有很多文化寓意。
+                        <br><br>
+                        “鱼”谐音“余”，过年吃鱼寓意年年有余；饺子外形类似古代铜钱，过年吃饺子盼望发财好运。筷子不能竖直插米饭，是生活当中需要避开的礼仪小细节。学习汉语，同时也要了解这些生活文化。
+                        <br><br>
+                        观看简短介绍视频：
+                        <br>
+                        <a class="video-link" href="https://www.bilibili.com/video/BV1xx411c7mZ/" target="_blank">B站｜中国饮食文化小科普</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const SHEETDB_URL = "https://sheetdb.io/api/v1/1ul2tw93jh57i";
+let totalScore = 0;
+let timers = {};
+function hideAll(){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+}
+function show(id){
+    hideAll();
+    document.getElementById(id).classList.add("active");
+}
+function formatTime(s){
+    let m = Math.floor(s/60);
+    let sec = s % 60;
+    return String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+}
+// 修改：倒计时到0只停止，不会自动跳转页面
+function startTimer(elId, seconds){
+    let remain = seconds;
+    const el = document.getElementById(elId);
+    el.innerText = formatTime(remain);
+    timers[elId] = setInterval(()=>{
+        remain--;
+        el.innerText = formatTime(remain);
+        if(remain <= 0){
+            clearInterval(timers[elId]);
+        }
+    },1000);
+}
+// ==========阶段1：必须填姓名才可以进入阅读==========
+document.getElementById("btnGoStage1").onclick = function(){
+    const nameVal = document.getElementById("stuName").value.trim();
+    if(!nameVal){
+        alert("请不要留空");
+        return;
+    }
+    show("stage1Read");
+    startTimer("t1",30);
+};
+document.getElementById("s1End").onclick = ()=>{
+    clearInterval(timers.t1);
+    show("stage1Q");
+};
+let s1Ans = null;
+document.querySelectorAll("#stage1Q .opt").forEach(opt=>{
+    opt.onclick = ()=>{
+        document.querySelectorAll("#stage1Q .opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s1Ans = opt.dataset.ans;
+    }
+})
+document.getElementById("s1Submit").onclick = ()=>{
+    if(s1Ans === null){
+        alert("请不要留空");
+        return;
+    }
+    if(s1Ans == 0){
+        totalScore +=1;
+        document.getElementById("s1Res").innerText = "✅正确，+1分";
+    }else{
+        document.getElementById("s1Res").innerText = "❌错误";
+    }
+    setTimeout(()=>show("stage2PreQ"),1200);
+}
+// ==========阶段2==========
+document.getElementById("s2Start").onclick = ()=>{
+    show("stage2Read");
+    startTimer("t2",120);
+}
+document.getElementById("s2End").onclick = ()=>{
+    clearInterval(timers.t2);
+    show("stage2Q");
+};
+let s2 = [null,null,null,null,null];
+const s2Opts = document.querySelectorAll("#stage2Q .opt");
+s2Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/3);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s2[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s2Submit").onclick = ()=>{
+    for(let i=0;i<5;i++){
+        if(s2[i]===null){
+            alert("请不要留空");
+            return;
+        }
+    }
+    let add = 0;
+    const right = ["0","0","0","0","0"];
+    for(let i=0;i<5;i++){
+        if(s2[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s2Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage3Read"),1200);
+}
+// ==========阶段3、阶段4：重写show钩子，进入阅读页自动开启计时 ==========
+const origShow = show;
+show = function(id){
+    origShow(id);
+    if(id === "stage3Read"){
+        startTimer("t3",180);
+    }
+    if(id === "stage4Read"){
+        startTimer("t4",30);
+    }
+}
+document.getElementById("s3End").onclick = ()=>{
+    clearInterval(timers.t3);
+    show("stage3Q");
+};
+let s3 = [null,null,null,null,null];
+const s3Opts = document.querySelectorAll("#stage3Q .opt");
+s3Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/2);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s3[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s3Submit").onclick = ()=>{
+    for(let i=0;i<5;i++){
+        if(s3[i]===null){
+            alert("请不要留空");
+            return;
+        }
+    }
+    let add = 0;
+    const right = ["true","false","true","false","true"];
+    for(let i=0;i<5;i++){
+        if(s3[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s3Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage4Read"),1200);
+}
+// ==========阶段4==========
+document.getElementById("s4End").onclick = ()=>{
+    clearInterval(timers.t4);
+    show("stage4Q");
+};
+document.getElementById("s4Submit").onclick = ()=>{
+    const a1 = document.getElementById("fill1").value.trim();
+    const a2 = document.getElementById("fill2").value.trim();
+    const a3 = document.getElementById("fill3").value.trim();
+    if(!a1 || !a2 || !a3){
+        alert("请不要留空");
+        return;
+    }
+    let add = 0;
+    if(a1 === "余") add++;
+    if(a2 === "好运气") add++;
+    if(a3 === "饮食") add++;
+    totalScore += add;
+    document.getElementById("s4Res").innerText = `答对${add}题，+${add}分`;
+    document.getElementById("totalScore").innerText = totalScore;
+    setTimeout(()=>show("finalPage"),1200);
+}
+//提交成绩到谷歌表格
+document.getElementById("finalSubmit").onclick = async ()=>{
+    const name = document.getElementById("stuName").value.trim();
+    if(!name){alert("请不要留空");return;}
+    const data = {
+        time: new Date().toLocaleString(),
+        name: name,
+        score: totalScore
+    }
+    try{
+        const res = await fetch(SHEETDB_URL,{
+            method:"POST",
+            headers:{"Content‑Type":"application/json"},
+            body:JSON.stringify(data)
+        })
+        if(res.ok){
+            document.getElementById("finalMsg").innerText = "✅成绩提交成功！";
+        }else{
+            document.getElementById("finalMsg").innerText = "❌提交失败，请重试";
+        }
+    }catch(err){
+        document.getElementById("finalMsg").innerText = "❌网络错误，提交失败";
+    }
+}
+//========语法页面跳转与显示答案逻辑========
+document.getElementById("goGrammar").onclick = ()=>{ show("grammarPage"); }
+document.getElementById("backFinal").onclick = ()=>{ show("finalPage"); }
+//显示答案按钮
+document.querySelectorAll("#grammarPage button[data‑answer]").forEach(btn=>{
+    btn.onclick = function(){
+        const hintDom = this.nextElementSibling;
+        hintDom.style.display = hintDom.style.display === "block" ? "none" : "block";
+    }
+})
+</script>
+</body>
+</html>

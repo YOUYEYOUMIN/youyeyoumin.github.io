@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巧克力｜四段阅读训练</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            color: #000066; /*深蓝色字体*/
+            background-color: #f8f9fa;
+            padding:20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .container{
+            background:#fff;
+            border-radius:16px;
+            padding:28px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.12);
+        }
+        .title{
+            text-align:center;
+            font-size:28px;
+            margin-bottom:18px;
+        }
+        .stage-title{
+            font-size:24px;
+            color:#1e40af;
+            margin:14px 0;
+        }
+        .timer-box{
+            font-size:24px;
+            text-align:center;
+            color:#c00;
+            margin-bottom:22px;
+            font-weight:bold;
+        }
+        .article{
+            font-size:20px;
+            line-height:1.8; /*加大行间距*/
+            margin-bottom:26px;
+        }
+        .article-firstline{
+            font-size:20px;
+            line-height:1.8;
+            margin-bottom:26px;
+        }
+        .btn{
+            padding:14px 26px;
+            font-size:20px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            background:#1e40af;
+            color:white;
+            margin:8px 6px;
+        }
+        .question-block{
+            margin:28px 0;
+        }
+        .q-text{
+            font-size:21px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .opt{
+            padding:14px 18px;
+            margin:10px 0;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:19px;
+            line-height:1.6;
+        }
+        .opt:hover{background:#eef2ff;}
+        .opt.selected{background:#dbeafe; border-color:#1e40af;}
+        .result-final{
+            font-size:23px;
+            text-align:center;
+            margin-top:32px;
+            line-height:1.7;
+        }
+        .input-name{
+            width:100%;
+            padding:14px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:10px;
+            margin-bottom:22px;
+        }
+        .fill-input{
+            width:100%;
+            padding:12px;
+            font-size:20px;
+            border:2px solid #ccd6eb;
+            border-radius:8px;
+            margin:10px 0;
+        }
+        .page{display:none;}
+        .page.active{display:block;}
+        /*=====新增语法页样式=====*/
+        .grammar-wrap{
+            display:flex;
+            gap:24px;
+            margin-top:20px;
+        }
+        .grammar-left{
+            flex:1;
+        }
+        .grammar-right{
+            flex:1;
+        }
+        .grammar-red{
+            color:#d62828;
+            font-weight:bold;
+        }
+        .vocab-blue{
+            color:#1e40af;
+            font-weight:bold;
+        }
+        .grammar-item{
+            margin-bottom:20px;
+            padding:16px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+        }
+        .grammar-desc{
+            font-size:18px;
+            line-height:1.7;
+            margin-bottom:10px;
+        }
+        .grammar-exercise-text{
+            font-size:17px;
+            margin:8px 0;
+        }
+        .ans-hint{
+            color:#16a34a;
+            margin-top:6px;
+            display:none;
+        }
+        .bg-info-block{
+            margin-top:28px;
+            padding:18px;
+            border:1px solid #cbd5e1;
+            border-radius:12px;
+        }
+        .bg-info-block h4{
+            font-size:20px;
+            margin-bottom:12px;
+            color:#1e40af;
+        }
+        .bg-text{
+            font-size:17px;
+            line-height:1.7;
+            margin-bottom:12px;
+        }
+        .video-link{
+            font-size:17px;
+            color:#1e40af;
+        }
+        /*小屏幕适配，手机改为上下排列*/
+        @media(max-width:768px){
+            .grammar-wrap{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title">巧克力｜四段阅读训练</h1>
+    <input class="input-name" id="stuName" placeholder="请输入你的姓名">
+    <button class="btn" id="btnGoStage1">开始</button>
+    <!-- ==========阶段1｜原文1：仅每段首句，限时30秒 ========== -->
+    <div id="stage1Read" class="page">
+        <h2 class="stage-title">阶段1：速读（限时30秒，只读每段第一句）</h2>
+        <div class="timer-box">剩余时间：<span id="t1">00:30</span></div>
+        <div class="article-firstline">
+            <p>学习汉语的时候，我们会遇到很多从外国语言来的词。</p>
+            <p>“巧克力”就是一个很典型的外来词。</p>
+            <p>第一种翻译方法叫纯音译。</p>
+            <p>第二种方法是音意兼译。</p>
+            <p>除了音译，还有意译和字母词。</p>
+            <p>了解外来词，对汉语学习很有帮助。</p>
+        </div>
+        <button class="btn" id="s1End">时间到，进入题目</button>
+    </div>
+    <div id="stage1Q" class="page">
+        <h2 class="stage-title">阶段1 题目（1分）</h2>
+        <div class="question-block">
+            <div class="q-text">本篇文章的主题是什么？</div>
+            <div class="opt" data-ans="0">A．汉语里的外来词与翻译方法</div>
+            <div class="opt" data-ans="1">B．巧克力的制作方法</div>
+            <div class="opt" data-ans="2">C．各国零食口味对比</div>
+        </div>
+        <button class="btn" id="s1Submit">提交本小题</button>
+        <div id="s1Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段2｜原文2：完整全文，限时2分钟，单选5题 ========== -->
+    <div id="stage2PreQ" class="page">
+        <h2 class="stage-title">阶段2：细节阅读（先看全部题目）</h2>
+        <div class="q-text">阅读前，请先浏览下面5道细节题：</div>
+        <div class="question-block">
+            <p>1.“巧克力”属于哪一类词语？</p>
+            <p>2.什么叫纯音译？</p>
+            <p>3.“啤酒”使用的是哪一种翻译方法？</p>
+            <p>4.沙发、咖啡属于什么翻译？</p>
+            <p>5.哪一类直接使用外国字母？</p>
+        </div>
+        <button class="btn" id="s2Start">记住题目，开始2分钟阅读全文</button>
+    </div>
+    <div id="stage2Read" class="page">
+        <h2 class="stage-title">阶段2 阅读全文（限时2分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t2">02:00</span></div>
+        <div class="article">
+            <p>学习汉语的时候，我们会遇到很多从外国语言来的词，我们叫它外来词。只有了解外来词，才能更好地理解一些汉语词语。</p>
+            <br>
+            <p>“巧克力”就是一个很典型的外来词。把外语词语变成汉语，一共有四种常见办法。</p>
+            <br>
+            <p>第一种翻译方法叫纯音译。也就是直接模仿外国词的读音，汉字只用来记录声音，不看汉字本身的意思。比如“沙发”“咖啡”“巧克力”都属于纯音译。</p>
+            <br>
+            <p>第二种方法是音意兼译。一部分模仿读音，一部分表示意思。例如“啤酒”，“啤”模仿外语读音，“酒”告诉我们这是一种饮料。</p>
+            <br>
+            <p>除了上面两种，还有意译和字母词。意译不用读音，直接用汉语把意思翻译出来，比如“电话”。字母词就直接使用外国字母，例如KTV、CD。</p>
+            <br>
+            <p>由此可见，外来词的翻译方法有很多种。特别是学习HSK的外国人，了解这些知识，对汉语学习很有帮助。</p>
+        </div>
+        <button class="btn" id="s2End">阅读结束，开始答题</button>
+    </div>
+    <div id="stage2Q" class="page">
+        <h2 class="stage-title">阶段2 细节选择题（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.“巧克力”属于哪一类词语？</div>
+            <div class="opt" data-ans="0">A.外来词</div>
+            <div class="opt" data-ans="1">B.古代本土词</div>
+            <div class="opt" data-ans="2">C.网络新词</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.什么是纯音译？</div>
+            <div class="opt" data-ans="0">A.汉字记录外语的读音</div>
+            <div class="opt" data-ans="1">B.直接翻译词语意思</div>
+            <div class="opt" data-ans="2">C.直接使用英文字母</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.“啤酒”使用的是哪一种翻译方法？</div>
+            <div class="opt" data-ans="0">A.音意兼译</div>
+            <div class="opt" data-ans="1">B.纯音译</div>
+            <div class="opt" data-ans="2">C.字母词</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.沙发、咖啡属于？</div>
+            <div class="opt" data-ans="0">A.纯音译</div>
+            <div class="opt" data-ans="1">B.意译</div>
+            <div class="opt" data-ans="2">C.音意兼译</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.KTV、CD属于？</div>
+            <div class="opt" data-ans="0">A.字母词</div>
+            <div class="opt" data-ans="1">B.意译词</div>
+            <div class="opt" data-ans="2">C.音意兼译</div>
+        </div>
+        <button class="btn" id="s2Submit">提交这5道题</button>
+        <div id="s2Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段3｜原文3：完整全文，限时3分钟，判断5题 ========== -->
+    <div id="stage3Read" class="page">
+        <h2 class="stage-title">阶段3 阅读全文（限时3分钟）</h2>
+        <div class="timer-box">剩余时间：<span id="t3">03:00</span></div>
+        <div class="article">
+            <p>学习汉语的时候，我们会遇到很多从外国语言来的词，我们叫它外来词。只有了解外来词，才能更好地理解一些汉语词语。</p>
+            <br>
+            <p>“巧克力”就是一个很典型的外来词。把外语词语变成汉语，一共有四种常见办法。</p>
+            <br>
+            <p>第一种翻译方法叫纯音译。也就是直接模仿外国词的读音，汉字只用来记录声音，不看汉字本身的意思。比如“沙发”“咖啡”“巧克力”都属于纯音译。</p>
+            <br>
+            <p>第二种方法是音意兼译。一部分模仿读音，一部分表示意思。例如“啤酒”，“啤”模仿外语读音，“酒”告诉我们这是一种饮料。</p>
+            <br>
+            <p>除了上面两种，还有意译和字母词。意译不用读音，直接用汉语把意思翻译出来，比如“电话”。字母词就直接使用外国字母，例如KTV、CD。</p>
+            <br>
+            <p>由此可见，外来词的翻译方法有很多种。特别是学习HSK的外国人，了解这些知识，对汉语学习很有帮助。</p>
+        </div>
+        <button class="btn" id="s3End">阅读结束，开始做判断题</button>
+    </div>
+    <div id="stage3Q" class="page">
+        <h2 class="stage-title">阶段3 判断正误（每题1分，共5分）</h2>
+        <div class="question-block">
+            <div class="q-text">1.“巧克力”是汉语的外来词。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">2.“啤酒”属于纯音译外来词。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">3.“沙发、咖啡”是纯音译词。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">4.“电话”是意译词。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <div class="question-block">
+            <div class="q-text">5.KTV属于音意兼译词。</div>
+            <div class="opt" data-ans="true">A.正确(T)</div>
+            <div class="opt" data-ans="false">B.错误(F)</div>
+        </div>
+        <button class="btn" id="s3Submit">提交判断题</button>
+        <div id="s3Res" class="result-final"></div>
+    </div>
+    <!-- ==========阶段4｜原文4：完整全文，限时30秒，填空 ========== -->
+    <div id="stage4Read" class="page">
+        <h2 class="stage-title">阶段4：速读全文（限时30秒）</h2>
+        <div class="timer-box">剩余时间：<span id="t4">00:30</span></div>
+        <div class="article">
+            <p>学习汉语的时候，我们会遇到很多从外国语言来的词，我们叫它外来词。只有了解外来词，才能更好地理解一些汉语词语。</p>
+            <br>
+            <p>“巧克力”就是一个很典型的外来词。把外语词语变成汉语，一共有四种常见办法。</p>
+            <br>
+            <p>第一种翻译方法叫纯音译。也就是直接模仿外国词的读音，汉字只用来记录声音，不看汉字本身的意思。比如“沙发”“咖啡”“巧克力”都属于纯音译。</p>
+            <br>
+            <p>第二种方法是音意兼译。一部分模仿读音，一部分表示意思。例如“啤酒”，“啤”模仿外语读音，“酒”告诉我们这是一种饮料。</p>
+            <br>
+            <p>除了上面两种，还有意译和字母词。意译不用读音，直接用汉语把意思翻译出来，比如“电话”。字母词就直接使用外国字母，例如KTV、CD。</p>
+            <br>
+            <p>由此可见，外来词的翻译方法有很多种。特别是学习HSK的外国人，了解这些知识，对汉语学习很有帮助。</p>
+        </div>
+        <button class="btn" id="s4End">阅读结束，进入概括填空题</button>
+    </div>
+    <div id="stage4Q" class="page">
+        <h2 class="stage-title">阶段4 段落简写填空（每题1分，共3分）</h2>
+        <div class="q-text">1.“巧克力”是一个典型的____词。</div>
+        <input class="fill-input" id="fill1" placeholder="填写答案">
+        <div class="q-text">2.“啤酒”属于____兼译的翻译方法。</div>
+        <input class="fill-input" id="fill2" placeholder="填写答案">
+        <div class="q-text">3.KTV、CD是____词，直接使用外文字母。</div>
+        <input class="fill-input" id="fill3" placeholder="填写答案">
+        <button class="btn" id="s4Submit">提交填空</button>
+        <div id="s4Res" class="result-final"></div>
+    </div>
+    <!-- 总分页面，提交到SheetDB -->
+    <div id="finalPage" class="page">
+        <h2 class="stage-title">✅全部完成！</h2>
+        <div class="result-final">你的总分：<span id="totalScore">0</span> /14</div>
+        <button class="btn" id="finalSubmit">提交本次成绩记录</button>
+        <button class="btn" id="goGrammar">查看本篇词汇、语法讲解</button>
+        <div id="finalMsg" class="result-final"></div>
+    </div>
+    <!-- ============新增：语法&词汇解析页面 左右分栏============ -->
+    <div id="grammarPage" class="page">
+        <h2 class="stage-title">📖词汇、语法点解析练习 & 文化背景</h2>
+        <button class="btn" id="backFinal">返回成绩页</button>
+        <div class="grammar-wrap">
+            <div class="grammar-left">
+                <h3>课文原文（语法<span class="grammar-red">红色</span>；生词<span class="vocab-blue">蓝色</span>）</h3>
+                <div class="article">
+                    <p>学习汉语的时候，我们会遇到很多<span class="vocab-blue">外来词</span>。<span class="grammar-red">只有……，才能……</span>了解外来词，才能更好地理解一些汉语词语。</p>
+                    <br>
+                    <p>“巧克力”就是一个很<span class="vocab-blue">典型</span>的外来词。<span class="grammar-red">也就是</span>直接模仿外国词的读音。</p>
+                    <br>
+                    <p><span class="grammar-red">例如</span>“啤酒”，“啤”模仿外语读音。<span class="grammar-red">除了……，还有……</span>意译和字母词。</p>
+                    <br>
+                    <p><span class="grammar-red">由此可见</span>，外来词的翻译方法有很多种。<span class="grammar-red">特别是</span>学习HSK的外国人，了解这些知识，对汉语学习很有帮助。</p>
+                </div>
+            </div>
+            <div class="grammar-right">
+                <!--=====重点生词（蓝色字体，HSK4‑5重点）=====-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b class="vocab-blue">【重点生词】</b></div>
+                    <div class="grammar-desc"><span class="vocab-blue">外来词 (wài lái cí)</span>：从外国语言引进的词语。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">典型 (diǎn xíng)</span>：很有代表性的例子。</div>
+                    <div class="grammar-desc"><span class="vocab-blue">模仿 (mó fǎng)</span>：照着样子学、照着样子做。</div>
+                </div>
+                <!--语法点1-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法1：只有……，才能……</b><br>含义：满足前面条件，才能够实现后面结果。例句：只有了解外来词，才能更好地理解汉语词语。</div>
+                    <div class="grammar-exercise-text">练习：多练习，只有这样，才能______。</div>
+                    <input class="fill-input" id="g1">
+                    <button class="btn" data-key="g1" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：提高汉语水平</div>
+                </div>
+                <!--语法点2-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法2：也就是</b><br>含义：换一句话，解释前面词语的意思。例句：纯音译，也就是直接模仿外国词的读音。</div>
+                    <div class="grammar-exercise-text">练习：HSK，______汉语水平考试。</div>
+                    <input class="fill-input" id="g2">
+                    <button class="btn" data-key="g2" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：也就是</div>
+                </div>
+                <!--语法点3-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法3：例如</b><br>含义：举例子，用来举例说明。例句：例如“啤酒”，就是音意兼译词。</div>
+                    <div class="grammar-exercise-text">练习：很多水果很好吃，______苹果、香蕉。</div>
+                    <input class="fill-input" id="g3">
+                    <button class="btn" data-key="g3" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：例如</div>
+                </div>
+                <!--语法点4-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法4：除了……，还有……</b><br>含义：排除前面，还有另外的类别、事物。例句：除了上面两种，还有意译和字母词。</div>
+                    <div class="grammar-exercise-text">练习：除了汉字，我们______学习听力口语。</div>
+                    <input class="fill-input" id="g4">
+                    <button class="btn" data-key="g4" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：还有</div>
+                </div>
+                <!--语法点5-->
+                <div class="grammar-item">
+                    <div class="grammar-desc"><b>语法5：特别是</b><br>含义：着重强调，突出某一类情况。例句：特别是学习HSK的外国人。</div>
+                    <div class="grammar-exercise-text">练习：很多人喜欢旅游，特别是______。</div>
+                    <input class="fill-input" id="g5">
+                    <button class="btn" data-key="g5" data-answer>显示答案</button>
+                    <div class="ans-hint">参考答案：年轻人</div>
+                </div>
+                <!-- 知识背景板块 -->
+                <div class="bg-info-block">
+                    <h4>📚文化知识背景：汉语外来词</h4>
+                    <div class="bg-text">
+                        汉语有大量外来词。一共四种主要翻译方式：纯音译（巧克力、沙发）；音意兼译（啤酒）；意译（电话）；字母词（CD、KTV）。
+                        <br><br>
+                        学习外来词，可以帮助外国人理解很多看起来奇怪的汉语词语，对HSK阅读很有帮助。
+                        <br><br>
+                        观看简短介绍视频：
+                        <br>
+                        <a class="video-link" href="https://www.bilibili.com/video/BV1xx411c7mZ/" target="_blank">B站｜汉语外来词科普短片</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const SHEETDB_URL = "https://sheetdb.io/api/v1/1ul2tw93jh57i";
+let totalScore = 0;
+let timers = {};
+function hideAll(){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+}
+function show(id){
+    hideAll();
+    document.getElementById(id).classList.add("active");
+}
+function formatTime(s){
+    let m = Math.floor(s/60);
+    let sec = s % 60;
+    return String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+}
+// 修改：倒计时到0只停止，不会自动跳转页面
+function startTimer(elId, seconds){
+    let remain = seconds;
+    const el = document.getElementById(elId);
+    el.innerText = formatTime(remain);
+    timers[elId] = setInterval(()=>{
+        remain--;
+        el.innerText = formatTime(remain);
+        if(remain <= 0){
+            clearInterval(timers[elId]);
+        }
+    },1000);
+}
+// ==========阶段1：必须填姓名才可以进入阅读==========
+document.getElementById("btnGoStage1").onclick = function(){
+    const nameVal = document.getElementById("stuName").value.trim();
+    if(!nameVal){
+        alert("请不要留空");
+        return;
+    }
+    show("stage1Read");
+    startTimer("t1",30);
+};
+document.getElementById("s1End").onclick = ()=>{
+    clearInterval(timers.t1);
+    show("stage1Q");
+};
+let s1Ans = null;
+document.querySelectorAll("#stage1Q .opt").forEach(opt=>{
+    opt.onclick = ()=>{
+        document.querySelectorAll("#stage1Q .opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s1Ans = opt.dataset.ans;
+    }
+})
+document.getElementById("s1Submit").onclick = ()=>{
+    if(s1Ans === null){
+        alert("请不要留空");
+        return;
+    }
+    if(s1Ans == 0){
+        totalScore +=1;
+        document.getElementById("s1Res").innerText = "✅正确，+1分";
+    }else{
+        document.getElementById("s1Res").innerText = "❌错误";
+    }
+    setTimeout(()=>show("stage2PreQ"),1200);
+}
+// ==========阶段2==========
+document.getElementById("s2Start").onclick = ()=>{
+    show("stage2Read");
+    startTimer("t2",120);
+}
+document.getElementById("s2End").onclick = ()=>{
+    clearInterval(timers.t2);
+    show("stage2Q");
+};
+let s2 = [null,null,null,null,null];
+const s2Opts = document.querySelectorAll("#stage2Q .opt");
+s2Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/3);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s2[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s2Submit").onclick = ()=>{
+    for(let i=0;i<5;i++){
+        if(s2[i]===null){
+            alert("请不要留空");
+            return;
+        }
+    }
+    let add = 0;
+    const right = ["0","0","0","0","0"];
+    for(let i=0;i<5;i++){
+        if(s2[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s2Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage3Read"),1200);
+}
+// ==========阶段3、阶段4：重写show钩子，进入阅读页自动开启计时 ==========
+const origShow = show;
+show = function(id){
+    origShow(id);
+    if(id === "stage3Read"){
+        startTimer("t3",180);
+    }
+    if(id === "stage4Read"){
+        startTimer("t4",30);
+    }
+}
+document.getElementById("s3End").onclick = ()=>{
+    clearInterval(timers.t3);
+    show("stage3Q");
+};
+let s3 = [null,null,null,null,null];
+const s3Opts = document.querySelectorAll("#stage3Q .opt");
+s3Opts.forEach((opt,idx)=>{
+    opt.onclick = ()=>{
+        const qIndex = Math.floor(idx/2);
+        const qBlock = opt.closest(".question-block");
+        qBlock.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
+        opt.classList.add("selected");
+        s3[qIndex] = opt.dataset.ans;
+    }
+})
+document.getElementById("s3Submit").onclick = ()=>{
+    for(let i=0;i<5;i++){
+        if(s3[i]===null){
+            alert("请不要留空");
+            return;
+        }
+    }
+    let add = 0;
+    const right = ["true","false","true","true","false"];
+    for(let i=0;i<5;i++){
+        if(s3[i] === right[i]) add++;
+    }
+    totalScore += add;
+    document.getElementById("s3Res").innerText = `答对${add}题，+${add}分`;
+    setTimeout(()=>show("stage4Read"),1200);
+}
+// ==========阶段4==========
+document.getElementById("s4End").onclick = ()=>{
+    clearInterval(timers.t4);
+    show("stage4Q");
+};
+document.getElementById("s4Submit").onclick = ()=>{
+    const a1 = document.getElementById("fill1").value.trim();
+    const a2 = document.getElementById("fill2").value.trim();
+    const a3 = document.getElementById("fill3").value.trim();
+    if(!a1 || !a2 || !a3){
+        alert("请不要留空");
+        return;
+    }
+    let add = 0;
+    if(a1 === "外来") add++;
+    if(a2 === "音意") add++;
+    if(a3 === "字母") add++;
+    totalScore += add;
+    document.getElementById("s4Res").innerText = `答对${add}题，+${add}分`;
+    document.getElementById("totalScore").innerText = totalScore;
+    setTimeout(()=>show("finalPage"),1200);
+}
+//提交成绩到谷歌表格
+document.getElementById("finalSubmit").onclick = async ()=>{
+    const name = document.getElementById("stuName").value.trim();
+    if(!name){alert("请不要留空");return;}
+    const data = {
+        time: new Date().toLocaleString(),
+        name: name,
+        score: totalScore
+    }
+    try{
+        const res = await fetch(SHEETDB_URL,{
+            method:"POST",
+            headers:{"Content‑Type":"application/json"},
+            body:JSON.stringify(data)
+        })
+        if(res.ok){
+            document.getElementById("finalMsg").innerText = "✅成绩提交成功！";
+        }else{
+            document.getElementById("finalMsg").innerText = "❌提交失败，请重试";
+        }
+    }catch(err){
+        document.getElementById("finalMsg").innerText = "❌网络错误，提交失败";
+    }
+}
+//========语法页面跳转与显示答案逻辑========
+document.getElementById("goGrammar").onclick = ()=>{ show("grammarPage"); }
+document.getElementById("backFinal").onclick = ()=>{ show("finalPage"); }
+//显示答案按钮
+document.querySelectorAll("#grammarPage button[data‑answer]").forEach(btn=>{
+    btn.onclick = function(){
+        const hintDom = this.nextElementSibling;
+        hintDom.style.display = hintDom.style.display === "block" ? "none" : "block";
+    }
+})
+</script>
+</body>
+</html>

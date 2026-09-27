@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK & HSKK3.0 中文学习测试中心</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;}
+body{background:#f3f4f6;color:#1f2937;min-height:100vh;padding:16px;}
+:root{
+    --mori-blue:#a7c9d1;
+    --mori-rose:#d8b4b4;
+    --mori-green:#b8cdb1;
+    --mori-beige:#d9c9a3;
+    --mori-text:#374151;
+    --mori-light:#f7f3ea;
+    --mori-gray:#e5e7eb;
+}
+.wrap-center{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 10% 10%,rgba(167,201,209,0.14),transparent 28%),
+    radial-gradient(circle at 90% 20%,rgba(216,180,180,0.14),transparent 28%),
+    radial-gradient(circle at 50% 90%,rgba(184,205,177,0.14),transparent 28%);
+    padding:24px 16px;
+}
+.card-login{
+    background:#fff;max-width:480px;width:100%;border-radius:28px;
+    padding:40px 32px;box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    border:1px solid var(--mori-gray);
+}
+.card-login h1{text-align:center;font-size:22px;color:var(--mori-text);margin-bottom:24px;}
+.input-item{width:100%;padding:12px 14px;font-size:16px;border:1px solid var(--mori-gray);
+border-radius:12px;margin:6px 0;background:#f9fafb;color:var(--mori-text);}
+.btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:12px;margin:6px 0;cursor:pointer;font-weight:500;}
+.btn-primary{background:var(--mori-blue);color:#111;}
+.btn-secondary{background:var(--mori-beige);color:#111;}
+.tip-small{font-size:13px;color:#9ca3af;margin-top:12px;text-align:center;}
+
+.page{display:none;max-width:980px;margin:0 auto;}
+.page.active{display:block;}
+
+.section-title{font-size:20px;font-weight:bold;margin:28px 0 16px;color:var(--mori-text);border-bottom:1px solid var(--mori-gray);padding-bottom:8px;}
+.grid-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+.icon-card{
+    aspect-ratio:2.2/1;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:20px;font-size:20px;font-weight:600;cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,0.07);
+    transition:0.2s;text-align:center;padding:10px;
+}
+.icon-card:hover{transform:translateY(-2px);}
+.level1{background:#e2edf2;}
+.level2{background:#e8f2e2;}
+.level3{background:#f3e6e6;}
+.pub-res{background:var(--mori-light);}
+
+.box-panel{background:#fff;border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+textarea,select{width:100%;padding:12px;border:1px solid var(--mori-gray);border-radius:12px;font-size:15px;margin:8px 0;}
+.link-row{display:grid;grid-template-columns:1fr 2fr auto;gap:10px;align-items:center;margin:10px 0;}
+
+.nav-bar{
+    display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+    background:var(--mori-light);
+    padding:12px;border-radius:16px;
+}
+.nav-bar button{
+    padding:12px 18px;border-radius:12px;border:1px solid var(--mori-gray);
+    background:#fff;cursor:pointer;font-size:17px;font-weight:500;
+}
+.nav-bar button:hover{opacity:0.85;}
+
+.table-wrong{width:100%;border-collapse:collapse;margin:12px 0;}
+.table-wrong th,.table-wrong td{border:1px solid var(--mori-gray);padding:10px;text-align:left;}
+.table-wrong th{background:var(--mori-light);font-weight:600;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:99;}
+.modal.show{display:flex;}
+.modal-content{background:#fff;border-radius:20px;padding:28px;max-width:420px;width:100%;}
+
+.sub-title{font-size:17px;font-weight:bold;margin:14px 0 8px;color:var(--mori-text);}
+.link-item-card{
+    padding:12px 14px;border:1px solid var(--mori-gray);border-radius:12px;margin:10px 0;
+}
+.url-text{font-size:12px;color:#666;margin-top:8px;word-break:break-all;}
+.file-input{width:100%;padding:8px 0;}
+</style>
+</head>
+<body>
+
+<div id="page-login" class="wrap-center">
+<div class="card-login">
+<h1>HSK & HSKK3.0 中文学习测试中心</h1>
+<input class="input-item" id="inp-username" placeholder="请输入姓名">
+<input class="input-item" id="inp-pwd" type="password" placeholder="请输入密码">
+<button class="btn btn-primary" id="btn-student">学生登录</button>
+<button class="btn btn-secondary" id="btn-teacher">教师登录</button>
+<button class="btn btn-secondary" id="btn-guest">访客浏览</button>
+<div class="tip-small">访客模式不会保存任何个人做题数据</div>
+</div>
+</div>
+
+<div id="page-student" class="page">
+<div class="nav-bar">
+<button onclick="goStudentHome()">首页</button>
+<button onclick="openMyWrongSet()">我的错题集</button>
+<button onclick="openMyCollect()">我的收藏</button>
+<button onclick="openStudyLog()">学习日志</button>
+<button onclick="logout()">退出登录</button>
+</div>
+<h2>学生学习中心</h2>
+
+<div class="section-title">第一部分：基础语言根基</div>
+<div class="grid-group">
+<div class="icon-card level1" onclick="jumpModule('vocab')">词汇</div>
+<div class="icon-card level1" onclick="jumpModule('grammar')">语法</div>
+</div>
+
+<div class="section-title">第二部分：六大专项技能训练</div>
+<div class="grid-group">
+<div class="icon-card level2" onclick="jumpModule('listening')">听力训练</div>
+<div class="icon-card level2" onclick="jumpModule('speaking')">口语训练</div>
+<div class="icon-card level2" onclick="jumpModule('reading')">阅读训练</div>
+<div class="icon-card level2" onclick="jumpModule('writing')">写作训练</div>
+<div class="icon-card level2" onclick="jumpModule('translate')">翻译训练</div>
+<div class="icon-card level2" onclick="jumpModule('culture')">文化训练</div>
+</div>
+
+<div class="section-title">第三部分：测评闭环体系</div>
+<div class="grid-group">
+<div class="icon-card level3" onclick="jumpModule('test')">模拟测试</div>
+<div class="icon-card level3" onclick="openMyWrongSet()">错题集</div>
+</div>
+
+<div class="section-title">第四部分：公共资源阅览室</div>
+<div class="grid-group">
+<div class="icon-card pub-res" onclick="jumpModule('lib')">电子阅览室</div>
+</div>
+
+<div id="module-container"></div>
+</div>
+
+<div id="page-teacher" class="page">
+<div class="nav-bar">
+<button onclick="goTeacherHome()">教师首页</button>
+<button onclick="openAccountManage()">账号管理中心</button>
+<button onclick="openResLib()">分层素材资源库</button>
+<button onclick="openNotice()">公告与通知</button>
+<button onclick="openStudyData()">学情数据中心</button>
+<button onclick="openBackup()">备份与导出</button>
+<button onclick="logout()">退出登录</button>
+</div>
+<h2>教师备课工作台</h2>
+<div id="teacher-container"></div>
+</div>
+
+<div id="modal" class="modal">
+<div class="modal-content">
+<div id="modal-text"></div>
+<br>
+<button class="btn btn-primary" onclick="closeModal()">确定</button>
+</div>
+</div>
+
+<script>
+const PWD_FIX = "123456";
+
+const categoryList = [
+    {key:"vocab",name:"词汇"},
+    {key:"grammar",name:"语法"},
+    {key:"listening",name:"听力训练"},
+    {key:"speaking",name:"口语训练"},
+    {key:"reading",name:"阅读训练"},
+    {key:"writing",name:"写作训练"},
+    {key:"translate",name:"翻译训练"},
+    {key:"culture",name:"文化训练"},
+    {key:"test",name:"模拟测试"},
+    {key:"lib",name:"电子阅览室"}
+];
+
+let currentUser = null;
+let isGuestMode = false;
+
+function parseExcelFile(file,callback){
+    const reader = new FileReader();
+    reader.onload = function(e){
+        try{
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data,{type:"array"});
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json(sheet);
+            callback(json);
+        }catch(err){
+            callback([]);
+        }
+    }
+    reader.readAsArrayBuffer(file);
+}
+
+function exportFullBackup(){
+    const data = getStorage();
+    const text = JSON.stringify(data,null,2);
+    downloadFile(text,`系统备份_${new Date().toLocaleDateString()}.json`,"application/json");
+    showModal("✅备份文件下载完成，请妥善保存！");
+}
+
+function importFullBackup(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+        try{
+            const restore = JSON.parse(e.target.result);
+            setStorage(restore);
+            showModal("✅导入备份成功，页面即将刷新");
+            setTimeout(function(){location.reload();},800);
+        }catch(err){
+            showModal("❌文件解析失败，请选择正确的备份JSON");
+        }
+    }
+    reader.readAsText(file);
+}
+
+function getStorage(){
+    const raw = localStorage.getItem("hsk30_data");
+    if(!raw){
+        const init = {studentUsers:{},teacherUsers:{}};
+        categoryList.forEach(function(c){init[c.key]=[];});
+        return init;
+    }
+    try{
+        return JSON.parse(raw);
+    }catch(e){
+        return {studentUsers:{},teacherUsers:{}};
+    }
+}
+function setStorage(obj){
+    localStorage.setItem("hsk30_data",JSON.stringify(obj));
+}
+
+function showModal(text){
+    document.getElementById("modal-text").innerText = text;
+    document.getElementById("modal").classList.add("show");
+}
+function closeModal(){
+    document.getElementById("modal").classList.remove("show");
+}
+
+document.getElementById("btn-student").onclick = function(){
+    const name = document.getElementById("inp-username").value.trim();
+    const pwd = document.getElementById("inp-pwd").value.trim();
+    if(!name){showModal("请不要留空");return;}
+    const store = getStorage();
+    if(!store.studentUsers[name]){
+        store.studentUsers[name] = {pwd:PWD_FIX,wrongList:[],collect:[],studyLog:[]};
+        setStorage(store);
+    }
+    if(store.studentUsers[name].pwd !== pwd){
+        showModal("密码错误，默认密码：123456");
+        return;
+    }
+    currentUser = name;
+    isGuestMode = false;
+    renderStudentPage();
+};
+
+document.getElementById("btn-teacher").onclick = function(){
+    const name = document.getElementById("inp-username").value.trim();
+    const pwd = document.getElementById("inp-pwd").value.trim();
+    if(!name){showModal("请不要留空");return;}
+    const store = getStorage();
+    if(!store.teacherUsers[name]){
+        store.teacherUsers[name] = {pwd:PWD_FIX};
+        setStorage(store);
+    }
+    if(store.teacherUsers[name].pwd !== pwd){
+        showModal("密码错误，默认密码：123456");
+        return;
+    }
+    currentUser = name;
+    isGuestMode = false;
+    renderTeacherPage();
+};
+
+document.getElementById("btn-guest").onclick = function(){
+    isGuestMode = true;
+    currentUser = "guest";
+    renderStudentPage();
+};
+
+function logout(){
+    currentUser = null;
+    isGuestMode = false;
+    document.getElementById("page-login").style.display = "flex";
+    document.getElementById("page-student").classList.remove("active");
+    document.getElementById("page-teacher").classList.remove("active");
+}
+
+function renderStudentPage(){
+    document.getElementById("page-login").style.display = "none";
+    document.getElementById("page-student").classList.add("active");
+    goStudentHome();
+}
+function renderTeacherPage(){
+    document.getElementById("page-login").style.display = "none";
+    document.getElementById("page-teacher").classList.add("active");
+    goTeacherHome();
+}
+
+function goStudentHome(){
+    document.getElementById("module-container").innerHTML = "";
+}
+function goTeacherHome(){
+    document.getElementById("teacher-container").innerHTML = "<div class='box-panel'><h3>欢迎来到教师备课工作台</h3><p>请使用上方导航栏进入各个功能模块。</p></div>";
+}
+
+//兼容多浏览器跳转
+function safeOpenUrl(url){
+    try{
+        window.open(url,"_blank");
+    }catch(e){
+        showModal("浏览器拦截了新窗口，请复制下方备用链接打开");
+    }
+}
+
+function jumpModule(key){
+    const store = getStorage();
+    const list = store[key]||[];
+    let html = "<div class='box-panel'><h3>练习列表</h3>";
+    if(list.length===0){
+        html += "<p>该模块暂无练习资源，请教师后台添加GitHub链接。</p>";
+    }else{
+        for(let i=0;i<list.length;i++){
+            const item = list[i];
+            const url = item.url.trim();
+            html += "<div class='link-item-card'>"
+                +"<button class='btn btn-primary' style='text-align:left' onclick=\"safeOpenUrl('"+url+"')\">"+item.title+"</button>"
+                +"<div class='url-text'>备用链接："+url+"</div>"
+                +"</div>";
+        }
+    }
+    html += "<br><button class='btn btn-secondary' onclick='goStudentHome()'>返回首页</button></div>";
+    document.getElementById("module-container").innerHTML = html;
+}
+
+window.addCatLink = function(key){
+    const titleInput = document.getElementById("add_name_"+key);
+    const urlInput = document.getElementById("add_url_"+key);
+    const title = titleInput.value.trim();
+    const url = urlInput.value.trim();
+    if(!title||!url){
+        showModal("名称和链接不能为空");
+        return;
+    }
+    const store = getStorage();
+    if(!store[key]) store[key]=[];
+    store[key].push({title:title,url:url});
+    setStorage(store);
+    titleInput.value = "";
+    urlInput.value = "";
+    showModal("✅添加成功");
+    openResLib();
+};
+
+window.delCatLink = function(key,idx){
+    const store = getStorage();
+    store[key].splice(idx,1);
+    setStorage(store);
+    openResLib();
+};
+
+function openResLib(){
+    const store = getStorage();
+    let html = "<div class='box-panel'><h3>分层素材资源管理</h3><p>填写练习名称、GitHub‑Pages网页链接，点本行【添加】按钮录入。</p>";
+    for(let i=0;i<categoryList.length;i++){
+        const cat = categoryList[i];
+        const arr = store[cat.key]||[];
+        html += "<div class='sub-title'>"+cat.name+"</div>";
+        for(let j=0;j<arr.length;j++){
+            const item = arr[j];
+            html += "<div class='link-row'>"
+                +"<div>"+item.title+"</div>"
+                +"<div style='font-size:12px;overflow:hidden'>"+item.url+"</div>"
+                +"<button class='btn btn-secondary' onclick=\"delCatLink('"+cat.key+"',"+j+")\">删除</button>"
+                +"</div>";
+        }
+        html += "<div class='link-row'>"
+            +"<input class='input-item' id='add_name_"+cat.key+"' placeholder='新增‑显示名称'>"
+            +"<input class='input-item' id='add_url_"+cat.key+"' placeholder='新增‑GitHub网页链接'>"
+            +"<button class='btn btn-primary' onclick=\"addCatLink('"+cat.key+"')\">添加</button>"
+            +"</div>";
+    }
+    html += "<br><button class='btn btn-secondary' onclick=\"showModal('所有链接已保存到本地存储')\">保存全部</button></div>";
+    document.getElementById("teacher-container").innerHTML = html;
+}
+
+function openAccountManage(){
+    let html = "<div class='box-panel'><h3>账号管理中心</h3>"
+    +"<p>上传学生名单Excel(xlsx/csv)：<input class='file-input' type='file' id='file-student'></p>"
+    +"<p>上传教师名单Excel(xlsx/csv)：<input class='file-input' type='file' id='file-teacher'></p></div>";
+    document.getElementById("teacher-container").innerHTML = html;
+
+    document.getElementById("file-student").onchange = function(e){
+        const f = e.target.files[0];
+        if(!f) return;
+        parseExcelFile(f,function(jsonArr){
+            const s = getStorage();
+            for(let i=0;i<jsonArr.length;i++){
+                const row = jsonArr[i];
+                const name = String(row["姓名"]||row["name"]||"").trim();
+                if(name){
+                    s.studentUsers[name] = {pwd:PWD_FIX,wrongList:[],collect:[],studyLog:[]};
+                }
+            }
+            setStorage(s);
+            showModal("✅学生名单导入完成");
+        });
+    };
+    document.getElementById("file-teacher").onchange = function(e){
+        const f = e.target.files[0];
+        if(!f) return;
+        parseExcelFile(f,function(jsonArr){
+            const s = getStorage();
+            for(let i=0;i<jsonArr.length;i++){
+                const row = jsonArr[i];
+                const name = String(row["姓名"]||row["name"]||"").trim();
+                if(name){
+                    s.teacherUsers[name] = {pwd:PWD_FIX};
+                }
+            }
+            setStorage(s);
+            showModal("✅教师名单导入完成");
+        });
+    };
+}
+
+function openNotice(){
+    document.getElementById("teacher-container").innerHTML = "<div class='box-panel'><h3>公告&班级通知</h3><textarea placeholder='输入公告内容'></textarea><button class='btn btn-primary'>发布公告</button></div>";
+}
+
+function openStudyData(){
+    document.getElementById("teacher-container").innerHTML = "<div class='box-panel'><h3>学情数据中心</h3>"
+    +"<p>导入学生答题报告(xlsx/csv)：<input class='file-input' type='file'></p>"
+    +"<p>字段：学生姓名、做题时间、模块、题目、学生答案、标准答案</p></div>";
+}
+
+function openBackup(){
+    let html = "<div class='box-panel'><h3>备份导出</h3>"
+    +"<p>⚠️浏览器本地存储，清缓存会丢失，务必导出备份json。</p>"
+    +"<button class='btn btn-primary' onclick='exportFullBackup()'>导出全部系统JSON备份</button>"
+    +"<br><br><p>从备份文件恢复：<input class='file-input' type='file' id='file-restore'></p></div>";
+    document.getElementById("teacher-container").innerHTML = html;
+    document.getElementById("file-restore").onchange = function(e){
+        const f = e.target.files[0];
+        if(!f) return;
+        importFullBackup(f);
+    };
+}
+
+function openMyWrongSet(){showModal("错题集待开发");}
+function openMyCollect(){showModal("我的收藏待开发");}
+function openStudyLog(){showModal("学习日志待开发");}
+
+function downloadFile(text,filename,mime){
+    const blob = new Blob([text],{type:mime});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+</script>
+</body>
+</html>

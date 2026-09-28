@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HSK4语法闪卡合集｜敢、各、各位、各种、任何、此、量词</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:680px;
+    height:600px;
+    margin-bottom:24px;
+}
+.flashcard {
+    width:100%;
+    height:100%;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding:36px 28px;
+    border-radius:22px;
+    background:#ffffff;
+    overflow-y:auto;
+    text-align:center;
+}
+.card-back{display:none; background:#ffffff;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+
+.card-content{position:relative;z-index:1;}
+h2{font-size:26px;color:#222;margin-bottom:18px;text-align:center;}
+.label-title{font-weight:bold;font-size:19px;text-align:center;margin-top:20px;margin-bottom:12px;}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{font-size:18px;line-height:1.85;color:#222;margin-bottom:10px;text-align:center;}
+.grammar-hl{color:#204070;font-weight:bold;}
+.err{color:#c82424;font-weight:bold;}
+.ok{color:#1f8030;font-weight:bold;}
+.click-hint{position:absolute;bottom:16px;left:0;right:0;font-size:15px;color:#666;text-align:center;}
+
+.nav-bar{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+.nav-btn{
+    padding:12px 26px;
+    border:none;
+    border-radius:12px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:17px;
+    cursor:pointer;
+}
+.nav-btn:hover{background:#949088;}
+.page-info{font-size:18px;color:#333;min-width:130px;text-align:center;}
+
+.card-stack{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+.card-stack > div{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+.card-stack > div.active{
+    display:block;
+}
+</style>
+</head>
+<body>
+
+<div class="flashcard-wrap">
+<div class="card-stack" id="cardStack">
+
+<!-- 卡0 敢 -->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>敢（gǎn）｜能愿动词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用来讲人有没有胆子、怕不怕，敢不敢去做一件事情。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 敢 + 动词</p>
+            <p>② 不敢 + 动词（否定）</p>
+            <p>③ 敢不敢 + 动词（提问）</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我<span class="grammar-hl">敢</span>一个人晚上走路。</p>
+            <p>2.他<span class="grammar-hl">不敢</span>回答老师的问题。</p>
+            <p>3.你<span class="grammar-hl">敢不敢</span>试一试？</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>要放在主语后面、动词前面，不能直接放在句子开头。</p>
+            <p>否定形式只能用“不敢”，留学生经常错写成“敢不”。</p>
+            <p>后面只能接动作动词，一般不接形容词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我敢不游泳。 <span class="ok">✔</span>我不敢游泳。</p>
+            <p><span class="err">✖</span>敢我说话。 <span class="ok">✔</span>我敢说话。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡1 各 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>各（gè）｜指示代词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>一群人、一堆东西里面的每一个，分开来看。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 各 + 量词 + 名词</p>
+            <p>② 各 + 动词（各自分开做）</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">各</span>个小组完成自己的任务。</p>
+            <p>2.我们<span class="grammar-hl">各</span>买一杯饮料。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>“各”不能直接加名词，中间必须带上量词。</p>
+            <p>只能用于两个及以上的人或者事物，不能用于单一对象。</p>
+            <p>不要和“每”混淆：“每”强调全部，“各”强调分开、分别。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>各同学要努力。 <span class="ok">✔</span>各个同学要努力。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡2 各位 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>各位（gè wèi）｜指示代词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>礼貌打招呼，称呼很多人，只能用来叫人。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 各位，+句子</p>
+            <p>② 各位 + 人（同学、老师），+句子</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">各位</span>同学，请安静。</p>
+            <p>2.<span class="grammar-hl">各位</span>老师，下午好。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>只用于称呼人，物品、书本、桌子不能使用各位。</p>
+            <p>多用于公开场合开头打招呼，一般不放在句子中间。</p>
+            <p>已经带有复数含义，后面不要再加“们”，不说“各位同学们”。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>各位书在这里。<span class="ok">✔</span>各位同学，书在这里。</p>
+            <p><span class="err">✖</span>各位老师们。<span class="ok">✔</span>各位老师。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡3 各种 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>各种（gè zhǒng）｜指示代词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>有很多不一样的种类，大多说东西、事物。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 各种 + 名词</p>
+            <p>② 各种各样的 + 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.商店有<span class="grammar-hl">各种</span>水果。</p>
+            <p>2.我遇到<span class="grammar-hl">各种</span>问题。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>优先修饰事物，尽量不要直接修饰人。</p>
+            <p>修饰人建议改写为“各种各样的”。</p>
+            <p>表示种类多，不能用来表示数量多。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>各种同学来了。<span class="ok">✔</span>各种各样的同学来了。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡4 任何 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>任何（rèn hé）｜指示代词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>不管是哪一个，全部算进去，没有例外。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 任何 + 名词，……都……</p>
+            <p>② 任何 + 名词，都不……（否定）</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">任何</span>人都要遵守规则。</p>
+            <p>2.<span class="grammar-hl">任何</span>时间你都可以找我。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>绝大多数句子必须搭配副词“都”，丢掉“都”是留学生最高频错误。</p>
+            <p>可以用于肯定、否定句；不能用于疑问句。</p>
+            <p>后面直接接名词，中间不加“的”。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>任何学生不可以迟到。<span class="ok">✔</span>任何学生都不可以迟到。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡5 此 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>此（cǐ）｜指示代词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>书面文字用，意思就是“这”，口语很少说。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 此 + 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">此</span>问题很重要。</p>
+            <p>2.<span class="grammar-hl">此</span>事大家要记住。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>只用书面通知、文章；日常说话要说“这”。</p>
+            <p>后面不能加“的”，不能写“此的事情”。</p>
+            <p>口语对话强行使用“此”，听起来非常生硬不自然。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>此的事情。 <span class="ok">✔</span>此事 / 这件事情。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡6 打（dá） -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>打（dá）｜专用名量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用来数商品，一打等于12个。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 打 + 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">打</span>铅笔（12支）。</p>
+            <p>2.两<span class="grammar-hl">打</span>鸡蛋。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>做量词读dá，动词打人读dǎ，读音很容易搞混。</p>
+            <p>只用于成套小商品；书本、纸张堆叠用“一沓”，不用“打”。</p>
+            <p>日常生活汉语里面“打”作为量词使用频率不算很高。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一打书。<span class="ok">✔</span>一打铅笔 / 一沓书。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡7 袋 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>袋（dài）｜专用名量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>东西装在袋子里面，就用这个量词。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 袋 + 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">袋</span>大米。</p>
+            <p>2.两<span class="grammar-hl">袋</span>苹果。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>物品必须装进袋子，才可以用量词袋。</p>
+            <p>大件物品、没有袋子包装的东西不能用袋。</p>
+            <p>不要和“代”混淆，量词是袋（袋子）。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一袋桌子。<span class="ok">✔</span>一袋面包。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡8 棵 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>棵（kē）｜专用名量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>专门数植物：树、花、小草。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 棵 + 植物名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">棵</span>大树。</p>
+            <p>2.三<span class="grammar-hl">棵</span>小草。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>只用于植物；人、动物、机器不能用棵。</p>
+            <p>留学生高频混淆：棵（植物）、颗（颗粒小东西）。</p>
+            <p>树用棵；星星、豆子、药丸用颗。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一棵电脑。<span class="ok">✔</span>一棵树。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡9 台 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>台（tái）｜专用名量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>机器、电器、设备，电脑电视这类。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 台 + 电器/机器名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">台</span>电脑。</p>
+            <p>2.两<span class="grammar-hl">台</span>电视。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>电器机器用台；桌椅家具不能用台。</p>
+            <p>桌子用“张”，椅子用“把”，是留学生最常记错的量词。</p>
+            <p>大型机器设备用台；小型随身机器不用台。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一台桌子。<span class="ok">✔</span>一张桌子。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡10 幅 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>幅（fú）｜专用名量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用来数图画、字画、美术作品。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 幅 + 画、字画</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">幅</span>画。</p>
+            <p>2.两<span class="grammar-hl">幅</span>中国画。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>只有绘画、书法字画用幅。</p>
+            <p>普通照片、打印图片量词用“张”，不能用幅。</p>
+            <p>不要和“副”混淆，一副手套，一幅画。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一幅照片。<span class="ok">✔</span>一张照片。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡11 场 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>场（chǎng）｜动量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>一件完整的事情：比赛、下雨、考试、活动。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 场 + 事件名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">场</span>比赛。</p>
+            <p>2.一<span class="grammar-hl">场</span>大雨。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>用于完整发生的事件活动，书本物品不能用场。</p>
+            <p>吃饭不用场，吃饭要用顿。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一场书。<span class="ok">✔</span>一场考试。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡12 顿 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>顿（dùn）｜动量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>吃饭；也可以说被批评、被骂一次。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 数词 + 顿 + 饭</p>
+            <p>② 挨 + 数词 + 顿 + 批评</p>
+            <div class="label-title">【例句】</div>
+            <p>1.一<span class="grammar-hl">顿</span>晚饭。</p>
+            <p>2.挨了一<span class="grammar-hl">顿</span>批评。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>主要用于吃饭；也用于责骂、批评。</p>
+            <p>运动、比赛不能用顿，比赛要用场。</p>
+            <p>不能用来表达出行走路。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一顿足球。<span class="ok">✔</span>踢一场足球。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 卡13 趟 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>趟（tàng）｜动量词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>跑过去又回来，出门走一次路程。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>① 动词 + 数词 + 趟</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我去一<span class="grammar-hl">趟</span>超市。</p>
+            <p>2.跑两<span class="grammar-hl">趟</span>学校。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>专门用于来回出行，只跟走动、出行动词搭配。</p>
+            <p>吃饭不能用趟，吃饭用量词顿。</p>
+            <p>没有移动的动作，不能使用趟。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>一趟饭。<span class="ok">✔</span>一顿饭。</p>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="nav-bar">
+<button class="nav-btn" id="prevBtn">上一张</button>
+<div class="page-info" id="pageText">1 / 14</div>
+<button class="nav-btn" id="nextBtn">下一张</button>
+</div>
+
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+
+function render(){
+    items.forEach((el,i)=>{
+        if(i===current){
+            el.classList.add("active");
+        }else{
+            el.classList.remove("active");
+        }
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+
+</body>
+</html>

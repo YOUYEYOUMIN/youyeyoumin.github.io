@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4生词交互词卡｜啊、爱情、爱心、安检、安排、按、按时、按照、白酒、办公</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:860px;
+    margin-bottom:30px;
+}
+.flashcard {
+    width:100%;
+    min-height:820px;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    /* 响应式内边距，手机自动变小 */
+    padding: clamp(24px,4vw,40px) clamp(20px,4vw,44px);
+    border-radius:26px;
+    background:#ffffff;
+    overflow:auto; /* 内容多的时候内部滚动，不会溢出屏幕 */
+}
+.card-back{display:none; background:#ffffff; border-radius:26px;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;width:100%;}
+
+.img-placeholder{
+    /* 响应式容器，手机自动缩小，永远不会超出卡片宽度 */
+    width: min(320px, 100%);
+    max-width:100%;
+    height:auto;
+    margin:24px auto 0 auto;
+    border-radius:14px;
+    overflow:hidden;
+}
+.img-placeholder img{
+    width:100%;
+    height:auto;
+    object-fit:cover;
+    display:block;
+    margin:0 auto;
+}
+.img-placeholder img:broken {
+    display:none !important;
+}
+/* 正面生字标题：莫兰迪深色黄加粗，字号响应式 */
+h2{
+    font-size: clamp(32px,7vw,44px);
+    color:#b58a3c;
+    font-weight:800;
+    margin-bottom:14px;
+    text-align:center;
+}
+.pinyin-text{
+    font-size: clamp(22px,5vw,28px);
+    color:#333;
+    margin-bottom:12px;
+    text-align:center;
+}
+.pos-text{
+    font-size: clamp(18px,4vw,22px);
+    color:#555;
+    margin-bottom:20px;
+    text-align:center;
+}
+.label-title{
+    font-weight:bold;
+    font-size: clamp(18px,4vw,21px);
+    margin-top:24px;
+    margin-bottom:10px;
+}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{
+    font-size: clamp(16px,3.5vw,19px);
+    line-height:1.85;
+    color:#222;
+    margin-bottom:10px;
+}
+/* 正文中的生字：莫兰迪深色黄加粗 */
+.word-highlight{
+    color:#b58a3c;
+    font-weight:800;
+}
+.nav-bar{
+    display:flex;
+    gap:24px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+.nav-bar button{
+    padding:14px 32px;
+    border:none;
+    border-radius:14px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+}
+#pageText{
+    font-size:20px;
+    color:#333;
+    min-width:140px;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack">
+<!--卡0 啊-->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>啊</h2>
+            <div class="pinyin-text">ā</div>
+            <div class="pos-text">叹词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/a.jpg" alt="啊" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">啊</span>，真好、<span class="word-highlight">啊</span>，太棒了、<span class="word-highlight">啊</span>，原来是这样</p>
+            <div class="label-title">例句</div>
+            <p>1.<span class="word-highlight">啊</span>，这里的风景真美！</p>
+            <p>2.<span class="word-highlight">啊</span>，我忘记带钥匙了。</p>
+            <div class="label-title">易错提示</div>
+            <p>“<span class="word-highlight">啊</span>”只用在句子开头，用来表达惊讶、感叹。不要放在句子中间。读音会跟着前面的字变化，不只有ā这一个读法。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①<span class="word-highlight">啊</span>，今天天气很好！（）</p>
+            <p>②我<span class="word-highlight">啊</span>喜欢吃水果。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡1 爱情-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>爱情</h2>
+            <div class="pinyin-text">ài qíng</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/aiqing.jpg" alt="爱情" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>美好的<span class="word-highlight">爱情</span>、相信<span class="word-highlight">爱情</span>、<span class="word-highlight">爱情</span>故事</p>
+            <div class="label-title">例句</div>
+            <p>1.他们拥有美好的<span class="word-highlight">爱情</span>。</p>
+            <p>2.这本书讲的是一个<span class="word-highlight">爱情</span>故事。</p>
+            <div class="label-title">易错提示</div>
+            <p>是名词，只能当主语、宾语。不能直接拿来当动词用，不能说“<span class="word-highlight">爱情</span>某人”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我相信美好的<span class="word-highlight">爱情</span>。（）</p>
+            <p>②我<span class="word-highlight">爱情</span>这个女孩子。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>爱恋</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡2 爱心-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>爱心</h2>
+            <div class="pinyin-text">ài xīn</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/aixin.jpg" alt="爱心" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>有<span class="word-highlight">爱心</span>、献出<span class="word-highlight">爱心</span>、<span class="word-highlight">爱心</span>活动</p>
+            <div class="label-title">例句</div>
+            <p>1.这个老师很有<span class="word-highlight">爱心</span>。</p>
+            <p>2.我们为穷人献出<span class="word-highlight">爱心</span>。</p>
+            <div class="label-title">易错提示</div>
+            <p><span class="word-highlight">爱心</span>是说人善良、愿意帮助别人；<span class="word-highlight">爱情</span>是男女之间的感情，两个词不要搞混。它也是名词，不能直接当动词。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①她是一个很有<span class="word-highlight">爱心</span>的姑娘。（）</p>
+            <p>②我<span class="word-highlight">爱心</span>小狗，我想收养它。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>善心</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡3 安检-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>安检</h2>
+            <div class="pinyin-text">ān jiǎn</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/anjian.jpg" alt="安检" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>过<span class="word-highlight">安检</span>、进行<span class="word-highlight">安检</span>、<span class="word-highlight">安检</span>机器</p>
+            <div class="label-title">例句</div>
+            <p>1.坐飞机之前我们要过<span class="word-highlight">安检</span>。</p>
+            <p>2.工作人员正在<span class="word-highlight">安检</span>旅客的行李。</p>
+            <div class="label-title">易错提示</div>
+            <p>多用于机场、火车站。我们人“过<span class="word-highlight">安检</span>”；工作人员“<span class="word-highlight">安检</span>行李”。不要把人当作安检对象。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①坐高铁之前我们需要过<span class="word-highlight">安检</span>。（）</p>
+            <p>②警察<span class="word-highlight">安检</span>我，让我打开包。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡4 安排-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>安排</h2>
+            <div class="pinyin-text">ān pái</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/anpai.jpg" alt="安排" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">安排</span>时间、<span class="word-highlight">安排</span>工作、<span class="word-highlight">安排</span>房间</p>
+            <div class="label-title">例句</div>
+            <p>1.老师帮我们<span class="word-highlight">安排</span>考试时间。</p>
+            <p>2.酒店已经<span class="word-highlight">安排</span>好了我们的房间。</p>
+            <div class="label-title">易错提示</div>
+            <p>表示把时间、事情、人员整理妥当。可以说“把XX<span class="word-highlight">安排</span>好”。注意不要漏掉“把”字句。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①老板<span class="word-highlight">安排</span>我去外地工作。（）</p>
+            <p>②我<span class="word-highlight">安排</span>好了明天的时间。（）</p>
+            <p>参考答案：①（√） ②（√）</p>
+            <div class="label-title">近义词</div>
+            <p>筹划</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡5 按-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>按</h2>
+            <div class="pinyin-text">àn</div>
+            <div class="pos-text">动词、介词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/an.jpg" alt="按" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">按</span>按钮、<span class="word-highlight">按</span>要求、<span class="word-highlight">按</span>规定</p>
+            <div class="label-title">例句</div>
+            <p>1.请<span class="word-highlight">按</span>这个红色的按钮。（动词）</p>
+            <p>2.<span class="word-highlight">按</span>规定，我们不能迟到。（介词）</p>
+            <div class="label-title">易错提示</div>
+            <p>做动词：用手往下压；做介词：照着标准去做。介词“<span class="word-highlight">按</span>”不能单独放在句子开头就结束，后面必须带上名词。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①请<span class="word-highlight">按</span>一下这个门铃。（）</p>
+            <p>②<span class="word-highlight">按</span>，我要这么做。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡6 按时-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>按时</h2>
+            <div class="pinyin-text">àn shí</div>
+            <div class="pos-text">副词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/anshi.jpg" alt="按时" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">按时</span>上课、<span class="word-highlight">按时</span>吃饭、<span class="word-highlight">按时</span>睡觉</p>
+            <div class="label-title">例句</div>
+            <p>1.请大家<span class="word-highlight">按时</span>来上课。</p>
+            <p>2.我每天<span class="word-highlight">按时</span>完成作业。</p>
+            <div class="label-title">易错提示</div>
+            <p>副词，直接放在动词前面。后面不能加“的”。意思是遵守时间，不迟到。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我们<span class="word-highlight">按时</span>到达火车站。（）</p>
+            <p>②<span class="word-highlight">按时</span>的完成作业。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>准时</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡7 按照-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>按照</h2>
+            <div class="pinyin-text">àn zhào</div>
+            <div class="pos-text">介词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/anzhao.jpg" alt="按照" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">按照</span>计划、<span class="word-highlight">按照</span>规则、<span class="word-highlight">按照</span>例子</p>
+            <div class="label-title">例句</div>
+            <p>1.我们<span class="word-highlight">按照</span>计划出发。</p>
+            <p>2.请<span class="word-highlight">按照</span>这个样子写汉字。</p>
+            <div class="label-title">易错提示</div>
+            <p>照着某个标准做，后面一定要接名词。别跟“<span class="word-highlight">按时</span>”搞混，<span class="word-highlight">按时</span>跟时间有关；<span class="word-highlight">按照</span>跟规则、计划有关。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①<span class="word-highlight">按照</span>老师的要求完成练习。（）</p>
+            <p>②<span class="word-highlight">按照</span>写，你就可以做好。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>依照</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡8 白酒-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>白酒</h2>
+            <div class="pinyin-text">bái jiǔ</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/baijiu.jpg" alt="白酒" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>一杯<span class="word-highlight">白酒</span>、喝<span class="word-highlight">白酒</span>、中国<span class="word-highlight">白酒</span></p>
+            <div class="label-title">例句</div>
+            <p>1.爸爸过年喜欢喝<span class="word-highlight">白酒</span>。</p>
+            <p>2.这是一杯中国<span class="word-highlight">白酒</span>。</p>
+            <div class="label-title">易错提示</div>
+            <p>名词，是中国度数很高的酒。要分清<span class="word-highlight">白酒</span>、啤酒、红酒。名词一般放在动词后面，不要颠倒语序。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①爷爷过节的时候会喝<span class="word-highlight">白酒</span>。（）</p>
+            <p>②我<span class="word-highlight">白酒</span>很喜欢。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡9 办公-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>办公</h2>
+            <div class="pinyin-text">bàn gōng</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0001/bangong.jpg" alt="办公" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">办公</span>时间、<span class="word-highlight">办公</span>地点、<span class="word-highlight">办公</span>设备</p>
+            <div class="label-title">例句</div>
+            <p>1.他在办公室<span class="word-highlight">办公</span>。</p>
+            <p>2.现在是<span class="word-highlight">办公</span>时间，请安静。</p>
+            <div class="label-title">易错提示</div>
+            <p>专指上班处理工作，是工作人员做的事。学生写作业不能用<span class="word-highlight">办公</span>。学生容易错说成“做<span class="word-highlight">办公</span>”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①经理正在办公室<span class="word-highlight">办公</span>。（）</p>
+            <p>②每天晚上我在家做<span class="word-highlight">办公</span>。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>工作</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button id="prevBtn">上一张</button>
+<div id="pageText">1 / 10</div>
+<button id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        el.style.display = i===current ? "block":"none";
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《网上冲浪》阶梯写作练习</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin:0;
+            padding:0;
+            font-family: system-ui, "Microsoft Yahei", sans-serif;
+        }
+        body{
+            background-color:#f6f9fc;
+            padding:20px 16px;
+        }
+        .container{
+            max-width:720px;
+            margin:0 auto;
+        }
+        h1{
+            text-align:center;
+            color:#1f4e79;
+            margin-bottom:24px;
+            font-size:24px;
+        }
+        .card{
+            background:#fff;
+            border-radius:18px;
+            padding:28px;
+            box-shadow:0 3px 12px rgba(31,78,121,0.1);
+            min-height:580px;
+        }
+        .level-tag{
+            display:inline-block;
+            background:#e8f4fc;
+            color:#1f4e79;
+            padding:4px 10px;
+            border-radius:8px;
+            font-size:14px;
+            margin-bottom:14px;
+        }
+        .question{
+            font-size:18px;
+            line-height:1.7;
+            margin-bottom:18px;
+            color:#222;
+        }
+        .tips{
+            background:#f0f7ff;
+            padding:14px;
+            border-radius:12px;
+            margin-bottom:16px;
+        }
+        .tips-title{
+            font-weight:bold;
+            color:#1f4e79;
+            margin-bottom:8px;
+        }
+        .tip-text{
+            font-size:15px;
+            line-height:1.6;
+            color:#333;
+        }
+        .answer-ref{
+            background:#fff7e6;
+            padding:14px;
+            border-radius:12px;
+            margin-bottom:16px;
+        }
+        .ref-title{
+            font-weight:bold;
+            color:#b36b00;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .ref-content{
+            margin-top:10px;
+            font-size:15px;
+            line-height:1.6;
+            display:none;
+        }
+        .toggle-ref{
+            border:none;
+            background:#b36b00;
+            color:#fff;
+            border-radius:6px;
+            padding:4px 8px;
+            font-size:13px;
+            cursor:pointer;
+        }
+        textarea{
+            width:100%;
+            min-height:140px;
+            padding:14px;
+            border:1px solid #c7d8e8;
+            border-radius:12px;
+            font-size:16px;
+            line-height:1.6;
+            resize:vertical;
+        }
+        .page-info{
+            text-align:center;
+            margin:18px 0;
+            color:#1f4e79;
+        }
+        .btn-group{
+            display:flex;
+            justify-content:center;
+            gap:16px;
+            margin-top:24px;
+            flex-wrap: wrap;
+        }
+        button{
+            padding:12px 26px;
+            border:none;
+            border-radius:10px;
+            background:#1f4e79;
+            color:white;
+            font-size:16px;
+            cursor:pointer;
+        }
+        button:disabled{
+            background:#a4b8cc;
+            cursor:not-allowed;
+        }
+        .btn-view-all{
+            background:#386b9c;
+        }
+        /*弹窗样式*/
+        .modal{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.5);
+            padding:20px;
+            overflow-y:auto;
+        }
+        .modal-content{
+            background:white;
+            max-width:700px;
+            margin:20px auto;
+            border-radius:16px;
+            padding:24px;
+        }
+        .modal-title{
+            font-size:20px;
+            font-weight:bold;
+            color:#1f4e79;
+            margin-bottom:16px;
+        }
+        .answer-item{
+            margin-bottom:14px;
+            border-bottom:1px solid #eee;
+            padding-bottom:12px;
+        }
+        .q-title{
+            font-weight:bold;
+            margin-bottom:4px;
+        }
+        .close-modal{
+            margin-top:16px;
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>《网上冲浪》阶梯写作练习</h1>
+        <div class="card">
+            <div class="level-tag" id="level">难度：初级短句</div>
+            <div class="question" id="question"></div>
+            <div class="tips">
+                <div class="tips-title">💡词汇&语法提示</div>
+                <div class="tip-text" id="tip"></div>
+            </div>
+            <div class="answer-ref">
+                <div class="ref-title">
+                    参考范文
+                    <button class="toggle-ref" id="toggleRef">显示参考</button>
+                </div>
+                <div class="ref-content" id="refContent"></div>
+            </div>
+            <textarea id="answer" placeholder="在这里写你的回答……"></textarea>
+        </div>
+        <div class="page-info">
+            第 <span id="current">1</span> / <span id="total">8</span> 题
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一页</button>
+            <button id="next">下一页</button>
+            <button class="btn-view-all" id="viewAll">查看全部作答</button>
+        </div>
+    </div>
+    <!-- 弹窗：全部答案 -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-title">全部作答内容</div>
+            <div id="allAnswerBox"></div>
+            <button class="close-modal" id="closeModal">关闭</button>
+        </div>
+    </div>
+<script>
+const questionList = [
+    {
+        level:"难度：初级短句",
+        q:"（1）你平时经常上网吗？你一般用手机上网还是电脑上网？",
+        tip:"参考词语：上网、手机、电脑、经常\n参考句式：我……上网。我用……上网。",
+        ref:"我<span style='color:#d02020'>【平时】</span>经常上网。大多数时候我<span style='color:#d02020'>【用……做……】</span>手机上网。"
+    },
+    {
+        level:"难度：初级短句",
+        q:"（2）上网的时候，你常常会做什么事情？",
+        tip:"参考词语：看视频、聊天、查资料、听音乐\n参考句式：我常常……。有时候还会……。",
+        ref:"上网的时候我<span style='color:#d02020'>【常常】</span>看视频，<span style='color:#d02020'>【有时候还会】</span>和朋友聊天。"
+    },
+    {
+        level:"难度：中级对比句",
+        q:"（3）和电脑相比，手机上网有什么优点？",
+        tip:"参考词语：方便、随时随地、轻便\n参考句式：和A相比，B……",
+        ref:"<span style='color:#d02020'>【和A相比，B……（对比句式）】</span>和电脑相比，手机上网更加方便，我们可以<span style='color:#d02020'>【随时随地】</span>使用。"
+    },
+    {
+        level:"难度：中级对比句",
+        q:"（4）上网学习和看书学习，各有什么好处？",
+        tip:"参考词语：信息、快速、安静\n参考句式：……但是……；比起……",
+        ref:"上网可以很快找到很多信息，<span style='color:#d02020'>【……但是……（转折）】</span>但是看书学习环境更加安静。"
+    },
+    {
+        level:"难度：多句表达",
+        q:"（5）上网可以给我们的学习带来哪些帮助？",
+        tip:"参考词语：查资料、听课、练习、扩大眼界\n参考句式：一方面……另一方面……",
+        ref:"<span style='color:#d02020'>【一方面……另一方面……（并列）】</span>一方面我们可以在网上听课练习汉语，另一方面还可以查各种资料，扩大眼界。"
+    },
+    {
+        level:"难度：多句表达",
+        q:"（6）上网时间太长，会带来哪些不好的影响？",
+        tip:"参考词语：眼睛、浪费时间、休息\n参考句式：正因为……，才……",
+        ref:"<span style='color:#d02020'>【正因为……，才……（因果）】</span>正因为上网很有趣，很多人才会忘记休息，伤害自己的眼睛。"
+    },
+    {
+        level:"难度：段落写作",
+        q:"（7）我们应该怎样合理使用网络？",
+        tip:"参考词语：控制时间、分清、有用、娱乐\n参考句式：只有……，才……；A给B带来……",
+        ref:"<span style='color:#d02020'>【只有……，才……（条件）】</span>只有学会控制上网的时间，我们才可以用好网络。网络会<span style='color:#d02020'>【A给B带来……】</span>给我们的生活带来很多帮助。"
+    },
+    {
+        level:"难度：作文整合（高阶）",
+        q:"（8）写作文《网上冲浪》，整合前面所有问题，150字以上。",
+        tip:"参考全部词语：上网、手机、电脑、看视频、聊天、查资料、听课、方便、随时随地、信息、眼睛、休息、控制时间、娱乐、学习\n关联词：既……又……；……尤其是……；只有……，才……；正因为……，才……；A给B带来……",
+        ref:"# 网上冲浪\n我<span style='color:#d02020'>【平时】</span>经常上网，大多数时候我<span style='color:#d02020'>【用……】</span>用手机上网。上网的时候我常常看视频，<span style='color:#d02020'>【有时候还会】</span>有时候还会和朋友聊天。\n<span style='color:#d02020'>【和A相比，B……】</span>和电脑相比，手机上网更加方便，可以随时随地使用。上网学习可以很快找到资料，<span style='color:#d02020'>【……但是……】</span>但是看书学习更加安静。\n<span style='color:#d02020'>【一方面……另一方面……】</span>一方面网络可以听课练习汉语，扩大眼界，另一方面上网太久会伤害眼睛。<span style='color:#d02020'>【正因为……，才……】</span>正因为网上内容很有趣，很多人才忘记休息。\n<span style='color:#d02020'>【只有……，才……】</span>只有学会控制上网时间，我们才能用好网络。网络<span style='color:#d02020'>【既……又……】</span>既可以娱乐，也会<span style='color:#d02020'>【A给B带来……】</span>给我们的学习带来很大帮助。"
+    }
+];
+let current = 0;
+let saveAnswers = Array(questionList.length).fill("");
+let refShow = false;
+const levelDom = document.getElementById("level");
+const qDom = document.getElementById("question");
+const tipDom = document.getElementById("tip");
+const refContentDom = document.getElementById("refContent");
+const toggleRefBtn = document.getElementById("toggleRef");
+const answerDom = document.getElementById("answer");
+const currentDom = document.getElementById("current");
+const totalDom = document.getElementById("total");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const viewAllBtn = document.getElementById("viewAll");
+const modal = document.getElementById("modal");
+const allAnswerBox = document.getElementById("allAnswerBox");
+const closeModalBtn = document.getElementById("closeModal");
+totalDom.innerText = questionList.length;
+function render(){
+    const item = questionList[current];
+    levelDom.innerText = item.level;
+    qDom.innerText = item.q;
+    tipDom.innerText = item.tip;
+    refContentDom.innerHTML = item.ref;
+    answerDom.value = saveAnswers[current];
+    refContentDom.style.display = refShow ? "block" : "none";
+    toggleRefBtn.innerText = refShow ? "隐藏参考" : "显示参考";
+    currentDom.innerText = current+1;
+    prevBtn.disabled = current === 0;
+    if(current === questionList.length -1){
+        nextBtn.innerText = "完成";
+    }else{
+        nextBtn.innerText = "下一页";
+    }
+}
+// 切换参考答案显示/隐藏
+toggleRefBtn.onclick = ()=>{
+    refShow = !refShow;
+    render();
+}
+// 弹窗：渲染全部答案
+function renderAllAnswer(){
+    let html = "";
+    for(let i=0; i<questionList.length; i++){
+        html += `<div class="answer-item">
+            <div class="q-title">${questionList[i].q}</div>
+            <div>${saveAnswers[i] || "（还没有写答案）"}</div>
+        </div>`;
+    }
+    allAnswerBox.innerHTML = html;
+}
+answerDom.addEventListener("input", ()=>{
+    saveAnswers[current] = answerDom.value;
+})
+prevBtn.addEventListener("click",()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+})
+nextBtn.addEventListener("click",()=>{
+    saveAnswers[current] = answerDom.value;
+    if(current < questionList.length -1){
+        current++;
+        render();
+    }else{
+        alert("练习完成！你可以复制作文提交。");
+    }
+})
+// 查看全部作答：必须当前题目不为空才能打开
+viewAllBtn.addEventListener("click",()=>{
+    saveAnswers[current] = answerDom.value.trim();
+    if(saveAnswers[current] === ""){
+        alert("请先完成本题作答，才可以查看全部作答！");
+        return;
+    }
+    renderAllAnswer();
+    modal.style.display = "block";
+})
+closeModalBtn.addEventListener("click",()=>{
+    modal.style.display = "none";
+})
+// 点击弹窗空白关闭
+modal.addEventListener("click",(e)=>{
+    if(e.target === modal) modal.style.display = "none";
+})
+render();
+</script>
+</body>
+</html>

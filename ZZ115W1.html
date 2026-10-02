@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《绿色的梦想》阶梯写作练习</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin:0;
+            padding:0;
+            font-family: system-ui, "Microsoft Yahei", sans-serif;
+        }
+        body{
+            background-color:#f6f9fc;
+            padding:20px 16px;
+        }
+        .container{
+            max-width:720px;
+            margin:0 auto;
+        }
+        h1{
+            text-align:center;
+            color:#1f4e79;
+            margin-bottom:24px;
+            font-size:24px;
+        }
+        .card{
+            background:#fff;
+            border-radius:18px;
+            padding:28px;
+            box-shadow:0 3px 12px rgba(31,78,121,0.1);
+            min-height:580px;
+        }
+        .level-tag{
+            display:inline-block;
+            background:#e8f4fc;
+            color:#1f4e79;
+            padding:4px 10px;
+            border-radius:8px;
+            font-size:14px;
+            margin-bottom:14px;
+        }
+        .question{
+            font-size:18px;
+            line-height:1.7;
+            margin-bottom:18px;
+            color:#222;
+        }
+        .tips{
+            background:#f0f7ff;
+            padding:14px;
+            border-radius:12px;
+            margin-bottom:16px;
+        }
+        .tips-title{
+            font-weight:bold;
+            color:#1f4e79;
+            margin-bottom:8px;
+        }
+        .tip-text{
+            font-size:15px;
+            line-height:1.6;
+            color:#333;
+        }
+        .answer-ref{
+            background:#fff7e6;
+            padding:14px;
+            border-radius:12px;
+            margin-bottom:16px;
+        }
+        .ref-title{
+            font-weight:bold;
+            color:#b36b00;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .ref-content{
+            margin-top:10px;
+            font-size:15px;
+            line-height:1.6;
+            display:none;
+        }
+        .toggle-ref{
+            border:none;
+            background:#b36b00;
+            color:#fff;
+            border-radius:6px;
+            padding:4px 8px;
+            font-size:13px;
+            cursor:pointer;
+        }
+        textarea{
+            width:100%;
+            min-height:140px;
+            padding:14px;
+            border:1px solid #c7d8e8;
+            border-radius:12px;
+            font-size:16px;
+            line-height:1.6;
+            resize:vertical;
+        }
+        .page-info{
+            text-align:center;
+            margin:18px 0;
+            color:#1f4e79;
+        }
+        .btn-group{
+            display:flex;
+            justify-content:center;
+            gap:16px;
+            margin-top:24px;
+            flex-wrap: wrap;
+        }
+        button{
+            padding:12px 26px;
+            border:none;
+            border-radius:10px;
+            background:#1f4e79;
+            color:white;
+            font-size:16px;
+            cursor:pointer;
+        }
+        button:disabled{
+            background:#a4b8cc;
+            cursor:not-allowed;
+        }
+        .btn-view-all{
+            background:#386b9c;
+        }
+        /*弹窗样式*/
+        .modal{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.5);
+            padding:20px;
+            overflow-y:auto;
+        }
+        .modal-content{
+            background:white;
+            max-width:700px;
+            margin:20px auto;
+            border-radius:16px;
+            padding:24px;
+        }
+        .modal-title{
+            font-size:20px;
+            font-weight:bold;
+            color:#1f4e79;
+            margin-bottom:16px;
+        }
+        .answer-item{
+            margin-bottom:14px;
+            border-bottom:1px solid #eee;
+            padding-bottom:12px;
+        }
+        .q-title{
+            font-weight:bold;
+            margin-bottom:4px;
+        }
+        .close-modal{
+            margin-top:16px;
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>《绿色的梦想》阶梯写作练习</h1>
+        <div class="card">
+            <div class="level-tag" id="level">难度：初级短句</div>
+            <div class="question" id="question"></div>
+            <div class="tips">
+                <div class="tips-title">💡词汇&语法提示</div>
+                <div class="tip-text" id="tip"></div>
+            </div>
+            <div class="answer-ref">
+                <div class="ref-title">
+                    参考范文
+                    <button class="toggle-ref" id="toggleRef">显示参考</button>
+                </div>
+                <div class="ref-content" id="refContent"></div>
+            </div>
+            <textarea id="answer" placeholder="在这里写你的回答……"></textarea>
+        </div>
+        <div class="page-info">
+            第 <span id="current">1</span> / <span id="total">8</span> 题
+        </div>
+        <div class="btn-group">
+            <button id="prev">上一页</button>
+            <button id="next">下一页</button>
+            <button class="btn-view-all" id="viewAll">查看全部作答</button>
+        </div>
+    </div>
+    <!-- 弹窗：全部答案 -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-title">全部作答内容</div>
+            <div id="allAnswerBox"></div>
+            <button class="close-modal" id="closeModal">关闭</button>
+        </div>
+    </div>
+<script>
+const questionList = [
+    {
+        level:"难度：初级短句",
+        q:"（1）你们国家的环境怎么样？人们关心环境保护（环保）问题吗？",
+        tip:"参考词语：环境、保护、关心、大自然\n参考句式：……很……。人们关心……。",
+        ref:"我的家乡环境<span style='color:#d02020'>【很+形容词】</span>很不错。<span style='color:#d02020'>【越来越多的】</span>越来越多的人关心环保，大家都想保护大自然。"
+    },
+    {
+        level:"难度：初级短句",
+        q:"（2）你们国家在环境保护方面存在哪些问题？（如空气、海洋、森林、动物……）",
+        tip:"参考词语：污染、空气、海洋、森林、垃圾\n参考句式：有……的问题。尤其是……",
+        ref:"我们国家有垃圾污染的问题，<span style='color:#d02020'>【尤其是（强调）】</span>尤其是城市里的塑料垃圾比较多。"
+    },
+    {
+        level:"难度：中级对比句",
+        q:"（3）和你们国家相比，中国的环境怎么样？",
+        tip:"参考词语：相比、美化、资源\n参考句式：和A相比，B……",
+        ref:"<span style='color:#d02020'>【和A相比，B……对比句式】</span>和我的家乡相比，中国在城市绿化方面做得很好，很多城市都在美化环境。"
+    },
+    {
+        level:"难度：中级对比句",
+        q:"（4）你认为中国在环境保护方面存在哪些问题？",
+        tip:"参考词语：工厂、污水、汽车、污染\n参考句式：我认为……，尤其是……",
+        ref:"<span style='color:#d02020'>【我认为（表达观点）】</span>我认为中国还有一些污染问题，<span style='color:#d02020'>【尤其是】</span>尤其是大城市汽车太多，会带来空气污染。"
+    },
+    {
+        level:"难度：多句表达",
+        q:"（5）你们国家有哪些环保的好办法是值得中国学习的？",
+        tip:"参考词语：节约、再利用、开发\n参考句式：一方面……另一方面……",
+        ref:"<span style='color:#d02020'>【一方面……另一方面……并列】</span>一方面我们国家很重视垃圾再利用，另一方面大力开发清洁能源。这些方法<span style='color:#d02020'>【值得……学习】</span>值得中国学习。"
+    },
+    {
+        level:"难度：多句表达",
+        q:"（6）你认为现在全世界最严重的环境问题是什么？",
+        tip:"参考词语：气候变暖、资源、有害\n参考句式：正因为……，才……",
+        ref:"我认为全球气候变暖是最严重的问题。<span style='color:#d02020'>【正因为……，才……因果】</span>正因为人们大量使用化石能源，地球才越来越暖。"
+    },
+    {
+        level:"难度：段落写作",
+        q:"（7）为了保护地球的环境，平时我们应该注意哪些问题？",
+        tip:"参考词语：节约、浪费、保护\n参考句式：只有……，才……；A给B带来……",
+        ref:"<span style='color:#d02020'>【只有……，才……条件】</span>只有学会节约资源，减少浪费，才能保护地球。我们的行动会<span style='color:#d02020'>【A给B带来……】</span>给大自然带来好的变化。"
+    },
+    {
+        level:"难度：作文整合（高阶）",
+        q:"（8）你理想中的“绿色家园”是什么样子的？把前面所有问题的内容整合，写作文《绿色的梦想》，150字以上。",
+        tip:"参考全部词语：美化 污染 浪费 节约 再利用 开发 气候变暖 资源 经济 农药 化肥 汽车 工厂 垃圾 污水 有害 人口 海洋 森林 生物 大自然 平等 生存 朋友 保护 要不然\n关联词：既……又……；……尤其是……；只有……，才……；正因为……，才……；A给B带来……",
+        ref:"# 绿色的梦想\n我理想中的绿色家园，空气<span style='color:#d02020'>【很+形容词】</span>干净，森林茂密，海洋清澈。\n<span style='color:#d02020'>【和A相比，B……】</span>和我的家乡相比，中国很多城市已经开始美化环境，但是还有一些污染问题，<span style='color:#d02020'>【尤其是】</span>尤其是大城市汽车带来的空气污染。\n全世界现在面临气候变暖的难题。<span style='color:#d02020'>【只有……，才……】</span>只有节约资源、做好垃圾再利用，我们才能保护地球。<span style='color:#d02020'>【一方面……另一方面……】</span>一方面国家要开发清洁能源，另一方面每个人都要减少浪费。\n大自然是人类的朋友，我们要和所有生物平等生存。这就是我的绿色梦想。"
+    }
+];
+let current = 0;
+let saveAnswers = Array(questionList.length).fill("");
+let refShow = false;
+const levelDom = document.getElementById("level");
+const qDom = document.getElementById("question");
+const tipDom = document.getElementById("tip");
+const refContentDom = document.getElementById("refContent");
+const toggleRefBtn = document.getElementById("toggleRef");
+const answerDom = document.getElementById("answer");
+const currentDom = document.getElementById("current");
+const totalDom = document.getElementById("total");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const viewAllBtn = document.getElementById("viewAll");
+const modal = document.getElementById("modal");
+const allAnswerBox = document.getElementById("allAnswerBox");
+const closeModalBtn = document.getElementById("closeModal");
+totalDom.innerText = questionList.length;
+function render(){
+    const item = questionList[current];
+    levelDom.innerText = item.level;
+    qDom.innerText = item.q;
+    tipDom.innerText = item.tip;
+    refContentDom.innerHTML = item.ref;
+    answerDom.value = saveAnswers[current];
+    refContentDom.style.display = refShow ? "block" : "none";
+    toggleRefBtn.innerText = refShow ? "隐藏参考" : "显示参考";
+    currentDom.innerText = current+1;
+    prevBtn.disabled = current === 0;
+    if(current === questionList.length -1){
+        nextBtn.innerText = "完成";
+    }else{
+        nextBtn.innerText = "下一页";
+    }
+}
+// 切换参考答案显示/隐藏
+toggleRefBtn.onclick = ()=>{
+    refShow = !refShow;
+    render();
+}
+// 弹窗：渲染全部答案
+function renderAllAnswer(){
+    let html = "";
+    for(let i=0; i<questionList.length; i++){
+        html += `<div class="answer-item">
+            <div class="q-title">${questionList[i].q}</div>
+            <div>${saveAnswers[i] || "（还没有写答案）"}</div>
+        </div>`;
+    }
+    allAnswerBox.innerHTML = html;
+}
+answerDom.addEventListener("input", ()=>{
+    saveAnswers[current] = answerDom.value;
+})
+prevBtn.addEventListener("click",()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+})
+nextBtn.addEventListener("click",()=>{
+    saveAnswers[current] = answerDom.value;
+    if(current < questionList.length -1){
+        current++;
+        render();
+    }else{
+        alert("练习完成！你可以复制作文提交。");
+    }
+})
+// 查看全部作答：必须当前题目不为空才能打开
+viewAllBtn.addEventListener("click",()=>{
+    saveAnswers[current] = answerDom.value.trim();
+    if(saveAnswers[current] === ""){
+        alert("请先完成本题作答，才可以查看全部作答！");
+        return;
+    }
+    renderAllAnswer();
+    modal.style.display = "block";
+})
+closeModalBtn.addEventListener("click",()=>{
+    modal.style.display = "none";
+})
+// 点击弹窗空白关闭
+modal.addEventListener("click",(e)=>{
+    if(e.target === modal) modal.style.display = "none";
+})
+render();
+</script>
+</body>
+</html>

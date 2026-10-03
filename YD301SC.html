@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>至爱亲情｜HSK5阅读答题 + 生词语法闪卡</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft Yahei",sans-serif;}
+body{padding:16px;background:#f4f4f2;}
+
+/* 一级主导航 */
+.main-nav{display:flex;gap:12px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.main-nav-btn{padding:11px 24px;border:1px solid #b9c5d4;background:#d8e1ec;border-radius:8px;cursor:pointer;font-size:17px;color:#2c3e50;transition:all 0.2s ease;}
+.main-nav-btn.active{background:#7b98b5;color:#fff;border-color:#7b98b5;font-weight:bold;}
+.main-nav-btn:hover{background:#c9d6e4;}
+
+.main-section{display:none;}
+.main-section.active{display:block;}
+
+/* 阅读模块样式 完全保留原版 */
+.header-bar{
+    display:flex;align-items:center;gap:20px;margin-bottom:16px;
+    background:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 2px 6px #00000010;
+}
+.name-input{padding:8px 12px;font-size:16px;width:220px;border:1px solid #d8d8d8;border-radius:6px;}
+.timer{font-size:22px;font-weight:bold;color:#7c5c5c;min-width:140px;}
+.btn{padding:9px 18px;border:none;border-radius:6px;font-size:16px;cursor:pointer;font-weight:bold;}
+.btn-start{background:#829987;color:#fff;}
+.btn-end{background:#888b94;color:#fff;}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:calc(100vh - 180px);}
+.col{background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 8px #0000000c;overflow:auto;}
+h2{margin-bottom:14px;font-size:19px;border-bottom:1px solid #eee;padding-bottom:8px;}
+
+.tab-wrap{display:flex;gap:4px;margin-bottom:12px;}
+.tab{
+    padding:8px 14px;border-radius:6px 6px 0 0;cursor:pointer;
+    border:1px solid #ddd;color:#333;font-weight:500;
+}
+.tab.t1-tab{background:#f3e9e9;border-color:#d8c2c2;}
+.tab.t2-tab{background:#f5f2e7;border-color:#ddd4b8;}
+.tab.t3-tab{background:#eef2f7;border-color:#c8d3e2;}
+.tab.t4-tab{background:#edf3ef;border-color:#c2d8c9;}
+.tab.active{background:#fff;border-bottom-color:#fff;color:#222;font-weight:bold;}
+
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* 段落开头空两格 */
+.tab-content p{text-indent:2em;margin-bottom:8px;}
+
+.hl-r{background:#ffe0e0;}
+.hl-y{background:#fff4c2;}
+.hl-b{background:#dcebff;}
+.hl-g{background:#dff5e1;}
+.question-block{margin-bottom:24px;padding:14px;border-radius:8px;}
+.q1{background:#f3e9e9;border:1px solid #d8c2c2;}
+.q2{background:#f5f2e7;border:1px solid #ddd4b8;}
+.q3{background:#eef2f7;border:1px solid #c8d3e2;}
+.q4{background:#edf3ef;border:1px solid #c2d8c9;}
+.question-title{font-weight:bold;margin-bottom:10px;font-size:17px;}
+.item{margin:10px 0 14px 0;}
+label{margin-right:12px;cursor:pointer;}
+input[type="radio"]{margin-right:4px;}
+textarea{width:100%;min-height:70px;padding:8px;font-size:15px;border:1px solid #d8d8d8;border-radius:6px;resize:vertical;}
+.answer-compare{display:none;margin-top:12px;grid-template-columns:1fr 1fr;gap:10px;}
+.ans-col{padding:8px;border-radius:6px;}
+.student-ans{background:#f0f2f6;}
+.standard-ans{background:#eaf0ec;}
+.score-area{margin-top:16px;padding:12px;background:#f4f1e8;border-radius:8px;font-size:18px;font-weight:bold;color:#6b5c45;display:none;}
+.disabled{pointer-events:none;opacity:0.6;}
+
+/* 闪卡模块样式 */
+.flash-wrapper{max-width:860px;margin:0 auto;}
+.flash-h1{text-align:center;font-size:26px;margin-bottom:16px;color:#2c3e50;}
+.tab-bar{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+.tab-btn{
+    padding:10px 22px;
+    border:1px solid #b9c5d4;
+    background:#e8eef5;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    color:#35495d;
+    transition:all 0.2s ease;
+}
+.tab-btn:hover{background:#d7e1ed;}
+.tab-btn.active{background:#7b98b5;color:#fff;border-color:#7b98b5;font-weight:bold;}
+
+.opt-bar{display:none;}
+
+.card-container{perspective:1000px;height:460px;position:relative;}
+.flip-card{width:100%;height:100%;position:absolute;transform-style:preserve-3d;transition:transform 0.6s ease;cursor:pointer;}
+.flip-card.flipped{transform:rotateY(180deg);}
+.card-front,.card-back{
+    position:absolute;width:100%;height:100%;backface-visibility:hidden;
+    border-radius:12px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.12);
+    background:#fff;overflow-y:auto;
+}
+.card-back{transform:rotateY(180deg);background:#f7f9fc;}
+.card-title{font-size:24px;font-weight:bold;margin-bottom:16px;color:#2c3e50;}
+.item-line{margin:14px 0;font-size:18px;line-height:1.65;}
+.label{font-weight:bold;color:#546a82;display:inline-block;width:105px;}
+
+.ctrl-bar{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.ctrl-btn{padding:10px 20px;border:none;background:#8ca3bd;color:#fff;border-radius:6px;cursor:pointer;font-size:17px;transition:all 0.2s ease;}
+.ctrl-btn:hover{background:#7b98b5;}
+.info-text{text-align:center;margin-top:12px;color:#555;font-size:16px;}
+</style>
+</head>
+<body>
+<div class="main-nav">
+    <button class="main-nav-btn active" data-main-target="readMain">阅读答题</button>
+    <button class="main-nav-btn" data-main-target="flashMain">生词&语法闪卡</button>
+</div>
+
+<!-- 阅读答题区域 -->
+<div id="readMain" class="main-section active">
+<div class="header-bar">
+    <div>姓名：<input class="name-input" id="stuName" placeholder="请输入你的姓名"></div>
+    <div class="timer" id="timerBox">倒计时：08:00</div>
+    <button class="btn btn-start" id="startBtn">开始答题</button>
+    <button class="btn btn-end" id="endBtn" disabled>完成提交</button>
+</div>
+<div class="wrap">
+<div class="col" id="textCol">
+    <h2>课文（点击右侧题目自动定位关键字）</h2>
+    <div class="tab-wrap">
+        <button class="tab t1-tab active" data-tab="t1" data-highlight="hl-r">① 判断正误</button>
+        <button class="tab t2-tab" data-tab="t2" data-highlight="hl-y">② 词语释义</button>
+        <button class="tab t3-tab" data-tab="t3" data-highlight="hl-b">③ 句子理解</button>
+        <button class="tab t4-tab" data-tab="t4" data-highlight="hl-g">④ 简答</button>
+    </div>
+    <div class="tab-content active" id="t1">
+        <p>常听人说，男孩子跟妈妈比较亲，而女孩子则与爸爸更亲。对于这句话，我一直体会不深。</p>
+        <p>从我记事开始，父母的感情就一直不好。我是<span class="hl-r">由外婆带大</span>的，经常看到外婆为父母的关系而忧虑，心中不免产生一份对父亲的敌意，再加上父亲经常出差，感觉上就更陌生了。在我上中学的时候，<span class="hl-r">父母终于离婚了</span>。</p>
+        <p>记得父亲与母亲离婚后曾专门来找过我，<span class="hl-r">我们一起吃了饭</span>。那是我印象中第一次与父亲单独吃饭。父亲点了许多菜，但吃得却很少，只是不断地给我夹菜。他告诉我，以后无论怎样，他都不会再要孩子，<span class="hl-r">他一生只有我一个女儿</span>。那时的我似懂非懂地听着，<span class="hl-r">并没有因为父亲的即将离去而伤心</span>。</p>
+        <p>父亲后来去了外地，<span class="hl-r">并又结了婚</span>。我几乎每隔一个月就会收到他的来信，询问我的生活和学习状况。每到新年，我还会收到他寄来的贺年卡和钱，但我却很少给他回信，说不清是什么原因。也许是我深爱外婆，于是天真地认为，如果我对父亲好就是对外婆的背叛；也许是因为与父亲在一起生活的时间太短，印象有些模糊，缺少那份亲情吧。</p>
+        <p>直到几天前，我把自己要结婚的消息<span class="hl-r">写信告诉了父亲</span>，很快就接到了他的电话，电话里那苍老的声音竟是久未见面的父亲。他说他的门牙刚刚掉了，还没来得及去补，所以声音听上去有些瓮声瓮气。在电话里他哭了，<span class="hl-r">因为他太高兴了</span>，女儿终于长大了。他不断地问我，未来的丈夫对我好不好，并说最近还梦见了我好几次。说着说着，我的声音哽咽了，一种少有的感动涌上来。我对他说，男朋友对我很好，我们都很惦念他。</p>
+        <p>放下电话，我很难过。我不知道是否要等到长大成人……</p>
+        <p>要等到长大成人，等到有了家庭才明白：其实父母之间的感情并不会影响他们对孩子的爱，这份血浓于水的亲情是永远抹不去的。我永远都是他的女儿。突然我感到很内疚，为我以往的冷漠，更为年老的父亲。这些年，我没有尽到做女儿的责任，而我却是他在这世上最亲的人。</p>
+        <p><span class="hl-r">我拿起电话，告诉父亲今年春节我一定去看他。</span></p>
+    </div>
+    <div class="tab-content" id="t2">
+        <p>常听人说，男孩子跟妈妈比较<span class="hl-y">亲</span>，而女孩子则与爸爸更亲。对于这句话，我一直体会不深。</p>
+        <p>从我记事开始，父母的感情就一直不好。我是由外婆带大的，经常看到外婆为父母的关系而忧虑，心中不免产生一份对父亲的敌意，再加上父亲经常出差，感觉上就更<span class="hl-y">陌生</span>了。在我上中学的时候，父母终于离婚了。</p>
+        <p>记得父亲与母亲离婚后曾专门来找过我，我们一起吃了饭。那是我印象中第一次与父亲单独吃饭。父亲<span class="hl-y">点</span>了许多菜，但吃得却很少，只是不断地给我夹菜。他告诉我，以后无论怎样，他都不会再要孩子，他一生只有我一个女儿。那时的我似懂非懂地听着，并没有因为父亲的<span class="hl-y">即将</span>离去而伤心。</p>
+        <p>父亲后来去了外地，并又结了婚。我几乎<span class="hl-y">每隔</span>一个月就会收到他的来信，询问我的生活和学习状况。每到新年，我还会收到他寄来的贺年卡和钱，但我却很少给他回信，说不清是什么原因。也许是我深爱外婆，于是天真地认为，如果我对父亲好就是对外婆的背叛；也许是因为与父亲在一起生活的时间太短，印象有些模糊，缺少那份亲情吧。</p>
+        <p>直到几天前，我把自己要结婚的消息写信告诉了父亲，很快就接到了他的电话，电话里那<span class="hl-y">苍老</span>的声音竟是久未见面的父亲。他说他的门牙刚刚掉了，还没来得及去补，所以声音听上去有些瓮声瓮气。在电话里他哭了，因为他太高兴了，女儿终于长大了。他不断地问我，未来的丈夫对我好不好，并说最近还梦见了我好几次。说着说着，我的声音哽咽了，一种少有的感动涌上来。我对他说，男朋友对我很好，我们都很惦念他。</p>
+        <p>放下电话，我很难过。我不知道是否要等到长大成人……</p>
+        <p>要等到长大成人，等到有了家庭才明白：其实父母之间的感情并不会影响他们对孩子的爱，这份血浓于水的亲情是永远抹不去的。我永远都是他的女儿。突然我感到很内疚，为我<span class="hl-y">以往</span>的冷漠，更为年老的父亲。这些年，我没有尽到做女儿的责任，而我却是他在这世上最亲的人。</p>
+        <p>我拿起电话，告诉父亲今年春节我一定去看他。</p>
+    </div>
+    <div class="tab-content" id="t3">
+        <p>常听人说，男孩子跟妈妈比较亲，而女孩子则与爸爸更亲。对于这句话，我一直体会不深。</p>
+        <p>从我记事开始，父母的感情就一直不好。我是由外婆带大的，经常看到外婆为父母的关系而忧虑，心中不免产生一份对父亲的敌意，再加上父亲经常出差，感觉上就更陌生了。在我上中学的时候，父母终于离婚了。</p>
+        <p>记得父亲与母亲离婚后曾专门来找过我，我们一起吃了饭。那是我印象中第一次与父亲单独吃饭。父亲点了许多菜，但吃得却很少，只是不断地给我夹菜。他告诉我，以后无论怎样，他都不会再要孩子，他一生只有我一个女儿。那时的我似懂非懂地听着，并没有因为父亲的即将离去而伤心。</p>
+        <p>父亲后来去了外地，并又结了婚。我几乎每隔一个月就会收到他的来信，询问我的生活和学习状况。每到新年，我还会收到他寄来的贺年卡和钱，但我却很少给他回信，说不清是什么原因。也许是我深爱外婆，于是天真地认为，<span class="hl-b">如果我对父亲好就是对外婆的背叛</span>；也许是因为与父亲在一起生活的时间太短，印象有些模糊，缺少那份亲情吧。</p>
+        <p>直到几天前，我把自己要结婚的消息写信告诉了父亲，很快就接到了他的电话，电话里那苍老的声音竟是久未见面的父亲。他说他的门牙刚刚掉了，还没来得及去补，所以声音听上去有些瓮声瓮气。在电话里他哭了，因为他太高兴了，女儿终于长大了。他不断地问我，未来的丈夫对我好不好，并说最近还梦见了我好几次。说着说着，<span class="hl-b">我的声音哽咽了</span>，一种少有的感动涌上来。我对他说，男朋友对我很好，我们都很惦念他。</p>
+        <p>放下电话，我很难过。<span class="hl-b">我不知道是否要等到长大成人</span>……</p>
+        <p>要等到长大成人，等到有了家庭才明白：其实父母之间的感情并不会影响他们对孩子的爱，这份血浓于水的亲情是永远抹不去的。我永远都是他的女儿。突然我感到很内疚，为我以往的冷漠，更为年老的父亲。这些年，我没有尽到做女儿的责任，<span class="hl-b">而我却是他在这世上最亲的人</span>。</p>
+        <p>我拿起电话，告诉父亲今年春节我一定去看他。</p>
+    </div>
+    <div class="tab-content" id="t4">
+        <p>常听人说，男孩子跟妈妈比较亲，而女孩子则与爸爸更亲。对于这句话，我一直体会不深。</p>
+        <p>从我记事开始，父母的感情就一直不好。我是<span class="hl-g">由外婆带大</span>的，经常看到外婆为父母的关系而忧虑，心中不免产生一份对父亲的敌意，再加上父亲经常出差，感觉上就更陌生了。在我上中学的时候，父母终于离婚了。</p>
+        <p>记得父亲与母亲离婚后曾专门来找过我，<span class="hl-g">我们一起吃了饭</span>。那是我印象中第一次与父亲单独吃饭。父亲点了许多菜，但吃得却很少，只是不断地给我夹菜。他告诉我，以后无论怎样，他都不会再要孩子，他一生只有我一个女儿。那时的我似懂非懂地听着，并没有因为父亲的即将离去而伤心。</p>
+        <p>父亲后来去了外地，并又结了婚。我几乎<span class="hl-g">每隔一个月就会收到他的来信</span>，询问我的生活和学习状况。每到新年，我还会收到他寄来的贺年卡和钱，但我却很少给他回信，说不清是什么原因。也许是我深爱外婆，于是天真地认为，如果我对父亲好就是对外婆的背叛；也许是因为与父亲在一起生活的时间太短，印象有些模糊，缺少那份亲情吧。</p>
+        <p>直到几天前，我把自己要结婚的消息写信告诉了父亲，很快就接到了他的电话，电话里那苍老的声音竟是久未见面的父亲。他说他的门牙刚刚掉了，还没来得及去补，所以声音听上去有些瓮声瓮气。在电话里他哭了，因为他太高兴了，女儿终于长大了。他不断地问我，未来的丈夫对我好不好，并说最近还梦见了我好几次。说着说着，我的声音哽咽了，一种少有的感动涌上来。我对他说，男朋友对我很好，我们都很惦念他。</p>
+        <p>放下电话，我很难过。我不知道是否要等到长大成人……</p>
+        <p>要等到长大成人，等到有了家庭才明白：其实父母之间的感情并不会影响他们对孩子的爱，这份血浓于水的亲情是永远抹不去的。我永远都是他的女儿。突然我感到很内疚，<span class="hl-g">为我以往的冷漠，没有尽到做女儿的责任</span>，更为年老的父亲。这些年，我没有尽到做女儿的责任，而我却是他在这世上最亲的人。</p>
+        <p><span class="hl-g">我拿起电话，告诉父亲今年春节我一定去看他。</span></p>
+    </div>
+</div>
+<div class="col" id="exerciseCol">
+    <h2>课后练习题</h2>
+    <div class="question-block q1" data-link-tab="t1" data-highlight="hl-r">
+        <div class="question-title">① 判断正误（正确√，错误×）</div>
+        <div class="item"><label>(1) “我”一直跟母亲一起生活。</label><br>
+            <input type="radio" name="q1_1" value="T">√ <input type="radio" name="q1_1" value="F">×
+        </div>
+        <div class="item"><label>(2) 父亲跟母亲感情不好，他们离婚了。</label><br>
+            <input type="radio" name="q1_2" value="T">√ <input type="radio" name="q1_2" value="F">×
+        </div>
+        <div class="item"><label>(3) 以前“我”跟父亲的感情不太好。</label><br>
+            <input type="radio" name="q1_3" value="T">√ <input type="radio" name="q1_3" value="F">×
+        </div>
+        <div class="item"><label>(4) 父母离婚以后“我”跟父亲一起吃了一次饭。</label><br>
+            <input type="radio" name="q1_4" value="T">√ <input type="radio" name="q1_4" value="F">×
+        </div>
+        <div class="item"><label>(5) 父亲要离开“我”时，“我”很伤心。</label><br>
+            <input type="radio" name="q1_5" value="T">√ <input type="radio" name="q1_5" value="F">×
+        </div>
+        <div class="item"><label>(6) 父亲没有再结婚。</label><br>
+            <input type="radio" name="q1_6" value="T">√ <input type="radio" name="q1_6" value="F">×
+        </div>
+        <div class="item"><label>(7) 父亲只有“我”一个孩子。</label><br>
+            <input type="radio" name="q1_7" value="T">√ <input type="radio" name="q1_7" value="F">×
+        </div>
+        <div class="item"><label>(8) “我”打电话告诉父亲“我”要结婚了。</label><br>
+            <input type="radio" name="q1_8" value="T">√ <input type="radio" name="q1_8" value="F">×
+        </div>
+        <div class="item"><label>(9) 父亲知道“我”要结婚很伤心。</label><br>
+            <input type="radio" name="q1_9" value="T">√ <input type="radio" name="q1_9" value="F">×
+        </div>
+        <div class="item"><label>(10) “我”决定春节去看父亲。</label><br>
+            <input type="radio" name="q1_10" value="T">√ <input type="radio" name="q1_10" value="F">×
+        </div>
+        <div class="answer-compare" id="ans1">
+            <div class="ans-col student-ans"><b>你的答案：</b><div id="stuAns1"></div></div>
+            <div class="ans-col standard-ans"><b>标准答案：</b><div id="stdAns1"></div></div>
+        </div>
+    </div>
+    <div class="question-block q2" data-link-tab="t2" data-highlight="hl-y">
+        <div class="question-title">② 选择画线词语的正确解释</div>
+        <div class="item">
+            <label>(1) 男孩子跟妈妈比较亲，而女孩子则与爸爸更亲。</label><br>
+            <input type="radio" name="q2_1" value="A">A.亲爱
+            <input type="radio" name="q2_1" value="B">B.亲人
+            <input type="radio" name="q2_1" value="C">C.亲近
+            <input type="radio" name="q2_1" value="D">D.亲切
+        </div>
+        <div class="item">
+            <label>(2) 心中不免产生一份对父亲的敌意。</label><br>
+            <input type="radio" name="q2_2" value="A">A.敌人
+            <input type="radio" name="q2_2" value="B">B.厌烦
+            <input type="radio" name="q2_2" value="C">C.讨厌
+            <input type="radio" name="q2_2" value="D">D.仇恨
+        </div>
+        <div class="item">
+            <label>(3) 感觉上就更陌生了。</label><br>
+            <input type="radio" name="q2_3" value="A">A.不认识
+            <input type="radio" name="q2_3" value="B">B.不熟悉
+            <input type="radio" name="q2_3" value="C">C.不热情
+            <input type="radio" name="q2_3" value="D">D.不喜欢
+        </div>
+        <div class="item">
+            <label>(4) 父亲点了许多菜。</label><br>
+            <input type="radio" name="q2_4" value="A">A.做
+            <input type="radio" name="q2_4" value="B">B.卖
+            <input type="radio" name="q2_4" value="C">C.要
+            <input type="radio" name="q2_4" value="D">D.吃
+        </div>
+        <div class="item">
+            <label>(5) 并没有因为父亲的即将离去而伤心。</label><br>
+            <input type="radio" name="q2_5" value="A">A.就要
+            <input type="radio" name="q2_5" value="B">B.很久
+            <input type="radio" name="q2_5" value="C">C.慢慢
+            <input type="radio" name="q2_5" value="D">D.刚刚
+        </div>
+        <div class="item">
+            <label>(6) 我几乎每隔一个月就会收到他的来信。</label><br>
+            <input type="radio" name="q2_6" value="A">A.隔壁
+            <input type="radio" name="q2_6" value="B">B.间隔
+            <input type="radio" name="q2_6" value="C">C.隔开
+            <input type="radio" name="q2_6" value="D">D.隔断
+        </div>
+        <div class="item">
+            <label>(7) 电话里那苍老的声音竟是久未见面的父亲。</label><br>
+            <input type="radio" name="q2_7" value="A">A.遥远
+            <input type="radio" name="q2_7" value="B">B.长远
+            <input type="radio" name="q2_7" value="C">C.很长时间
+            <input type="radio" name="q2_7" value="D">D.永久
+        </div>
+        <div class="item">
+            <label>(8) 突然我感到很内疚，为我以往的冷漠……</label><br>
+            <input type="radio" name="q2_8" value="A">A.常常
+            <input type="radio" name="q2_8" value="B">B.经常
+            <input type="radio" name="q2_8" value="C">C.往后
+            <input type="radio" name="q2_8" value="D">D.以前
+        </div>
+        <div class="answer-compare" id="ans2">
+            <div class="ans-col student-ans"><b>你的答案：</b><div id="stuAns2"></div></div>
+            <div class="ans-col standard-ans"><b>标准答案：</b><div id="stdAns2"></div></div>
+        </div>
+    </div>
+    <div class="question-block q3" data-link-tab="t3" data-highlight="hl-b">
+        <div class="question-title">③ 选择对句子的正确解释</div>
+        <div class="item">
+            <label>(1) 如果我对父亲好就是对外婆的背叛。</label><br>
+            <input type="radio" name="q3_1" value="A">A.要是我对父亲没有感情，就是因为外婆。<br>
+            <input type="radio" name="q3_1" value="B">B.要是我对父亲好，就是对外婆不好。<br>
+            <input type="radio" name="q3_1" value="C">C.要是我对父亲不好，就是对外婆不好。
+        </div>
+        <div class="item">
+            <label>(2) 我的声音哽咽了。</label><br>
+            <input type="radio" name="q3_2" value="A">A.我不能发出声音。<br>
+            <input type="radio" name="q3_2" value="B">B.我的心里高兴得说不出话。<br>
+            <input type="radio" name="q3_2" value="C">C.我哭着说话。
+        </div>
+        <div class="item">
+            <label>(3) 我不知道是否要等到长大成人……</label><br>
+            <input type="radio" name="q3_3" value="A">A.我知道不一定要等我长大成人……<br>
+            <input type="radio" name="q3_3" value="B">B.我不知道是不是一定要等我长大成人……<br>
+            <input type="radio" name="q3_3" value="C">C.我不知道如果我长大成人会怎么样。
+        </div>
+        <div class="item">
+            <label>(4) 我却是他在这世上最亲的人。</label><br>
+            <input type="radio" name="q3_4" value="A">A.我认为这世界上他最亲切。<br>
+            <input type="radio" name="q3_4" value="B">B.我是他在这个世界上最好的人。<br>
+            <input type="radio" name="q3_4" value="C">C.只有我是他最亲近的亲人。
+        </div>
+        <div class="answer-compare" id="ans3">
+            <div class="ans-col student-ans"><b>你的答案：</b><div id="stuAns3"></div></div>
+            <div class="ans-col standard-ans"><b>标准答案：</b><div id="stdAns3"></div></div>
+        </div>
+    </div>
+    <div class="question-block q4" data-link-tab="t4" data-highlight="hl-g">
+        <div class="question-title">④ 回答问题</div>
+        <div class="item">
+            <label>(1) “我”小时候跟谁一起生活？</label><br>
+            <textarea id="q4_1"></textarea>
+        </div>
+        <div class="item">
+            <label>(2) 父母离婚后父亲跟女儿一起做了什么？</label><br>
+            <textarea id="q4_2"></textarea>
+        </div>
+        <div class="item">
+            <label>(3) 父亲多长时间给“我”写一封信？</label><br>
+            <textarea id="q4_3"></textarea>
+        </div>
+        <div class="item">
+            <label>(4) “我”为什么突然觉得内疚？</label><br>
+            <textarea id="q4_4"></textarea>
+        </div>
+        <div class="item">
+            <label>(5) 你觉得今年春节女儿会去看父亲吗？为什么？</label><br>
+            <textarea id="q4_5"></textarea>
+        </div>
+        <div class="answer-compare" id="ans4">
+            <div class="ans-col student-ans"><b>你的答案：</b><div id="stuAns4"></div></div>
+            <div class="ans-col standard-ans"><b>参考答案：</b><div id="stdAns4"></div></div>
+        </div>
+    </div>
+    <div class="score-area" id="scoreBox"></div>
+</div>
+</div>
+</div>
+
+<!-- 闪卡模块 -->
+<div id="flashMain" class="main-section">
+<div class="flash-wrapper">
+    <h1 class="flash-h1">至爱亲情</h1>
+    <div class="tab-bar">
+        <button class="tab-btn active" data-type="word">生词卡</button>
+        <button class="tab-btn" data-type="grammar">语法卡</button>
+    </div>
+    <div class="card-container">
+        <div class="flip-card" id="flashCard">
+            <div class="card-front">
+                <div class="card-title" id="frontTitle"></div>
+                <div id="frontContent"></div>
+            </div>
+            <div class="card-back">
+                <div class="card-title">答案</div>
+                <div id="backContent"></div>
+            </div>
+        </div>
+    </div>
+    <div class="ctrl-bar">
+        <button class="ctrl-btn" id="prevBtn">上一张</button>
+        <button class="ctrl-btn" id="shuffleBtn">随机抽卡</button>
+        <button class="ctrl-btn" id="hideAnsBtn">🔒隐藏答案模式</button>
+        <button class="ctrl-btn" id="nextBtn">下一张</button>
+    </div>
+    <div class="info-text" id="pageInfo"></div>
+</div>
+</div>
+
+<script>
+// 一级导航切换
+const mainNavBtns = document.querySelectorAll(".main-nav-btn");
+const mainSections = document.querySelectorAll(".main-section");
+mainNavBtns.forEach(btn=>{
+    btn.onclick = ()=>{
+        mainNavBtns.forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        const target = btn.dataset.mainTarget;
+        mainSections.forEach(s=>s.classList.remove("active"));
+        document.getElementById(target).classList.add("active");
+    }
+});
+
+// 阅读标签切换+滚动
+function switchTabAndScroll(tabId, highlightClass){
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t=>t.classList.remove('active'));
+    const targetTabBtn = document.querySelector(`.tab[data-tab="${tabId}"]`);
+    if(targetTabBtn) targetTabBtn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    const tabContent = document.getElementById(tabId);
+    tabContent.classList.add('active');
+    if(highlightClass){
+        const firstHighlight = tabContent.querySelector('.' + highlightClass);
+        if(firstHighlight){
+            const textCol = document.getElementById('textCol');
+            const rect = firstHighlight.getBoundingClientRect();
+            const containerRect = textCol.getBoundingClientRect();
+            textCol.scrollTop += rect.top - containerRect.top - 120;
+        }
+    }
+}
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab=>{
+    tab.onclick = ()=>{
+        switchTabAndScroll(tab.dataset.tab, tab.dataset.highlight);
+    }
+});
+const questionBlocks = document.querySelectorAll('.question-block[data-link-tab]');
+questionBlocks.forEach(block=>{
+    block.addEventListener('click',()=>{
+        const targetTabId = block.dataset.linkTab;
+        const highlightClass = block.dataset.highlight;
+        switchTabAndScroll(targetTabId, highlightClass);
+    });
+});
+
+// 阅读答题数据与逻辑
+const answerKey = {
+    q1:{q1_1:"F",q1_2:"T",q1_3:"T",q1_4:"T",q1_5:"F",q1_6:"F",q1_7:"T",q1_8:"F",q1_9:"F",q1_10:"T"},
+    q2:{q2_1:"C",q2_2:"D",q2_3:"B",q2_4:"C",q2_5:"A",q2_6:"B",q2_7:"C",q2_8:"D"},
+    q3:{q3_1:"B",q3_2:"C",q3_3:"B",q3_4:"C"},
+    q4:["跟外婆一起生活。","一起吃了一次饭。","几乎每隔一个月写一封信。","因为自己以前对父亲态度冷漠，没有尽到女儿的责任。","会。因为她告诉父亲今年春节一定去看他。"]
+};
+let totalQuestions = 10+8+4+5;
+let timeLeft = 8*60;
+let timerId = null;
+let started = false;
+const timerBox = document.getElementById("timerBox");
+const startBtn = document.getElementById("startBtn");
+const endBtn = document.getElementById("endBtn");
+const stuNameInput = document.getElementById("stuName");
+function formatTime(s){
+    let m = Math.floor(s/60);
+    let sec = s%60;
+    return String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");
+}
+startBtn.onclick = function(){
+    const name = stuNameInput.value.trim();
+    if(!name){alert("请输入姓名！");return;}
+    if(started) return;
+    started = true;
+    startBtn.disabled = true;
+    endBtn.disabled = false;
+    timerId = setInterval(()=>{
+        timeLeft--;
+        timerBox.innerText = "倒计时："+formatTime(timeLeft);
+        if(timeLeft<=0){
+            clearInterval(timerId);
+            submit();
+        }
+    },1000);
+};
+endBtn.onclick = submit;
+function submit(){
+    clearInterval(timerId);
+    endBtn.disabled = true;
+    let score = 0;
+    let stu1 = [],std1 = [];
+    for(let i=1;i<=10;i++){
+        const sel = document.querySelector(`input[name="q1_${i}"]:checked`);
+        const sAns = sel ? sel.value : "未答";
+        const std = answerKey.q1[`q1_${i}`];
+        stu1.push(sAns==="T"?"√":"×");
+        std1.push(std==="T"?"√":"×");
+        if(sAns === std) score++;
+    }
+    document.getElementById("stuAns1").innerText = stu1.join(" | ");
+    document.getElementById("stdAns1").innerText = std1.join(" | ");
+    document.getElementById("ans1").style.display="grid";
+
+    let stu2 = [],std2 = [];
+    for(let i=1;i<=8;i++){
+        const sel = document.querySelector(`input[name="q2_${i}"]:checked`);
+        const sAns = sel ? sel.value : "未答";
+        const std = answerKey.q2[`q2_${i}`];
+        stu2.push(sAns);
+        std2.push(std);
+        if(sAns === std) score++;
+    }
+    document.getElementById("stuAns2").innerText = stu2.join(" | ");
+    document.getElementById("stdAns2").innerText = std2.join(" | ");
+    document.getElementById("ans2").style.display="grid";
+
+    let stu3 = [],std3 = [];
+    for(let i=1;i<=4;i++){
+        const sel = document.querySelector(`input[name="q3_${i}"]:checked`);
+        const sAns = sel ? sel.value : "未答";
+        const std = answerKey.q3[`q3_${i}`];
+        stu3.push(sAns);
+        std3.push(std);
+        if(sAns === std) score++;
+    }
+    document.getElementById("stuAns3").innerText = stu3.join(" | ");
+    document.getElementById("stdAns3").innerText = std3.join(" | ");
+    document.getElementById("ans3").style.display="grid";
+
+    let stu4 = [];
+    for(let i=1;i<=5;i++){
+        const val = document.getElementById(`q4_${i}`).value.trim();
+        stu4.push(val||"(空)");
+        score++;
+    }
+    document.getElementById("stuAns4").innerText = stu4.join("\n");
+    document.getElementById("stdAns4").innerText = answerKey.q4.join("\n");
+    document.getElementById("ans4").style.display="grid";
+
+    const scoreBox = document.getElementById("scoreBox");
+    scoreBox.style.display="block";
+    scoreBox.innerText = `学生姓名：${stuNameInput.value.trim()} ｜ 总分：${score}/${totalQuestions}`;
+}
+
+// ========== 生词 HSK4‑5，填空位置优化，横线精准放在要填的词位置 ==========
+const wordList = [
+{"word":"外婆","pinyin":"wàipó","mean":"妈妈的妈妈","scope":"写家人的时候用","sentence":"小时候，外婆常常陪我读书。","exercise":"我的____很关心我的生活。"},
+{"word":"忧虑","pinyin":"yōulǜ","mean":"心里很担心，放不下","scope":"说心里的想法用","sentence":"妈妈常常忧虑我的学习。","exercise":"他为家里的事情感到____。"},
+{"word":"敌意","pinyin":"díyì","mean":"心里不喜欢别人，对别人不好","scope":"写人和人关系用","sentence":"不要对朋友有敌意。","exercise":"我们不要对别人有____。"},
+{"word":"出差","pinyin":"chūchāi","mean":"去别的地方工作几天","scope":"说工作的话题用","sentence":"爸爸下个月要出差。","exercise":"我的爸爸经常____。"},
+{"word":"单独","pinyin":"dāndú","mean":"自己一个人","scope":"说一个人做事用","sentence":"我不想单独出门。","exercise":"我____在家看书。"},
+{"word":"夹菜","pinyin":"jiā cài","mean":"用筷子把菜放到别人碗里","scope":"吃饭的时候用","sentence":"吃饭时，奶奶给我夹菜。","exercise":"妈妈常常给我____。"},
+{"word":"似懂非懂","pinyin":"sì dǒng fēi dǒng","mean":"好像懂，其实不完全懂","scope":"写学习、小时候的事用","sentence":"小时候听道理，我似懂非懂。","exercise":"听老师讲，我____地点点头。"},
+{"word":"即将","pinyin":"jíjiāng","mean":"马上就要发生","scope":"说快要发生的事","sentence":"假期即将开始。","exercise":"考试____到来。"},
+{"word":"伤心","pinyin":"shāngxīn","mean":"心里难过，想哭","scope":"写心情用","sentence":"听到坏消息，我很伤心。","exercise":"朋友离开，我很____。"},
+{"word":"隔","pinyin":"gé","mean":"两件事中间有距离、有时间","scope":"说时间、距离","sentence":"我们隔很远，很少见面。","exercise":"我们____两个月见一次。"},
+{"word":"状况","pinyin":"zhuàngkuàng","mean":"现在的样子，现在的情况","scope":"说人或者事情现在怎样","sentence":"医生问我的身体状况。","exercise":"我想知道他的____。"},
+{"word":"天真","pinyin":"tiānzhēn","mean":"想法简单，想的不多，像小孩","scope":"写小孩子性格","sentence":"小时候的我很天真。","exercise":"孩子的想法很____。"},
+{"word":"背叛","pinyin":"bèipàn","mean":"对朋友、家人不好，辜负别人对你的好","scope":"人和人感情","sentence":"不要背叛信任你的朋友。","exercise":"我们不能____关心自己的人。"},
+{"word":"模糊","pinyin":"móhu","mean":"记不清，看不清楚","scope":"写记忆、画面","sentence":"时间久了，记忆变得模糊。","exercise":"很多往事慢慢变____。"},
+{"word":"苍老","pinyin":"cānglǎo","mean":"人年纪大，看起来老","scope":"写老人外貌","sentence":"几年不见，爷爷样子变得苍老。","exercise":"时间让爸爸变得____。"},
+{"word":"门牙","pinyin":"mén yá","mean":"嘴巴前面的牙齿","scope":"说身体、牙齿","sentence":"我的门牙有点疼。","exercise":"小孩子会换____。"},
+{"word":"瓮声瓮气","pinyin":"wèng shēng wèng qì","mean":"声音闷闷的，不好听","scope":"写说话声音","sentence":"感冒时，他说话瓮声瓮气。","exercise":"鼻子堵了，说话____。"},
+{"word":"梦见","pinyin":"mèngjiàn","mean":"睡觉做梦看见什么","scope":"说做梦","sentence":"我昨天梦见老朋友。","exercise":"夜里我____了我的家乡。"},
+{"word":"哽咽","pinyin":"gěngyè","mean":"难过想哭，说话不顺畅","scope":"写难过的时候说话","sentence":"听到坏消息，她哽咽着说话。","exercise":"难过的时候，他有点____。"},
+{"word":"涌","pinyin":"yǒng","mean":"心里的感觉一下子出来","scope":"写心里的感情","sentence":"感动从心里涌出来。","exercise":"一股暖流从心底____上来。"},
+{"word":"惦念","pinyin":"diànniàn","mean":"常常想起，心里记挂远方的人","scope":"想念家人朋友","sentence":"我惦念远方的家人。","exercise":"我一直____我的老朋友。"},
+{"word":"浓","pinyin":"nóng","mean":"感情很深；味道很重","scope":"写感情、味道","sentence":"他们亲情很浓。","exercise":"我们之间感情很____。"},
+{"word":"抹","pinyin":"mǒ","mean":"擦掉，去掉；记忆去掉","scope":"写擦东西、记忆","sentence":"有些回忆，时间抹不掉。","exercise":"这些回忆永远____不掉。"},
+{"word":"内疚","pinyin":"nèijiù","mean":"自己做错事，心里不好意思、惭愧","scope":"写心里惭愧","sentence":"做错事以后，我很内疚。","exercise":"伤害朋友之后，我心里____。"},
+{"word":"冷漠","pinyin":"lěngmò","mean":"态度冷淡，不关心别人","scope":"写人的态度性格","sentence":"不要对家人很冷漠。","exercise":"我们不要对别人____。"},
+{"word":"责任","pinyin":"zérèn","mean":"自己应该做的事情","scope":"家庭、生活话题","sentence":"照顾家人是我的责任。","exercise":"照顾老人是我们的____。"},
+{"word":"血浓于水","pinyin":"xuè nóng yú shuǐ","mean":"有血缘的亲人，感情很深","scope":"讲家人亲情用","sentence":"血浓于水，亲人永远很重要。","exercise":"____，亲人之间感情很深。"},
+{"word":"竟","pinyin":"jìng","mean":"事情和自己想的不一样，很意外","scope":"说意外的事","sentence":"很久不见，他竟认不出我。","exercise":"没想到，他____还记得我。"},
+{"word":"不免","pinyin":"bùmiǎn","mean":"遇到一件事，自然就会有某种感觉","scope":"说心里自然产生感觉","sentence":"看到旧照片，不免想起过去。","exercise":"看见老房子，我____想起小时候。"},
+{"word":"专门","pinyin":"zhuānmén","mean":"为了一件事特意去做","scope":"说特意做事","sentence":"我专门来看你。","exercise":"我____来这里找你。"},
+{"word":"久未见面","pinyin":"jiǔ wèi jiàn miàn","mean":"很长时间没有见到","scope":"写很久不见的人","sentence":"我和他久未见面。","exercise":"我和____的朋友见面了。"}
+];
+
+// ========== 语法：全部填空位置优化，横线放在语法该出现的位置 ==========
+const grammarList = [
+{"grammar":"而（对比）","sentence":"弟弟喜欢出去玩，而妹妹喜欢在家看书。","mean":"对比两件不一样的事","scope":"写作文对比情况","exercise":"他爱热闹，____我爱安静。"},
+{"grammar":"从……开始","sentence":"从去年开始，我学习中文。","mean":"一件事的时间起点","scope":"讲什么时候开始做某事","exercise":"____上高中开始，我很忙。"},
+{"grammar":"由……","sentence":"家里的晚饭由妈妈来做。","mean":"这件事是谁做的","scope":"说谁来做一件事","exercise":"这个作业____小组共同完成。"},
+{"grammar":"再加上","sentence":"今天很累，再加上天气不好，我不想出门。","mean":"再加一个原因","scope":"讲多个原因","exercise":"工作很多，____身体不舒服，我想休息。"},
+{"grammar":"在……的时候","sentence":"在我小的时候，我喜欢画画。","mean":"讲一件事发生的时间","scope":"回忆、讲故事","exercise":"____我有空____，我爱听音乐。"},
+{"grammar":"曾","sentence":"我曾在北京生活。","mean":"过去以前做过，现在不做了","scope":"讲过去的经历","exercise":"我____去过那个城市。"},
+{"grammar":"只是","sentence":"我不是不想去，只是没有时间。","mean":"仅仅，情况有限制","scope":"解释真实情况","exercise":"我不反对，____觉得有点早。"},
+{"grammar":"无论怎样","sentence":"无论怎样，我会帮助你。","mean":"不管什么情况，结果不变","scope":"表达自己的态度","exercise":"无论怎样，我____会坚持。"},
+{"grammar":"并没有……","sentence":"看上去很难，但是并没有那么难。","mean":"真实情况和想的不一样","scope":"纠正想法","exercise":"大家以为他生气，他____生气。"},
+{"grammar":"因为……而……","sentence":"不要因为一点小事而不高兴。","mean":"因为前面的原因，出现后面的结果","scope":"说明原因带来的结果","exercise":"不要____一点失败____难过。"},
+{"grammar":"每隔……就……","sentence":"我每隔两周就回家一次。","mean":"隔一段时间就重复做一件事","scope":"讲重复的事","exercise":"我____一周____运动一次。"},
+{"grammar":"但……却……","sentence":"他很忙，但却愿意帮我。","mean":"本来以为A，实际是B，有转折","scope":"说事情有反差","exercise":"他有时间，____却不联系朋友。"},
+{"grammar":"也许是……也许是……","sentence":"也许是太累，也许是生病，他没来。","mean":"猜几个可能的原因","scope":"猜为什么会这样","exercise":"____下雨，____有事，他没来。"},
+{"grammar":"直到……才……","sentence":"直到上大学，我才懂这件事。","mean":"很晚以后，才发生这件事","scope":"讲很晚才明白、才做某事","exercise":"____长大以后，我____懂了。"},
+{"grammar":"没来得及……","sentence":"时间太少，我没来得及吃饭。","mean":"时间不够，事情没有做完","scope":"讲遗憾，来不及做","exercise":"出门太晚，我____吃早饭。"},
+{"grammar":"V着V着","sentence":"说着说着，她哭了。","mean":"做A这件事的时候，突然发生B","scope":"讲故事过程中发生新情况","exercise":"____走着走着，我们遇见朋友。"},
+{"grammar":"一种……（情绪）","sentence":"我心里生出一种开心的感觉。","mean":"心里出现某一种感受","scope":"写心里的感情","exercise":"____温暖的感觉出现在心里。"},
+{"grammar":"等到……才……","sentence":"等到放假，我才回家。","mean":"要等到那个时间，才做这件事","scope":"讲要等到时间才做","exercise":"____有空，我____出去玩。"},
+{"grammar":"并不会","sentence":"一次失败，并不会把人打倒。","mean":"就算有前面的情况，也不会发生后面的事","scope":"说理、表达看法","exercise":"小困难____改变我的想法。"},
+{"grammar":"为……更为……","sentence":"我为他高兴，更为他骄傲。","mean":"两件事，后一件感情更深","scope":"两层感情，后一层更强","exercise":"我为你开心，____为你骄傲。"},
+{"grammar":"而（转折）","sentence":"我努力学习，而他不爱学习。","mean":"两件事不一样，有转折","scope":"对比人和事","exercise":"他很认真，____我有点马虎。"},
+{"grammar":"尽到……责任","sentence":"我们要尽到照顾家人的责任。","mean":"做好自己该做的事","scope":"讲家庭、义务","exercise":"我们要____照顾家人的责任。"}
+];
+
+let currentType = "word";
+let currentIndex = 0;
+let list = [...wordList];
+let hideAnswerMode = false;
+
+const flashCard = document.getElementById("flashCard");
+const frontTitle = document.getElementById("frontTitle");
+const frontContent = document.getElementById("frontContent");
+const backContent = document.getElementById("backContent");
+const pageInfo = document.getElementById("pageInfo");
+const hideAnsBtn = document.getElementById("hideAnsBtn");
+
+function renderCard(){
+    const item = list[currentIndex];
+    flashCard.classList.remove("flipped");
+    if(currentType === "word"){
+        frontTitle.innerText = `${item.word}【${item.pinyin}】`;
+        frontContent.innerHTML = `
+            <div class="item-line"><span class="label">例句：</span>${item.sentence}</div>
+            <div class="item-line"><span class="label">填空：</span>${item.exercise}</div>
+        `;
+        if(hideAnswerMode){
+            backContent.innerHTML = `<div style="color:#999;text-align:center;font-size:18px;">🔒答案已隐藏</div>`;
+        }else{
+            backContent.innerHTML = `
+                <div class="item-line"><span class="label">意思：</span>${item.mean}</div>
+                <div class="item-line"><span class="label">使用：</span>${item.scope}</div>
+                <div class="item-line"><span class="label">填空答案：</span>${item.word}</div>
+            `;
+        }
+    }else{
+        frontTitle.innerText = `${item.grammar}`;
+        frontContent.innerHTML = `
+            <div class="item-line"><span class="label">原句：</span>${item.sentence}</div>
+            <div class="item-line"><span class="label">填空：</span>${item.exercise}</div>
+        `;
+        if(hideAnswerMode){
+            backContent.innerHTML = `<div style="color:#999;text-align:center;font-size:18px;">🔒答案已隐藏</div>`;
+        }else{
+            backContent.innerHTML = `
+                <div class="item-line"><span class="label">意思：</span>${item.mean}</div>
+                <div class="item-line"><span class="label">使用：</span>${item.scope}</div>
+            `;
+        }
+    }
+    pageInfo.innerText = `第 ${currentIndex+1} / ${list.length} 张`;
+}
+
+//闪卡标签切换
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+        document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        currentType = btn.dataset.type;
+        currentIndex = 0;
+        list = currentType==="word"?[...wordList]:[...grammarList];
+        renderCard();
+    }
+});
+
+//闪卡交互：恢复点击卡片翻转，没有翻转按钮
+flashCard.onclick = ()=>flashCard.classList.toggle("flipped");
+document.getElementById("prevBtn").onclick = ()=>{if(currentIndex>0){currentIndex--;}renderCard();};
+document.getElementById("nextBtn").onclick = ()=>{if(currentIndex < list.length-1){currentIndex++;}renderCard();};
+document.getElementById("shuffleBtn").onclick = ()=>{
+    for(let i=list.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [list[i],list[j]] = [list[j],list[i]];
+    }
+    currentIndex = 0;
+    renderCard();
+};
+hideAnsBtn.onclick = ()=>{
+    hideAnswerMode = !hideAnswerMode;
+    hideAnsBtn.classList.toggle("active");
+    hideAnsBtn.innerText = hideAnswerMode ? "🔓显示答案模式" : "🔒隐藏答案模式";
+    renderCard();
+};
+//键盘翻页
+document.onkeydown = (e)=>{
+    if(e.key === "ArrowLeft"){if(currentIndex>0) currentIndex--;renderCard();}
+    else if(e.key === "ArrowRight"){if(currentIndex < list.length-1) currentIndex++;renderCard();}
+};
+renderCard();
+</script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>汉语限时速读练习 HSK4-5</title>
+<style>
+*{box-sizing:border-box;font-family:"Microsoft Yahei",PingFang SC,sans-serif;margin:0;padding:0}
+body{background:#f6f4f1;padding:24px;color:#333}
+.container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:24px}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 14px rgba(0,0,0.06)}
+.tab-wrap{display:flex;gap:8px;margin-bottom:16px}
+.tab-btn{border:none;border-radius:10px;padding:10px 16px;font-size:15px;cursor:pointer;background:#e9e6e1;color:#444;transition:0.2s}
+.tab-btn.active{background:#7f8c85;color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.timer{background:#ece6dd;border-radius:12px;padding:14px;text-align:center;font-size:22px;font-weight:bold;color:#5a4f44;margin-bottom:16px}
+.btns{display:flex;gap:12px;margin-bottom:18px}
+button{border:none;border-radius:10px;padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s}
+.btn-primary{background:#7f8c85;color:#fff}
+.btn-primary:hover{background:#67746d}
+.btn-ghost{background:#e9e6e1;color:#444}
+.btn-ghost:hover{background:#dcd7cf}
+.article{font-size:17px;line-height:1.9;margin-bottom:24px}
+.sentence{display:inline;transition:opacity 0.35s}
+.sentence.hide{opacity:0;pointer-events:none}
+/*生词蓝色，语法红色*/
+.word-mark{color:#3478c9;font-weight:500}
+.grammar-mark{color:#c24b4b;font-weight:500}
+.q-title{font-size:18px;margin-bottom:18px}
+.option{display:flex;gap:10px;padding:12px;background:#faf8f5;border-radius:10px;margin-bottom:10px;cursor:pointer}
+.option:hover{background:#f1ede7}
+.option input{margin-top:4px}
+.ans-box{margin-top:20px;padding:16px;border-radius:12px;background:#eef4ee;display:none}
+.ans-box.show{display:block}
+.vocab-grammar-wrap{display:none}
+.vocab-grammar-wrap.active{display:block}
+.vocab-grammar{padding-top:18px}
+/*生词、语法分框*/
+.vocab-box{background:#edf4fc;border-radius:12px;padding:16px;margin-bottom:16px}
+.grammar-box{background:#fcf0f0;border-radius:12px;padding:16px;margin-bottom:16px}
+.fill-box{margin-top:16px;background:#f7f4ef;padding:16px;border-radius:12px}
+.fill-answer{color:#c24b4b;font-weight:bold;display:none}
+.fill-answer.show{display:block}
+@media(max-width:860px){.container{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <!--左侧：标签、计时、课文、题目 -->
+  <div class="card">
+    <div class="tab-wrap">
+      <button class="tab-btn active" data-tab="tab1">速读一</button>
+      <button class="tab-btn" data-tab="tab2">速读二</button>
+      <button class="tab-btn" data-tab="tab3">速读三</button>
+      <button class="tab-btn" data-tab="tab4">速读四</button>
+    </div>
+    <div class="timer">剩余时间：<span id="timeText">02:00</span></div>
+    <div class="btns">
+      <button class="btn-primary" id="startBtn">开始限时阅读</button>
+      <button class="btn-ghost" id="resetBtn">重置</button>
+    </div>
+
+    <!-- ==================速读一【原速读4：至爱亲情，女儿处理和母亲关系】================== -->
+    <div class="tab-content active" id="tab1">
+      <div class="article">
+        <span class="sentence">专家认为，女儿在<span class="grammar-mark">处理</span>与母亲的关系时，生活琐事上，应该由母亲<span class="word-mark">料理</span>。</span>
+        <span class="sentence"><span class="grammar-mark">即使</span>你的生活习惯与母亲完全不同，也不要<span class="word-mark">拒绝</span>母亲这方面的关心。</span>
+        <span class="sentence">其次，不要<span class="grammar-mark">将</span>母亲和兄弟姐妹的关系<span class="grammar-mark">与</span>母亲和自己的关系作<span class="word-mark">比较</span>。</span>
+        <span class="sentence">要<span class="grammar-mark">承认</span>，母爱也和其他爱一样，是无法平均分配的。</span>
+        <span class="sentence"><span class="grammar-mark">如果</span>觉得母亲对你的爱心不够，<span class="grammar-mark">可</span>寻求母亲的其他关怀来加以<span class="word-mark">补偿</span>。</span>
+        <span class="sentence">第三，如果受到母亲<span class="word-mark">不公正</span>的对待，不要<span class="grammar-mark">期待</span>母亲的道歉认错。</span>
+        <span class="sentence">可以想想母亲的其他好处来<span class="word-mark">安慰</span>自己。</span>
+        <span class="sentence">最后，听到母亲<span class="word-mark">不合时宜</span>的<span class="word-mark">劝告</span>时不要生气。</span>
+        <span class="sentence">可直接向母亲<span class="word-mark">解释</span>，说明如果按照她的意思去做会给自己带来的不好后果。</span>
+        <span class="sentence">母亲的劝告一般出自希望帮助所爱的人的愿望。</span>
+        <span class="sentence">因此讲明道理很重要。</span>
+      </div>
+      <div class="q-title">这段话主要的意思是：</div>
+      <label class="option">
+        <input type="radio" name="q1" value="A">
+        <span>A. 女儿要让母亲继续照料自己的生活</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q1" value="B">
+        <span>B. 女儿如何处理好与母亲的关系</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q1" value="C">
+        <span>C. 母亲不爱自己怎么办</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q1" value="D">
+        <span>D. 对母亲的一切劝告都要听从</span>
+      </label>
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>正确答案：B</strong></p>
+        <p>解析：文章从生活琐事、母爱分配、不公正对待、母亲劝告等多个方面，说明女儿应该如何处理与母亲的关系。A 只是文章中的一个细节；C 不是文章讨论的重点；D 与原文意思不符。</p>
+      </div>
+    </div>
+
+    <!-- ==================速读二【原速读3：母亲处理女儿问题】================== -->
+    <div class="tab-content" id="tab2">
+      <div class="article">
+        <span class="sentence">有专家<span class="word-mark">建议</span>母亲在<span class="grammar-mark">处理</span>女儿的问题时，应该注意以下几点：首先，女儿不在身边时，将生活安排得<span class="word-mark">充实</span>一些，广交朋友，寻找新的乐趣。</span>
+        <span class="sentence">第二，不要只会用<span class="word-mark">贤妻良母</span>的标准来<span class="word-mark">评价</span>自己，如果事业上无法作出较大的成绩，可寻找一些喜欢的<span class="word-mark">业余</span>活动去发挥自己的<span class="word-mark">才能</span>。</span>
+        <span class="sentence">第三，女儿不来请教就尽量不要主动去<span class="word-mark">指教</span>。</span>
+        <span class="sentence">如果不得不对女儿作出劝告，记住说<span class="grammar-mark">“你可以……”</span>比说<span class="grammar-mark">“你应该……”</span>效果要好。</span>
+        <span class="sentence">第四，虽然女儿是你最信任的人，也不要将女儿看做是你情感的唯一<span class="word-mark">支持者</span>。</span>
+        <span class="sentence">同样，虽然你知道自己永远是女儿苦恼时最好的安慰者，也还是要<span class="word-mark">鼓励</span>女儿在情感上去得到别人的支持。</span>
+        <span class="sentence">第五，不要充当女儿与她父亲或女儿与家庭其他成员关系的<span class="word-mark">中间人</span>，让女儿与他们用自己的方式去建立相互关系。</span>
+      </div>
+      <div class="q-title">这段话的主要意思是：</div>
+      <label class="option">
+        <input type="radio" name="q2" value="A">
+        <span>A.母亲不要干涉女儿的生活</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q2" value="B">
+        <span>B.母亲要支持女儿交朋友</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q2" value="C">
+        <span>C.母亲要做贤妻良母</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q2" value="D">
+        <span>D.母亲怎样处理好与女儿的关系</span>
+      </label>
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>正确答案：D</strong></p>
+        <p>解析：文章列出五点，介绍母亲处理女儿相关问题的注意事项，主题是母亲如何处理母女关系。</p>
+      </div>
+    </div>
+
+    <!-- ==================速读三【原速读2：母女如何相处】================== -->
+    <div class="tab-content" id="tab3">
+      <div class="article">
+        <span class="sentence">我们知道，母女关系没有固定的<span class="word-mark">模式</span>。</span>
+        <span class="sentence">有时母亲的作用显得重要一些，有时女儿的作用显得重要一些。</span>
+        <span class="sentence">然而作为女儿，依赖和<span class="word-mark">脆弱</span>的一面在受到<span class="word-mark">压力</span>时常常会<span class="word-mark">显露</span>出来。</span>
+        <span class="sentence">所以，专家建议母女相处时应该注意以下几个方面：</span>
+        <span class="sentence">① <span class="grammar-mark">即使</span>每天见面，也要把母女之情写下来。哪怕只在贺卡上写上几句话，也会被终生<span class="word-mark">珍藏</span>。</span>
+        <span class="sentence">② 经常相互赠送有意义的小礼物，不要只是到了节日才想起买礼物。</span>
+        <span class="sentence">③ 不同看法要做到<span class="word-mark">坦诚</span>相告，但是不要忘记，有许多选择并非一定都要得到母亲或女儿的<span class="word-mark">认可</span>。</span>
+        <span class="sentence">这时，你可以说：“我知道你会对此感到失望，但是我不能那样去做。”</span>
+        <span class="sentence">④ 发生<span class="word-mark">争执</span>时，不要攻击对方人格，只谈论行为。</span>
+        <span class="sentence">比如，可以说：“你没打电话我很难过。”不要说：“你怎么这样懒。”如果不小心说话时没有注意到这些，可事后表示<span class="word-mark">歉意</span>。</span>
+      </div>
+      <div class="q-title">1）这段话主要是讲：</div>
+      <label class="option">
+        <input type="radio" name="q3" value="A">
+        <span>A.母亲和女儿要互相帮助</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q3" value="B">
+        <span>B.母亲和女儿增加了解的方法</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q3" value="C">
+        <span>C.母亲不要总批评女儿</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q3" value="D">
+        <span>D.母亲和女儿应该怎样相处</span>
+      </label>
+      <div class="q-title">2）下面哪种观点不是短文中提到的？</div>
+      <label class="option">
+        <input type="radio" name="q32" value="A">
+        <span>A.母女之间也应该写贺卡</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q32" value="B">
+        <span>B.母女之间互送礼物有利于增进感情</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q32" value="C">
+        <span>C.母女之间一定要有同样的观点</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q32" value="D">
+        <span>D.做了不好的事应该向对方道歉</span>
+      </label>
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>1）答案：D</strong></p>
+        <p>解析：文章介绍母女相处的几条建议，主题是母女应当如何相处。</p>
+        <p><strong>2）答案：C</strong></p>
+        <p>解析：原文说“不同看法要坦诚相告，并非一定都要得到认可”，不需要观点完全一样。</p>
+      </div>
+    </div>
+
+    <!-- ==================速读四【原速读1：家里来客介绍孩子】================== -->
+    <div class="tab-content" id="tab4">
+      <div class="article">
+        <span class="sentence">在中国，有客人第一次到家里来<span class="word-mark">做客</span>，父母<span class="grammar-mark">往往</span>只是向客人介绍家里的成年人，而家里另外的正式成员——孩子，常常被<span class="word-mark">忽略</span>，<span class="grammar-mark">即使</span>孩子就在眼前，也好像他们并不存在。</span>
+        <span class="sentence">有的父母即使介绍自己的孩子，也只是说“这是我的儿子”或“这是我的女儿”，<span class="grammar-mark">似乎</span>孩子没有属于他们自己的姓名，这种现象相当<span class="word-mark">普遍</span>。</span>
+        <span class="sentence">这是父母的<span class="word-mark">疏忽</span>吗？不是。</span>
+        <span class="sentence">这说明中国父母在思想上，没有把孩子看成是一个<span class="word-mark">独立</span>的人；在观念上，没有把孩子看做是家庭的正式成员。</span>
+        <span class="sentence">在接待客人这件事上，表明有些中国父母不像外国的父母那样，给孩子的独立人格以应有的<span class="word-mark">尊重</span>。</span>
+        <span class="sentence">家庭是孩子进入社会生活之前的“培训基地”。</span>
+        <span class="sentence">家里来了客人正是教孩子学习交往和培养、训练交往能力的好机会。</span>
+        <span class="sentence">为了培养孩子的自尊、自信、自重，提高社会交往的能力，在家里来客人时，家长请不要忘记<span class="word-mark">郑重</span>地向客人介绍你的孩子。</span>
+      </div>
+      <div class="q-title">1）在中国，父母不向客人介绍孩子的原因是:</div>
+      <label class="option">
+        <input type="radio" name="q4" value="A">
+        <span>A.父母不喜欢孩子</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q4" value="B">
+        <span>B.孩子的年龄太小</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q4" value="C">
+        <span>C.父母不重视孩子</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q4" value="D">
+        <span>D.孩子不能独立生活</span>
+      </label>
+      <div class="q-title">2）本文的观点是:</div>
+      <label class="option">
+        <input type="radio" name="q42" value="A">
+        <span>A.家庭只是孩子生活的地方</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q42" value="B">
+        <span>B.家庭是培养孩子社交能力的基地</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q42" value="C">
+        <span>C.向客人介绍孩子是应该的</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q42" value="D">
+        <span>D.外国的家长也不尊重孩子</span>
+      </label>
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>1）答案：C</strong></p>
+        <p>解析：父母没有把孩子看作独立的、家庭正式成员，本质是不够重视孩子独立人格。</p>
+        <p><strong>2）答案：C</strong></p>
+        <p>解析：文章结尾提出观点：家里来客，家长要郑重向客人介绍孩子。</p>
+      </div>
+    </div>
+  </div>
+
+  <!--右侧：每篇速读独立生词、语法、语法填空练习 -->
+  <div class="card">
+    <!--速读一 生词语法-->
+    <div class="vocab-grammar-wrap active" id="vocab-tab1">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读一｜生词（HSK4-5）</h3>
+          <p><strong>料理</strong>：处理、安排生活中的事情。</p>
+          <p><strong>拒绝</strong>：不接受别人的好意或者要求。</p>
+          <p><strong>比较</strong>：对比两种人或事物，看差别。</p>
+          <p><strong>补偿</strong>：用别的方式弥补不足。</p>
+          <p><strong>不公正</strong>：不公平。</p>
+          <p><strong>期待</strong>：心里等待、盼望某事发生。</p>
+          <p><strong>安慰</strong>：让人心里不难过。</p>
+          <p><strong>不合时宜</strong>：不符合当时的情况或需要。</p>
+          <p><strong>劝告</strong>：劝说、提醒别人的话。</p>
+          <p><strong>解释</strong>：说明原因，让别人明白。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读一｜语法</h3>
+          <p><strong>1. 即使……，也……</strong>让步假设复句</p>
+          <p>含义：就算出现前面的情况，结果也不会改变。</p>
+          <p>例句：即使很忙，我也每天练习中文。</p>
+          <p><strong>2. 将A与B作比较</strong></p>
+          <p>适用范围：书面表达，用来对比两件事物。</p>
+          <p>例句：不要将自己和别人作比较。</p>
+          <p><strong>3. 如果……，可……</strong></p>
+          <p>适用范围：假设情况，给出建议。</p>
+          <p>例句：如果遇到困难，可找老师求助。</p>
+          <p><strong>4. 处理 + 名词</strong>：处理问题 / 处理关系</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. ________ 生活习惯不一样，你 ________ 要理解妈妈。（即使……也……）<span class="fill-answer">答案：即使，也</span></p>
+          <p>2. 不要 ________ 你的生活 ________ 姐姐的生活作比较。（将……与……）<span class="fill-answer">答案：将，与</span></p>
+          <p>3. ________ 你有烦恼，________ 和妈妈好好谈谈。（如果……可……）<span class="fill-answer">答案：如果，可</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+
+    <!--速读二 生词语法-->
+    <div class="vocab-grammar-wrap" id="vocab-tab2">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读二｜生词（HSK4-5）</h3>
+          <p><strong>建议</strong>：向别人提出想法，希望参考。</p>
+          <p><strong>充实</strong>：内容多，不空闲。</p>
+          <p><strong>贤妻良母</strong>：贤惠的妻子、善良的母亲，传统对女性的评价标准。</p>
+          <p><strong>评价</strong>：判断人或事物好坏。</p>
+          <p><strong>业余</strong>：工作以外的。业余活动 = 爱好活动。</p>
+          <p><strong>才能</strong>：能力、本事。</p>
+          <p><strong>指教</strong>：指点、教导（敬辞）。</p>
+          <p><strong>支持者</strong>：支持你的人。</p>
+          <p><strong>鼓励</strong>：给人信心，让人努力。</p>
+          <p><strong>中间人</strong>：在两个人中间传话、协调的人。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读二｜语法</h3>
+          <p><strong>你可以…… / 你应该……</strong></p>
+          <p>区别：<span class="grammar-mark">你可以……</span>是建议，给对方选择权；<span class="grammar-mark">你应该……</span>是要求，带有命令感。</p>
+          <p>例句：你可以试试这个方法。｜你应该按时完成作业。</p>
+          <p><strong>动词 + 得 + 形容词（无法作出较大的成绩）</strong></p>
+          <p><strong>以下几点</strong>：下面的几条建议，阅读高频表达。</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. 你 ________ 多去交朋友。（建议，可选）<span class="fill-answer">答案：可以</span></p>
+          <p>2. 你 ________ 早点休息。（要求）<span class="fill-answer">答案：应该</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+
+    <!--速读三 生词语法-->
+    <div class="vocab-grammar-wrap" id="vocab-tab3">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读三｜生词（HSK4-5）</h3>
+          <p><strong>模式</strong>：固定的方式、样子。</p>
+          <p><strong>脆弱</strong>：容易受伤、不坚强。</p>
+          <p><strong>压力</strong>：心里沉重、紧张的感觉。</p>
+          <p><strong>显露</strong>：表现出来，让人看见。</p>
+          <p><strong>珍藏</strong>：好好保存，十分爱惜。</p>
+          <p><strong>坦诚</strong>：真诚坦率，不隐瞒想法。</p>
+          <p><strong>认可</strong>：同意、承认。</p>
+          <p><strong>争执</strong>：发生争吵、争论。</p>
+          <p><strong>歉意</strong>：抱歉、对不起的心情。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读三｜语法</h3>
+          <p><strong>即使……，也……</strong> 让步复句</p>
+          <p>含义：就算满足前面的条件，结果依然不变。</p>
+          <p>例句：即使每天见面，我们也要互相尊重。</p>
+          <p><strong>不是……，只是……</strong></p>
+          <p>用来否定前面的猜测，说明真实情况。</p>
+          <p>例句：我不是生气，只是有点难过。</p>
+          <p><strong>并非</strong>：并不是，书面否定词。</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. ________ 我们常常见面，我 ________ 愿意写卡片给你。（即使……也……）<span class="fill-answer">答案：即使，也</span></p>
+          <p>2. 我 ________ 不想听你的想法，________ 需要一点时间想一想。（不是……只是……）<span class="fill-answer">答案：不是，只是</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+
+    <!--速读四 生词语法-->
+    <div class="vocab-grammar-wrap" id="vocab-tab4">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读四｜生词（HSK4-5）</h3>
+          <p><strong>做客</strong>：去别人家里拜访。</p>
+          <p><strong>忽略</strong>：没有注意到，不重视。</p>
+          <p><strong>普遍</strong>：很多地方、很多人都这样。</p>
+          <p><strong>疏忽</strong>：不小心漏掉、没注意。</p>
+          <p><strong>独立</strong>：自己做主，不靠别人。</p>
+          <p><strong>尊重</strong>：重视、认真对待别人。</p>
+          <p><strong>郑重</strong>：认真、严肃地。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读四｜语法</h3>
+          <p><strong>往往</strong>：常常、一般情况下，用来总结习惯性现象。</p>
+          <p>例句：中国人过节往往一家人一起吃饭。</p>
+          <p><strong>即使……，也……</strong>让步假设复句</p>
+          <p>含义：就算是这样，结果也不会改变。</p>
+          <p>例句：即使孩子就在旁边，父母也不介绍他。</p>
+          <p><strong>似乎</strong>：好像，看起来是这样。</p>
+          <p><strong>这说明……</strong>：这表示、这证明……，议论文常用句式。</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. 父母 ________ 只介绍家里的成年人。（往往）<span class="fill-answer">答案：往往</span></p>
+          <p>2. ________ 孩子在场，父母 ________ 忘记介绍。（即使……也……）<span class="fill-answer">答案：即使，也</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const timeText = document.getElementById('timeText');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+let allSentences = [];
+const totalSecond = 120;
+const holdSecond = 20;
+let remainTime = totalSecond;
+let timerId = null;
+let isStart = false;
+let hideIndex = -1;
+
+function updateTimeDisplay(){
+  let m = String(Math.floor(remainTime /60)).padStart(2,'0');
+  let s = String(remainTime %60).padStart(2,'0');
+  timeText.innerText = `${m}:${s}`;
+}
+
+function loadCurrentSentences(){
+  const activeTabEl = document.querySelector('.tab-content.active');
+  allSentences = Array.from(activeTabEl.querySelectorAll('.sentence'));
+}
+
+function resetAll(){
+  clearInterval(timerId);
+  remainTime = totalSecond;
+  isStart = false;
+  hideIndex = -1;
+  startBtn.disabled = false;
+  startBtn.innerText = "开始限时阅读";
+  loadCurrentSentences();
+  allSentences.forEach(s=>s.classList.remove('hide'));
+  document.querySelectorAll('.ans-box').forEach(box=>box.classList.remove('show'));
+  document.querySelectorAll('.fill-answer').forEach(f=>f.classList.remove('show'));
+  updateTimeDisplay();
+}
+
+function startRead(){
+  if(isStart) return;
+  loadCurrentSentences();
+  isStart = true;
+  startBtn.disabled = true;
+  startBtn.innerText = "阅读进行中……";
+  hideIndex = -1;
+  updateTimeDisplay();
+
+  timerId = setInterval(()=>{
+    remainTime--;
+    updateTimeDisplay();
+    const passed = totalSecond - remainTime;
+    if(passed <= holdSecond){
+      return;
+    }
+    const usableTime = totalSecond - holdSecond;
+    const progress = (passed - holdSecond) / usableTime;
+    const nextHide = Math.floor(progress * allSentences.length);
+    if(nextHide > hideIndex){
+      hideIndex = nextHide;
+      allSentences[hideIndex].classList.add('hide');
+    }
+    if(remainTime <= 0){
+      clearInterval(timerId);
+      timeText.innerText = "阅读结束，请答题";
+    }
+  },1000)
+}
+
+//切换标签
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick = function(){
+    clearInterval(timerId);
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const tabId = this.dataset.tab;
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.querySelectorAll('.vocab-grammar-wrap').forEach(v=>v.classList.remove('active'));
+    document.getElementById("vocab-"+tabId).classList.add('active');
+    resetAll();
+  }
+})
+
+//查看答案
+document.querySelectorAll('.checkAnswerBtn').forEach(btn=>{
+  btn.onclick = function(){
+    const ansBox = this.nextElementSibling;
+    ansBox.classList.add('show');
+    loadCurrentSentences();
+    allSentences.forEach(sent => sent.classList.remove('hide'));
+  }
+})
+
+//填空答案
+document.querySelectorAll('.fillAnsBtn').forEach(btn=>{
+  btn.onclick = function(){
+    const parentWrap = this.closest('.vocab-grammar-wrap');
+    const fillAnswers = parentWrap.querySelectorAll('.fill-answer');
+    fillAnswers.forEach(f=>f.classList.add('show'));
+  }
+})
+
+startBtn.onclick = startRead;
+resetBtn.onclick = resetAll;
+
+loadCurrentSentences();
+updateTimeDisplay();
+</script>
+</body>
+</html>

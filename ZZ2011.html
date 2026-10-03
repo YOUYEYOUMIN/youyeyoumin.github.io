@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZZ2011</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, sans-serif;
+    }
+    body {
+        background-color: #f7f9fc;
+        padding: 24px 16px;
+    }
+    h1 {
+        text-align: center;
+        color: #002b5c;
+        margin-bottom: 28px;
+        font-size: clamp(22px, 4vw, 28px);
+    }
+    .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .flashcard {
+        background: #ffffff;
+        border-radius: 20px;
+        min-height: 540px;
+        padding: 32px 20px;
+        box-shadow: 0 4px 14px rgba(0, 43, 92, 0.12);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .flashcard:hover {
+        box-shadow: 0 6px 20px rgba(0, 43, 92, 0.18);
+    }
+    /* 生词正面：大字 */
+    .front-text {
+        font-size: clamp(44px, 11vw, 64px);
+        font-weight: bold;
+        color: #002b5c;
+        text-align: center;
+        line-height: 1.9;
+    }
+    /* 练习卡正反面统一字号，句子居中 */
+    .back-text {
+        font-size: clamp(20px, 3.5vw, 24px);
+        color: #002b5c;
+        line-height: 2.0;
+        display: none;
+        width: 100%;
+        text-align: center;
+    }
+    .back-inner {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        text-align: left;
+    }
+    .back-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .card-img {
+        width: min(220px, 70vw);
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #eef2f7;
+    }
+    .text-part {
+        flex: 1;
+        min-width: 200px;
+    }
+    .text-part p {
+        margin: 4px 0;
+    }
+    .sentence-line {
+        width: 100%;
+        margin-top: 14px;
+        text-align: center;
+    }
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 26px;
+        flex-wrap: wrap;
+    }
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: #002b5c;
+        color: #ffffff;
+        font-size: clamp(16px, 3vw, 20px);
+        cursor: pointer;
+    }
+    button:hover {
+        opacity: 0.85;
+    }
+    .page-info {
+        text-align: center;
+        margin-top: 16px;
+        color: #002b5c;
+        font-size: clamp(16px, 3vw, 20px);
+    }
+</style>
+</head>
+<body>
+<h1>ZZ2011</h1>
+<div class="wrap">
+    <div class="flashcard" id="card">
+        <div class="front-text" id="front">玫瑰</div>
+        <div class="back-text" id="back"></div>
+    </div>
+    <div class="page-info">
+        <span id="current">1</span> / <span id="total">31</span>
+    </div>
+    <div class="btn-group">
+        <button id="prev">上一张</button>
+        <button id="next">下一张</button>
+        <button id="shuffle">随机洗牌</button>
+    </div>
+</div>
+<script>
+    const cardList = [
+        // ========== 1‑21 生词卡，图片路径统一 ./ZZ2011/ ==========
+        {
+            front: "玫瑰",
+            img: "./ZZ2011/meigui.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/meigui.jpg" alt="玫瑰" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>méi gui（名词）</p>
+                            <p>红玫瑰</p>
+                            <p>一束玫瑰</p>
+                            <p>玫瑰花</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：她收到了一束红玫瑰。</div>
+                </div>
+            `
+        },
+        {
+            front: "惊讶",
+            img: "./ZZ2011/jingya.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/jingya.jpg" alt="惊讶" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jīng yà（形容词）</p>
+                            <p>很惊讶</p>
+                            <p>感到惊讶</p>
+                            <p>十分惊讶</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：听到这个消息，我十分惊讶。</div>
+                </div>
+            `
+        },
+        {
+            front: "似的",
+            img: "./ZZ2011/shide.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/shide.jpg" alt="似的" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shì de（助词）</p>
+                            <p>像火似的</p>
+                            <p>飞似的跑</p>
+                            <p>孩子似的</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他像孩子似的开心。</div>
+                </div>
+            `
+        },
+        {
+            front: "灿烂",
+            img: "./ZZ2011/canlan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/canlan.jpg" alt="灿烂" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>càn làn（形容词）</p>
+                            <p>阳光灿烂</p>
+                            <p>灿烂的笑容</p>
+                            <p>灿烂的春天</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：今天阳光灿烂，适合出游。</div>
+                </div>
+            `
+        },
+        {
+            front: "逗",
+            img: "./ZZ2011/dou.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/dou.jpg" alt="逗" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dòu（动词）</p>
+                            <p>逗小孩</p>
+                            <p>逗乐</p>
+                            <p>逗小狗</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他喜欢逗小狗玩。</div>
+                </div>
+            `
+        },
+        {
+            front: "随即",
+            img: "./ZZ2011/suiji.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/suiji.jpg" alt="随即" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>suí jí（副词）</p>
+                            <p>随即离开</p>
+                            <p>随即站起</p>
+                            <p>随即发生</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：听完他的话，我随即离开了房间。</div>
+                </div>
+            `
+        },
+        {
+            front: "观看",
+            img: "./ZZ2011/guankan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/guankan.jpg" alt="观看" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>guān kàn（动词）</p>
+                            <p>观看比赛</p>
+                            <p>观看演出</p>
+                            <p>认真观看</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们在广场观看晚会表演。</div>
+                </div>
+            `
+        },
+        {
+            front: "裹",
+            img: "./ZZ2011/guo.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/guo.jpg" alt="裹" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>guǒ（动词）</p>
+                            <p>裹衣服</p>
+                            <p>裹被子</p>
+                            <p>紧紧裹住</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：天冷，他把身体裹在大衣里面。</div>
+                </div>
+            `
+        },
+        {
+            front: "透",
+            img: "./ZZ2011/tou.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/tou.jpg" alt="透" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>tòu（动词）</p>
+                            <p>阳光透过</p>
+                            <p>看透</p>
+                            <p>湿透</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：阳光透过窗户照进屋里。</div>
+                </div>
+            `
+        },
+        {
+            front: "情人",
+            img: "./ZZ2011/qingren.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/qingren.jpg" alt="情人" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qíng rén（名词）</p>
+                            <p>情人节</p>
+                            <p>情人礼物</p>
+                            <p>一对情人</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：情人节是情人们的节日。</div>
+                </div>
+            `
+        },
+        {
+            front: "顿时",
+            img: "./ZZ2011/dunshi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/dunshi.jpg" alt="顿时" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dùn shí（副词）</p>
+                            <p>顿时明白</p>
+                            <p>顿时安静</p>
+                            <p>顿时高兴</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：听到好消息，我顿时开心起来。</div>
+                </div>
+            `
+        },
+        {
+            front: "丛",
+            img: "./ZZ2011/cong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/cong.jpg" alt="丛" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>cóng（名词）</p>
+                            <p>花丛</p>
+                            <p>草丛</p>
+                            <p>一丛花</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：蝴蝶飞进了花丛里面。</div>
+                </div>
+            `
+        },
+        {
+            front: "温暖",
+            img: "./ZZ2011/wennuan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/wennuan.jpg" alt="温暖" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>wēn nuǎn（形容词）</p>
+                            <p>温暖的阳光</p>
+                            <p>感到温暖</p>
+                            <p>温暖的家</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：家人的关心让我心里很温暖。</div>
+                </div>
+            `
+        },
+        {
+            front: "景象",
+            img: "./ZZ2011/jingxiang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/jingxiang.jpg" alt="景象" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jǐng xiàng（名词）</p>
+                            <p>美丽的景象</p>
+                            <p>春天的景象</p>
+                            <p>热闹的景象</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：海边是一幅十分美丽的景象。</div>
+                </div>
+            `
+        },
+        {
+            front: "开心",
+            img: "./ZZ2011/kaixin.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/kaixin.jpg" alt="开心" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>kāi xīn（形容词）</p>
+                            <p>非常开心</p>
+                            <p>玩得开心</p>
+                            <p>开心的笑容</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：和朋友在一起，我特别开心。</div>
+                </div>
+            `
+        },
+        {
+            front: "舍不得",
+            img: "./ZZ2011/shebude.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/shebude.jpg" alt="舍不得" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shě bu de（动词）</p>
+                            <p>舍不得离开</p>
+                            <p>舍不得花钱</p>
+                            <p>舍不得丢掉</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：假期结束，我舍不得离开家乡。</div>
+                </div>
+            `
+        },
+        {
+            front: "轻易",
+            img: "./ZZ2011/qingyi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/qingyi.jpg" alt="轻易" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qīng yì（副词）</p>
+                            <p>轻易放弃</p>
+                            <p>不轻易相信</p>
+                            <p>轻易得到</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到困难不要轻易放弃。</div>
+                </div>
+            `
+        },
+        {
+            front: "包围",
+            img: "./ZZ2011/baowei.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/baowei.jpg" alt="包围" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bāo wéi（动词）</p>
+                            <p>被包围</p>
+                            <p>包围起来</p>
+                            <p>被花香包围</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我被花园的花香包围了。</div>
+                </div>
+            `
+        },
+        {
+            front: "凭",
+            img: "./ZZ2011/ping.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/ping.jpg" alt="凭" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>píng（介词）</p>
+                            <p>凭能力</p>
+                            <p>凭经验</p>
+                            <p>凭努力</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他凭自己的努力获得成功。</div>
+                </div>
+            `
+        },
+        {
+            front: "方式",
+            img: "./ZZ2011/fangshi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/fangshi.jpg" alt="方式" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>fāng shì（名词）</p>
+                            <p>生活方式</p>
+                            <p>学习方式</p>
+                            <p>沟通方式</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：每个人都有自己的生活方式。</div>
+                </div>
+            `
+        },
+        {
+            front: "珍惜",
+            img: "./ZZ2011/zhenxi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2011/zhenxi.jpg" alt="珍惜" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhēn xī（动词）</p>
+                            <p>珍惜时间</p>
+                            <p>珍惜机会</p>
+                            <p>珍惜感情</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们要珍惜现在的幸福生活。</div>
+                </div>
+            `
+        },
+        // ========== 22‑31 填空练习卡 ==========
+        {
+            front: `①她收到了一束______。<br><br>②听到这个消息，我十分______。`,
+            back: `①她收到了一束<strong>玫瑰</strong>。<br><br>②听到这个消息，我十分<strong>惊讶</strong>。`
+        },
+        {
+            front: `①他像孩子______开心。<br><br>②今天阳光______，适合出游。`,
+            back: `①他像孩子<strong>似的</strong>开心。<br><br>②今天阳光<strong>灿烂</strong>，适合出游。`
+        },
+        {
+            front: `①他喜欢______小狗玩。<br><br>②听完他的话，我______离开了房间。`,
+            back: `①他喜欢<strong>逗</strong>小狗玩。<br><br>②听完他的话，我<strong>随即</strong>离开了房间。`
+        },
+        {
+            front: `①我们在广场______晚会表演。<br><br>②天冷，他把身体______在大衣里面。`,
+            back: `①我们在广场<strong>观看</strong>晚会表演。<br><br>②天冷，他把身体<strong>裹</strong>在大衣里面。`
+        },
+        {
+            front: `①阳光______过窗户照进屋里。<br><br>②______节是情人们的节日。`,
+            back: `①阳光<strong>透</strong>过窗户照进屋里。<br><br>②<strong>情人</strong>节是情人们的节日。`
+        },
+        {
+            front: `①听到好消息，我______开心起来。<br><br>②蝴蝶飞进了花______里面。`,
+            back: `①听到好消息，我<strong>顿时</strong>开心起来。<br><br>②蝴蝶飞进了花<strong>丛</strong>里面。`
+        },
+        {
+            front: `①家人的关心让我心里很______。<br><br>②海边是一幅十分美丽的______。`,
+            back: `①家人的关心让我心里很<strong>温暖</strong>。<br><br>②海边是一幅十分美丽的<strong>景象</strong>。`
+        },
+        {
+            front: `①假期结束，我______离开家乡。<br><br>②遇到困难不要______放弃。`,
+            back: `①假期结束，我<strong>舍不得</strong>离开家乡。<br><br>②遇到困难不要<strong>轻易</strong>放弃。`
+        },
+        {
+            front: `①我被花香______了。<br><br>②他______自己的努力获得成功。`,
+            back: `①我被花香<strong>包围</strong>了。<br><br>②他<strong>凭</strong>自己的努力获得成功。`
+        },
+        {
+            front: `①每个人都有自己的生活______。<br><br>②我们要______现在的幸福生活。`,
+            back: `①每个人都有自己的生活<strong>方式</strong>。<br><br>②我们要<strong>珍惜</strong>现在的幸福生活。`
+        }
+    ];
+    let currentIndex = 0;
+    let isShowBack = false;
+    let cards = [...cardList];
+    const frontDom = document.getElementById("front");
+    const backDom = document.getElementById("back");
+    const cardDom = document.getElementById("card");
+    const currentPage = document.getElementById("current");
+    const totalPage = document.getElementById("total");
+    totalPage.innerText = cards.length;
+    function renderCard() {
+        const item = cards[currentIndex];
+        frontDom.innerHTML = item.front;
+        backDom.innerHTML = item.back;
+        // 判断：如果是练习卡（包含下划线），正面使用练习字号；生词卡用超大汉字字号
+        if(String(item.front).includes("____")){
+            frontDom.style.fontSize = "clamp(20px,3.5vw,24px)";
+        }else{
+            frontDom.style.fontSize = "clamp(44px, 11vw, 64px)";
+        }
+        if (isShowBack) {
+            frontDom.style.display = "none";
+            backDom.style.display = "block";
+        } else {
+            frontDom.style.display = "block";
+            backDom.style.display = "none";
+        }
+        currentPage.innerText = currentIndex + 1;
+    }
+    cardDom.addEventListener("click", () => {
+        isShowBack = !isShowBack;
+        renderCard();
+    });
+    document.getElementById("prev").addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("next").addEventListener("click", () => {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("shuffle").addEventListener("click", () => {
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        currentIndex = 0;
+        isShowBack = false;
+        renderCard();
+    });
+    renderCard();
+</script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>捡来的快乐｜课文交互学习</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"PingFang SC",Microsoft YaHei,sans-serif;}
+body{background:#f4f2ee;padding:20px;color:#444;}
+.container{max-width:1200px;margin:0 auto;background:#fff;border-radius:16px;padding:24px;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+h1{text-align:center;color:#635852;margin-bottom:24px;font-size:24px;}
+
+/* 分段标签按钮 */
+.tab-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.tab-btn{padding:10px 16px;border:none;border-radius:8px;background:#d9d3cc;color:#333;font-size:15px;cursor:pointer;transition:0.25s;}
+.tab-btn.active{background:#8c9b94;color:white;}
+.tab-btn:hover{opacity:0.85;}
+
+/* 左右分栏布局 */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+@media(max-width:768px){.row{grid-template-columns:1fr;}}
+
+.left-col{line-height:2.1;font-size:17px;}
+.paragraph-block{display:none;}
+.paragraph-block.active{display:block;animation:fade 0.4s ease;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+
+/* 课文填空 */
+.blank-input{width:110px;border:1px solid #b8b8b8;border-radius:4px;padding:2px 4px;font-size:17px;text-align:center;}
+.wrong{border:2px solid #e06c6c;background:#ffe9e9;color:#c82222;}
+.right{border:2px solid #72b884;background:#edf8f0;color:#1e7032;}
+
+/* 问答题模块 */
+.question-wrap{margin-top:24px;padding-top:16px;border-top:1px solid #ccc;}
+.q-item{margin:14px 0;}
+.q-text{font-weight:500;margin-bottom:6px;}
+.q-answer-input{width:100%;min-height:80px;border:1px solid #bbbbbb;border-radius:6px;padding:8px;font-size:16px;}
+.q-show-ans{margin-top:8px;padding:10px;background:#f0f2f1;border-radius:6px;display:none;white-space:pre‑line;}
+
+.right-col{background:#f7f5f1;padding:20px;border-radius:12px;}
+.word-card{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #ddd;}
+.word-title{font-weight:bold;color:#546e7a;font-size:18px;margin-bottom:4px;}
+.grammar-card{margin:18px 0;padding:14px;background:#eef1f0;border-radius:10px;}
+.grammar-title{font-weight:bold;color:#4a5f58;margin-bottom:8px;font-size:17px;}
+.fill-exercise{margin-top:10px;}
+.answer-btn{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#8c9b94;color:white;cursor:pointer;}
+.answer-btn:hover{opacity:0.85;}
+.show-answer{margin-top:8px;color:#333;font-weight:500;display:none;padding:6px 8px;background:#e8eceb;border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>捡来的快乐｜课文交互学习</h1>
+
+  <!-- 段落标签 -->
+  <div class="tab-buttons">
+    <button class="tab-btn active" onclick="switchTab(0)">第1段</button>
+    <button class="tab-btn" onclick="switchTab(1)">第2段</button>
+    <button class="tab-btn" onclick="switchTab(2)">第3段</button>
+    <button class="tab-btn" onclick="switchTab(3)">第4段</button>
+    <button class="tab-btn" onclick="switchTab(4)">第5段</button>
+  </div>
+
+  <div class="row">
+    <!-- 左侧：课文填空 + 本段问答题 -->
+    <div class="left-col">
+      <!-- 段落1 -->
+      <div class="paragraph-block active" id="p0">
+        <p>一个春天的上午，课间的时候，一个十岁左右的小男孩儿捧着一大把<input class="blank-input" data-ans="玫瑰" type="text">，来到我们农民工子弟学校办公室。他直接走到一位年轻漂亮的女老师身旁说：“老师，送你花儿。”那位年轻的女老师<input class="blank-input" data-ans="惊讶" type="text">地抬起头，看着眼前的小男孩儿，脸一下子红了。她不敢相信似的问小男孩儿：“是送给我的吗？”小男孩儿回答：“是送给你的！”说这话时，他一脸<input class="blank-input" data-ans="灿烂" type="text">的笑。“为什么要送给我花？”年轻的女老师有些奇怪，因为“三八妇女节”早就过了呀。“不为什么，就是想送给你。”</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q1：小男孩大概多大？他拿着什么来到办公室？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">小男孩十岁左右。他捧着一大把玫瑰来到办公室。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q2：女老师为什么觉得奇怪？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">因为三八妇女节已经过去了，小男孩却送她花。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 段落2 -->
+      <div class="paragraph-block" id="p1">
+        <p>办公室的老师们都笑了起来。小男孩儿有些不好意思了，不明白老师们为什么会笑。一个女老师逗他：“那你为什么不送花儿给我呢？我也想要啊！”“可以呀，我捡了好多呢！”他认真地说：“等着，看我的！”小男孩儿<input class="blank-input" data-ans="随即" type="text">又跑了出去。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q3：女老师跟小男孩开了什么玩笑？小男孩怎样回答？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">女老师问他为什么不送花给自己。小男孩说可以，他捡了很多，然后跑出去拿花。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 段落3 -->
+      <div class="paragraph-block" id="p2">
+        <p>原来是捡的啊！我拿过那把花儿仔细<input class="blank-input" data-ans="观看" type="text">，每朵花儿都用玻璃纸包了<input class="blank-input" data-ans="裹" type="text">，裹了又包，<input class="blank-input" data-ans="透" type="text">过玻璃纸，只见里面的绿叶子有些发黄。也许是花店卖剩的，也许是<input class="blank-input" data-ans="情人" type="text">们丢掉的，但花儿还是很漂亮。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q4：花是从哪里来的？叶子有什么样子？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">花是捡来的，可能是花店剩下或者别人丢掉的。花的绿叶有一点发黄。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 段落4 -->
+      <div class="paragraph-block" id="p3">
+        <p>不一会儿，小男孩儿又抱来一大捧红红的玫瑰花，他往每个老师的办公桌上放了两朵。我们把花儿插在瓶子里，顿时，办公桌上冒出一<input class="blank-input" data-ans="丛丛" type="text">玫瑰，给房间里带来了<input class="blank-input" data-ans="温暖" type="text">的春天的<input class="blank-input" data-ans="景象" type="text">。每个老师都<input class="blank-input" data-ans="开心" type="text">地笑了，快乐像春天的阳光照在每个人心里……</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q5：小男孩回来以后做了什么？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">小男孩抱来很多玫瑰花，给每位老师桌上放两朵花。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q6：老师们的心情怎么样？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">老师们都很开心，心里感受到了快乐。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 段落5 -->
+      <div class="paragraph-block" id="p4">
+        <p>玫瑰花在办公室里开放了两个星期，大家<input class="blank-input" data-ans="舍不得" type="text"><input class="blank-input" data-ans="轻易" type="text">把花儿扔掉。那些日子里，每个老师都被快乐<input class="blank-input" data-ans="包围" type="text">着。原来，有时候，美丽和快乐也能凭这种<input class="blank-input" data-ans="方式" type="text">得到。只要你能像小男孩儿那样<input class="blank-input" data-ans="珍惜" type="text">它，像老师们那样接受它。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q7：玫瑰花在办公室开了多久？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">玫瑰花在办公室开放了两个星期。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q8：大家为什么舍不得把花丢掉？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">因为这束花带来了快乐，大家都被快乐包围着。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q9：快乐只能用钱买到吗？课文告诉我们什么？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">快乐不一定需要花钱。珍惜和接受，我们也可以得到美丽和快乐。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q10：小男孩送的花是花钱买的吗？你觉得小男孩是怎样的孩子？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">花不是买的，是捡来的。小男孩善良、单纯，愿意分享美好。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q11：生活里，你得到过不用花钱的快乐吗？简单说一说。</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">开放题，没有标准答案。例如朋友的关心、看到好看风景等。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧：生词 + 每一个语法都附带例句+填空练习 -->
+    <div class="right-col">
+      <!-- 第1段生词语法 -->
+      <div class="paragraph-block active" id="r0">
+        <h3>生词</h3>
+        <div class="word-card">
+          <div class="word-title">玫瑰 méigui 名</div>
+          <div>一种红色好看的花</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">惊讶 jīngyà 形</div>
+          <div>看到想不到的事情，觉得意外</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">灿烂 cànlàn 形</div>
+          <div>笑容明亮、好看</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 数量短语：……左右（大约）</div>
+          <p>放在数字后面，表示大概的时间、年龄、数量。</p>
+          <p>例句：十岁左右；三点左右；五百块钱左右。</p>
+          <div class="fill-exercise">填空：他三十____。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">他三十<b>左右</b>。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 动词+过来 / 过去（趋向补语）</div>
+          <p>表示人或者物体向说话人方向移动。走到身旁、拿过来、跑过去。</p>
+          <p>例句：他走到我身旁。请把书拿过来。</p>
+          <div class="fill-exercise">填空：请走____这里。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">请走<b>过来</b>这里。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 似的 shìde（比况助词）</div>
+          <p>格式：像 / 好像 + 事物 + 似的，用来比喻。</p>
+          <p>例句：脸一下子红得像苹果似的。</p>
+          <div class="fill-exercise">填空：他跑得____兔子____。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">他跑得<b>像</b>兔子<b>似的</b>。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 早就（副词）</div>
+          <p>表示事情在很早以前已经完成。</p>
+          <p>例句：节日早就过去了。我早就知道这件事。</p>
+          <div class="fill-exercise">填空：电影____结束了。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">电影<b>早就</b>结束了。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">5. 不为什么，就是……（口语惯用）</div>
+          <p>没有特别的理由，单纯心里想做。</p>
+          <p>例句：不为什么，就是想跟你聊天。</p>
+          <div class="fill-exercise">填空：不为什么，____想看看你。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">不为什么，<b>就是</b>想看看你。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第2段生词语法 -->
+      <div class="paragraph-block" id="r1">
+        <h3>生词</h3>
+        <div class="word-card">
+          <div class="word-title">逗 dòu 动</div>
+          <div>开玩笑，逗别人</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">随即 suíjí 副</div>
+          <div>马上，立刻</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 起来（趋向补语）</div>
+          <p>动作开始或者出现某种状态：笑起来、跑起来、热起来。</p>
+          <p>例句：大家都笑了起来。天气冷起来了。</p>
+          <div class="fill-exercise">填空：孩子们开心地唱____。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">孩子们开心地唱<b>起来</b>。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 有些 + 形容词（程度表达）</div>
+          <p>表示“有一点”，程度不高。有些不好意思、有些奇怪。</p>
+          <p>例句：我有些累。他有些生气。</p>
+          <div class="fill-exercise">填空：今天我____难过。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">今天我<b>有些</b>难过。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 为什么不……呢？（反问句，提建议）</div>
+          <p>口语反问，用来提出建议。</p>
+          <p>例句：为什么不试一试呢？为什么不休息呢？</p>
+          <div class="fill-exercise">填空：____不试一试____？<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer"><b>为什么</b>不试一试<b>呢</b>？</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 看我的！（口语固定短句）</div>
+          <p>意思：你看我来做，我可以做好。</p>
+          <p>例句：等着，看我的！这件事交给我，看我的！</p>
+          <div class="fill-exercise">填空：等着，____！<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">等着，<b>看我的</b>！</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第3段生词语法 -->
+      <div class="paragraph-block" id="r2">
+        <h3>生词</h3>
+        <div class="word-card">
+          <div class="word-title">观看 guānkàn 动</div>
+          <div>仔细看</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">裹 guǒ 动</div>
+          <div>用纸、布包起来</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">透 tòu 动</div>
+          <div>穿过</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">情人 qíngrén 名</div>
+          <div>爱人</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 是……的 句式（强调来源、时间、方式）</div>
+          <p>强调信息，不是简单陈述事实。花儿是捡来的。</p>
+          <p>例句：这本书是网上买的。他是昨天来的。</p>
+          <div class="fill-exercise">填空：这件礼物，我____朋友送____。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">这件礼物，我<b>是</b>朋友送<b>的</b>。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 动词+了又+动词（动作重复）</div>
+          <p>裹了又包、看了又看、想了又想，表示动作重复做。</p>
+          <p>例句：他想了又想，最后决定不去。</p>
+          <div class="fill-exercise">填空：他看____看，还是没看懂。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">他看<b>了又</b>看，还是没看懂。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 也许……也许……（两种猜测并列）</div>
+          <p>对事情做两种可能性推测。</p>
+          <p>例句：他也许在家，也许在外面。</p>
+          <div class="fill-exercise">填空：明天____下雨，____刮风。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">明天<b>也许</b>下雨，<b>也许</b>刮风。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 但（连词），表转折</div>
+          <p>跟“但是”一样，书面、口语都能用。虽然……但……</p>
+          <p>例句：东西不贵，但很好用。</p>
+          <div class="fill-exercise">填空：房间不大，____很干净。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">房间不大，<b>但</b>很干净。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第4段生词语法 -->
+      <div class="paragraph-block" id="r3">
+        <h3>生词</h3>
+        <div class="word-card">
+          <div class="word-title">丛 cóng 名</div>
+          <div>一堆花草</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">温暖 wēnnuǎn 形</div>
+          <div>暖和，心里舒服</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">景象 jǐngxiàng 名</div>
+          <div>看到的画面、景色</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">开心 kāixīn 形</div>
+          <div>快乐</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 不一会儿（时间短语）</div>
+          <p>很短时间以后，没过多久。</p>
+          <p>例句：不一会儿，雨就停了。</p>
+          <div class="fill-exercise">填空：____，他就回来了。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer"><b>不一会儿</b>，他就回来了。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 顿时（副词）</div>
+          <p>一件事情发生之后，立刻产生变化。</p>
+          <p>例句：听到好消息，他顿时笑了。灯一亮，房间顿时明亮。</p>
+          <div class="fill-exercise">填空：听到这句话，我____明白了。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">听到这句话，我<b>顿时</b>明白了。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 给……带来了……（常用句式）</div>
+          <p>某人、某物带来某种东西或者感受。</p>
+          <p>例句：朋友给我带来了礼物。春天给城市带来绿色。</p>
+          <div class="fill-exercise">填空：阳光____我们____温暖。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">阳光<b>给</b>我们<b>带来了</b>温暖。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. A像B……（比喻句）</div>
+          <p>把A比作B。快乐像春天的阳光。</p>
+          <p>例句：月亮像圆盘。孩子像小鸟。</p>
+          <div class="fill-exercise">填空：白云____棉花。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">白云<b>像</b>棉花。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第5段生词语法 -->
+      <div class="paragraph-block" id="r4">
+        <h3>生词</h3>
+        <div class="word-card">
+          <div class="word-title">舍不得 shěbude 动</div>
+          <div>不愿意丢掉、分开</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">轻易 qīngyì 副</div>
+          <div>随便，简单地</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">包围 bāowéi 动</div>
+          <div>四周围住</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">方式 fāngshì 名</div>
+          <div>办法、做法</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">珍惜 zhēnxī 动</div>
+          <div>好好爱护，不浪费</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 被字句：受事 + 被 + 施事 + 动词</div>
+          <p>每个老师都被快乐包围着。表示被动。</p>
+          <p>例句：杯子被弟弟打碎了。我被这件事感动。</p>
+          <div class="fill-exercise">填空：他____大家____感动了。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">他<b>被</b>大家<b>给</b>感动了。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 原来（副词），表示发现真相</div>
+          <p>恍然大悟，知道真实情况。原来，快乐可以这样得到。</p>
+          <p>例句：原来你在这里！原来他不会汉语。</p>
+          <div class="fill-exercise">填空：____，这本书是你的。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer"><b>原来</b>，这本书是你的。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 凭……（介词，依靠、借助）</div>
+          <p>凭这种方式得到；凭努力取得成功。</p>
+          <p>例句：他凭自己的能力找到工作。</p>
+          <div class="fill-exercise">填空：他____努力获得成功。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer">他<b>凭</b>努力获得成功。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 只要……，就……（条件复句）</div>
+          <p>满足前面条件，就会出现后面结果。</p>
+          <p>例句：只要认真练习，就可以进步。</p>
+          <div class="fill-exercise">填空：____你坚持，____可以学好。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer"><b>只要</b>你坚持，<b>就</b>可以学好。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">5. 像A那样，像B那样（举例参照）</div>
+          <p>格式：像+人/事+那样，用来参照别人的行为。</p>
+          <p>例句：像他那样努力，像老师那样思考。</p>
+          <div class="fill-exercise">填空：____你哥哥____，认真学习。<br>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看答案</button>
+            <div class="show-answer"><b>像</b>你哥哥<b>那样</b>，认真学习。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 切换标签页，左右同步
+function switchTab(index){
+  document.querySelectorAll('.left-col .paragraph-block').forEach(el=>el.classList.remove('active'));
+  document.getElementById('p'+index).classList.add('active');
+  document.querySelectorAll('.right-col .paragraph-block').forEach(el=>el.classList.remove('active'));
+  document.getElementById('r'+index).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((btn,i)=>{
+    btn.classList.toggle('active',i===index);
+  })
+}
+
+// 检查本段课文填空，正确绿色，错误红色
+function checkAllBlank(btn){
+  const parent = btn.parentElement;
+  const inputs = parent.querySelectorAll('.blank-input');
+  inputs.forEach(input=>{
+    const answer = input.dataset.ans;
+    if(input.value.trim() === answer){
+      input.className = "blank-input right";
+    }else{
+      input.className = "blank-input wrong";
+    }
+  })
+}
+</script>
+</body>
+</html>

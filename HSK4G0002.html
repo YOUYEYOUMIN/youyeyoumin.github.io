@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4G0002语法闪卡｜程度副词、范围副词</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:680px;
+    height:600px;
+    margin-bottom:24px;
+}
+.flashcard {
+    width:100%;
+    height:100%;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding:36px 28px;
+    border-radius:22px;
+    background:#ffffff;
+    overflow-y:auto;
+    text-align:center;
+}
+.card-back{display:none; background:#ffffff;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;}
+h2{font-size:26px;color:#222;margin-bottom:18px;text-align:center;}
+.label-title{font-weight:bold;font-size:19px;text-align:center;margin-top:20px;margin-bottom:12px;}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{font-size:18px;line-height:1.85;color:#222;margin-bottom:10px;text-align:center;}
+.grammar-hl{color:#204070;font-weight:bold;}
+.err{color:#c82424;font-weight:bold;}
+.ok{color:#1f8030;font-weight:bold;}
+.click-hint{position:absolute;bottom:16px;left:0;right:0;font-size:15px;color:#666;text-align:center;}
+.nav-bar{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+.nav-btn{
+    padding:12px 26px;
+    border:none;
+    border-radius:12px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:17px;
+    cursor:pointer;
+}
+.nav-btn:hover{background:#949088;}
+.page-info{font-size:18px;color:#333;min-width:130px;text-align:center;}
+.card-stack{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+.card-stack > div{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+.card-stack > div.active{
+    display:block;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack" id="cardStack">
+<!-- 卡0 十分 -->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>十分（shí fēn）｜程度副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用来表示程度很高，相当于“非常”，修饰形容词。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>十分 + 形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.今天<span class="grammar-hl">十分</span>冷。</p>
+            <p>2.这个故事<span class="grammar-hl">十分</span>有趣。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>一般放在形容词前面，不直接放在动词前面。</p>
+            <p>多用于书面一点的句子，口语里“非常”用得更多。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我十分喜欢书。 <span class="ok">✔</span>我十分喜欢这本书。</p>
+            <p><span class="err">✖</span>十分吃饭。 <span class="ok">✔</span>饭菜十分好吃。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡1 更加 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>更加（gèng jiā）｜程度副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>和之前对比，程度变高了，比原来更……</p>
+            <div class="label-title">【常用句式】</div>
+            <p>更加 + 形容词 / 心理动词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.下雨之后，天气<span class="grammar-hl">更加</span>冷了。</p>
+            <p>2.我<span class="grammar-hl">更加</span>喜欢汉语了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>句子要有对比，有前后变化，不能用在没有对比的句子。</p>
+            <p>放在主语后面，形容词、动词前面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>苹果更加红。（没有对比） <span class="ok">✔</span>这个苹果更加红。</p>
+            <p><span class="err">✖</span>更加他努力。 <span class="ok">✔</span>他更加努力。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡2 稍 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>稍（shāo）｜程度副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>表示一点点，程度不高，和“稍微”意思一样。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>稍 + 动词 / 形容词，常搭配“稍等”</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">稍</span>等一下。</p>
+            <p>2.这件衣服<span class="grammar-hl">稍</span>大。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>“稍”书面感更强，口语多用“稍微”。</p>
+            <p>后面一般搭配短词语，不要放很长的句子。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>稍我休息。 <span class="ok">✔</span>我稍休息一下。</p>
+            <p><span class="err">✖</span>稍非常好看。 <span class="ok">✔</span>稍好看一点。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡3 稍微 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>稍微（shāo wēi）｜程度副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>表示不多、一点点，程度比较轻。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>稍微 + 动词/形容词 + 一点儿 / 一下</p>
+            <div class="label-title">【例句】</div>
+            <p>1.请<span class="grammar-hl">稍微</span>等我一下。</p>
+            <p>2.房间<span class="grammar-hl">稍微</span>大一点儿。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>口语常用，后面常常加上“一下、一点儿”，句子听起来自然。</p>
+            <p>不能用来修饰程度很高的词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>稍微非常漂亮。 <span class="ok">✔</span>稍微漂亮一点儿。</p>
+            <p><span class="err">✖</span>稍微等。 <span class="ok">✔</span>稍微等一下。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡4 尤其 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>尤其（yóu qí）｜程度副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>在一群里面，有一个更加突出，重点强调这一个。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>……，尤其 + 要强调的部分</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我喜欢运动，<span class="grammar-hl">尤其</span>喜欢跑步。</p>
+            <p>2.这里的水果很好，<span class="grammar-hl">尤其</span>苹果很甜。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>前面要先说一个大范围，再用尤其挑出里面最突出的。</p>
+            <p>不能直接放在句子最开头单独使用。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>尤其苹果好吃。 <span class="ok">✔</span>水果都好吃，尤其苹果好吃。</p>
+            <p><span class="err">✖</span>尤其我喜欢看书。 <span class="ok">✔</span>我喜欢读书，尤其喜欢小说。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡5 多么 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>多么（duō me）｜程度副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用来感叹，强调程度很高，表达惊喜、感慨。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>多么 + 形容词！</p>
+            <div class="label-title">【例句】</div>
+            <p>1.这里<span class="grammar-hl">多么</span>美啊！</p>
+            <p>2.他<span class="grammar-hl">多么</span>努力！</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>大多用在感叹句，不是普通陈述句。句尾经常用“啊”。</p>
+            <p>不要和“多少”弄混，多少是问数量。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>多么三本书。 <span class="ok">✔</span>多么好看的书啊！</p>
+            <p><span class="err">✖</span>我多么吃饭。 <span class="ok">✔</span>这顿饭多么香！</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡6 共 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>共（gòng）｜范围副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>表示全部加起来，一共多少。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>共 + 数量</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我们<span class="grammar-hl">共</span>十个人。</p>
+            <p>2.这本书<span class="grammar-hl">共</span>五章。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>后面一定要接数字，用来算总数。</p>
+            <p>放在主语后面，数字前面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>共学生。 <span class="ok">✔</span>学生共20人。</p>
+            <p><span class="err">✖</span>共我两本书。 <span class="ok">✔</span>我共两本书。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡7 全 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>全（quán）｜范围副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>全部、所有，没有剩下的。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>名词 + 全 + 动词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.同学们<span class="grammar-hl">全</span>来了。</p>
+            <p>2.东西<span class="grammar-hl">全</span>卖完了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>用来表达“全部”，指里面每一个都包含在内。</p>
+            <p>放在名词后面，动词前面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>全同学来了。 <span class="ok">✔</span>同学们全来了。</p>
+            <p><span class="err">✖</span>全我吃完。 <span class="ok">✔</span>饭菜我全吃完。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡8 光 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>光（guāng）｜范围副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>只、仅仅，只算这一部分，别的不算。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>光 + 名词 / 动词 / 代词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">光</span>喝水不够。</p>
+            <p>2.<span class="grammar-hl">光</span>我就有三本。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>意思等于“只”，强调只有这一样，缺少别的。</p>
+            <p>口语里常用，书面句子尽量用“仅/仅仅”。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡9 仅 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>仅（jǐn）｜范围副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>只有、不多，数量很少。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>仅 + 数量 / 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.这里<span class="grammar-hl">仅</span>五个人。</p>
+            <p>2.他<span class="grammar-hl">仅</span>会说一点汉语。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>偏书面，口语更多用“只”。</p>
+            <p>用来表达数量不多，有限。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>仅我去。 <span class="ok">✔</span>仅我一人去。</p>
+            <p><span class="err">✖</span>仅很大。 <span class="ok">✔</span>房间仅10平米。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡10 仅仅 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>仅仅（jǐn jǐn）｜范围副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>和“仅”一样，强调数量很少，只有这么多。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>仅仅 + 数量 / 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我<span class="grammar-hl">仅仅</span>学了一年。</p>
+            <p>2.这里<span class="grammar-hl">仅仅</span>三本书。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>语气比“仅”更强，重点突出数量很少。</p>
+            <p>可以放在主语前面或者后面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>仅仅漂亮。 <span class="ok">✔</span>仅仅三个人来上课。</p>
+            <p><span class="err">✖</span>仅仅我喜欢。 <span class="ok">✔</span>仅仅我一个人喜欢。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡11 至少 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>至少（zhì shǎo）｜范围副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>最低的数量，不会比这个数字更少，可能更多。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>至少 + 数量</p>
+            <div class="label-title">【例句】</div>
+            <p>1.你<span class="grammar-hl">至少</span>等十分钟。</p>
+            <p>2.这里<span class="grammar-hl">至少</span>二十个学生。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>表示最低底线，真实数字大于或等于这个数。</p>
+            <p>后面一般搭配数字。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>至少很好看。 <span class="ok">✔</span>至少5个人。</p>
+            <p><span class="err">✖</span>至少我看书。 <span class="ok">✔</span>我至少看两页书。</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button class="nav-btn" id="prevBtn">上一张</button>
+<div class="page-info" id="pageText">1 / 12</div>
+<button class="nav-btn" id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        if(i===current){
+            el.classList.add("active");
+        }else{
+            el.classList.remove("active");
+        }
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

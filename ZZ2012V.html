@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZZ2012</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, sans-serif;
+    }
+    body {
+        background-color: #f7f9fc;
+        padding: 24px 16px;
+    }
+    h1 {
+        text-align: center;
+        color: #002b5c;
+        margin-bottom: 28px;
+        font-size: clamp(22px, 4vw, 28px);
+    }
+    .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .flashcard {
+        background: #ffffff;
+        border-radius: 20px;
+        min-height: 540px;
+        padding: 32px 20px;
+        box-shadow: 0 4px 14px rgba(0, 43, 92, 0.12);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .flashcard:hover {
+        box-shadow: 0 6px 20px rgba(0, 43, 92, 0.18);
+    }
+    /* 生词正面：大字 */
+    .front-text {
+        font-size: clamp(44px, 11vw, 64px);
+        font-weight: bold;
+        color: #002b5c;
+        text-align: center;
+        line-height: 1.9;
+    }
+    /* 练习卡正反面统一字号，句子居中 */
+    .back-text {
+        font-size: clamp(20px, 3.5vw, 24px);
+        color: #002b5c;
+        line-height: 2.0;
+        display: none;
+        width: 100%;
+        text-align: center;
+    }
+    .back-inner {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        text-align: left;
+    }
+    .back-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .card-img {
+        width: min(220px, 70vw);
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #eef2f7;
+    }
+    .text-part {
+        flex: 1;
+        min-width: 200px;
+    }
+    .text-part p {
+        margin: 4px 0;
+    }
+    .sentence-line {
+        width: 100%;
+        margin-top: 14px;
+        text-align: center;
+    }
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 26px;
+        flex-wrap: wrap;
+    }
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: #002b5c;
+        color: #ffffff;
+        font-size: clamp(16px, 3vw, 20px);
+        cursor: pointer;
+    }
+    button:hover {
+        opacity: 0.85;
+    }
+    .page-info {
+        text-align: center;
+        margin-top: 16px;
+        color: #002b5c;
+        font-size: clamp(16px, 3vw, 20px);
+    }
+</style>
+</head>
+<body>
+<h1>ZZ2012</h1>
+<div class="wrap">
+    <div class="flashcard" id="card">
+        <div class="front-text" id="front">减法</div>
+        <div class="back-text" id="back"></div>
+    </div>
+    <div class="page-info">
+        <span id="current">1</span> / <span id="total">32</span>
+    </div>
+    <div class="btn-group">
+        <button id="prev">上一张</button>
+        <button id="next">下一张</button>
+        <button id="shuffle">随机洗牌</button>
+    </div>
+</div>
+<script>
+    const cardList = [
+        // ======================第1组：1~6生词======================
+        {
+            front: "减法",
+            img: "./ZZ2012/jianfa.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/jianfa.jpg" alt="减法" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiǎn fǎ（名词）</p>
+                            <p>学习减法</p>
+                            <p>减法运算</p>
+                            <p>简单减法</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：在生活中我们不能只用加法看待收获，也要学会用减法放下不必要的负担。</div>
+                </div>
+            `
+        },
+        {
+            front: "奔跑",
+            img: "./ZZ2012/benpao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/benpao.jpg" alt="奔跑" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bēn pǎo（动词）</p>
+                            <p>奋力奔跑</p>
+                            <p>向前奔跑</p>
+                            <p>自由奔跑</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：无论遇到多大的阻碍，年轻人都应当向着自己的理想勇敢地奔跑。</div>
+                </div>
+            `
+        },
+        {
+            front: "随手",
+            img: "./ZZ2012/suishou.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/suishou.jpg" alt="随手" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>suí shǒu（副词）</p>
+                            <p>随手关门</p>
+                            <p>随手记录</p>
+                            <p>随手放下</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：看到值得思考的观点，我总会随手记下，方便以后深入地分析。</div>
+                </div>
+            `
+        },
+        {
+            front: "从容",
+            img: "./ZZ2012/congrong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/congrong.jpg" alt="从容" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>cóng róng（形容词）</p>
+                            <p>态度从容</p>
+                            <p>从容面对</p>
+                            <p>从容镇定</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：即使面对突如其来的挑战，成熟的人依旧可以保持从容的心态。</div>
+                </div>
+            `
+        },
+        {
+            front: "最初",
+            img: "./ZZ2012/zuichu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/zuichu.jpg" alt="最初" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zuì chū（名词）</p>
+                            <p>最初阶段</p>
+                            <p>最初想法</p>
+                            <p>最初印象</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：回想最初的选择，很多人会感慨自己已经发生了巨大的改变。</div>
+                </div>
+            `
+        },
+        {
+            front: "丝毫",
+            img: "./ZZ2012/sihao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/sihao.jpg" alt="丝毫" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>sī háo（形容词）</p>
+                            <p>丝毫不受影响</p>
+                            <p>丝毫没有动摇</p>
+                            <p>丝毫差别</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：外界的议论没有给他带来丝毫压力，他依旧坚持自己做事的原则。</div>
+                </div>
+            `
+        },
+        // 第1组配套练习卡
+        {
+            front: `①学习数学的时候，我们除了加法，也要掌握______。<br><br>②为了理想，他在风雨中努力向前______。<br><br>③看到好想法，我会______把要点记录下来。<br><br>④遇到突发状况，他依旧表现得十分______。<br><br>⑤回想______的愿望，很多人已经改变不少。<br><br>⑥流言没有给他带来______影响。`,
+            back: `①学习数学的时候，我们除了加法，也要掌握<strong>减法</strong>。<br><br>②为了理想，他在风雨中努力向前<strong>奔跑</strong>。<br><br>③看到好想法，我会<strong>随手</strong>把要点记录下来。<br><br>④遇到突发状况，他依旧表现得十分<strong>从容</strong>。<br><br>⑤回想<strong>最初</strong>的愿望，很多人已经改变不少。<br><br>⑥流言没有给他带来<strong>丝毫</strong>影响。`
+        },
+        // ======================第2组：7~12生词======================
+        {
+            front: "留恋",
+            img: "./ZZ2012/liulian.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/liulian.jpg" alt="留恋" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>liú liàn（动词）</p>
+                            <p>十分留恋</p>
+                            <p>留恋过去</p>
+                            <p>留恋故乡</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：虽然大城市的生活很精彩，但他内心依然留恋安静简单的家乡生活。</div>
+                </div>
+            `
+        },
+        {
+            front: "即将",
+            img: "./ZZ2012/jijiang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/jijiang.jpg" alt="即将" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jí jiāng（副词）</p>
+                            <p>即将到来</p>
+                            <p>即将结束</p>
+                            <p>即将开始</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：考试即将开始，请同学们把手机放到教室前面的桌子上。</div>
+                </div>
+            `
+        },
+        {
+            front: "欲望",
+            img: "./ZZ2012/yuwang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/yuwang.jpg" alt="欲望" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yù wàng（名词）</p>
+                            <p>内心欲望</p>
+                            <p>控制欲望</p>
+                            <p>物质欲望</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：人应当学会控制自己的欲望，不能被物质上的追求完全支配。</div>
+                </div>
+            `
+        },
+        {
+            front: "宁静",
+            img: "./ZZ2012/ningjing.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/ningjing.jpg" alt="宁静" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>níng jìng（形容词）</p>
+                            <p>环境宁静</p>
+                            <p>内心宁静</p>
+                            <p>宁静的夜晚</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：远离喧闹的城市以后，我们才更容易获得一份内心的宁静。</div>
+                </div>
+            `
+        },
+        {
+            front: "隔",
+            img: "./ZZ2012/ge.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/ge.jpg" alt="隔" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>gé（动词）</p>
+                            <p>隔一段时间</p>
+                            <p>隔着窗户</p>
+                            <p>隔很远</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：虽然我们隔着遥远的距离，但是网络依旧可以拉近彼此之间的沟通。</div>
+                </div>
+            `
+        },
+        {
+            front: "一辈子",
+            img: "./ZZ2012/yibeizi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/yibeizi.jpg" alt="一辈子" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yí bèi zi（名词）</p>
+                            <p>一辈子努力</p>
+                            <p>一辈子幸福</p>
+                            <p>辛苦一辈子</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：没有人可以一辈子一帆风顺，遇到挫折也是人生中很正常的经历。</div>
+                </div>
+            `
+        },
+        // 第2组配套练习卡
+        {
+            front: `①离开生活多年的小城，心中难免有些______。<br><br>②考试______开始，请大家准备好文具。<br><br>③人要学会控制自己内心的______。<br><br>④远离喧闹之后，才能获得内心的______。<br><br>⑤虽然我们______着千山万水，但心意相通。<br><br>⑥没有人可以______都过得一帆风顺。`,
+            back: `①离开生活多年的小城，心中难免有些<strong>留恋</strong>。<br><br>②考试<strong>即将</strong>开始，请大家准备好文具。<br><br>③人要学会控制自己内心的<strong>欲望</strong>。<br><br>④远离喧闹之后，才能获得内心的<strong>宁静</strong>。<br><br>⑤虽然我们<strong>隔</strong>着千山万水，但心意相通。<br><br>⑥没有人可以<strong>一辈子</strong>都过得一帆风顺。`
+        },
+        // ======================第3组：13~18生词======================
+        {
+            front: "总",
+            img: "./ZZ2012/zong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/zong.jpg" alt="总" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zǒng（副词）</p>
+                            <p>总是忘记</p>
+                            <p>总觉得</p>
+                            <p>总希望</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到困境的时候，人们总希望可以得到身边亲友的理解与支持。</div>
+                </div>
+            `
+        },
+        {
+            front: "婆婆",
+            img: "./ZZ2012/popo.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/popo.jpg" alt="婆婆" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>pó po（名词）</p>
+                            <p>婆婆家</p>
+                            <p>照顾婆婆</p>
+                            <p>婆婆的想法</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：如果想要家庭关系更加和睦，媳妇和婆婆之间需要更多互相体谅与包容。</div>
+                </div>
+            `
+        },
+        {
+            front: "老公",
+            img: "./ZZ2012/laogong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/laogong.jpg" alt="老公" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>lǎo gōng（名词）</p>
+                            <p>老公的工作</p>
+                            <p>相信老公</p>
+                            <p>和老公商量</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到重大的家庭决定，她的老公都会主动跟她认真商量之后再做选择。</div>
+                </div>
+            `
+        },
+        {
+            front: "理",
+            img: "./ZZ2012/li.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/li.jpg" alt="理" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>lǐ（动词）</p>
+                            <p>不理他</p>
+                            <p>理家务</p>
+                            <p>没人理</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：面对那些毫无意义的批评，你不必理会，专注做好自己该完成的事情就足够。</div>
+                </div>
+            `
+        },
+        {
+            front: "一连",
+            img: "./ZZ2012/yilian.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/yilian.jpg" alt="一连" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yì lián（副词）</p>
+                            <p>一连几天</p>
+                            <p>一连好几次</p>
+                            <p>一连发生</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：最近一连下了好几天雨，户外活动的计划只好暂时向后推迟。</div>
+                </div>
+            `
+        },
+        {
+            front: "失去",
+            img: "./ZZ2012/shiqu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/shiqu.jpg" alt="失去" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shī qù（动词）</p>
+                            <p>失去机会</p>
+                            <p>失去信心</p>
+                            <p>失去联系</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：当我们失去一些东西的时候，也可能会收获另外一种全新的体验。</div>
+                </div>
+            `
+        },
+        // 第3组配套练习卡
+        {
+            front: `①遇到困境的时候，人们______希望得到亲友的理解。<br><br>②想要家庭和睦，媳妇和______需要互相体谅。<br><br>③她很关心______，常常询问工作情况。<br><br>④无聊的批评不必______，专注做好自己。<br><br>⑤这里______几天下雨，户外活动只能推迟。<br><br>⑥不要因为一次失败就______信心。`,
+            back: `①遇到困境的时候，人们<strong>总</strong>希望得到亲友的理解。<br><br>②想要家庭和睦，媳妇和<strong>婆婆</strong>需要互相体谅。<br><br>③她很关心<strong>老公</strong>，常常询问工作情况。<br><br>④无聊的批评不必<strong>理</strong>，专注做好自己。<br><br>⑤这里<strong>一连</strong>几天下雨，户外活动只能推迟。<br><br>⑥不要因为一次失败就<strong>失去</strong>信心。`
+        },
+        // ======================第4组：19~28生词（10个）======================
+        {
+            front: "呗",
+            img: "./ZZ2012/bei.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/bei.jpg" alt="呗" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bei（助词）</p>
+                            <p>不想来就不来呗</p>
+                            <p>算了呗</p>
+                            <p>那就努力呗</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：既然现实条件暂时无法改变，那就调整心态继续努力呗。</div>
+                </div>
+            `
+        },
+        {
+            front: "可惜",
+            img: "./ZZ2012/kexi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/kexi.jpg" alt="可惜" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>kě xī（形容词）</p>
+                            <p>非常可惜</p>
+                            <p>实在可惜</p>
+                            <p>可惜错过了</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他本来很有机会获得奖项，可惜因为身体原因没能参加最后的比赛。</div>
+                </div>
+            `
+        },
+        {
+            front: "计较",
+            img: "./ZZ2012/jijiao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/jijiao.jpg" alt="计较" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jì jiào（动词）</p>
+                            <p>不计较得失</p>
+                            <p>计较小事</p>
+                            <p>过分计较</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：心胸开阔的人不会计较生活里面的小事，更看重长远的合作与感情。</div>
+                </div>
+            `
+        },
+        {
+            front: "同事",
+            img: "./ZZ2012/tongshi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/tongshi.jpg" alt="同事" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>tóng shì（名词）</p>
+                            <p>老同事</p>
+                            <p>和同事相处</p>
+                            <p>同事之间</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：在职场当中，懂得尊重他人，才能跟各位同事维持良好的工作关系。</div>
+                </div>
+            `
+        },
+        {
+            front: "怀疑",
+            img: "./ZZ2012/huaiyi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/huaiyi.jpg" alt="怀疑" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>huái yí（动词）</p>
+                            <p>怀疑结果</p>
+                            <p>不要怀疑自己</p>
+                            <p>产生怀疑</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到暂时的失败时，我们不要轻易怀疑自己的能力，应当冷静分析问题所在。</div>
+                </div>
+            `
+        },
+        {
+            front: "滋润",
+            img: "./ZZ2012/zirun.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/zirun.jpg" alt="滋润" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zī rùn（动词）</p>
+                            <p>滋润生活</p>
+                            <p>滋润心灵</p>
+                            <p>雨水滋润</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：阅读优秀的文学作品可以滋润我们的心灵，提升看待世界的角度。</div>
+                </div>
+            `
+        },
+        {
+            front: "信任",
+            img: "./ZZ2012/xinren.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/xinren.jpg" alt="信任" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>xìn rèn（动词）</p>
+                            <p>彼此信任</p>
+                            <p>获得信任</p>
+                            <p>信任朋友</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：一份长久的友情或者婚姻，都建立在彼此充分信任的基础之上。</div>
+                </div>
+            `
+        },
+        {
+            front: "协作",
+            img: "./ZZ2012/xiezuo.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/xiezuo.jpg" alt="协作" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>xié zuò（动词）</p>
+                            <p>团队协作</p>
+                            <p>互相协作</p>
+                            <p>共同协作</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：想要完成规模较大的项目，仅仅依靠个人力量远远不够，还需要大家密切协作。</div>
+                </div>
+            `
+        },
+        {
+            front: "孤单",
+            img: "./ZZ2012/gudan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/gudan.jpg" alt="孤单" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>gū dān（形容词）</p>
+                            <p>感到孤单</p>
+                            <p>十分孤单</p>
+                            <p>孤单的夜晚</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：就算身边有很多人，如果缺少精神上的交流，内心依旧会觉得十分孤单。</div>
+                </div>
+            `
+        },
+        {
+            front: "友情",
+            img: "./ZZ2012/youqing.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ2012/youqing.jpg" alt="友情" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yǒu qíng（名词）</p>
+                            <p>珍贵的友情</p>
+                            <p>维护友情</p>
+                            <p>深厚的友情</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：真正的友情不会因为距离和时间变淡，反而会经过考验之后变得更加牢固。</div>
+                </div>
+            `
+        },
+        // 第4组配套练习卡
+        {
+            front: `①条件就这样，接受现实努力______。<br><br>②很______，他错过了这次难得的机会。<br><br>③成熟的人不会______生活里面的小事。<br><br>④职场上，我们要和______友好相处。<br><br>⑤不要轻易______自己真实的能力。<br><br>⑥好的书籍可以______我们的精神世界。<br><br>⑦长久的关系离不开互相______。<br><br>⑧完成大项目离不开团队成员的密切______。<br><br>⑨缺少精神交流，人就容易感到______。<br><br>⑩时间和距离不会破坏真正珍贵的______。`,
+            back: `①条件就这样，接受现实努力<strong>呗</strong>。<br><br>②很<strong>可惜</strong>，他错过了这次难得的机会。<br><br>③成熟的人不会<strong>计较</strong>生活里面的小事。<br><br>④职场上，我们要和<strong>同事</strong>友好相处。<br><br>⑤不要轻易<strong>怀疑</strong>自己真实的能力。<br><br>⑥好的书籍可以<strong>滋润</strong>我们的精神世界。<br><br>⑦长久的关系离不开互相<strong>信任</strong>。<br><br>⑧完成大项目离不开团队成员的密切<strong>协作</strong>。<br><br>⑨缺少精神交流，人就容易感到<strong>孤单</strong>。<br><br>⑩时间和距离不会破坏真正珍贵的<strong>友情</strong>。`
+        }
+    ];
+    let currentIndex = 0;
+    let isShowBack = false;
+    let cards = [...cardList];
+    const frontDom = document.getElementById("front");
+    const backDom = document.getElementById("back");
+    const cardDom = document.getElementById("card");
+    const currentPage = document.getElementById("current");
+    const totalPage = document.getElementById("total");
+    totalPage.innerText = cards.length;
+    function renderCard() {
+        const item = cards[currentIndex];
+        frontDom.innerHTML = item.front;
+        backDom.innerHTML = item.back;
+        // 判断：如果是练习卡（包含下划线），正面使用练习字号；生词卡用超大汉字字号
+        if(String(item.front).includes("____")){
+            frontDom.style.fontSize = "clamp(20px,3.5vw,24px)";
+        }else{
+            frontDom.style.fontSize = "clamp(44px, 11vw, 64px)";
+        }
+        if (isShowBack) {
+            frontDom.style.display = "none";
+            backDom.style.display = "block";
+        } else {
+            frontDom.style.display = "block";
+            backDom.style.display = "none";
+        }
+        currentPage.innerText = currentIndex + 1;
+    }
+    cardDom.addEventListener("click", () => {
+        isShowBack = !isShowBack;
+        renderCard();
+    });
+    document.getElementById("prev").addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("next").addEventListener("click", () => {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("shuffle").addEventListener("click", () => {
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        currentIndex = 0;
+        isShowBack = false;
+        renderCard();
+    });
+    renderCard();
+</script>
+</body>
+</html>

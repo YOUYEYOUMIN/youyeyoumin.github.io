@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZZ202</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, sans-serif;
+    }
+    body {
+        background-color: #f7f9fc;
+        padding: 24px 16px;
+    }
+    h1 {
+        text-align: center;
+        color: #002b5c;
+        margin-bottom: 28px;
+        font-size: clamp(22px, 4vw, 28px);
+    }
+    .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .flashcard {
+        background: #ffffff;
+        border-radius: 20px;
+        min-height: 540px;
+        padding: 32px 20px;
+        box-shadow: 0 4px 14px rgba(0, 43, 92, 0.12);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .flashcard:hover {
+        box-shadow: 0 6px 20px rgba(0, 43, 92, 0.18);
+    }
+    /* 生词正面：大字 */
+    .front-text {
+        font-size: clamp(44px, 11vw, 64px);
+        font-weight: bold;
+        color: #002b5c;
+        text-align: center;
+        line-height: 1.9;
+    }
+    /* 练习卡正反面统一字号，句子居中 */
+    .back-text {
+        font-size: clamp(20px, 3.5vw, 24px);
+        color: #002b5c;
+        line-height: 2.0;
+        display: none;
+        width: 100%;
+        text-align: center;
+    }
+    .back-inner {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        text-align: left;
+    }
+    .back-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .card-img {
+        width: min(220px, 70vw);
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #eef2f7;
+    }
+    .text-part {
+        flex: 1;
+        min-width: 200px;
+    }
+    .text-part p {
+        margin: 4px 0;
+    }
+    .sentence-line {
+        width: 100%;
+        margin-top: 14px;
+        text-align: center;
+    }
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 26px;
+        flex-wrap: wrap;
+    }
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: #002b5c;
+        color: #ffffff;
+        font-size: clamp(16px, 3vw, 20px);
+        cursor: pointer;
+    }
+    button:hover {
+        opacity: 0.85;
+    }
+    .page-info {
+        text-align: center;
+        margin-top: 16px;
+        color: #002b5c;
+        font-size: clamp(16px, 3vw, 20px);
+    }
+</style>
+</head>
+<body>
+<h1>ZZ202</h1>
+<div class="wrap">
+    <div class="flashcard" id="card">
+        <div class="front-text" id="front">灾难</div>
+        <div class="back-text" id="back"></div>
+    </div>
+    <div class="page-info">
+        <span id="current">1</span> / <span id="total">0</span>
+    </div>
+    <div class="btn-group">
+        <button id="prev">上一张</button>
+        <button id="next">下一张</button>
+        <button id="shuffle">随机洗牌</button>
+    </div>
+</div>
+<script>
+    const cardList = [
+        // ======================第1组：1~6生词======================
+        {
+            front: "灾难",
+            img: "./ZZ202/zainan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/zainan.jpg" alt="灾难" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zāi nàn（名词）</p>
+                            <p>自然灾难</p>
+                            <p>面对灾难</p>
+                            <p>巨大灾难</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到灾难的时候，掌握生存技巧可以帮助我们保护自己。</div>
+                </div>
+            `
+        },
+        {
+            front: "生存",
+            img: "./ZZ202/shengcun.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/shengcun.jpg" alt="生存" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shēng cún（动词）</p>
+                            <p>生存下去</p>
+                            <p>生存条件</p>
+                            <p>生存技巧</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：学习简单的知识，能够提高我们在危险环境下生存的能力。</div>
+                </div>
+            `
+        },
+        {
+            front: "技巧",
+            img: "./ZZ202/jiqiao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/jiqiao.jpg" alt="技巧" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jì qiǎo（名词）</p>
+                            <p>逃生技巧</p>
+                            <p>实用技巧</p>
+                            <p>学习技巧</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：掌握一些自救技巧，在危机时刻可以救自己的生命。</div>
+                </div>
+            `
+        },
+        {
+            front: "地震",
+            img: "./ZZ202/dizhen.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/dizhen.jpg" alt="地震" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dì zhèn（名词）</p>
+                            <p>发生地震</p>
+                            <p>地震灾害</p>
+                            <p>遇到地震</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：如果发生地震，不要慌张，要学会正确保护自己。</div>
+                </div>
+            `
+        },
+        {
+            front: "毫无",
+            img: "./ZZ202/haowu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/haowu.jpg" alt="毫无" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>háo wú</p>
+                            <p>毫无准备</p>
+                            <p>毫无办法</p>
+                            <p>毫无意义</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：灾难常常来得很快，人们常常毫无准备。</div>
+                </div>
+            `
+        },
+        {
+            front: "危机",
+            img: "./ZZ202/weiji.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/weiji.jpg" alt="危机" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>wēi jī（名词）</p>
+                            <p>出现危机</p>
+                            <p>面对危机</p>
+                            <p>危机时刻</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：当危机出现的时候，冷静的头脑比慌乱更有用。</div>
+                </div>
+            `
+        },
+        // 第1组配套练习卡
+        {
+            front: `①遇到______，我们要学会保护自己的生命安全。<br><br>②掌握知识可以提高危险环境下的______能力。<br><br>③多学习自救______，关键时刻可以帮助我们。<br><br>④______发生的时候，记得不要到处乱跑。<br><br>⑤灾难突然到来，大家常常______准备。<br><br>⑥______来临时，保持冷静非常重要。`,
+            back: `①遇到<strong>灾难</strong>，我们要学会保护自己的生命安全。<br><br>②掌握知识可以提高危险环境下的<strong>生存</strong>能力。<br><br>③多学习自救<strong>技巧</strong>，关键时刻可以帮助我们。<br><br>④<strong>地震</strong>发生的时候，记得不要到处乱跑。<br><br>⑤灾难突然到来，大家常常<strong>毫无</strong>准备。<br><br>⑥<strong>危机</strong>来临时，保持冷静非常重要。`
+        },
+        // ======================第2组：7~12生词======================
+        {
+            front: "万分",
+            img: "./ZZ202/wanfen.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/wanfen.jpg" alt="万分" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>wàn fēn（副词）</p>
+                            <p>万分危险</p>
+                            <p>万分紧急</p>
+                            <p>万分感谢</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：在万分危险的环境里，不要做冲动的事情。</div>
+                </div>
+            `
+        },
+        {
+            front: "紧急",
+            img: "./ZZ202/jinji.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/jinji.jpg" alt="紧急" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jǐn jí（形容词）</p>
+                            <p>紧急情况</p>
+                            <p>紧急出口</p>
+                            <p>紧急处理</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到紧急情况，请立刻拨打求救电话。</div>
+                </div>
+            `
+        },
+        {
+            front: "具备",
+            img: "./ZZ202/jubei.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/jubei.jpg" alt="具备" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jù bèi（动词）</p>
+                            <p>具备条件</p>
+                            <p>具备能力</p>
+                            <p>具备知识</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：每个人都应该具备基础的自救知识。</div>
+                </div>
+            `
+        },
+        {
+            front: "伤",
+            img: "./ZZ202/shang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/shang.jpg" alt="伤" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shāng（动词）</p>
+                            <p>受伤</p>
+                            <p>伤到自己</p>
+                            <p>摔伤</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：乱跑很容易伤到自己，要选择安全的地方躲避。</div>
+                </div>
+            `
+        },
+        {
+            front: "后果",
+            img: "./ZZ202/houguo.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/houguo.jpg" alt="后果" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>hòu guǒ（名词）</p>
+                            <p>严重后果</p>
+                            <p>不好的后果</p>
+                            <p>想到后果</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：错误的逃生方式，会带来很严重的后果。</div>
+                </div>
+            `
+        },
+        {
+            front: "难以",
+            img: "./ZZ202/nanyi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/nanyi.jpg" alt="难以" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>nán yǐ</p>
+                            <p>难以想象</p>
+                            <p>难以判断</p>
+                            <p>难以处理</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：灾难带来的破坏，有时候让人难以想象。</div>
+                </div>
+            `
+        },
+        // 第2组配套练习卡
+        {
+            front: `①这是一个______危险的处境，千万不要冲动。<br><br>②遇到______情况，记得尽快求救。<br><br>③我们应当______一些基础自救的知识。<br><br>④乱跳乱跑容易______到自己。<br><br>⑤做错选择会带来严重的______。<br><br>⑥灾难的破坏力有时让人______想象。`,
+            back: `①这是一个<strong>万分</strong>危险的处境，千万不要冲动。<br><br>②遇到<strong>紧急</strong>情况，记得尽快求救。<br><br>③我们应当<strong>具备</strong>一些基础自救的知识。<br><br>④乱跳乱跑容易<strong>伤</strong>到自己。<br><br>⑤做错选择会带来严重的<strong>后果</strong>。<br><br>⑥灾难的破坏力有时让人<strong>难以</strong>想象。`
+        },
+        // ======================第3组：13~18生词======================
+        {
+            front: "假设",
+            img: "./ZZ202/jiashe.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/jiashe.jpg" alt="假设" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiǎ shè（动词）</p>
+                            <p>假设发生地震</p>
+                            <p>假设一种情况</p>
+                            <p>假设出现危险</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们可以假设发生地震，想一想该怎么做。</div>
+                </div>
+            `
+        },
+        {
+            front: "提供",
+            img: "./ZZ202/tigong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/tigong.jpg" alt="提供" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>tí gōng（动词）</p>
+                            <p>提供帮助</p>
+                            <p>提供信息</p>
+                            <p>提供安全空间</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：结实的桌子可以为我们提供临时的保护。</div>
+                </div>
+            `
+        },
+        {
+            front: "逃生",
+            img: "./ZZ202/taosheng.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/taosheng.jpg" alt="逃生" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>táo shēng（动词）</p>
+                            <p>逃生路线</p>
+                            <p>逃生方法</p>
+                            <p>努力逃生</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：记住正确的逃生方法，能增加活下来的机会。</div>
+                </div>
+            `
+        },
+        {
+            front: "此",
+            img: "./ZZ202/ci.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/ci.jpg" alt="此" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>cǐ（代词）</p>
+                            <p>此时</p>
+                            <p>此地</p>
+                            <p>此刻</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：此时不要往楼下跳，会非常危险。</div>
+                </div>
+            `
+        },
+        {
+            front: "剧烈",
+            img: "./ZZ202/julie.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/julie.jpg" alt="剧烈" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jù liè（形容词）</p>
+                            <p>剧烈摇晃</p>
+                            <p>剧烈震动</p>
+                            <p>剧烈运动</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：地面开始剧烈摇晃的时候，立刻找地方躲起来。</div>
+                </div>
+            `
+        },
+        {
+            front: "摇晃",
+            img: "./ZZ202/yaohuang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/yaohuang.jpg" alt="摇晃" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yáo huàng（动词）</p>
+                            <p>不停地摇晃</p>
+                            <p>开始摇晃</p>
+                            <p>房屋摇晃</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：楼房摇晃，不要靠近窗户和柜子。</div>
+                </div>
+            `
+        },
+        // 第3组配套练习卡
+        {
+            front: `①______发生地震，你知道该如何保护自己吗？<br><br>②结实家具可以______短暂的安全保护。<br><br>③牢记______路线，危险时刻保护生命。<br><br>④______刻不要选择跳楼，那样十分危险。<br><br>⑤地面______震动，马上就近躲避。<br><br>⑥屋子开始______，远离柜子和玻璃窗。`,
+            back: `①<strong>假设</strong>发生地震，你知道该如何保护自己吗？<br><br>②结实家具可以<strong>提供</strong>短暂的安全保护。<br><br>③牢记<strong>逃生</strong>路线，危险时刻保护生命。<br><br>④<strong>此</strong>刻不要选择跳楼，那样十分危险。<br><br>⑤地面<strong>剧烈</strong>震动，马上就近躲避。<br><br>⑥屋子开始<strong>摇晃</strong>，远离柜子和玻璃窗。`
+        },
+        // ======================第4组：19~24生词======================
+        {
+            front: "结实",
+            img: "./ZZ202/jieshi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/jieshi.jpg" alt="结实" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiē shi（形容词）</p>
+                            <p>结实的桌子</p>
+                            <p>结实牢固</p>
+                            <p>身体结实</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：躲在结实的桌子下面，可以保护头部。</div>
+                </div>
+            `
+        },
+        {
+            front: "柜子",
+            img: "./ZZ202/gui zi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/gui zi.jpg" alt="柜子" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>guì zi（名词）</p>
+                            <p>高柜子</p>
+                            <p>木制柜子</p>
+                            <p>柜子倒下</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：地震的时候，高大的柜子有可能倒下来伤人。</div>
+                </div>
+            `
+        },
+        {
+            front: "以免",
+            img: "./ZZ202/yimian.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/yimian.jpg" alt="以免" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yǐ miǎn（连词）</p>
+                            <p>以免受伤</p>
+                            <p>以免发生危险</p>
+                            <p>以免受到伤害</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：远离柜子，以免被掉下来的东西砸到。</div>
+                </div>
+            `
+        },
+        {
+            front: "砸",
+            img: "./ZZ202/za.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/za.jpg" alt="砸" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zá（动词）</p>
+                            <p>砸到头部</p>
+                            <p>被石头砸</p>
+                            <p>砸伤</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：墙上物品掉下来，很容易砸到人。</div>
+                </div>
+            `
+        },
+        {
+            front: "承重",
+            img: "./ZZ202/chengzhong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/chengzhong.jpg" alt="承重" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>chéng zhòng</p>
+                            <p>承重能力</p>
+                            <p>承重的房顶</p>
+                            <p>可以承重</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：房顶承重有限，不要站在危险的位置。</div>
+                </div>
+            `
+        },
+        {
+            front: "与其",
+            img: "./ZZ202/yuqi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/yuqi.jpg" alt="与其" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yǔ qí（连词）</p>
+                            <p>与其乱跑不如躲避</p>
+                            <p>与其冒险不如等待</p>
+                            <p>与其害怕不如冷静</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：与其盲目向外跑，不如就近找安全位置保护自己。</div>
+                </div>
+            `
+        },
+        // 第4组配套练习卡
+        {
+            front: `①躲在______桌子下方，保护好自己头部。<br><br>②地震时高大______容易倾倒，一定要远离。<br><br>③远离高处物品，______被掉落物体砸伤。<br><br>④墙上东西掉下来，有可能______伤人。<br><br>⑤屋顶______能力有限，不能久待。<br><br>⑥______盲目乱跑，不如就地躲避保护自己。`,
+            back: `①躲在<strong>结实</strong>桌子下方，保护好自己头部。<br><br>②地震时高大<strong>柜子</strong>容易倾倒，一定要远离。<br><br>③远离高处物品，<strong>以免</strong>被掉落物体砸伤。<br><br>④墙上东西掉下来，有可能<strong>砸</strong>伤人。<br><br>⑤屋顶<strong>承重</strong>能力有限，不能久待。<br><br>⑥<strong>与其</strong>盲目乱跑，不如就地躲避保护自己。`
+        },
+        // ======================第5组：25~30生词======================
+        {
+            front: "宁可",
+            img: "./ZZ202/ningke.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/ningke.jpg" alt="宁可" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>nìng kě（连词）</p>
+                            <p>宁可等待救援</p>
+                            <p>宁可慢不要冒险</p>
+                            <p>宁可安静等待</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：被困住的时候，宁可安静等待，也不要做危险动作。</div>
+                </div>
+            `
+        },
+        {
+            front: "除非",
+            img: "./ZZ202/chufei.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/chufei.jpg" alt="除非" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>chú fēi（连词）</p>
+                            <p>除非非常安全</p>
+                            <p>除非确定安全</p>
+                            <p>除非必须移动</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：除非环境已经完全安全，否则不要随便移动。</div>
+                </div>
+            `
+        },
+        {
+            front: "废墟",
+            img: "./ZZ202/feixu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/feixu.jpg" alt="废墟" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>fèi xū（名词）</p>
+                            <p>一片废墟</p>
+                            <p>身处废墟</p>
+                            <p>从废墟获救</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：如果被困在废墟下面，要保存体力等待别人来救。</div>
+                </div>
+            `
+        },
+        {
+            front: "冷静",
+            img: "./ZZ202/lengjing.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/lengjing.jpg" alt="冷静" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>lěng jìng（形容词）</p>
+                            <p>保持冷静</p>
+                            <p>头脑冷静</p>
+                            <p>冷静思考</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：越是危险，越需要让自己保持冷静。</div>
+                </div>
+            `
+        },
+        {
+            front: "发出",
+            img: "./ZZ202/fachu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/fachu.jpg" alt="发出" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>fā chū（动词）</p>
+                            <p>发出声音</p>
+                            <p>发出求救信号</p>
+                            <p>发出光亮</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：被困住以后，可以敲击物体发出求救信号。</div>
+                </div>
+            `
+        },
+        {
+            front: "信号",
+            img: "./ZZ202/xinhao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/xinhao.jpg" alt="信号" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>xìn hào（名词）</p>
+                            <p>求救信号</p>
+                            <p>发出信号</p>
+                            <p>接收信号</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：利用响声或者灯光，向外发送求救信号。</div>
+                </div>
+            `
+        },
+        // 第5组配套练习卡
+        {
+            front: `①被困时，______等待救援，也不要乱挣扎。<br><br>②______确认环境安全，不然不要随意走动。<br><br>③如果埋在______之下，尽量节省体力。<br><br>④危险时刻，一定要尽量保持______。<br><br>⑤敲击硬物可以______求救的声响。<br><br>⑥灯光和敲击都可以当做求救______。`,
+            back: `①被困时，<strong>宁可</strong>等待救援，也不要乱挣扎。<br><br>②<strong>除非</strong>确认环境安全，不然不要随意走动。<br><br>③如果埋在<strong>废墟</strong>之下，尽量节省体力。<br><br>④危险时刻，一定要尽量保持<strong>冷静</strong>。<br><br>⑤敲击硬物可以<strong>发出</strong>求救的声响。<br><br>⑥灯光和敲击都可以当做求救<strong>信号</strong>。`
+        },
+        // ======================第6组：31~36生词======================
+        {
+            front: "烟雾",
+            img: "./ZZ202/yanwu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/yanwu.jpg" alt="烟雾" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yān wù（名词）</p>
+                            <p>浓厚烟雾</p>
+                            <p>躲避烟雾</p>
+                            <p>吸入烟雾</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：火灾现场的烟雾对人的伤害很大。</div>
+                </div>
+            `
+        },
+        {
+            front: "着火",
+            img: "./ZZ202/zhaohuo.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/zhaohuo.jpg" alt="着火" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zháo huǒ（动词）</p>
+                            <p>房间着火</p>
+                            <p>大楼着火</p>
+                            <p>家里着火</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：家里一旦着火，第一时间要想办法离开。</div>
+                </div>
+            `
+        },
+        {
+            front: "弄",
+            img: "./ZZ202/nong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/nong.jpg" alt="弄" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>nòng（动词）</p>
+                            <p>弄湿毛巾</p>
+                            <p>弄干净</p>
+                            <p>弄破</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：可以把毛巾弄湿，捂住嘴巴鼻子。</div>
+                </div>
+            `
+        },
+        {
+            front: "叠",
+            img: "./ZZ202/die.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/die.jpg" alt="叠" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dié（动词）</p>
+                            <p>叠好几层</p>
+                            <p>叠毛巾</p>
+                            <p>叠衣服</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：把毛巾叠几层，捂住口鼻减少吸入烟雾。</div>
+                </div>
+            `
+        },
+        {
+            front: "有害",
+            img: "./ZZ202/youhai.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/youhai.jpg" alt="有害" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yǒu hài（形容词）</p>
+                            <p>有害气体</p>
+                            <p>有害物质</p>
+                            <p>对身体有害</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：火灾会产生很多有害气体，不要直接吸入。</div>
+                </div>
+            `
+        },
+        {
+            front: "气体",
+            img: "./ZZ202/qiti.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/qiti.jpg" alt="气体" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qì tǐ（名词）</p>
+                            <p>有毒气体</p>
+                            <p>燃烧产生气体</p>
+                            <p>有害气体</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：燃烧产生的气体很多都有毒，一定要避开。</div>
+                </div>
+            `
+        },
+        // 第6组配套练习卡
+        {
+            front: `①火灾中大量______会伤害我们呼吸道。<br><br>②屋子______的时候，优先撤离不要贪恋财物。<br><br>③______湿毛巾，捂住自己口鼻。<br><br>④把毛巾______多层，过滤浓烟。<br><br>⑤燃烧会产生______的物质。<br><br>⑥有毒气体和高温火焰同样危险。`,
+            back: `①火灾中大量<strong>烟雾</strong>会伤害我们呼吸道。<br><br>②屋子<strong>着火</strong>的时候，优先撤离不要贪恋财物。<br><br>③<strong>弄</strong>湿毛巾，捂住自己口鼻。<br><br>④把毛巾<strong>叠</strong>多层，过滤浓烟。<br><br>⑤燃烧会产生<strong>有害</strong>的物质。<br><br>⑥有毒气体和高温火焰同样危险。`
+        },
+        // ======================第7组：37~42生词======================
+        {
+            front: "导致",
+            img: "./ZZ202/daozhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/daozhi.jpg" alt="导致" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dǎo zhì（动词）</p>
+                            <p>导致受伤</p>
+                            <p>导致危险</p>
+                            <p>导致灾难</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：吸入浓烟，会导致人昏迷，非常危险。</div>
+                </div>
+            `
+        },
+        {
+            front: "火灾",
+            img: "./ZZ202/huozai.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/huozai.jpg" alt="火灾" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>huǒ zāi（名词）</p>
+                            <p>发生火灾</p>
+                            <p>应对火灾</p>
+                            <p>火灾现场</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到火灾，记住要弯腰低姿向前移动。</div>
+                </div>
+            `
+        },
+        {
+            front: "姿势",
+            img: "./ZZ202/zishi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/zishi.jpg" alt="姿势" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zī shì（名词）</p>
+                            <p>弯腰的姿势</p>
+                            <p>保护姿势</p>
+                            <p>正确姿势</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：逃离火场，弯腰低姿是很重要的姿势。</div>
+                </div>
+            `
+        },
+        {
+            front: "清",
+            img: "./ZZ202/qing.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/qing.jpg" alt="清" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qīng（形容词）</p>
+                            <p>空气清</p>
+                            <p>头脑清醒</p>
+                            <p>看得清</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：靠近地面空气比较清，浓烟飘在上边。</div>
+                </div>
+            `
+        },
+        {
+            front: "场地",
+            img: "./ZZ202/changdi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/changdi.jpg" alt="场地" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>chǎng dì（名词）</p>
+                            <p>安全场地</p>
+                            <p>空旷场地</p>
+                            <p>撤离到场地</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：逃出之后，要快速来到空旷安全的场地。</div>
+                </div>
+            `
+        },
+        {
+            front: "电源",
+            img: "./ZZ202/dianyuan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/dianyuan.jpg" alt="电源" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>diàn yuán（名词）</p>
+                            <p>切断电源</p>
+                            <p>关掉电源</p>
+                            <p>电源起火</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：电器起火，条件允许先切断电源。</div>
+                </div>
+            `
+        },
+        // 第7组配套练习卡
+        {
+            front: `①吸入浓烟会______人昏迷甚至失去意识。<br><br>②发生______不要乘坐电梯，要走楼梯。<br><br>③逃离浓烟环境要保持弯腰低身的______。<br><br>④靠近地面空气更______，尽量压低身体。<br><br>⑤脱险之后转移到开阔安全的______。<br><br>⑥电器起火，优先切断______。`,
+            back: `①吸入浓烟会<strong>导致</strong>人昏迷甚至失去意识。<br><br>②发生<strong>火灾</strong>不要乘坐电梯，要走楼梯。<br><br>③逃离浓烟环境要保持弯腰低身的<strong>姿势</strong>。<br><br>④靠近地面空气更<strong>清</strong>，尽量压低身体。<br><br>⑤脱险之后转移到开阔安全的<strong>场地</strong>。<br><br>⑥电器起火，优先切断<strong>电源</strong>。`
+        },
+        // ======================第8组：43~48生词======================
+        {
+            front: "投",
+            img: "./ZZ202/tou.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/tou.jpg" alt="投" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>tóu（动词）</p>
+                            <p>投进水里</p>
+                            <p>投入水中</p>
+                            <p>向下投</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：洪水爆发时，不要把船贸然投进湍急的河水。</div>
+                </div>
+            `
+        },
+        {
+            front: "游",
+            img: "./ZZ202/you.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/you.jpg" alt="游" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yóu（动词）</p>
+                            <p>游泳</p>
+                            <p>游过去</p>
+                            <p>在水里游</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：洪水水流很急，不要试图在洪水里游。</div>
+                </div>
+            `
+        },
+        {
+            front: "山坡",
+            img: "./ZZ202/shanpo.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/shanpo.jpg" alt="山坡" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shān pō（名词）</p>
+                            <p>高高的山坡</p>
+                            <p>爬上山坡</p>
+                            <p>山坡滑坡</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到泥石流，快速向山坡两边高处跑。</div>
+                </div>
+            `
+        },
+        {
+            front: "转移",
+            img: "./ZZ202/zhuanyi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/zhuanyi.jpg" alt="转移" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhuǎn yí（动词）</p>
+                            <p>快速转移</p>
+                            <p>转移到高处</p>
+                            <p>及时转移</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：收到危险预警，要尽快向安全地方转移。</div>
+                </div>
+            `
+        },
+        {
+            front: "顺",
+            img: "./ZZ202/shun.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/shun.jpg" alt="顺" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shùn（动词）</p>
+                            <p>顺着水流</p>
+                            <p>顺着道路</p>
+                            <p>顺着这个方向</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：泥石流来的时候，千万不要顺着沟谷往下跑。</div>
+                </div>
+            `
+        },
+        {
+            front: "避",
+            img: "./ZZ202/bi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/bi.jpg" alt="避" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bì（动词）</p>
+                            <p>避开危险</p>
+                            <p>避险</p>
+                            <p>避开洪水</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：学会避开危险地带，保护自己生命。</div>
+                </div>
+            `
+        },
+        // 第8组配套练习卡
+        {
+            front: `①洪水来临，不要盲目______入湍急水流。<br><br>②洪水水流凶猛，不要尝试在洪水里______。<br><br>③泥石流发生，尽快向两侧______高处逃跑。<br><br>④接到预警，及时______到安全高地。<br><br>⑤泥石流来了，不能______着山谷向下跑。<br><br>⑥要懂得______开危险区域。`,
+            back: `①洪水来临，不要盲目<strong>投</strong>入湍急水流。<br><br>②洪水水流凶猛，不要尝试在洪水里<strong>游</strong>。<br><br>③泥石流发生，尽快向两侧<strong>山坡</strong>高处逃跑。<br><br>④接到预警，及时<strong>转移</strong>到安全高地。<br><br>⑤泥石流来了，不能<strong>顺</strong>着山谷向下跑。<br><br>⑥要懂得<strong>避</strong>开危险区域。`
+        },
+        // ======================第9组：49~52生词（4个，不足6个）======================
+        {
+            front: "不至于",
+            img: "./ZZ202/buzhiyu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/buzhiyu.jpg" alt="不至于" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bù zhì yú（连词）</p>
+                            <p>不至于受伤</p>
+                            <p>不至于很危险</p>
+                            <p>不至于无法逃生</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：掌握自救知识，遇到灾难不至于完全慌乱。</div>
+                </div>
+            `
+        },
+        {
+            front: "不止",
+            img: "./ZZ202/buzhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/buzhi.jpg" alt="不止" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bù zhǐ</p>
+                            <p>不止一次</p>
+                            <p>不止一种</p>
+                            <p>不止这些</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：需要学习的自救知识，还不止上面这些。</div>
+                </div>
+            `
+        },
+        {
+            front: "八成",
+            img: "./ZZ202/bacheng.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/bacheng.jpg" alt="八成" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bā chéng（副词）</p>
+                            <p>八成会遇到</p>
+                            <p>八成很危险</p>
+                            <p>八成来不及</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到这种错误操作，八成会带来伤害。</div>
+                </div>
+            `
+        },
+        {
+            front: "尊重",
+            img: "./ZZ202/zunzhong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ202/zunzhong.jpg" alt="尊重" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zūn zhòng（动词）</p>
+                            <p>尊重自然</p>
+                            <p>尊重规律</p>
+                            <p>尊重生命</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们要尊重自然，也要学习和危险相处。</div>
+                </div>
+            `
+        },
+        // 第9组配套练习卡
+        {
+            front: `①学好自救，遇到危险______完全没有办法。<br><br>②自救的知识______课本写的这些。<br><br>③这么做，______会造成不必要伤害。<br><br>④我们应当______自然，学会保护自己。`,
+            back: `①学好自救，遇到危险<strong>不至于</strong>完全没有办法。<br><br>②自救的知识<strong>不止</strong>课本写的这些。<br><br>③这么做，<strong>八成</strong>会造成不必要伤害。<br><br>④我们应当<strong>尊重</strong>自然，学会保护自己。`
+        }
+    ];
+    let currentIndex = 0;
+    let isShowBack = false;
+    let cards = [...cardList];
+    const frontDom = document.getElementById("front");
+    const backDom = document.getElementById("back");
+    const cardDom = document.getElementById("card");
+    const currentPage = document.getElementById("current");
+    const totalPage = document.getElementById("total");
+    totalPage.innerText = cards.length;
+    function renderCard() {
+        const item = cards[currentIndex];
+        frontDom.innerHTML = item.front;
+        backDom.innerHTML = item.back;
+        // 判断：如果是练习卡（包含下划线），正面使用练习字号；生词卡用超大汉字字号
+        if(String(item.front).includes("____")){
+            frontDom.style.fontSize = "clamp(20px,3.5vw,24px)";
+        }else{
+            frontDom.style.fontSize = "clamp(44px, 11vw, 64px)";
+        }
+        if (isShowBack) {
+            frontDom.style.display = "none";
+            backDom.style.display = "block";
+        } else {
+            frontDom.style.display = "block";
+            backDom.style.display = "none";
+        }
+        currentPage.innerText = currentIndex + 1;
+    }
+    cardDom.addEventListener("click", () => {
+        isShowBack = !isShowBack;
+        renderCard();
+    });
+    document.getElementById("prev").addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("next").addEventListener("click", () => {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("shuffle").addEventListener("click", () => {
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        currentIndex = 0;
+        isShowBack = false;
+        renderCard();
+    });
+    renderCard();
+</script>
+</body>
+</html>

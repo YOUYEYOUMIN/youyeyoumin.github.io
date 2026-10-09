@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>汉语限时速读练习 HSK4‑5｜鱼类主题</title>
+<style>
+*{box-sizing:border-box;font-family:"Microsoft Yahei",PingFang SC,sans-serif;margin:0;padding:0}
+body{background:#f6f4f1;padding:24px;color:#333}
+.container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:24px}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 14px rgba(0,0,0.06)}
+.tab-wrap{display:flex;gap:8px;margin-bottom:16px}
+.tab-btn{border:none;border-radius:10px;padding:10px 16px;font-size:15px;cursor:pointer;background:#e9e6e1;color:#444;transition:0.2s}
+.tab-btn.active{background:#7f8c85;color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.timer{background:#ece6dd;border-radius:12px;padding:14px;text-align:center;font-size:22px;font-weight:bold;color:#5a4f44;margin-bottom:16px}
+.btns{display:flex;gap:12px;margin-bottom:18px}
+button{border:none;border-radius:10px;padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s}
+.btn-primary{background:#7f8c85;color:#fff}
+.btn-primary:hover{background:#67746d}
+.btn-ghost{background:#e9e6e1;color:#444}
+.btn-ghost:hover{background:#dcd7cf}
+.article{font-size:17px;line-height:1.9;margin-bottom:24px}
+.sentence{display:inline;transition:opacity 0.35s}
+.sentence.hide{opacity:0;pointer-events:none}
+/*生词蓝色，语法红色*/
+.word-mark{color:#3478c9;font-weight:500}
+.grammar-mark{color:#c24b4b;font-weight:500}
+.q-title{font-size:18px;margin-bottom:18px}
+.option{display:flex;gap:10px;padding:12px;background:#faf8f5;border-radius:10px;margin-bottom:10px;cursor:pointer}
+.option:hover{background:#f1ede7}
+.option input{margin-top:4px}
+.ans-box{margin-top:20px;padding:16px;border-radius:12px;background:#eef4ee;display:none}
+.ans-box.show{display:block}
+.vocab-grammar-wrap{display:none}
+.vocab-grammar-wrap.active{display:block}
+.vocab-grammar{padding-top:18px}
+/*生词、语法分框*/
+.vocab-box{background:#edf4fc;border-radius:12px;padding:16px;margin-bottom:16px}
+.grammar-box{background:#fcf0f0;border-radius:12px;padding:16px;margin-bottom:16px}
+.fill-box{margin-top:16px;background:#f7f4ef;padding:16px;border-radius:12px}
+.fill-answer{color:#c24b4b;font-weight:bold;display:none}
+.fill-answer.show{display:block}
+@media(max-width:860px){.container{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <!--左侧：标签、计时、课文、题目 -->
+  <div class="card">
+    <div class="tab-wrap">
+      <button class="tab-btn active" data-tab="tab1">速读一｜活鱼保鲜(1′)</button>
+      <button class="tab-btn" data-tab="tab2">速读二｜鳗鲡(1′)</button>
+      <button class="tab-btn" data-tab="tab3">速读三｜金鱼春季管理(2′)</button>
+    </div>
+    <div class="timer">剩余时间：<span id="timeText">01:00</span></div>
+    <div class="btns">
+      <button class="btn-primary" id="startBtn">开始限时阅读</button>
+      <button class="btn-ghost" id="resetBtn">重置</button>
+    </div>
+
+    <!-- ==================速读一 活鱼保鲜 1分钟================== -->
+    <div class="tab-content active" id="tab1">
+      <div class="article">
+        <span class="sentence">怎样使活鱼<span class="word-mark">保鲜</span>时间长一些呢？</span>
+        <span class="sentence">可以把活鱼放在一个盆里，再找一个大型塑料瓶，装上半瓶水，封住瓶口上下快速<span class="word-mark">摇动</span>，使大量空气<span class="grammar-mark">融入</span>水中。</span>
+        <span class="sentence">然后把瓶中的水倒入鱼盆里，盆里加满这样的水后，鱼因为得到<span class="word-mark">充足</span>的氧气会比较活跃。</span>
+        <span class="sentence"><span class="grammar-mark">当</span>发现鱼翻白了，<span class="grammar-mark">可以</span>倒出一些水，再用上述方法换水，鱼很快又会恢复<span class="word-mark">活力</span>。</span>
+      </div>
+      <div class="q-title">1) 本文讲的是：</div>
+      <label class="option">
+        <input type="radio" name="q1" value="A">
+        <span>A. 怎样养鱼</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q1" value="B">
+        <span>B. 怎么给鱼换水</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q1" value="C">
+        <span>C. 怎样使活鱼活的时间长一些</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q1" value="D">
+        <span>D. 鱼应该放在盆里</span>
+      </label>
+
+      <div class="q-title">2) 不断摇动装水的瓶子，是为了：</div>
+      <label class="option">
+        <input type="radio" name="q12" value="A">
+        <span>A. 把瓶里的水倒进盆里</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q12" value="B">
+        <span>B. 让水中有更多的空气</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q12" value="C">
+        <span>C. 容易往瓶子里装水</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q12" value="D">
+        <span>D. 倒出一些水</span>
+      </label>
+
+      <div class="q-title">3) “鱼翻白了”的意思是：</div>
+      <label class="option">
+        <input type="radio" name="q13" value="A">
+        <span>A. 鱼快死了</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q13" value="B">
+        <span>B. 鱼变成白色的了</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q13" value="C">
+        <span>C. 鱼很活跃</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q13" value="D">
+        <span>D. 鱼恢复了活力</span>
+      </label>
+
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>正确答案：1)C 2)B 3)A</strong></p>
+        <p>解析：短文介绍延长活鱼存活时间的办法；摇瓶子目的让空气进到水里；鱼翻白代表鱼快要死亡。</p>
+      </div>
+    </div>
+
+    <!-- ==================速读二 鳗鲡 1分钟================== -->
+    <div class="tab-content" id="tab2">
+      <div class="article">
+        <span class="sentence">人们常说：“鱼离不开水。”可是自然界中有的鱼<span class="grammar-mark">就</span>可以离开水而不死。</span>
+        <span class="sentence"><span class="word-mark">鳗鲡</span>就是其中之一。</span>
+        <span class="sentence">鳗鲡在河里生活15到20年后，就开始了它的远程<span class="word-mark">旅行</span>。</span>
+        <span class="sentence">它能从水里游到陆地上，利用夜间的<span class="word-mark">露水</span>，经过草地<span class="word-mark">移居</span>到其他河流或湖泊中，最后入海。</span>
+        <span class="sentence">下沉到几十米甚至几百米的地方<span class="word-mark">产卵</span>，然后死去。</span>
+        <span class="sentence">从出发地到产卵地，最远<span class="word-mark">行程</span>可达七八千公里。</span>
+      </div>
+      <div class="q-title">根据这段短文可以知道：</div>
+      <label class="option">
+        <input type="radio" name="q2" value="A">
+        <span>A. 鳗鲡离开水就死</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q2" value="B">
+        <span>B. 鳗鲡生活在陆地</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q2" value="C">
+        <span>C. 鳗鲡是一种能离开水的鱼</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q2" value="D">
+        <span>D. 所有的鱼离开水都会死</span>
+      </label>
+
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>正确答案：C</strong></p>
+        <p>解析：短文开头点明，鳗鲡可以离开水不死；A、D和原文相反；鳗鲡主要生活在水里，只是可以短时间到陆地，B错误。</p>
+      </div>
+    </div>
+
+    <!-- ==================速读三 金鱼春季管理 2分钟================== -->
+    <div class="tab-content" id="tab3">
+      <div class="article">
+        <span class="sentence">春天到了，金鱼在经过漫长的<span class="word-mark">冬眠期</span>后，开始醒来。</span>
+        <span class="sentence">由于金鱼在冬眠状态下过冬，很少进食，冬天过后，鱼的<span class="word-mark">体质</span>大大减弱，所以金鱼的春季管理非常重要。</span>
+        <span class="sentence">搞好金鱼的春季管理，关系到金鱼的体力恢复及<span class="word-mark">产卵繁殖</span>。</span>
+        <span class="sentence">如何进行金鱼的春季管理呢？</span>
+        <span class="sentence">首先，随着气温的回升，要逐渐适量地喂一些小红虫，使金鱼尽快恢复体力。同时要增加光照。</span>
+        <span class="sentence">第二，要掌握好时间，将金鱼由室内搬到室外喂养。一般是在三月二十日前后，这时天气比较暖和。</span>
+        <span class="sentence">第三，要注意做好<span class="word-mark">防病</span>工作。春季气温变化较大，如果管理不当，金鱼很容易生病。</span>
+        <span class="sentence">第四，要随着气温的变化给鱼换水，不可换水太勤。</span>
+        <span class="sentence">最后，每天早晚要注意观察鱼的游动、吃食、排便等是否正常。<span class="grammar-mark">发现</span>病情<span class="grammar-mark">及时</span>采取治疗措施。</span>
+        <span class="sentence">只要按照上述这几条去做，就一定能够照料好金鱼，使其安全、顺利地度过春天。</span>
+      </div>
+      <div class="q-title">1) 本文主要讲的是：</div>
+      <label class="option">
+        <input type="radio" name="q3" value="A">
+        <span>A. 金鱼在冬天不吃食</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q3" value="B">
+        <span>B. 让金鱼安全度过春天</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q3" value="C">
+        <span>C. 金鱼的春季管理</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q3" value="D">
+        <span>D. 金鱼在春天醒了</span>
+      </label>
+
+      <div class="q-title">2) 本文介绍了金鱼春季管理中要注意：</div>
+      <label class="option">
+        <input type="radio" name="q32" value="A">
+        <span>A. 换水</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q32" value="B">
+        <span>B. 五个方面</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q32" value="C">
+        <span>C. 防病</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q32" value="D">
+        <span>D. 观察</span>
+      </label>
+
+      <div class="q-title">3) 从本文我们知道：</div>
+      <label class="option">
+        <input type="radio" name="q33" value="A">
+        <span>A. 冬天是金鱼的冬眠期</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q33" value="B">
+        <span>B. 天气暖和了，可以给金鱼多吃一些食</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q33" value="C">
+        <span>C. 要每天给金鱼换水</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="q33" value="D">
+        <span>D. 金鱼很容易生病</span>
+      </label>
+
+      <button class="btn-primary checkAnswerBtn" style="margin-top:10px;">查看答案</button>
+      <div class="ans-box">
+        <p><strong>正确答案：1)C 2)B 3)A</strong></p>
+        <p>解析：全文主题为金鱼春季管理；一共五点建议；原文提到金鱼经过漫长冬眠期过冬，对应A。</p>
+      </div>
+    </div>
+  </div>
+
+  <!--右侧：每篇速读独立生词、语法、语法填空练习 -->
+  <div class="card">
+    <!--速读一 生词语法-->
+    <div class="vocab-grammar-wrap active" id="vocab-tab1">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读一｜生词（HSK4‑5）</h3>
+          <p><strong>保鲜</strong>：保持食物新鲜，不容易变坏。</p>
+          <p><strong>摇动</strong>：来回晃动物体。</p>
+          <p><strong>融入</strong>：混合到另一种东西里面。</p>
+          <p><strong>充足</strong>：足够，够用。</p>
+          <p><strong>活力</strong>：生命力，精神旺盛的状态。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读一｜语法</h3>
+          <p><strong>1. 当……，可以……</strong></p>
+          <p>含义：当某个情况发生的时候，可以做某事。</p>
+          <p>例句：<span class="grammar-mark">当</span>水变脏了，<span class="grammar-mark">可以</span>给鱼换水。</p>
+          <p><strong>2. 使 + 宾语 + 动词/形容词</strong>：让……变得……</p>
+          <p>例句：多晒太阳，使身体更健康。</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. ________ 鱼翻白，你 ________ 换一盆新水。（当……可以……）<span class="fill-answer">答案：当，可以</span></p>
+          <p>2. 增加水里的氧气，________ 鱼更加有活力。（使）<span class="fill-answer">答案：使</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+
+    <!--速读二 生词语法-->
+    <div class="vocab-grammar-wrap" id="vocab-tab2">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读二｜生词（HSK4‑5）</h3>
+          <p><strong>鳗鲡（mán lí）</strong>：一种可以短时间离开水的鱼。</p>
+          <p><strong>旅行</strong>：远距离移动、出行。</p>
+          <p><strong>露水</strong>：夜晚空气中落在草上的小水珠。</p>
+          <p><strong>移居</strong>：搬到别的地方生活。</p>
+          <p><strong>产卵</strong>：鱼、鸟等生下卵。</p>
+          <p><strong>行程</strong>：走过的路程距离。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读二｜语法</h3>
+          <p><strong>就（强调出乎意料）</strong></p>
+          <p>含义：和一般情况不一样，竟然。</p>
+          <p>例句：有的鱼<span class="grammar-mark">就</span>可以离开水活一段时间。</p>
+          <p><strong>……之一</strong>：很多事物中间的一个。</p>
+          <p>例句：这是我喜欢的运动之一。</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. 这件事，我________听说过。（就，表意外）<span class="fill-answer">答案：就</span></p>
+          <p>2. 苹果是我爱吃的水果________。（之一）<span class="fill-answer">答案：之一</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+
+    <!--速读三 生词语法-->
+    <div class="vocab-grammar-wrap" id="vocab-tab3">
+      <div class="vocab-grammar">
+        <div class="vocab-box">
+          <h3>速读三｜生词（HSK4‑5）</h3>
+          <p><strong>冬眠期</strong>：动物冬天睡觉、很少活动的时期。</p>
+          <p><strong>体质</strong>：身体的健康情况。</p>
+          <p><strong>产卵繁殖</strong>：生下卵，生出新一代小鱼。</p>
+          <p><strong>防病</strong>：预防、防止生病。</p>
+        </div>
+        <div class="grammar-box">
+          <h3>速读三｜语法</h3>
+          <p><strong>发现……及时……</strong></p>
+          <p>含义：看到问题，马上采取行动。</p>
+          <p>例句：发现危险要及时报告老师。</p>
+          <p><strong>只要……就……</strong>条件复句</p>
+          <p>含义：满足前面条件，就会得到后面结果。</p>
+          <p>例句：只要坚持练习，中文就会进步。</p>
+        </div>
+        <div class="fill-box">
+          <h4>语法填空练习</h4>
+          <p>1. ________ 鱼生病，要 ________ 处理。（发现……及时……）<span class="fill-answer">答案：发现，及时</span></p>
+          <p>2. ________ 认真管理，金鱼 ________ 能平安度过春天。（只要……就……）<span class="fill-answer">答案：只要，就</span></p>
+          <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const timeText = document.getElementById('timeText');
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+let allSentences = [];
+let totalSecond = 60;
+const holdSecond = 15;
+let remainTime = totalSecond;
+let timerId = null;
+let isStart = false;
+let hideIndex = -1;
+
+// 根据tab设置对应总秒数
+function setTabTime(tabId){
+  if(tabId==="tab1"||tabId==="tab2"){
+    totalSecond=60;
+  }else if(tabId==="tab3"){
+    totalSecond=120;
+  }
+}
+
+function updateTimeDisplay(){
+  let m = String(Math.floor(remainTime /60)).padStart(2,'0');
+  let s = String(remainTime %60).padStart(2,'0');
+  timeText.innerText = `${m}:${s}`;
+}
+function loadCurrentSentences(){
+  const activeTabEl = document.querySelector('.tab-content.active');
+  allSentences = Array.from(activeTabEl.querySelectorAll('.sentence'));
+}
+function resetAll(){
+  clearInterval(timerId);
+  const activeBtn = document.querySelector('.tab-btn.active');
+  const tabId = activeBtn.dataset.tab;
+  setTabTime(tabId);
+  remainTime = totalSecond;
+  isStart = false;
+  hideIndex = -1;
+  startBtn.disabled = false;
+  startBtn.innerText = "开始限时阅读";
+  loadCurrentSentences();
+  allSentences.forEach(s=>s.classList.remove('hide'));
+  document.querySelectorAll('.ans-box').forEach(box=>box.classList.remove('show'));
+  document.querySelectorAll('.fill-answer').forEach(f=>f.classList.remove('show'));
+  updateTimeDisplay();
+}
+function startRead(){
+  if(isStart) return;
+  loadCurrentSentences();
+  isStart = true;
+  startBtn.disabled = true;
+  startBtn.innerText = "阅读进行中……";
+  hideIndex = -1;
+  updateTimeDisplay();
+  timerId = setInterval(()=>{
+    remainTime--;
+    updateTimeDisplay();
+    const passed = totalSecond - remainTime;
+    if(passed <= holdSecond){
+      return;
+    }
+    const usableTime = totalSecond - holdSecond;
+    const progress = (passed - holdSecond) / usableTime;
+    const nextHide = Math.floor(progress * allSentences.length);
+    if(nextHide > hideIndex){
+      hideIndex = nextHide;
+      allSentences[hideIndex].classList.add('hide');
+    }
+    if(remainTime <= 0){
+      clearInterval(timerId);
+      timeText.innerText = "阅读结束，请答题";
+    }
+  },1000)
+}
+
+//切换标签
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick = function(){
+    clearInterval(timerId);
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const tabId = this.dataset.tab;
+    setTabTime(tabId);
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.querySelectorAll('.vocab-grammar-wrap').forEach(v=>v.classList.remove('active'));
+    document.getElementById("vocab-"+tabId).classList.add('active');
+    resetAll();
+  }
+})
+
+//查看答案
+document.querySelectorAll('.checkAnswerBtn').forEach(btn=>{
+  btn.onclick = function(){
+    const ansBox = this.nextElementSibling;
+    ansBox.classList.add('show');
+    loadCurrentSentences();
+    allSentences.forEach(sent => sent.classList.remove('hide'));
+  }
+})
+
+//填空答案
+document.querySelectorAll('.fillAnsBtn').forEach(btn=>{
+  btn.onclick = function(){
+    const parentWrap = this.closest('.vocab-grammar-wrap');
+    const fillAnswers = parentWrap.querySelectorAll('.fill-answer');
+    fillAnswers.forEach(f=>f.classList.add('show'));
+  }
+})
+
+startBtn.onclick = startRead;
+resetBtn.onclick = resetAll;
+loadCurrentSentences();
+updateTimeDisplay();
+</script>
+</body>
+</html>

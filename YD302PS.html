@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skim 北京海洋馆｜HSK4‑5阅读练习</title>
+<style>
+*{box-sizing:border-box;font-family:"Microsoft Yahei",PingFang SC,sans-serif;margin:0;padding:0}
+body{background:#f6f4f1;padding:24px;color:#333}
+.container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:24px}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 14px rgba(0,0,0.06)}
+.btns{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+button{border:none;border-radius:10px;padding:12px 18px;font-size:15px;cursor:pointer;transition:0.2s}
+.btn-primary{background:#7f8c85;color:#fff}
+.btn-primary:hover{background:#67746d}
+.btn-ghost{background:#e9e6e1;color:#444}
+.btn-ghost:hover{background:#dcd7cf}
+/* 拖拽段落样式 */
+.sort-wrap{margin-bottom:20px;min-height:300px}
+.sort-item{padding:14px;background:#faf8f5;border-radius:10px;margin-bottom:10px;cursor:grab;border:1px solid #e2ddd4;user-select:none}
+.sort-item:active{cursor:grabbing;background:#f1ede7}
+.sort-item.correct{background:#eaf6ea;border-color:#84c984}
+.sort-item.wrong{background:#fce8e8;border-color:#e28888}
+.key{
+  transition: background 0.3s;
+}
+.key.highlight-yellow{
+  background-color: #fff280;
+  padding:2px 4px;
+  border-radius:4px;
+}
+.key.key-error{
+  color:#c24b4b;
+  font-weight:bold;
+}
+.sort-ghost{background:#e9e9e9;opacity:0.6}
+.feedback{margin:16px 0;padding:14px;border-radius:10px;display:none}
+.feedback.right{background:#eaf6ea;color:#2b702b;display:block}
+.feedback.wrong{background:#fce8e8;color:#9b2c2c;display:block}
+/* 震动动画 */
+@keyframes shake {
+  0%,100% {transform: translateX(0)}
+  20% {transform: translateX(-6px)}
+  40% {transform: translateX(6px)}
+  60% {transform: translateX(-6px)}
+  80% {transform: translateX(6px)}
+}
+.shake-anim{
+  animation: shake 0.4s ease-in-out;
+}
+/* 课文段落，用于定时消失 */
+.article p{
+  transition: opacity 0.6s;
+}
+.article p.hide-paragraph{
+  opacity:0;
+  pointer-events:none;
+}
+/* 课文，初始隐藏 */
+.article{font-size:17px;line-height:1.9;margin-bottom:24px;display:none}
+.article.show{display:block}
+/*生词蓝色，语法红色*/
+.word-mark{color:#3478c9;font-weight:500}
+.grammar-mark{color:#c24b4b;font-weight:500}
+/*生词语法板块*/
+.vocab-box{background:#edf4fc;border-radius:12px;padding:16px;margin-bottom:16px;display:none}
+.vocab-box.show{display:block}
+.grammar-box{background:#fcf0f0;border-radius:12px;padding:16px;margin-bottom:16px;display:none}
+.grammar-box.show{display:block}
+.fill-box{margin-top:16px;background:#f7f4ef;padding:16px;border-radius:12px;display:none}
+.fill-box.show{display:block}
+.fill-answer{color:#c24b4b;font-weight:bold;display:none}
+.fill-answer.show{display:block}
+.timer2{background:#dce6e9;border-radius:12px;padding:10px;text-align:center;font-size:18px;font-weight:bold;color:#3a4a52;margin-bottom:16px;display:none}
+@media(max-width:860px){.container{grid-template-columns:1fr}}
+</style>
+<!-- SortableJS 拖拽库 -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <!--左侧：拖拽排序区域（乱序段落） -->
+  <div class="card">
+    <h3>任务：段落排序（上下拖动调整顺序）</h3>
+    <p>请把下面5段文字按照参观故事的先后顺序排好</p>
+    <div class="sort-wrap" id="sortContainer">
+      <div class="sort-item" data-id="3">C：<span class="key">跟着成群结队的鱼，“海底环游”带着人们游进它们的天堂</span>。生活在不同水域的数万尾色彩鲜艳的珊瑚鱼与五颜六色的珊瑚和谐地构成一幅优美的动感画。这些鱼一会儿“飞”过你的头顶，一会儿又穿梭在你的身旁。这里是一个巨大、神秘而又吸引人的海底世界。</div>
+      <div class="sort-item" data-id="1">A：<span class="key">北京海洋馆坐落在北京动物园内，它是目前中国最大的内陆海洋馆</span>，总建筑面积达4.2万平方米。海洋馆外形像一只海螺，馆内共有6个不同内容的展示场馆。除观赏鱼外，北京海洋馆还有一个海洋动物表演团，成员有海豚、鲸鱼、海狮等珍稀哺乳动物。</div>
+      <div class="sort-item" data-id="4">D：<span class="key">潜入海洋深处的“鲨鱼馆”，人们会发现被称为海中霸王的鲨鱼在这里却被那些小小的印鱼困扰得束手无策</span>。这时人们早已忘记了鲨鱼的凶猛，只会感觉到大自然的和谐。</div>
+      <div class="sort-item" data-id="2">B：<span class="key">穿过热带雨林，就可以听到海浪轻轻拍击海岸的声音，这就是触摸池</span>。在这里，你可以在曲折的岸边，拉拉海星的手，摸摸海胆的刺，敲敲海龟的背。</div>
+      <div class="sort-item" data-id="5">E：<span class="key">在可以容纳3000名观众的“海洋剧院”里</span>，孩子们的欢呼声、大人们的感叹声，混合着浪花拍打水面的清脆的节拍，谱写出一曲海洋交响曲。可爱的海狮做出各种可笑有趣的表演，而鲸鱼和海豚的水中芭蕾更是让人叫绝。这就是规模庞大的世界级海洋馆，它向人们呈现了一个完整而真实的海洋世界。</div>
+    </div>
+    <div class="btns">
+      <button class="btn-primary" id="checkSortBtn">检查答案</button>
+      <button class="btn-ghost" id="resetSortBtn">重置排序</button>
+    </div>
+    <div class="feedback" id="sortFeedback"></div>
+  </div>
+  <!--右侧：课文、生词、语法（初始全部隐藏，排序正确才显示） -->
+  <div class="card">
+    <h2>课外阅读：北京海洋馆</h2>
+    <div class="timer2" id="timerRead">速读计时：<span id="readTime">02:00</span></div>
+    <div class="article" id="articleBox">
+      <p>北京海洋馆坐落在北京动物园内，它是目前中国最大的内陆海洋馆，总建筑面积达4.2万平方米。海洋馆外形像一只海螺，馆内共有6个不同内容的展示场馆，分别叫做“雨林奇观”、“海底环游”、“触摸池”、“鲨鱼馆”、“鲸豚湾”和“海洋剧院”。目前，已有近万尾观赏鱼入住海底环游馆。除观赏鱼外，北京海洋馆还有一个海洋动物表演团，其成员有海豚、鲸鱼、海狮等<span class="word-mark">珍稀</span>哺乳动物。</p>
+      <p>穿过热带雨林，就可以听到海浪轻轻拍击海岸的声音，这就是从陆地走向海岸的第一个停留点——触摸池。在这里，你可以在曲折的岸边，拉拉海星的手，摸摸海胆的刺，敲敲海龟的背……</p>
+      <p>跟着成群结队的鱼，“海底环游”带着人们游进它们的天堂。生活在东太平洋、西太平洋、印度洋、地中海、大西洋等不同水域的数万尾色彩鲜艳的珊瑚鱼与五颜六色的珊瑚和谐地构成一幅优美的动感画。这些鱼一会儿“飞”过你的头顶，一会儿又穿梭在你的身旁。这里是一个巨大、神秘而又吸引人的海底世界。</p>
+      <p>潜入海洋深处的“鲨鱼馆”，人们会发现被称为海中霸王的鲨鱼在这里却被那些小小的印鱼困扰得<span class="word-mark">束手无策</span>。这时人们早已忘记了鲨鱼的凶猛，只会感觉到大自然的和谐。</p>
+      <p>在可以容纳3000名观众的“海洋剧院”里，孩子们的欢呼声、大人们的感叹声，混合着浪花拍打水面的清脆的节拍，谱写出一曲海洋交响曲。可爱的海狮在驯养师的引导下，做出各种可笑有趣的表演，而鲸鱼和海豚的水中芭蕾更是<span class="word-mark">让人叫绝</span>。这就是规模庞大的世界级海洋馆——北京海洋馆，它向人们呈现了一个完整而真实的海洋世界。</p>
+    </div>
+    <div class="vocab-box" id="vocabBox">
+      <h3>生词（HSK4‑5）</h3>
+      <p><strong>珍稀</strong>：非常少见、珍贵。</p>
+      <p><strong>成群结队</strong>：很多动物聚集在一起。</p>
+      <p><strong>束手无策</strong>：一点办法也没有。</p>
+      <p><strong>凶猛</strong>：气势强大，很有攻击性。</p>
+      <p><strong>驯养师</strong>：训练动物表演的工作人员。</p>
+      <p><strong>让人叫绝</strong>：做得特别精彩，人人称赞。</p>
+      <p><strong>规模庞大</strong>：地方大、设施多。</p>
+    </div>
+    <div class="grammar-box" id="grammarBox">
+      <h3>语法和惯用表达</h3>
+      <p><strong>1. 除……外，还有……</strong></p>
+      <p>适用范围：表示补充，除了A，还有B。</p>
+      <p>例句：除中文外，他还会说英语。</p>
+      <p><strong>2. 一会儿……一会儿……</strong></p>
+      <p>适用范围：动作不断交替变化。</p>
+      <p>例句：小鸟一会儿飞上枝头，一会儿落到地面。</p>
+      <p><strong>3. 被……（所）困扰</strong></p>
+      <p>适用范围：被动，被某事、某物麻烦。</p>
+    </div>
+    <div class="fill-box" id="fillBox">
+      <h4>语法填空练习</h4>
+      <p>1. <span class="grammar-mark">除</span>观赏鱼<span class="grammar-mark">外</span>，海洋馆________很多海洋哺乳动物。（还有）<span class="fill-answer">答案：还有</span></p>
+      <p>2. 鱼儿________游到上面，________躲到珊瑚后面。（一会儿……一会儿……）<span class="fill-answer">答案：一会儿，一会儿</span></p>
+      <button class="btn-ghost fillAnsBtn">显示填空答案</button>
+    </div>
+  </div>
+</div>
+<script>
+//速读计时器（排序解锁课文后启动）
+const timerReadBox = document.getElementById('timerRead');
+const readTimeDom = document.getElementById('readTime');
+let readTimer = null;
+let readRemain = 120; // 修改：2分钟=120秒
+let hideParaTimer = null;
+let paraIndex = 0;
+const articleParas = [];
+function resetReadTimer(){
+  clearInterval(readTimer);
+  clearInterval(hideParaTimer);
+  readRemain = 120;
+  paraIndex = 0;
+  articleParas.forEach(p=>p.classList.remove('hide-paragraph'));
+  updateReadTime();
+}
+function updateReadTime(){
+  let m = String(Math.floor(readRemain /60)).padStart(2,'0');
+  let s = String(readRemain %60).padStart(2,'0');
+  readTimeDom.innerText = `${m}:${s}`;
+}
+function startReadTimer(){
+  timerReadBox.style.display = "block";
+  articleParas.length = 0;
+  const paras = document.querySelectorAll("#articleBox p");
+  paras.forEach(p=>{
+    p.classList.remove('hide-paragraph');
+    articleParas.push(p);
+  })
+  paraIndex = 0;
+  readRemain = 120;
+  updateReadTime();
+  //倒计时
+  readTimer = setInterval(()=>{
+    readRemain--;
+    updateReadTime();
+    if(readRemain <=0){
+      clearInterval(readTimer);
+      clearInterval(hideParaTimer);
+      // 时间到，全部段落显示出来
+      articleParas.forEach(p=>p.classList.remove('hide-paragraph'));
+    }
+  },1000);
+  //每20秒隐藏一段，计时到0停止隐藏并展示全文
+  hideParaTimer = setInterval(()=>{
+    if(readRemain > 0 && paraIndex < articleParas.length){
+      articleParas[paraIndex].classList.add('hide-paragraph');
+      paraIndex++;
+    }
+  },20000);
+}
+// ========== 拖拽核心修复：全局保存实例，销毁再重建 ==========
+const sortContainer = document.getElementById('sortContainer');
+let sortable = null;
+function initSortable(){
+  // 如果已有实例，先销毁，防止重复绑定导致拖拽卡死
+  if(sortable){
+    sortable.destroy();
+  }
+  sortable = new Sortable(sortContainer, {
+    animation:150,
+    ghostClass:'sort-ghost'
+  });
+}
+//页面载入初始化拖拽
+initSortable();
+const checkSortBtn = document.getElementById('checkSortBtn');
+const resetSortBtn = document.getElementById('resetSortBtn');
+const sortFeedback = document.getElementById('sortFeedback');
+const correctOrder = ["1","2","3","4","5"];
+//检查答案
+checkSortBtn.onclick = ()=>{
+  const items = [...sortContainer.querySelectorAll('.sort-item')];
+  const userOrder = items.map(item=>item.dataset.id);
+  let isRight = true;
+  //清除旧标记、清除动画、清除黄色高亮
+  items.forEach(el=>{
+    el.classList.remove('correct','wrong','shake-anim');
+    const keys = el.querySelectorAll('.key');
+    keys.forEach(k=>k.classList.remove('key-error','highlight-yellow'));
+  })
+  for(let i=0;i<correctOrder.length;i++){
+    if(userOrder[i]!==correctOrder[i]){
+      isRight=false;
+      items[i].classList.add('wrong');
+      const keys = items[i].querySelectorAll('.key');
+      keys.forEach(k=>k.classList.add('key-error'));
+      // 添加震动动画
+      items[i].classList.add('shake-anim');
+      //动画结束自动移除动画类，方便下次再次震动
+      setTimeout(()=>{
+        items[i].classList.remove('shake-anim');
+      },400)
+    }else{
+      items[i].classList.add('correct');
+    }
+  }
+  if(isRight){
+    sortFeedback.className="feedback right";
+    sortFeedback.innerText="✅ 顺序完全正确！已解锁完整课文、生词和语法讲解";
+    //所有 .key 全部标黄色高亮
+    items.forEach(el=>{
+      const keys = el.querySelectorAll('.key');
+      keys.forEach(k=>k.classList.add('highlight-yellow'));
+    })
+    // 解锁显示课文与生词语法
+    document.getElementById('articleBox').classList.add('show');
+    document.getElementById('vocabBox').classList.add('show');
+    document.getElementById('grammarBox').classList.add('show');
+    document.getElementById('fillBox').classList.add('show');
+    //启动速读2分钟计时
+    startReadTimer();
+  }else{
+    sortFeedback.className="feedback wrong";
+    sortFeedback.innerText="❌ 顺序不对！红色加粗句子是本段的核心线索，请根据线索重新排序。正确顺序：A → B → C → D → E";
+  }
+}
+//重置排序
+function resetSort(){
+  sortFeedback.style.display = 'none';
+  resetReadTimer();
+  //隐藏课文、生词语法
+  document.getElementById('articleBox').classList.remove('show');
+  document.getElementById('vocabBox').classList.remove('show');
+  document.getElementById('grammarBox').classList.remove('show');
+  document.getElementById('fillBox').classList.remove('show');
+  timerReadBox.style.display = "none";
+  sortContainer.innerHTML=`
+      <div class="sort-item" data-id="3">C：<span class="key">跟着成群结队的鱼，“海底环游”带着人们游进它们的天堂</span>。生活在不同水域的数万尾色彩鲜艳的珊瑚鱼与五颜六色的珊瑚和谐地构成一幅优美的动感画。这些鱼一会儿“飞”过你的头顶，一会儿又穿梭在你的身旁。这里是一个巨大、神秘而又吸引人的海底世界。</div>
+      <div class="sort-item" data-id="1">A：<span class="key">北京海洋馆坐落在北京动物园内，它是目前中国最大的内陆海洋馆</span>，总建筑面积达4.2万平方米。海洋馆外形像一只海螺，馆内共有6个不同内容的展示场馆。除观赏鱼外，北京海洋馆还有一个海洋动物表演团，成员有海豚、鲸鱼、海狮等珍稀哺乳动物。</div>
+      <div class="sort-item" data-id="4">D：<span class="key">潜入海洋深处的“鲨鱼馆”，人们会发现被称为海中霸王的鲨鱼在这里却被那些小小的印鱼困扰得束手无策</span>。这时人们早已忘记了鲨鱼的凶猛，只会感觉到大自然的和谐。</div>
+      <div class="sort-item" data-id="2">B：<span class="key">穿过热带雨林，就可以听到海浪轻轻拍击海岸的声音，这就是触摸池</span>。在这里，你可以在曲折的岸边，拉拉海星的手，摸摸海胆的刺，敲敲海龟的背。</div>
+      <div class="sort-item" data-id="5">E：<span class="key">在可以容纳3000名观众的“海洋剧院”里</span>，孩子们的欢呼声、大人们的感叹声，混合着浪花拍打水面的清脆的节拍，谱写出一曲海洋交响曲。可爱的海狮做出各种可笑有趣的表演，而鲸鱼和海豚的水中芭蕾更是让人叫绝。这就是规模庞大的世界级海洋馆，它向人们呈现了一个完整而真实的海洋世界。</div>
+  `;
+  // 销毁旧实例，重建拖拽
+  initSortable();
+}
+resetSortBtn.onclick = resetSort;
+//填空答案展开
+document.querySelector('.fillAnsBtn').onclick = function(){
+  const answers = document.querySelectorAll('.fill-answer');
+  answers.forEach(f=>f.classList.add('show'));
+}
+</script>
+</body>
+</html>

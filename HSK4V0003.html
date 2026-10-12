@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4生词交互词卡｜背、背包、北部、倍、本科、本来、笨、鼻子、笔试、毕业、毕业生</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:860px;
+    margin-bottom:30px;
+}
+.flashcard {
+    width:100%;
+    min-height:820px;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding: clamp(24px,4vw,40px) clamp(20px,4vw,44px);
+    border-radius:26px;
+    background:#ffffff;
+    overflow:auto;
+}
+.card-back{display:none; background:#ffffff; border-radius:26px;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;width:100%;}
+.img-placeholder{
+    width: min(320px, 100%);
+    max-width:100%;
+    height:auto;
+    margin:24px auto 0 auto;
+    border-radius:14px;
+    overflow:hidden;
+}
+.img-placeholder img{
+    width:100%;
+    height:auto;
+    object-fit:cover;
+    display:block;
+    margin:0 auto;
+}
+.img-placeholder img:broken {
+    display:none !important;
+}
+h2{
+    font-size: clamp(32px,7vw,44px);
+    color:#b58a3c;
+    font-weight:800;
+    margin-bottom:14px;
+    text-align:center;
+}
+.pinyin-text{
+    font-size: clamp(22px,5vw,28px);
+    color:#333;
+    margin-bottom:12px;
+    text-align:center;
+}
+.pos-text{
+    font-size: clamp(18px,4vw,22px);
+    color:#555;
+    margin-bottom:20px;
+    text-align:center;
+}
+.label-title{
+    font-weight:bold;
+    font-size: clamp(18px,4vw,21px);
+    margin-top:24px;
+    margin-bottom:10px;
+}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{
+    font-size: clamp(16px,3.5vw,19px);
+    line-height:1.85;
+    color:#222;
+    margin-bottom:10px;
+}
+.word-highlight{
+    color:#b58a3c;
+    font-weight:800;
+}
+.nav-bar{
+    display:flex;
+    gap:24px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+.nav-bar button{
+    padding:14px 32px;
+    border:none;
+    border-radius:14px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+}
+#pageText{
+    font-size:20px;
+    color:#333;
+    min-width:140px;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack">
+<!--卡0 背-->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>背</h2>
+            <div class="pinyin-text">bēi</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/bei.jpg" alt="背" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">背</span>包、<span class="word-highlight">背</span>东西、<span class="word-highlight">背</span>孩子</p>
+            <div class="label-title">例句</div>
+            <p>1.我每天<span class="word-highlight">背</span>书包去上学。</p>
+            <p>2.他帮我<span class="word-highlight">背</span>很重的箱子。</p>
+            <div class="label-title">易错提示</div>
+            <p>bēi：用脊背驮东西；另外还有读音bèi（后背），两个读音意思不一样。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我<span class="word-highlight">背</span>着背包去旅行。（）</p>
+            <p>②我的<span class="word-highlight">背</span>bēi很疼。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>驮</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡1 背包-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>背包</h2>
+            <div class="pinyin-text">bēibāo</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/beibao.jpg" alt="背包" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>一个<span class="word-highlight">背包</span>、旅行<span class="word-highlight">背包</span>、背着<span class="word-highlight">背包</span></p>
+            <div class="label-title">例句</div>
+            <p>1.我的<span class="word-highlight">背包</span>里有书和水杯。</p>
+            <p>2.这个黑色<span class="word-highlight">背包</span>很好看。</p>
+            <div class="label-title">易错提示</div>
+            <p>名词，指可以背在身上的包；不要和动词短语“背包”混淆。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我的<span class="word-highlight">背包</span>很重。（）</p>
+            <p>②我<span class="word-highlight">背包</span>很重。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>书包</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡2 北部-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>北部</h2>
+            <div class="pinyin-text">běibù</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/beibu.jpg" alt="北部" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>城市<span class="word-highlight">北部</span>、国家<span class="word-highlight">北部</span>、<span class="word-highlight">北部</span>地区</p>
+            <div class="label-title">例句</div>
+            <p>1.这个国家的<span class="word-highlight">北部</span>冬天很冷。</p>
+            <p>2.公园的<span class="word-highlight">北部</span>有一个湖。</p>
+            <div class="label-title">易错提示</div>
+            <p>指某个地方靠北的部分；区别“北方”，北部多指一个区域内部北边。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①这座城市<span class="word-highlight">北部</span>工厂很多。（）</p>
+            <p>②我想去<span class="word-highlight">北部</span>中国旅游。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>北方</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡3 倍-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>倍</h2>
+            <div class="pinyin-text">bèi</div>
+            <div class="pos-text">量词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/bei2.jpg" alt="倍" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>两<span class="word-highlight">倍</span>、三<span class="word-highlight">倍</span>、增加一<span class="word-highlight">倍</span></p>
+            <div class="label-title">例句</div>
+            <p>1.我的工资是以前的两<span class="word-highlight">倍</span>。</p>
+            <p>2.这个房间比那个大两<span class="word-highlight">倍</span>。</p>
+            <div class="label-title">易错提示</div>
+            <p>用于数字比较，表示倍数；不能说“一倍大”，要说“大一倍”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①A的价格是B的三<span class="word-highlight">倍</span>。（）</p>
+            <p>②苹果比橘子一<span class="word-highlight">倍</span>贵。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡4 本科-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>本科</h2>
+            <div class="pinyin-text">běnkē</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/benke.jpg" alt="本科" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">本科</span>生、读<span class="word-highlight">本科</span>、<span class="word-highlight">本科</span>毕业</p>
+            <div class="label-title">例句</div>
+            <p>1.我正在读<span class="word-highlight">本科</span>。</p>
+            <p>2.他是<span class="word-highlight">本科</span>毕业生。</p>
+            <div class="label-title">易错提示</div>
+            <p>大学的一种学历阶段；后面可以加“生”指学生。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①他明年<span class="word-highlight">本科</span>毕业。（）</p>
+            <p>②我打算去<span class="word-highlight">本科</span>工作。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡5 本来-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>本来</h2>
+            <div class="pinyin-text">běnlái</div>
+            <div class="pos-text">形容词、副词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/benlai.jpg" alt="本来" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">本来</span>打算、<span class="word-highlight">本来</span>就是、<span class="word-highlight">本来</span>的样子</p>
+            <div class="label-title">例句</div>
+            <p>1.我<span class="word-highlight">本来</span>想去，但是没时间。（副词）</p>
+            <p>2.这是它<span class="word-highlight">本来</span>的颜色。（形容词）</p>
+            <div class="label-title">易错提示</div>
+            <p>表示原先、原来；经常和“想、打算”搭配，说明原本的计划后来发生改变。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我<span class="word-highlight">本来</span>想出去玩，下雨了。（）</p>
+            <p>②我<span class="word-highlight">本来</span>昨天去买书。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>原来</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡6 笨-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>笨</h2>
+            <div class="pinyin-text">bèn</div>
+            <div class="pos-text">形容词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/ben.jpg" alt="笨" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>很<span class="word-highlight">笨</span>、<span class="word-highlight">笨</span>手笨脚、太<span class="word-highlight">笨</span></p>
+            <div class="label-title">例句</div>
+            <p>1.我学骑车很<span class="word-highlight">笨</span>，总是摔倒。</p>
+            <p>2.不要说别人<span class="word-highlight">笨</span>。</p>
+            <div class="label-title">易错提示</div>
+            <p>形容不聪明、不灵巧，多用于人或者动作；属于不太礼貌的词，慎用。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我做这个工作很<span class="word-highlight">笨</span>。（）</p>
+            <p>②这杯咖啡很<span class="word-highlight">笨</span>。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">反义词</div>
+            <p>聪明</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡7 鼻子-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>鼻子</h2>
+            <div class="pinyin-text">bízi</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/bizi.jpg" alt="鼻子" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>大<span class="word-highlight">鼻子</span>、小<span class="word-highlight">鼻子</span>、<span class="word-highlight">鼻子</span>疼</p>
+            <div class="label-title">例句</div>
+            <p>1.他的<span class="word-highlight">鼻子</span>很高。</p>
+            <p>2.我感冒了，<span class="word-highlight">鼻子</span>不舒服。</p>
+            <div class="label-title">易错提示</div>
+            <p>身体器官名词，后缀“子”读轻声zi。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我的<span class="word-highlight">鼻子</span>能闻到味道了。（）</p>
+            <p>②我有一个<span class="word-highlight">鼻</span>。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡8 笔试-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>笔试</h2>
+            <div class="pinyin-text">bǐshì</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/bishi.jpg" alt="笔试" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>参加<span class="word-highlight">笔试</span>、通过<span class="word-highlight">笔试</span>、<span class="word-highlight">笔试</span>考试</p>
+            <div class="label-title">例句</div>
+            <p>1.明天我们要<span class="word-highlight">笔试</span>。</p>
+            <p>2.<span class="word-highlight">笔试</span>之后还有面试。</p>
+            <div class="label-title">易错提示</div>
+            <p>用笔写的考试，和“面试”相对；可以作名词也可以作动词。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①这次招聘先进行<span class="word-highlight">笔试</span>。（）</p>
+            <p>②我打算<span class="word-highlight">笔试</span>一本书。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡9 毕业-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>毕业</h2>
+            <div class="pinyin-text">bìyè</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/biye.jpg" alt="毕业" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>大学<span class="word-highlight">毕业</span>、<span class="word-highlight">毕业</span>以后、马上<span class="word-highlight">毕业</span></p>
+            <div class="label-title">例句</div>
+            <p>1.我明年大学<span class="word-highlight">毕业</span>。</p>
+            <p>2.<span class="word-highlight">毕业</span>以后我想找一份工作。</p>
+            <div class="label-title">易错提示</div>
+            <p>完成学校的学习；不能说“毕业大学”，要说“从大学毕业 / 大学毕业”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我今年夏天<span class="word-highlight">毕业</span>。（）</p>
+            <p>②我打算<span class="word-highlight">毕业</span>这所学校。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡10 毕业生-->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>毕业生</h2>
+            <div class="pinyin-text">bìyèshēng</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0003/biyesheng.jpg" alt="毕业生" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>大学<span class="word-highlight">毕业生</span>、新<span class="word-highlight">毕业生</span>、本科<span class="word-highlight">毕业生</span></p>
+            <div class="label-title">例句</div>
+            <p>1.很多<span class="word-highlight">毕业生</span>正在找工作。</p>
+            <p>2.他是今年的大学<span class="word-highlight">毕业生</span>。</p>
+            <div class="label-title">易错提示</div>
+            <p>名词，指已经毕业的学生。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①这家公司招不少大学<span class="word-highlight">毕业生</span>。（）</p>
+            <p>②我明年做<span class="word-highlight">毕业生</span>。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button id="prevBtn">上一张</button>
+<div id="pageText">1 / 11</div>
+<button id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        el.style.display = i===current ? "block":"none";
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

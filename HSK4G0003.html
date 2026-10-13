@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4G0003语法闪卡｜时间副词 HSK4</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:680px;
+    height:600px;
+    margin-bottom:24px;
+}
+.flashcard {
+    width:100%;
+    height:100%;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding:36px 28px;
+    border-radius:22px;
+    background:#ffffff;
+    overflow-y:auto;
+    text-align:center;
+}
+.card-back{display:none; background:#ffffff;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;}
+h2{font-size:26px;color:#222;margin-bottom:18px;text-align:center;}
+.label-title{font-weight:bold;font-size:19px;text-align:center;margin-top:20px;margin-bottom:12px;}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{font-size:18px;line-height:1.85;color:#222;margin-bottom:10px;text-align:center;}
+.grammar-hl{color:#204070;font-weight:bold;}
+.err{color:#c82424;font-weight:bold;}
+.ok{color:#1f8030;font-weight:bold;}
+.click-hint{position:absolute;bottom:16px;left:0;right:0;font-size:15px;color:#666;text-align:center;}
+.nav-bar{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+.nav-btn{
+    padding:12px 26px;
+    border:none;
+    border-radius:12px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:17px;
+    cursor:pointer;
+}
+.nav-btn:hover{background:#949088;}
+.page-info{font-size:18px;color:#333;min-width:130px;text-align:center;}
+.card-stack{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+.card-stack > div{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+.card-stack > div.active{
+    display:block;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack" id="cardStack">
+<!-- 卡0 按时 -->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>按时（àn shí）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>按照规定、约定的时间去做事情。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>按时 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.请<span class="grammar-hl">按时</span>交作业。</p>
+            <p>2.每天要<span class="grammar-hl">按时</span>吃药。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>放在动词前面，强调遵守时间；不能直接修饰名词。</p>
+            <p>多用于要求、习惯、计划类句子。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>按时作业。 <span class="ok">✔</span>按时完成作业。</p>
+            <p><span class="err">✖</span>我按时。 <span class="ok">✔</span>我按时来上课。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡1 从来 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>从来（cóng lái）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>从过去一直到现在；多搭配否定，表示“从未”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>从来 + 不 / 没有 + 动词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.他<span class="grammar-hl">从来</span>不迟到。</p>
+            <p>2.我<span class="grammar-hl">从来</span>没有去过国外。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>口语最常用否定：从来不（习惯）、从来没有（经历）。</p>
+            <p>一般放在主语后，否定词前面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>从来我迟到。 <span class="ok">✔</span>我从来不迟到。</p>
+            <p><span class="err">✖</span>从来去过北京。 <span class="ok">✔</span>我从来没有去过北京。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡2 赶紧 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>赶紧（gǎn jǐn）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>抓紧时间，立刻行动，多用于催促。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>赶紧 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">赶紧</span>走吧，快要迟到了。</p>
+            <p>2.你<span class="grammar-hl">赶紧</span>休息一会儿。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>多用祈使句，用来提醒、催促别人。</p>
+            <p>放在主语后、动词前面，不修饰形容词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>赶紧漂亮。 <span class="ok">✔</span>赶紧把衣服穿上。</p>
+            <p><span class="err">✖</span>赶紧他跑。 <span class="ok">✔</span>他赶紧跑过去。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡3 赶快 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>赶快（gǎn kuài）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>尽快、迅速做某事；和“赶紧”意思接近，侧重速度。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>赶快 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">赶快</span>上车，火车要开了。</p>
+            <p>2.请<span class="grammar-hl">赶快</span>回答问题。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>多用于催促；“赶快”侧重速度，“赶紧”侧重抓紧时机。</p>
+            <p>一般不用在已经发生的事情。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我赶快昨天吃饭。 <span class="ok">✔</span>你赶快吃饭。</p>
+            <p><span class="err">✖</span>赶快干净。 <span class="ok">✔</span>赶快把房间打扫干净。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡4 已 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>已（yǐ）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>表示动作已经完成，相当于书面版“已经”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>已 + 动词 / 形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.任务<span class="grammar-hl">已</span>完成。</p>
+            <p>2.他<span class="grammar-hl">已</span>五十多岁。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>书面用语；口语一般说“已经”。</p>
+            <p>表达事情到现在已经发生、结束。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我已吃饭吧。 <span class="ok">✔</span>我已吃完饭。</p>
+            <p><span class="err">✖</span>已明天出发。 <span class="ok">✔</span>我们已出发。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡5 忽然 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>忽然（hū rán）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>事情发生得很快，出乎意料。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 忽然 + 动词；也可句首。</p>
+            <div class="label-title">【例句】</div>
+            <p>1.天<span class="grammar-hl">忽然</span>下起雨。</p>
+            <p>2.我<span class="grammar-hl">忽然</span>想到一件事。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>描写突发、没有预料到的情况。</p>
+            <p>不能用来描写计划好、慢慢发生的事。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我忽然每天跑步。 <span class="ok">✔</span>我忽然想跑步。</p>
+            <p><span class="err">✖</span>忽然我很高。 <span class="ok">✔</span>他忽然站起来。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡6 将 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>将（jiāng）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>动作将要发生，还没有发生；书面，相当于“将要”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>将 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.飞机<span class="grammar-hl">将</span>起飞。</p>
+            <p>2.明天我们<span class="grammar-hl">将</span>考试。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>书面；口语多用“要、将要”。</p>
+            <p>只能用于未来，不能用于过去已经做完的动作。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>昨天我将回家。 <span class="ok">✔</span>明天我将回家。</p>
+            <p><span class="err">✖</span>将书。 <span class="ok">✔</span>我们将看书。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡7 本来 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>本来（běn lái）｜时间副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>原先、原来；表示原本的情况，后面常有转折。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>本来 + 小句，（但是/可是……）</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我<span class="grammar-hl">本来</span>想去，但是没时间。</p>
+            <p>2.这件衣服<span class="grammar-hl">本来</span>很便宜。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>经常和“但是、可是”搭配，对比原本和后来的变化。</p>
+            <p>放在主语后面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>本来我去了。 <span class="ok">✔</span>我本来想去，没去成。</p>
+            <p><span class="err">✖</span>本来漂亮。 <span class="ok">✔</span>它本来很漂亮，现在坏了。</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button class="nav-btn" id="prevBtn">上一张</button>
+<div class="page-info" id="pageText">1 / 8</div>
+<button class="nav-btn" id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        if(i===current){
+            el.classList.add("active");
+        }else{
+            el.classList.remove("active");
+        }
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

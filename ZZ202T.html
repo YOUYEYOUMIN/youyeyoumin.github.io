@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>测试你的生存技巧｜课文交互学习 ZZ202</title>
+<!-- 引入Sortable拖拽库（CDN，不用改任何页面结构） -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;}
+body{background:#f4f2ee;padding:16px;color:#444;}
+.container{max-width:1400px;margin:0 auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+/* 顶部段落切换按钮 */
+.tab-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;justify-content:center;}
+.tab-btn{padding:9px 15px;border:none;border-radius:8px;background:#d9d3cc;color:#333;font-size:15px;cursor:pointer;transition:0.25s;}
+.tab-btn.active{background:#8c9b94;color:#fff;}
+.tab-btn:hover{opacity:0.85;}
+/* ========== 左右分栏 ========== */
+.main-row{
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+.left-panel,
+.right-panel{
+    background:#ffffff;
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.left-panel{line-height:2.1;font-size:17px;}
+.right-panel{background:#f7f5f1;}
+/* 段落内容块 */
+.block-item{display:none;}
+.block-item.active{display:block;animation:fade 0.35s ease;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+/* 课文挖空 */
+.blank-input{width:110px;border:1px solid #b8b8b8;border-radius:4px;padding:2px 4px;font-size:17px;text-align:center;background:#fff;}
+.wrong{border:2px solid #e06c6c;background:#ffe9e9;color:#c82222;}
+.right{border:2px solid #72b884;background:#edf8f0;color:#1e7032;}
+/* 拖拽句子排序 */
+.sort-wrap{margin:18px 0;padding:14px;background:#efede8;border-radius:10px;}
+.sort-title{font-weight:bold;margin-bottom:10px;font-size:17px;color:#555;}
+.sort-item{padding:9px 12px;background:#fff;border:1px solid #c8c2b8;border-radius:6px;margin:8px 0;cursor:grab;line-height:1.6;}
+.sort-item:active{cursor:grabbing;}
+.sort-btn{margin-top:10px;padding:7px 12px;border:none;border-radius:6px;background:#8c9b94;color:#fff;cursor:pointer;}
+.sort-result{margin-top:8px;padding:8px;display:none;border-radius:6px;}
+.sort-res-ok{background:#eaf4ec;color:#2b613a;display:block;}
+.sort-res-err{background:#f9e8e8;color:#882f2f;display:block;}
+/* 问答题 */
+.question-wrap{margin-top:20px;padding-top:14px;border-top:1px solid #ccc;}
+.q-item{margin:12px 0;}
+.q-text{font-weight:500;margin-bottom:6px;}
+.q-answer-input{width:100%;min-height:55px;border:1px solid #bbbbbb;border-radius:6px;padding:8px;font-size:16px;background:#fff;}
+.q-show-ans{margin-top:8px;padding:10px;background:#f0f2f1;border-radius:6px;display:none;white-space:pre-line;}
+/* 右侧生词与语法卡片 */
+.right-panel h3{margin-bottom:12px;color:#4a5f58;font-size:19px;border-left:4px solid #8c9b94;padding-left:8px;}
+.word-card{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #ddd;}
+.word-title{font-weight:bold;color:#546e7a;font-size:18px;margin-bottom:4px;}
+.grammar-card{margin:18px 0;padding:14px;background:#eef1f0;border-radius:10px;}
+.grammar-title{font-weight:bold;color:#4a5f58;margin-bottom:8px;font-size:17px;}
+.grammar-note{font-size:15px;color:#555;margin:6px 0;padding-left:4px;border-left:3px solid #8c9b94;}
+/* 补全句子练习 */
+.complete-exercise{margin-top:12px;}
+.complete-q{margin-bottom:6px;}
+.complete-ta{width:100%;min-height:60px;border:1px solid #c2c9c6;border-radius:6px;padding:8px;font-size:16px;background:#fff;}
+.answer-btn{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#8c9b94;color:#fff;cursor:pointer;}
+.answer-btn:hover{opacity:0.85;}
+.show-answer{margin-top:8px;color:#333;font-weight:500;display:none;padding:6px 8px;background:#e8eceb;border-radius:4px;white-space:pre-line;}
+/* 重置按钮 */
+.reset-btn{margin-left:8px;padding:8px 14px;border:none;border-radius:6px;background:#c27c7c;color:#fff;cursor:pointer;}
+.reset-btn:hover{opacity:0.85;}
+/* 移动端小屏幕自动上下堆叠 */
+@media(max-width:900px){
+  .main-row{
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部切换按钮 -->
+  <div class="tab-buttons">
+    <button class="tab-btn active" onclick="switchTab(0)">第1段</button>
+    <button class="tab-btn" onclick="switchTab(1)">第2段</button>
+    <button class="tab-btn" onclick="switchTab(2)">第3段</button>
+    <button class="tab-btn" onclick="switchTab(3)">第4段</button>
+    <button class="tab-btn" onclick="switchTab(4)">第5段</button>
+  </div>
+  <!-- ========== 左右分栏容器 ========== -->
+  <div class="main-row">
+    <!-- 左栏：课文挖空 + 句子拖拽排序 + 问答题 -->
+    <div class="left-panel">
+      <!-- 第1段左 -->
+      <div class="block-item active" id="L0">
+        <p>生活不总是充满阳光，<input class="blank-input" data-ans="地震" type="text">、大火、水灾等往往不请自来，把<input class="blank-input" data-ans="毫无" type="text">准备的人类推到<input class="blank-input" data-ans="危机" type="text">的面前。在<input class="blank-input" data-ans="万分" type="text">紧急的情况下，如果人们<input class="blank-input" data-ans="具备" type="text">处理危机的知识和<input class="blank-input" data-ans="生存" type="text"><input class="blank-input" data-ans="技巧" type="text">，就有可能保护自己，减少死伤。相反，<input class="blank-input" data-ans="后果" type="text">则<input class="blank-input" data-ans="难以" type="text">想象。</p>
+        <br>
+        <p>下面，我们就<input class="blank-input" data-ans="假设" type="text">几种紧急情况，并<input class="blank-input" data-ans="提供" type="text">两种不同的<input class="blank-input" data-ans="逃生" type="text">方法让你选择，以此来考考你的生存知识和生存技巧。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(0)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox0"></div>
+          <button class="sort-btn" onclick="checkSort(0)">检查排序</button>
+          <div class="sort-result" id="sortRes0"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q1：危机到来的时候，具备生存知识有什么作用？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">具备生存知识与技巧，可以保护自己，减少死伤；没有相关知识，后果难以想象。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第2段左 -->
+      <div class="block-item" id="L1">
+        <p>一、地震刚刚发生的时候，建筑大约要<input class="blank-input" data-ans="剧烈" type="text"><input class="blank-input" data-ans="摇晃" type="text">一分钟左右，如果你正待在家里，正确的做法是：A赶快钻进比较<input class="blank-input" data-ans="结实" type="text">的桌子下、床下或者高大的<input class="blank-input" data-ans="柜子" type="text">里面躲起来，<input class="blank-input" data-ans="以免" type="text">被高处掉下来的东西和倒下来的家具<input class="blank-input" data-ans="砸" type="text">伤。B迅速跑到承重墙的墙角、厕所等比较小的房间里。</p>
+        <br>
+        <p>二、在地震暂时停止或发现高层楼房要倒下去的时候：A 快速跑走，或者抱着被子从窗户往下跳。B 如果住在高层，<input class="blank-input" data-ans="与其" type="text">跑楼梯被撞伤摔死，<input class="blank-input" data-ans="宁可" type="text">留下来躲好。<input class="blank-input" data-ans="除非" type="text">能快速跑到外面，才向外跑。跑出来后别站在楼房旁边。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(1)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox1"></div>
+          <button class="sort-btn" onclick="checkSort(1)">检查排序</button>
+          <div class="sort-result" id="sortRes1"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q2：地震发生时，为什么不能站在柜子旁边？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">地震时柜子可能倾倒，柜子或者掉落物品会砸伤人。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第3段左 -->
+      <div class="block-item" id="L2">
+        <p>三、如果已经被困在楼房里或埋在<input class="blank-input" data-ans="废墟" type="text">下，短时间找不到支援的人。A大声喊叫。B尽可能让自己保持<input class="blank-input" data-ans="冷静" type="text">；必要时敲打物体<input class="blank-input" data-ans="发出" type="text">求救<input class="blank-input" data-ans="信号" type="text">，等待救援。</p>
+        <br>
+        <p>四、楼内突然起火、<input class="blank-input" data-ans="烟雾" type="text">很大时。A直接穿过烟雾区逃离。B脱下衣服或者找到毛巾，<input class="blank-input" data-ans="弄" type="text">湿后多<input class="blank-input" data-ans="叠" type="text">几层，放在口鼻上，避免吸入<input class="blank-input" data-ans="有害" type="text"><input class="blank-input" data-ans="气体" type="text">，防止<input class="blank-input" data-ans="导致" type="text">不能呼吸而死去。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(2)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox2"></div>
+          <button class="sort-btn" onclick="checkSort(2)">检查排序</button>
+          <div class="sort-result" id="sortRes2"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q3：火灾里面，湿毛巾有什么作用？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">湿毛巾可以过滤有害气体烟雾，保护人的呼吸。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第4段左 -->
+      <div class="block-item" id="L3">
+        <p>五、逃离烟雾区，正确身体<input class="blank-input" data-ans="姿势" type="text">：A直起身子大步往前跑。B尽量低头弯腰往前跑，靠近地面空气比较<input class="blank-input" data-ans="清" type="text">。</p>
+        <br>
+        <p>六、半夜起火被大火包围：A向着有光亮的地方跑。B不要朝光亮跑，大火后<input class="blank-input" data-ans="电源" type="text">很可能被切断，光亮代表着火。</p>
+        <br>
+        <p>七、碰到发大水：A会游泳就拼命地<input class="blank-input" data-ans="游" type="text">出危险区。B迅速向<input class="blank-input" data-ans="山坡" type="text">、高地楼房<input class="blank-input" data-ans="转移" type="text">，耐心等待帮助。</p>
+        <br>
+        <p>八、出门碰到大水：A<input class="blank-input" data-ans="顺" type="text">着水流方向跑。B朝着水流两边跑，尽快<input class="blank-input" data-ans="避" type="text">开大水，才<input class="blank-input" data-ans="不至于" type="text">被大水冲走。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(3)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox3"></div>
+          <button class="sort-btn" onclick="checkSort(3)">检查排序</button>
+          <div class="sort-result" id="sortRes3"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q4：遇到洪水，为什么不能顺着水流跑？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">顺着水流跑很容易被洪水冲走，要向两侧高地躲避转移。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第5段左 -->
+      <div class="block-item" id="L4">
+        <p>经验证明，A与B两种方法中，B的选择更正确，因此也最容易逃生成功。生活里的紧急情况远<input class="blank-input" data-ans="不止" type="text">这八种，在你的一生中<input class="blank-input" data-ans="八成" type="text">会遇到这样或者那样的危机。请问，你<input class="blank-input" data-ans="具备" type="text">这些生存知识和逃生技巧吗？相信你一定会想办法了解和学会的，因为人的生命太宝贵了，需要永远<input class="blank-input" data-ans="尊重" type="text">和珍惜它。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(4)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox4"></div>
+          <button class="sort-btn" onclick="checkSort(4)">检查排序</button>
+          <div class="sort-result" id="sortRes4"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q5：读完全文，说一说学习生存技巧有什么意义？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">遇到灾难危机的时候，可以保护自己的生命，减少伤害，学会尊重珍惜生命。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 右栏：生词 + HSK语法 + 补全句子练习 -->
+    <div class="right-panel">
+      <div class="block-item active" id="R0">
+        <h3>生词（第1段）</h3>
+        <div class="word-card">
+          <div class="word-title">地震 dìzhèn 名</div>
+          <div>大地剧烈震动的自然灾害。例：发生地震不要慌张。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">毫无 háowú</div>
+          <div>完全没有，一点儿也不。例：毫无准备。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">危机 wēijī 名</div>
+          <div>危险紧急的处境。例：面对危机。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">万分 wànfēn 副</div>
+          <div>程度很深，极其。例：万分危险。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">具备 jùbèi 动</div>
+          <div>拥有、具有。例：具备自救知识。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">生存 shēngcún 动</div>
+          <div>维持生命，活下去。例：生存能力。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">技巧 jìqiǎo 名</div>
+          <div>本领、实用方法。例：逃生技巧。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">后果 hòuguǒ 名</div>
+          <div>事情带来的结果，多指坏的。例：严重后果。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">难以 nányǐ</div>
+          <div>不容易，很难。例：难以想象。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">假设 jiǎshè 动</div>
+          <div>设想想象一种情况。例：假设发生地震。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">提供 tígōng 动</div>
+          <div>拿出来给别人使用。例：提供帮助。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">逃生 táoshēng 动</div>
+          <div>从危险地方逃出保命。例：逃生路线。</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 在……的情况下 【HSK4 条件格式】</div>
+          <p>说明某种处境、条件。<br>格式：在+某种情况+的情况下，+结果句子。</p>
+          <div class="grammar-note">⚠易错：后面句子一般写现实、假设发生的事情，不写命令。</div>
+          <p>例句：在万分紧急的情况下，人们要保持冷静。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“在……的情况下”写一个遇到危险的句子。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：在火灾发生的情况下，我们不要慌张。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 难以 + 动词 【HSK5】</div>
+          <p>表示“很难做某事”，后面直接接双音节动词。</p>
+          <div class="grammar-note">⚠易错：后面不能接单字动词；不能说“难以跑”，要说“难以逃跑”。</div>
+          <p>例句：灾难带来的破坏，让人难以想象。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“难以”写句子，写一件很难做到的事。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：当时情况很乱，真相难以查清。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 相反 【HSK5 转折连词】</div>
+          <p>用于前后两件事对比，后一件和前面完全不一样。放在句子开头。</p>
+          <div class="grammar-note">⚠易错：“相反”后面一般有逗号。</div>
+          <p>例句：有知识可以保护自己。相反，无知会带来危险。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“相反”写一组对比。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：认真准备会减少麻烦，相反，毫无准备会遇到很多困难。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 以此来 【书面 HSK5】</div>
+          <p>“用前面这件事，来实现后面的目的”。</p>
+          <p>例句：我们做练习，以此来巩固学到的生词。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“以此来”写目的。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：我们学习自救知识，以此来保护自己。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R1">
+        <h3>生词（第2段）</h3>
+        <div class="word-card">
+          <div class="word-title">剧烈 jùliè 形</div>
+          <div>力量大，变化很强。例：剧烈摇晃。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">摇晃 yáohuàng 动</div>
+          <div>来回晃动摆动。例：房屋摇晃。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">结实 jiēshi 形</div>
+          <div>牢固坚固。例：结实的桌子。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">柜子 guìzi 名</div>
+          <div>存放物品的立式家具。例：高大的柜子。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">以免 yǐmiǎn 连</div>
+          <div>为了避免不好的事。例：远离高处，以免被砸伤。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">砸 zá 动</div>
+          <div>重物撞击人或物体。例：被石头砸伤。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">与其 yǔqí 连</div>
+          <div>选择连词，常和不如 / 宁可搭配。例：与其乱跑，不如躲避。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">宁可 nìngkě 连</div>
+          <div>情愿选择某种做法。例：宁可等待救援。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">除非 chúfēi 连</div>
+          <div>表示唯一条件。例：除非确认安全，才可以出去。</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 以免 【HSK5 目的连词】</div>
+          <p>前面做动作，目的是避免后面坏事发生。格式：动作 + 以免 + 不好结果。</p>
+          <div class="grammar-note">⚠易错：后面直接写短句，不能加主语。</div>
+          <p>例句：躲到安全地方，以免被东西砸伤。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“以免”写一个安全提醒。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：远离燃烧的火，以免被烧伤。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 与其……宁可…… 【HSK5 选择复句】</div>
+          <p>比较两件坏事，情愿选择后者。<br>格式：与其+不希望的事，宁可+相对可以接受的事。</p>
+          <div class="grammar-note">⚠易错：两件事一般都是不好的情况。</div>
+          <p>例句：与其冒险跑出去，宁可留在原地等待救援。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“与其……宁可……”写句子，说说你的选择。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：与其冒雨赶路，宁可多等一会儿雨变小。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 除非……才…… 【HSK5 条件复句】</div>
+          <p>“除非”引出唯一必要条件，满足条件，后面“才”的事情才可以做。</p>
+          <div class="grammar-note">⚠易错：条件不满足，就不能做“才”后面的动作。</div>
+          <p>例句：除非确认环境安全，我们才可以离开。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“除非……才……”写条件。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：除非做好准备，我们才可以开始这项工作。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 大约 + 时间/数量 【HSK4】</div>
+          <p>表示估计、大概的数字，不精确。</p>
+          <p>例句：地震摇晃大约一分钟左右。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“大约”写一个估计时间。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：走路到那里，大约需要二十分钟。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R2">
+        <h3>生词（第3段）</h3>
+        <div class="word-card">
+          <div class="word-title">废墟 fèixū 名</div>
+          <div>灾害破坏后的残破建筑。例：埋在废墟下面。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">冷静 lěngjìng 形</div>
+          <div>情绪平稳，不慌张。例：保持冷静。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">发出 fāchū 动</div>
+          <div>送出声音、光亮等。例：发出求救信号。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">信号 xìnhào 名</div>
+          <div>传递消息的声响光亮。例：求救信号。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">烟雾 yānwù 名</div>
+          <div>烟和雾气。例：浓厚的烟雾。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">弄 nòng 动</div>
+          <div>使事物变成某种状态。例：弄湿毛巾。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">叠 dié 动</div>
+          <div>一层一层折起来。例：叠毛巾。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">有害 yǒuhài 形</div>
+          <div>带来伤害，有坏处。例：有害气体。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">气体 qìtǐ 名</div>
+          <div>气态物质。例：有毒气体。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">导致 dǎozhì 动</div>
+          <div>引起、造成结果。例：导致受伤。</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 导致 【HSK5 动词】</div>
+          <p>动词，多半引出不好的结果。格式：原因 + 导致 + 坏结果。</p>
+          <div class="grammar-note">⚠易错：“导致”前面是原因，后面是结果；不能用于好事情。</div>
+          <p>例句：吸入浓烟会导致人昏迷。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“导致”写一个不好的结果。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：错误的做法会导致严重的后果。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 尽可能 【HSK5 副词】</div>
+          <p>表示尽量、尽最大努力去做。放在动词前面。</p>
+          <p>例句：被困的时候，尽可能让自己保持冷静。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“尽可能”写一个建议。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：遇到危险，尽可能快速离开危险区域。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 多 + 量词 + 几 + （名词）【HSK4】</div>
+          <p>表示数量增加几层、几件等。课文：多叠几层。</p>
+          <div class="grammar-note">⚠结构：多 + 动词 + 几 + 量词。例：多写几遍，多看几眼。</div>
+          <p>例句：把毛巾多叠几层，可以更好过滤烟雾。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“多……几……”写句子。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：这个生词很难，你要多读几遍。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 避免 + 动词短语 【HSK5】</div>
+          <p>“不要让不好的事情发生”，后面直接接行为。</p>
+          <div class="grammar-note">⚠易错：避免后面不加主语。</div>
+          <p>例句：捂住口鼻，避免吸入有害气体。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“避免”写安全提示。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：走路注意脚下，避免摔倒受伤。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R3">
+        <h3>生词（第4段）</h3>
+        <div class="word-card">
+          <div class="word-title">姿势 zīshì 名</div>
+          <div>身体的姿态样子。例：弯腰的姿势。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">清 qīng 形</div>
+          <div>干净通透，不浑浊。例：空气清。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">电源 diànyuán 名</div>
+          <div>电力来源。例：切断电源。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">游 yóu 动</div>
+          <div>在水里移动，游泳。例：在水里游。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">山坡 shānpō 名</div>
+          <div>山倾斜的斜面。例：爬上山坡。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">转移 zhuǎnyí 动</div>
+          <div>换到另外一个地方。例：转移到高处。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">顺 shùn 动</div>
+          <div>沿着同一个方向。例：顺着这个方向。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">避 bì 动</div>
+          <div>躲开危险。例：避开洪水。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">不至于 bùzhìyú 连</div>
+          <div>不会达到不好的程度。例：不至于受伤。</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 不至于 【HSK5】</div>
+          <p>表示情况不会坏到某种地步。格式：主语 + 不至于 + 不好情况。</p>
+          <div class="grammar-note">⚠后面一般接动词/形容词，多用否定推测。</div>
+          <p>例句：学会自救，不至于完全慌乱。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“不至于”写一句话。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：提前做好准备，我们不至于手忙脚乱。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 尽量 【HSK4副词】</div>
+          <p>表示尽力去做，放在动词前。课文：尽量低头弯腰往前跑。</p>
+          <p>例句：遇到危险，我们尽量保持冷静。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“尽量”写建议。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：考试的时候，尽量把字写清楚。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 很可能 【HSK4 推测短语】</div>
+          <p>对事情做推测，“可能性比较大”。课文：电源很可能被切断。</p>
+          <div class="grammar-note">⚠放在动词前面。</div>
+          <p>例句：大火之后，电路很可能出现问题。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“很可能”写推测。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：这么晚了，他很可能不会回来了。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 向 + 地点 【HSK4 方向介词】</div>
+          <p>表示动作朝向某个地方：向山坡、向高处。</p>
+          <div class="grammar-note">⚠“向”后面接方位、地点名词。</div>
+          <p>例句：遇到洪水，迅速向高地转移。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“向”写移动方向。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：听到声音，大家向门口跑过去。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R4">
+        <h3>生词（第5段）</h3>
+        <div class="word-card">
+          <div class="word-title">不止 bùzhǐ</div>
+          <div>超过，不仅仅。例：不止这些。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">八成 bāchéng 副</div>
+          <div>大概、多半，可能性很大。例：八成很危险。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">尊重 zūnzhòng 动</div>
+          <div>重视认真对待。例：尊重生命。</div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">1. 八成 【HSK5 副词（表推测）】</div>
+          <p>口语书面都可用，“多半、大概率”，用来推测事情。</p>
+          <div class="grammar-note">⚠只用于推测，不表示精确的数字。</div>
+          <p>例句：这么做，八成会带来伤害。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“八成”写推测的句子。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：天上乌云很多，八成要下雨。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">2. 远不止 【HSK5】</div>
+          <p>“远远超过，不只是”。课文：紧急情况远不止这八种。</p>
+          <div class="grammar-note">“远”加强程度，不止+数量/名词。</div>
+          <p>例句：需要学习的知识远不止课本上面的内容。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“远不止”。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：生活中的困难远不止我们看到的这些。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">3. 因为……，所以…… 【HSK2 因果复句】</div>
+          <p>说明原因与结果。课文：因为人的生命太宝贵了，需要永远尊重和珍惜它。</p>
+          <div class="grammar-note">有时候“所以”可以省略，只保留“因为”。</div>
+          <p>例句：因为危机很可怕，所以我们要学习生存技巧。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“因为……，所以……”写因果。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：因为生命只有一次，所以我们要好好保护自己。</div>
+          </div>
+        </div>
+
+        <div class="grammar-card">
+          <div class="grammar-title">4. 相信……一定会…… 【HSK4】</div>
+          <p>表达对未来的信心，相信后面是句子。</p>
+          <p>例句：相信你一定会学会这些自救的本领。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“相信……一定会……”写信心。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：相信只要努力，你一定会取得进步。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+//每一段排序原始数据 id代表正确顺序
+const sortSource = [
+  [
+    {id:1,txt:"生活不总是充满阳光，地震、大火、水灾等往往不请自来，把毫无准备的人类推到危机的面前。"},
+    {id:2,txt:"在万分紧急的情况下，如果人们具备处理危机的知识和生存技巧，就有可能保护自己，减少死伤。"},
+    {id:3,txt:"相反，后果则难以想象。"},
+    {id:4,txt:"下面，我们就假设几种紧急情况，并提供两种不同的逃生方法让你选择，以此来考考你的生存知识和生存技巧。"}
+  ],
+  [
+    {id:1,txt:"一、地震刚刚发生的时候，建筑大约要剧烈摇晃一分钟左右，如果你正待在家里，正确的做法是。"},
+    {id:2,txt:"A赶快钻进比较结实的桌子下、床下或者高大的柜子里面躲起来，以免被高处掉下来的东西和倒下来的家具砸伤。"},
+    {id:3,txt:"B迅速跑到承重墙的墙角、厕所等比较小的房间里。"},
+    {id:4,txt:"二、在地震暂时停止或发现高层楼房要倒下去的时候。"},
+    {id:5,txt:"B 如果住在高层，与其跑楼梯被撞伤摔死，宁可留下来躲好。除非能快速跑到外面，才向外跑。跑出来后别站在楼房旁边。"}
+  ],
+  [
+    {id:1,txt:"三、如果已经被困在楼房里或埋在废墟下，短时间找不到支援的人。"},
+    {id:2,txt:"B尽可能让自己保持冷静；必要时敲打物体发出求救信号，等待救援。"},
+    {id:3,txt:"四、楼内突然起火、烟雾很大时。"},
+    {id:4,txt:"B脱下衣服或者找到毛巾，弄湿后多叠几层，放在口鼻上，避免吸入有害气体，防止导致不能呼吸而死去。"}
+  ],
+  [
+    {id:1,txt:"五、逃离烟雾区，正确身体姿势：A直起身子大步往前跑。B尽量低头弯腰往前跑，靠近地面空气比较清。"},
+    {id:2,txt:"六、半夜起火被大火包围：A向着有光亮的地方跑。B不要朝光亮跑，大火后电源很可能被切断，光亮代表着火。"},
+    {id:3,txt:"七、碰到发大水：A会游泳就拼命地游出危险区。B迅速向山坡、高地楼房转移，耐心等待帮助。"},
+    {id:4,txt:"八、出门碰到大水：A顺着水流方向跑。B朝着水流两边跑，尽快避开大水，才不至于被大水冲走。"}
+  ],
+  [
+    {id:1,txt:"经验证明，A与B两种方法中，B的选择更正确，因此也最容易逃生成功。"},
+    {id:2,txt:"生活里的紧急情况远不止这八种，在你的一生中八成会遇到这样或者那样的危机。"},
+    {id:3,txt:"请问，你具备这些生存知识和逃生技巧吗？"},
+    {id:4,txt:"相信你一定会想办法了解和学会的，因为人的生命太宝贵了，需要永远尊重和珍惜它。"}
+  ]
+];
+//打乱数组工具
+function shuffle(arr){
+    let tmp = [...arr];
+    for(let i=tmp.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [tmp[i],tmp[j]] = [tmp[j],tmp[i]];
+    }
+    return tmp;
+}
+let sortableInstances = {};
+//渲染排序盒子：自动打乱 + 初始化Sortable拖拽
+function renderSortBox(idx){
+    const box = document.getElementById("sortBox"+idx);
+    box.innerHTML = "";
+    //销毁旧实例，防止重复绑定
+    if(sortableInstances[idx]){
+        sortableInstances[idx].destroy();
+        delete sortableInstances[idx];
+    }
+    const list = shuffle(sortSource[idx]);
+    list.forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.dataset.id = item.id;
+        div.innerText = item.txt;
+        box.appendChild(div);
+    });
+    //初始化Sortable
+    sortableInstances[idx] = new Sortable(box,{
+        animation:150,
+        ghostClass:'sort-ghost'
+    });
+}
+//切换段落：左右面板同时更新，并且重新生成本段打乱的排序
+function switchTab(index){
+  document.querySelectorAll(".left-panel .block-item").forEach(el=>el.classList.remove("active"));
+  document.getElementById("L"+index).classList.add("active");
+  document.querySelectorAll(".right-panel .block-item").forEach(el=>el.classList.remove("active"));
+  document.getElementById("R"+index).classList.add("active");
+  document.querySelectorAll(".tab-btn").forEach((btn,i)=>{
+    btn.classList.toggle('active', i===index);
+  });
+  renderSortBox(index);
+}
+//检查课文挖空
+function checkAllBlank(btn){
+  const parent = btn.parentElement;
+  const inputs = parent.querySelectorAll('.blank-input');
+  inputs.forEach(input=>{
+    const answer = input.dataset.ans;
+    if(input.value.trim() === answer){
+      input.classList.add("right");
+      input.classList.remove("wrong");
+    }else{
+      input.classList.add("wrong");
+      input.classList.remove("right");
+    }
+  });
+}
+//🔄重置本段：清空输入框、隐藏答案提示、重新生成本段打乱的句子排序
+function resetSection(idx){
+    const block = document.getElementById("L"+idx);
+    block.querySelectorAll(".blank-input").forEach(i=>{i.value="";i.classList.remove("right","wrong");});
+    block.querySelectorAll(".q-answer-input").forEach(t=>t.value="");
+    block.querySelectorAll(".q-show-ans").forEach(d=>d.style.display="none");
+    const resEl = document.getElementById("sortRes"+idx);
+    if(resEl) resEl.style.display="none";
+    renderSortBox(idx);
+}
+//检查句子排序
+function checkSort(idx){
+  const box = document.getElementById("sortBox"+idx);
+  const resDom = document.getElementById("sortRes"+idx);
+  const items = box.querySelectorAll(".sort-item");
+  let arr = [];
+  items.forEach(it=>arr.push(it.dataset.id));
+  const correctIds = sortSource[idx].map(x=>String(x.id));
+  if(arr.join(",") === correctIds.join(",")){
+    resDom.className = "sort-result sort-res-ok";
+    resDom.style.display="block";
+    resDom.innerText = "✅排序完全正确！";
+  }else{
+    resDom.className = "sort-result sort-res-err";
+    resDom.style.display="block";
+    resDom.innerText = "❌顺序不对，请重新拖拽调整句子顺序。";
+  }
+}
+//页面初始化渲染第0段打乱排序
+renderSortBox(0);
+</script>
+</body>
+</html>

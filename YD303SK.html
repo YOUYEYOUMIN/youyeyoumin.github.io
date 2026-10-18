@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK鸟类阅读练习｜交互版</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f6f4f1;
+            padding: 16px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 60% 38%;
+            gap: 2%;
+        }
+        /* 一级标签 HSK3/4/5 */
+        .level-tab-wrap {
+            display: flex;
+            gap: 8px;
+            margin-bottom:16px;
+            flex-wrap:wrap;
+        }
+        .level-tab {
+            padding:10px 20px;
+            background:#fff;
+            border: 1px solid #b8c6d8;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .level-tab.active {
+            background:#4267a8;
+            color:#fff;
+            border-color:#4267a8;
+        }
+        /* 二级标签 短文T1-T4 */
+        .article-tab-wrap {
+            display: flex;
+            gap:6px;
+            margin-bottom:12px;
+            flex-wrap:wrap;
+        }
+        .article-tab {
+            padding:7px 14px;
+            background:#fff;
+            border:1px solid #b8c6d8;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        .article-tab.active {
+            background:#6288c9;
+            color:#fff;
+            border-color:#6288c9;
+        }
+        /* 计时器 */
+        .timer-area {
+            background:#ece6dd;
+            padding:12px;
+            border-radius:8px;
+            margin-bottom:14px;
+        }
+        .timer-text {
+            font-size:20px;
+            font-weight:bold;
+            color:#5a4f44;
+            margin-bottom:8px;
+        }
+        .timer-btn button {
+            padding:8px 14px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            margin-right:6px;
+        }
+        #startTimer {
+            background:#3b68af;
+            color:white;
+        }
+        #resetTimer {
+            background:#888;
+            color:white;
+        }
+        /* 文章区域 */
+        .article-panel {
+            background:#fff;
+            padding:20px;
+            border-radius:10px;
+            display:none;
+        }
+        .article-panel.active {
+            display:block;
+        }
+        .article-content {
+            font-size:17px;
+            line-height:1.8;
+            margin-bottom:20px;
+        }
+        .sentence {
+            transition: opacity 0.5s ease;
+            opacity:1;
+        }
+        .sentence.hide {
+            opacity:0;
+        }
+        .question-block {
+            margin-bottom:18px;
+        }
+        .q-title {
+            font-weight:bold;
+            margin-bottom:8px;
+        }
+        .radio-line {
+            margin:6px 0;
+        }
+        .showAnswerBtn {
+            margin-top:8px;
+            padding:8px 14px;
+            background:#3b68af;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        .answer-box {
+            margin-top:10px;
+            padding:10px;
+            background:#eef4fc;
+            border-radius:6px;
+            display:none;
+        }
+        .answer-box.show {
+            display:block;
+        }
+        /* 右侧生词语法面板 */
+        .vocab-side {
+            background:#fff;
+            padding:20px;
+            border-radius:10px;
+            height:fit-content;
+            position:sticky;
+            top:16px;
+        }
+        .vocab-section {
+            display:none;
+        }
+        .vocab-section.active {
+            display:block;
+        }
+        .vocab-item {
+            margin:10px 0;
+        }
+        .vocab-word {
+            color:#2b4b80;
+            font-weight:bold;
+        }
+        .grammar-title {
+            color:#9c2c2c;
+            font-weight:bold;
+            margin-top:18px;
+            margin-bottom:8px;
+        }
+        .grammar-item {
+            margin:8px 0;
+        }
+        /* 移动端适配 */
+        @media (max-width:768px) {
+            .container {
+                grid-template-columns:1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧：文章、题目、计时器 -->
+        <div class="left-col">
+            <!--一级标签 HSK3 HSK4 HSK5 -->
+            <div class="level-tab-wrap">
+                <div class="level-tab active" data-level="hsk3">HSK3</div>
+                <div class="level-tab" data-level="hsk4">HSK4</div>
+                <div class="level-tab" data-level="hsk5">HSK5</div>
+            </div>
+            <!--计时器区域-->
+            <div class="timer-area">
+                <div class="timer-text">剩余时间：<span id="timeDisplay">05:00</span></div>
+                <div class="timer-btn">
+                    <button id="startTimer">开始限时阅读</button>
+                    <button id="resetTimer">重置</button>
+                </div>
+            </div>
+            <!--HSK3 内容组-->
+            <div class="level-group" id="hsk3">
+                <div class="article-tab-wrap">
+                    <div class="article-tab active" data-art="h3t1">短文1｜蜂鸟</div>
+                    <div class="article-tab" data-art="h3t2">短文2｜鹦鹉</div>
+                    <div class="article-tab" data-art="h3t3">短文3｜鸟的嘴</div>
+                    <div class="article-tab" data-art="h3t4">短文4｜老王和鸽子</div>
+                </div>
+                <!-- HSK3 T1 -->
+                <div class="article-panel active" data-art="h3t1">
+                    <div class="article-content">
+                        <span class="sentence">蜂鸟是世界上最小的鸟，生活在南美洲。</span>
+                        <span class="sentence">它的大小和人的大拇指差不多。</span>
+                        <span class="sentence">它的羽毛很细，阳光照上去，羽毛会有不同的颜色。</span>
+                        <span class="sentence">蜂鸟有细细长长的嘴，爱吃花蜜和小花上的虫子。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 蜂鸟生活在南美洲。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t1q1" id="h3t1q1t"><label for="h3t1q1t">对</label>
+                            <input type="radio" name="h3t1q1" id="h3t1q1f"><label for="h3t1q1f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 蜂鸟很大，比人的手还要大。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t1q2" id="h3t1q2t"><label for="h3t1q2t">对</label>
+                            <input type="radio" name="h3t1q2" id="h3t1q2f"><label for="h3t1q2f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 蜂鸟长长的嘴，可以帮它吃到花蜜。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t1q3" id="h3t1q3t"><label for="h3t1q3t">对</label>
+                            <input type="radio" name="h3t1q3" id="h3t1q3f"><label for="h3t1q3f">错</label>
+                        </div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.对  2.错  3.对</div>
+                </div>
+                <!-- HSK3 T2 -->
+                <div class="article-panel" data-art="h3t2">
+                    <div class="article-content">
+                        <span class="sentence">鹦鹉又叫鹦哥，住在很热的树林里。</span>
+                        <span class="sentence">鹦鹉主要吃果子，可以活很长时间。</span>
+                        <span class="sentence">它的头圆圆的，上嘴大，向下弯。</span>
+                        <span class="sentence">鹦鹉的羽毛很漂亮，有白色、红色、黄色、绿色。</span>
+                        <span class="sentence">人们训练它以后，鹦鹉可以学人的声音说话。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 鹦鹉生活在热带的树林。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t2q1" id="h3t2q1t"><label for="h3t2q1t">对</label>
+                            <input type="radio" name="h3t2q1" id="h3t2q1f"><label for="h3t2q1f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 鹦鹉天生就会说话，不用别人教。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t2q2" id="h3t2q2t"><label for="h3t2q2t">对</label>
+                            <input type="radio" name="h3t2q2" id="h3t2q2f"><label for="h3t2q2f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 鹦鹉有好看的彩色羽毛。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t2q3" id="h3t2q3t"><label for="h3t2q3t">对</label>
+                            <input type="radio" name="h3t2q3" id="h3t2q3f"><label for="h3t2q3f">错</label>
+                        </div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.对  2.错  3.对</div>
+                </div>
+                <!-- HSK3 T3 -->
+                <div class="article-panel" data-art="h3t3">
+                    <div class="article-content">
+                        <span class="sentence">鸟的嘴，名字叫喙。</span>
+                        <span class="sentence">不同的鸟，嘴的样子不一样。</span>
+                        <span class="sentence">鸟的嘴不只是用来吃东西，还可以整理羽毛、打架、做鸟窝。</span>
+                        <span class="sentence">吃虫子、花蜜的鸟，嘴细长；吃种子的鸟，嘴短短的；吃鱼的鸟，嘴又宽又大。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. “喙”就是鸟的嘴巴。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t3q1" id="h3t3q1t"><label for="h3t3q1t">对</label>
+                            <input type="radio" name="h3t3q1" id="h3t3q1f"><label for="h3t3q1f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 鸟的嘴只能用来吃饭。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t3q2" id="h3t3q2t"><label for="h3t3q2t">对</label>
+                            <input type="radio" name="h3t3q2" id="h3t3q2f"><label for="h3t3q2f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 吃鱼的鸟，嘴巴宽大。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t3q3" id="h3t3q3t"><label for="h3t3q3t">对</label>
+                            <input type="radio" name="h3t3q3" id="h3t3q3f"><label for="h3t3q3f">错</label>
+                        </div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.对  2.错  3.对</div>
+                </div>
+                <!-- HSK3 T4 -->
+                <div class="article-panel" data-art="h3t4">
+                    <div class="article-content">
+                        <span class="sentence">鸽子是人类的好朋友。</span>
+                        <span class="sentence">老王退休以后，养了十几只鸽子，已经很多年了。</span>
+                        <span class="sentence">老王养鸽子不是为了卖钱，也不只是好玩。</span>
+                        <span class="sentence">他想活动身体，练习眼睛。</span>
+                        <span class="sentence">每天早上，老王带鸽子出去放飞。</span>
+                        <span class="sentence">鸽子飞得很远，最后还能回到老王身边。</span>
+                        <span class="sentence">养鸽子让老王开心，身体也更好了。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 老王养鸽子，是为了卖鸽子赚钱。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t4q1" id="h3t4q1t"><label for="h3t4q1t">对</label>
+                            <input type="radio" name="h3t4q1" id="h3t4q1f"><label for="h3t4q1f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 老王每天早上都会出去放飞鸽子。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t4q2" id="h3t4q2t"><label for="h3t4q2t">对</label>
+                            <input type="radio" name="h3t4q2" id="h3t4q2f"><label for="h3t4q2f">错</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 鸽子飞远以后，还能飞回来。</p>
+                        <div class="radio-line">
+                            <input type="radio" name="h3t4q3" id="h3t4q3t"><label for="h3t4q3t">对</label>
+                            <input type="radio" name="h3t4q3" id="h3t4q3f"><label for="h3t4q3f">错</label>
+                        </div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.错  2.对  3.对</div>
+                </div>
+            </div>
+            <!--HSK4 原文组-->
+            <div class="level-group" id="hsk4" style="display:none;">
+                <div class="article-tab-wrap">
+                    <div class="article-tab active" data-art="h4t1">短文1｜蜂鸟</div>
+                    <div class="article-tab" data-art="h4t2">短文2｜鹦鹉</div>
+                    <div class="article-tab" data-art="h4t3">短文3｜鸟的喙</div>
+                    <div class="article-tab" data-art="h4t4">短文4｜老王和鸽子</div>
+                </div>
+                <!-- HSK4 T1 -->
+                <div class="article-panel active" data-art="h4t1">
+                    <div class="article-content">
+                        <span class="sentence">蜂鸟是鸟类中最小的一种，产于南美洲。</span>
+                        <span class="sentence">蜂鸟的大小跟大拇指差不多，羽毛很细，在阳光照射下可以呈现出不同的颜色。</span>
+                        <span class="sentence">蜂鸟的嘴又细又长，喜欢吃花蜜和花上的小昆虫。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1）根据本文我们知道：</p>
+                        <div class="radio-line"><input type="radio" name="h4t1q1" id="h4t1q1a"><label for="h4t1q1a">A.蜂鸟喜欢花儿</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t1q1" id="h4t1q1b"><label for="h4t1q1b">B.蜂鸟有很多种颜色</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t1q1" id="h4t1q1c"><label for="h4t1q1c">C.任何一种鸟都比蜂鸟大</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t1q1" id="h4t1q1d"><label for="h4t1q1d">D.蜂鸟的毛很少</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2）在阳光照射下：</p>
+                        <div class="radio-line"><input type="radio" name="h4t1q2" id="h4t1q2a"><label for="h4t1q2a">A.蜂鸟可以改变颜色</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t1q2" id="h4t1q2b"><label for="h4t1q2b">B.人们可以看到蜂鸟的羽毛是有颜色的</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t1q2" id="h4t1q2c"><label for="h4t1q2c">C.蜂鸟能认识多种颜色</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t1q2" id="h4t1q2d"><label for="h4t1q2d">D.蜂鸟跟别的鸟颜色不一样</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.C  2.B</div>
+                </div>
+                <!-- HSK4 T2 -->
+                <div class="article-panel" data-art="h4t2">
+                    <div class="article-content">
+                        <span class="sentence">鹦鹉，也叫鹦哥，生活在热带树林中，主要吃果实，寿命较长。</span>
+                        <span class="sentence">鹦鹉的头是圆的，上嘴大，且向下弯曲，下嘴短小。</span>
+                        <span class="sentence">鹦鹉的羽毛色彩十分美丽，有白、赤、黄、绿等色。</span>
+                        <span class="sentence">经过训练，鹦鹉能模仿人说话的声音。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1）根据本文我们知道：</p>
+                        <div class="radio-line"><input type="radio" name="h4t2q1" id="h4t2q1a"><label for="h4t2q1a">A.鹦鹉能学“说话”</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t2q1" id="h4t2q1b"><label for="h4t2q1b">B.鹦鹉的嘴有的大、有的小</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t2q1" id="h4t2q1c"><label for="h4t2q1c">C.鹦鹉喜欢吃水果，所以能活很多年</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t2q1" id="h4t2q1d"><label for="h4t2q1d">D.鹦鹉有四种颜色</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2）“鹦鹉”很可能是：</p>
+                        <div class="radio-line"><input type="radio" name="h4t2q2" id="h4t2q2a"><label for="h4t2q2a">A.热带的树</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t2q2" id="h4t2q2b"><label for="h4t2q2b">B.一种漂亮的鸟</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t2q2" id="h4t2q2c"><label for="h4t2q2c">C.能使人长寿的水果</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t2q2" id="h4t2q2d"><label for="h4t2q2d">D.鸟的哥哥</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.A  2.B</div>
+                </div>
+                <!-- HSK4 T3 -->
+                <div class="article-panel" data-art="h4t3">
+                    <div class="article-content">
+                        <span class="sentence">鸟类的嘴的形状各种各样，这是它们适应生存环境与取食生活习性的结果。</span>
+                        <span class="sentence">鸟的嘴叫做“喙”(huì)。</span>
+                        <span class="sentence">鸟喙的用途不仅是取食，还用来整理羽毛、打斗、筑巢等。</span>
+                        <span class="sentence">鸟喙很发达，而且根据不同的生活习性形成各种形态。</span>
+                        <span class="sentence">一般来说，吃昆虫和吸食花蜜的鸟类的喙细长，如蜂鸟的喙；食植物种子和幼芽的鸟类的喙短小，如麻雀的喙；而捕食鱼类的鸟类的喙宽大。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1）这段话主要说的是：</p>
+                        <div class="radio-line"><input type="radio" name="h4t3q1" id="h4t3q1a"><label for="h4t3q1a">A.鸟的嘴只是用来取食的</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t3q1b"><label for="h4t3q1b">B.鸟类的嘴形状很多</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t3q1" id="h4t3q1c"><label for="h4t3q1c">C.吃昆虫的鸟身体细长</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t3q1" id="h4t3q1d"><label for="h4t3q1d">D.蜂鸟吃蜂蜜</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2）下面哪一项文中没提到？</p>
+                        <div class="radio-line"><input type="radio" name="h4t3q2" id="h4t3q2a"><label for="h4t3q2a">A.喙是鸟的嘴</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t3q2" id="h4t3q2b"><label for="h4t3q2b">B.蜂鸟的嘴细长</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t3q2" id="h4t3q2c"><label for="h4t3q2c">C.鸟没有牙</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t3q2" id="h4t3q2d"><label for="h4t3q2d">D.有吃鱼的鸟</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.B  2.C</div>
+                </div>
+                <!-- HSK4 T4 -->
+                <div class="article-panel" data-art="h4t4">
+                    <div class="article-content">
+                        <span class="sentence">鸽子，是人类的朋友。养鸽子，放鸽子，对生态平衡，对人的身体健康都很有好处。</span>
+                        <span class="sentence">老王退休后开始养鸽子，已经有些“历史”了。他一共养了十来只鸽子。</span>
+                        <span class="sentence">他说，我养鸽子不是为了卖，也不仅仅是为了玩儿，而是想活动活动手脚，也练练眼神儿。</span>
+                        <span class="sentence">早晨，老人骑上自行车，带着十几只鸽子来到立交桥的绿地上放鸽。</span>
+                        <span class="sentence">他拿着一根绑着红绸的小棍一挥，正在地上吃食的鸽子一下子就飞起来，在头上盘旋着。</span>
+                        <span class="sentence">老人的目光一直跟随着鸽子。鸽子飞远了，变成一个个小点，他还望着那个方向。</span>
+                        <span class="sentence">老人说，他现在虽然已经70多岁了，可是眼神儿一点儿不比50多岁的差。</span>
+                        <span class="sentence">一会儿，在天空的另一个方向，一个个小点由小变大，老人说：“看，它们飞回来了。”果然，是那十几只鸽子。它们越来越近，一会儿一只只地落下来。</span>
+                        <span class="sentence">老王每天早上都要带着他的这十几只鸽子来放飞。养鸽子给他带来了不少乐趣，也锻炼了身体。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1）老王养鸽子是为了：</p>
+                        <div class="radio-line"><input type="radio" name="h4t4q1" id="h4t4q1a"><label for="h4t4q1a">A.好玩儿</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t4q1b"><label for="h4t4q1b">B.卖钱</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t4q1" id="h4t4q1c"><label for="h4t4q1c">C.锻炼身体和眼神儿</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t4q1" id="h4t4q1d"><label for="h4t4q1d">D.和鸽子成为好朋友</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2）老王养鸽子有：</p>
+                        <div class="radio-line"><input type="radio" name="h4t4q2" id="h4t4q2a"><label for="h4t4q2a">A.三年多了</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t4q2" id="h4t4q2b"><label for="h4t4q2b">B.时间不长</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t4q2c"><label for="h4t4q2c">C.五六年了</label></div>
+                        <div class="radio-line"><input type="radio" name="h4t4q2" id="h4t4q2d"><label for="h4t4q2d">D.很多年了</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.C  2.D</div>
+                </div>
+            </div>
+            <!--HSK5 内容组-->
+            <div class="level-group" id="hsk5" style="display:none;">
+                <div class="article-tab-wrap">
+                    <div class="article-tab active" data-art="h5t1">短文1｜蜂鸟</div>
+                    <div class="article-tab" data-art="h5t2">短文2｜鹦鹉</div>
+                    <div class="article-tab" data-art="h5t3">短文3｜鸟类的喙</div>
+                    <div class="article-tab" data-art="h5t4">短文4｜饲养鸽子的益处</div>
+                </div>
+                <!-- HSK5 T1 -->
+                <div class="article-panel active" data-art="h5t1">
+                    <div class="article-content">
+                        <span class="sentence">蜂鸟是现存鸟类当中体型最小的类群，其自然原生栖息地集中分布在南美洲区域。</span>
+                        <span class="sentence">这类鸟类体型十分小巧，成年个体大小基本和人类大拇指相近。</span>
+                        <span class="sentence">蜂鸟体表覆盖细密的羽毛，羽毛的微观结构具备光学折射特性，当太阳光照射到羽毛表面时，就会折射出丰富多变的色彩。</span>
+                        <span class="sentence">值得注意的是，这种色彩变化来自光线的折射作用，并非羽毛本身含有的色素发生改变。</span>
+                        <span class="sentence">蜂鸟演化出细长尖锐的喙，这一身体构造，是长期适应取食习性演化形成的。</span>
+                        <span class="sentence">在日常觅食活动中，花蜜是蜂鸟最主要的能量来源，它们同时也会捕食附着在花朵上的小型昆虫，以此补充身体所需的蛋白质。</span>
+                        <span class="sentence">蜂鸟的飞行能力极具特点，它们可以在空中保持悬停，方便将喙探入花蕊深处获取花蜜。</span>
+                        <span class="sentence">不同于多数鸟类，蜂鸟新陈代谢速率极高，因此需要频繁进食来维持身体运转。</span>
+                        <span class="sentence">尽管蜂鸟体型微小，但它们对生存环境的要求较高，依赖开花植物充足的区域。在热带、亚热带的丛林环境中，蜂鸟种群分布相对密集。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 原句：蜂鸟体表覆盖细密的羽毛，羽毛的微观结构具备光学折射特性，当太阳光照射到羽毛表面时，就会折射出丰富多变的色彩。</p>
+                        <div class="radio-line"><input type="radio" name="h5t1q1" id="h5t1q1a"><label for="h5t1q1a">A. 阳光照射蜂鸟羽毛时，因为羽毛特殊结构，会呈现多种不同颜色</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q1" id="h5t1q1b"><label for="h5t1q1b">B. 蜂鸟可以主动改变羽毛里的色素，从而变换自身颜色</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q1" id="h5t1q1c"><label for="h5t1q1c">C. 南美洲的蜂鸟天生带有五颜六色的色素羽毛</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q1" id="h5t1q1d"><label for="h5t1q1d">D. 蜂鸟只有在晴天的时候才会长出彩色羽毛</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 原句：蜂鸟拥有细长尖锐的喙，这一身体构造，是长期适应取食习性演化形成的。</p>
+                        <div class="radio-line"><input type="radio" name="h5t1q2" id="h5t1q2a"><label for="h5t1q2a">A. 蜂鸟细长的嘴，是慢慢进化出来，方便它寻找食物</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q2" id="h5t1q2b"><label for="h5t1q2b">B. 蜂鸟的喙会随着年龄增长不断变长变尖</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q2" id="h5t1q2c"><label for="h5t1q2c">C. 所有南美洲小鸟都长着细长尖锐的喙</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q2" id="h5t1q2d"><label for="h5t1q2d">D. 蜂鸟用细长的喙，主要用来和别的鸟类争斗</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 原句：它们可以在空中保持悬停，方便将喙探入花蕊深处获取花蜜。</p>
+                        <div class="radio-line"><input type="radio" name="h5t1q3" id="h5t1q3a"><label for="h5t1q3a">A. 蜂鸟停在花朵上面休息，顺便吸食花蜜</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q3" id="h5t1q3b"><label for="h5t1q3b">B. 蜂鸟能够停在空中不动，便于伸嘴到花里面采花蜜</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q3" id="h5t1q3c"><label for="h5t1q3c">C. 蜂鸟只能落在花枝上，才能吃到里面的花蜜</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t1q3" id="h5t1q3d"><label for="h5t1q3d">D. 蜂鸟飞行速度很快，飞过花朵就能带走花蜜</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.A  2.A  3.B</div>
+                </div>
+                <!-- HSK5 T2 -->
+                <div class="article-panel" data-art="h5t2">
+                    <div class="article-content">
+                        <span class="sentence">鹦鹉，也常被称作鹦哥，是广泛分布于热带林区的一类鸟类。</span>
+                        <span class="sentence">多数鹦鹉以各类植物果实作为主要食物来源，该物种普遍具备较长的自然寿命。</span>
+                        <span class="sentence">从外形特征来看，鹦鹉头部呈圆形，上喙体积偏大，向下弯曲，下喙相对短小。</span>
+                        <span class="sentence">这种独特的嘴部结构，方便它们咬开坚硬的果壳，获取内部果肉。</span>
+                        <span class="sentence">鹦鹉的羽毛色彩丰富绚丽，常见包含白色、红色、黄色、绿色等多种色系。</span>
+                        <span class="sentence">鹦鹉拥有发达的鸣管，具备模仿声音的生理基础，但这类模仿能力并非与生俱来。</span>
+                        <span class="sentence">只有经过持续、规范的人工训练，部分鹦鹉才能够复刻人类说话的声音。</span>
+                        <span class="sentence">需要区分的是，鹦鹉仅仅是复刻声音，并不代表它能够理解人类语言的含义。</span>
+                        <span class="sentence">不同品种的鹦鹉体型差异巨大，栖息地也覆盖热带雨林、草原等多种热带环境。</span>
+                        <span class="sentence">在野外环境中，鹦鹉大多成群活动，依靠果实、种子维持生存。</span>
+                        <span class="sentence">因为艳丽的外表与声音模仿能力，长期以来鹦鹉被很多人当作观赏鸟类。同时，不少野生鹦鹉品种属于保护动物，私自捕捉、饲养会违反相关规定。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 原句：鹦鹉拥有发达的鸣管，具备模仿声音的生理基础，但这类模仿能力并非与生俱来。</p>
+                        <div class="radio-line"><input type="radio" name="h5t2q1" id="h5t2q1a"><label for="h5t2q1a">A. 鹦鹉天生就能听懂并且理解人类说的话</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q1" id="h5t2q1b"><label for="h5t2q1b">B. 鹦鹉身体条件可以模仿声音，但这个能力不是出生就有</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q1" id="h5t2q1c"><label for="h5t2q1c">C. 所有鹦鹉都可以不用训练，直接模仿人的声音</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q1" id="h5t2q1d"><label for="h5t2q1d">D. 鹦鹉只能模仿大自然里的风声，不能模仿人声</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 原句：这种独特的嘴部结构，方便它们咬开坚硬的果壳，获取内部果肉。</p>
+                        <div class="radio-line"><input type="radio" name="h5t2q2" id="h5t2q2a"><label for="h5t2q2a">A. 鹦鹉特殊的嘴巴，便于咬开果壳吃到里面的果肉</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q2b"><label for="h5t2q2b">B. 鹦鹉的嘴弯曲短小，很难咬开任何坚硬果实</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q2c"><label for="h5t2q2c">C. 鹦鹉只吃柔软嫩叶，不需要咬开果壳</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q2d"><label for="h5t2q2d">D. 鹦鹉用爪子剥开果壳，嘴巴只用来喝水</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 原句：只有经过持续、规范的人工训练，部分鹦鹉才能够复刻人类说话的声音。</p>
+                        <div class="radio-line"><input type="radio" name="h5t2q3" id="h5t2q3a"><label for="h5t2q3a">A. 只要是人养的鹦鹉，全都可以流利与人对话</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q3" id="h5t2q3b"><label for="h5t2q3b">B. 经过长期规范的人工训练，一些鹦鹉可以模仿人说话的声音</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q3" id="h5t2q3c"><label for="h5t2q3c">C. 鹦鹉学会说话之后，就可以明白人的想法</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t2q3" id="h5t2q3d"><label for="h5t2q3d">D. 在野外长大的鹦鹉，天生就会模仿人类说话</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.B  2.A  3.B</div>
+                </div>
+                <!-- HSK5 T3 -->
+                <div class="article-panel" data-art="h5t3">
+                    <div class="article-content">
+                        <span class="sentence">鸟类的嘴在生物学上被命名为喙。</span>
+                        <span class="sentence">多种多样的喙形态，是鸟类长期适应生存环境与觅食习惯演化的结果。</span>
+                        <span class="sentence">喙的功能并不局限于获取食物，它还拥有多重用途：鸟类可以借助喙梳理、整理全身羽毛，也可以用喙进行同类之间的争斗，还能够利用喙收集材料、搭建鸟巢。</span>
+                        <span class="sentence">不同食性的鸟类，喙的形态存在明显区别。</span>
+                        <span class="sentence">以花蜜、昆虫为食物来源的鸟类，一般长着细长的喙，蜂鸟就是典型代表；主要食用植物种子与嫩芽的鸟类，喙短小有力，麻雀属于这类；捕食鱼类的水鸟，则长出宽大的喙，便于在水中捕捉猎物。</span>
+                        <span class="sentence">喙是鸟类十分重要的器官，直接关系到鸟类觅食、生存的能力。</span>
+                        <span class="sentence">鸟类没有牙齿，无法咀嚼食物，所以全部食物都依靠喙处理之后，直接吞咽进入体内。</span>
+                        <span class="sentence">喙外层的角质层会缓慢磨损，同时持续生长，不会因为长期使用而彻底消耗。</span>
+                        <span class="sentence">通过观察鸟类喙的外形，研究者可以快速判断该鸟类大致的食性，推测它所处的生存环境。这也是生物学家研究鸟类分类与生态习性的重要依据之一。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 原句：多种多样的喙形态，是鸟类长期适应生存环境与觅食习惯演化的结果。</p>
+                        <div class="radio-line"><input type="radio" name="h5t3q1" id="h5t3q1a"><label for="h5t3q1a">A. 鸟类嘴的不同样子，是为适应环境和吃食，慢慢进化而来</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q1" id="h5t3q1b"><label for="h5t3q1b">B. 鸟喙的形状会在一年之中，随季节自动变化</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q1" id="h5t3q1c"><label for="h5t3q1c">C. 同一种鸟类，每一只的喙外形都完全不一样</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q1" id="h5t3q1d"><label for="h5t3q1d">D. 鸟类可以自由改变喙的样子，适应不同食物</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 原句：喙的功能并不局限于获取食物，它还拥有多重用途。</p>
+                        <div class="radio-line"><input type="radio" name="h5t3q2" id="h5t3q2a"><label for="h5t3q2a">A. 鸟的嘴唯一的用处就是寻找和吃掉食物</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q2" id="h5t3q2b"><label for="h5t3q2b">B. 除了吃东西，鸟嘴还有很多其他作用</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q2" id="h5t3q2c"><label for="h5t3q2c">C. 鸟类只用爪子收集材料搭建鸟巢</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q2d"><label for="h5t3q2d">D. 鸟类整理羽毛的时候，不会使用自己的喙</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 原句：鸟类没有牙齿，无法咀嚼食物，所以全部食物都依靠喙处理之后，直接吞咽进入体内。</p>
+                        <div class="radio-line"><input type="radio" name="h5t3q3" id="h5t3q3a"><label for="h5t3q3a">A. 鸟儿没有牙齿嚼食物，要用嘴处理食物再吞下去</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q3b"><label for="h5t3q3b">B. 鸟类的牙齿长在喙里面，可以咬碎种子</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q3c"><label for="h5t3q3c">C. 鸟类吃东西，会先把食物嚼碎再吞进胃里</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t3q3" id="h5t3q3d"><label for="h5t3q3d">D. 喙可以代替胃，直接消化鸟类吃的食物</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.A  2.B  3.A</div>
+                </div>
+                <!-- HSK5 T4 -->
+                <div class="article-panel" data-art="h5t4">
+                    <div class="article-content">
+                        <span class="sentence">鸽子属于和人类关系密切的鸟类。</span>
+                        <span class="sentence">科学的饲养与放飞鸽子的活动，能够对生态平衡起到积极作用，同时对人类身心健康产生正面影响。</span>
+                        <span class="sentence">饲养鸽子的行为在世界各地拥有很长的历史。</span>
+                        <span class="sentence">对于饲养者而言，这项活动的价值不只体现在经济层面，更多存在于身心锻炼与精神消遣。</span>
+                        <span class="sentence">以退休人群为例，不少老年人饲养鸽子，目的并不是售卖鸽子换取收入，也不单单是打发空闲时间。</span>
+                        <span class="sentence">日常带着鸽子外出放飞，可以帮助饲养者活动肢体，持续锻炼视力。</span>
+                        <span class="sentence">鸽子具备很强的归巢能力，被带到陌生地点放飞之后，它们能够辨别方位，跨越一定距离，重新回到原本的巢穴。</span>
+                        <span class="sentence">饲养者在放飞过程中，需要持续观察鸽子飞行的轨迹，这个过程可以锻炼专注力。</span>
+                        <span class="sentence">长期坚持这项爱好，不仅可以丰富退休后的日常生活，带来精神愉悦，还能够促进肢体活动，达到健身的效果。</span>
+                        <span class="sentence">当然饲养鸽子也要遵守城市管理规定，控制饲养数量，避免对周边居民的生活造成干扰。</span>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">1. 原句：科学的饲养与放飞鸽子的活动，能够对生态平衡起到积极作用，同时对人类身心健康产生正面影响。</p>
+                        <div class="radio-line"><input type="radio" name="h5t4q1" id="h5t4q1a"><label for="h5t4q1a">A. 合理饲养放飞鸽子，有利于生态，也有益于人的身心</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q1b"><label for="h5t4q1b">B. 大量随便放养鸽子，一定会破坏当地的生态环境</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q1" id="h5t4q1c"><label for="h5t4q1c">C. 养鸽子只能让人心情变好，对身体没有帮助</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q1" id="h5t4q1d"><label for="h5t4q1d">D. 只有老年人养鸽子，才可以保持身体健康</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">2. 原句：不少老年人饲养鸽子，目的并不是售卖鸽子换取收入，也不单单是打发空闲时间。</p>
+                        <div class="radio-line"><input type="radio" name="h5t4q2" id="h5t4q2a"><label for="h5t4q2a">A. 很多老人养鸽子，不是为了卖鸽子赚钱，也不只是用来消遣</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q2b"><label for="h5t4q2b">B. 老人养鸽子，最主要目标就是卖掉鸽子获得收入</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q2" id="h5t4q2c"><label for="h5t4q2c">C. 老年人养鸽子，唯一目的就是打发无聊的时间</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q2d"><label for="h5t4q2d">D. 老人养鸽子是为了参加鸽子飞行比赛拿奖金</label></div>
+                    </div>
+                    <div class="question-block">
+                        <p class="q-title">3. 原句：鸽子具备很强的归巢能力，被带到陌生地点放飞之后，它们能够辨别方位，跨越一定距离，重新回到原本的巢穴。</p>
+                        <div class="radio-line"><input type="radio" name="h5t4q3" id="h5t4q3a"><label for="h5t4q3a">A. 鸽子放到远处陌生地方，有能力认路飞回自己的窝</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q3b"><label for="h5t4q3b">B. 鸽子离开巢穴之后，就再也找不到回家的方向</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q3c"><label for="h5t4q3c">C. 鸽子只能在很近的地方飞行，不能远距离飞行</label></div>
+                        <div class="radio-line"><input type="radio" name="h5t4q3d"><label for="h5t4q3d">D. 鸽子辨别方向，必须依靠饲养者带路回家</label></div>
+                    </div>
+                    <button class="showAnswerBtn">查看参考答案</button>
+                    <div class="answer-box">答案：1.A  2.A  3.A</div>
+                </div>
+            </div>
+        </div>
+        <!--右侧生词语法面板-->
+        <div class="vocab-side">
+            <h3>📖 生词、释义 & 语法</h3>
+            <!--HSK3生词语法-->
+            <div class="vocab-section active" data-level="hsk3">
+                <!--h3t1-->
+                <div class="vocab-art" data-art="h3t1">
+                    <div class="vocab-item"><span class="vocab-word">蜂鸟</span>：一种很小的鸟</div>
+                    <div class="vocab-item"><span class="vocab-word">南美洲</span>：一个大洲的名字</div>
+                    <div class="vocab-item"><span class="vocab-word">羽毛</span>：鸟身上薄薄的毛</div>
+                    <div class="vocab-item"><span class="vocab-word">花蜜</span>：花里面甜甜的水</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 和……差不多：用来比较两件事物，表示两者很接近。例：他的身高和我差不多。</div>
+                    <div class="grammar-item">2. 动词+着：表示状态持续。例：他拿着一本书。</div>
+                    <div class="grammar-item">3. 可以+动词：表示有能力做某事。例：我可以说汉语。</div>
+                </div>
+                <!--h3t2-->
+                <div class="vocab-art" data-art="h3t2" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">鹦鹉</span>：可以学说话的鸟</div>
+                    <div class="vocab-item"><span class="vocab-word">热带</span>：很热的地方</div>
+                    <div class="vocab-item"><span class="vocab-word">寿命</span>：生命可以活多久</div>
+                    <div class="vocab-item"><span class="vocab-word">训练</span>：教动物学会做事情</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. ……以后：前面事情完成之后，发生后面的动作。例：吃完饭以后，我散步。</div>
+                    <div class="grammar-item">2. 有+形容词：表示事物具有某种特点。例：这个杯子有好看的颜色。</div>
+                    <div class="grammar-item">3. 主要+动词：表示最重要的。例：我主要学习HSK3。</div>
+                </div>
+                <!--h3t3-->
+                <div class="vocab-art" data-art="h3t3" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">喙</span>：鸟的嘴巴</div>
+                    <div class="vocab-item"><span class="vocab-word">整理</span>：收拾，变整齐</div>
+                    <div class="vocab-item"><span class="vocab-word">筑巢</span>：鸟做自己的窝</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 不只是……还……：递进关系，不只一件事，还有另外一件。</div>
+                    <div class="grammar-item">2. 不同的……，……不一样：表示事物之间有差别。</div>
+                    <div class="grammar-item">3. 分号用法：用来分隔并列的分句，列举同类情况。</div>
+                </div>
+                <!--h3t4-->
+                <div class="vocab-art" data-art="h3t4" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">退休</span>：年纪大，不用上班了</div>
+                    <div class="vocab-item"><span class="vocab-word">十几</span>：11到19之间的数量</div>
+                    <div class="vocab-item"><span class="vocab-word">放飞</span>：让鸟飞出去</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 不是……也不只是……：否定两种情况，说明真正目的。</div>
+                    <div class="grammar-item">2. 让+宾语+动词：使某人/某物做某事。例：让鸽子飞。</div>
+                    <div class="grammar-item">3. 越来越+形容词：程度慢慢变化。例：天气越来越冷。</div>
+                </div>
+            </div>
+            <!--HSK4生词语法-->
+            <div class="vocab-section" data-level="hsk4">
+                <div class="vocab-art" data-art="h4t1">
+                    <div class="vocab-item"><span class="vocab-word">产于</span>：出产在，生长在</div>
+                    <div class="vocab-item"><span class="vocab-word">呈现</span>：显出、表现出来</div>
+                    <div class="vocab-item"><span class="vocab-word">昆虫</span>：虫子一类的小动物</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 在……下：表示特定条件或环境。例：在灯光下看书。</div>
+                    <div class="grammar-item">2. 跟……差不多：比较两者，相近。</div>
+                    <div class="grammar-item">3. 喜欢+动词短语：表达爱好。</div>
+                </div>
+                <div class="vocab-art" data-art="h4t2" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">模仿</span>：照着样子学</div>
+                    <div class="vocab-item"><span class="vocab-word">弯曲</span>：不直，弯起来</div>
+                    <div class="vocab-item"><span class="vocab-word">色彩</span>：颜色</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 经过……，能……：经历某个过程之后获得能力。</div>
+                    <div class="grammar-item">2. 有……等：用于列举事物，不完全列出。</div>
+                    <div class="grammar-item">3. 且：连词，并且，书面连接词。</div>
+                </div>
+                <div class="vocab-art" data-art="h4t3" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">习性</span>：生活习惯</div>
+                    <div class="vocab-item"><span class="vocab-word">发达</span>：长得很好，功能强</div>
+                    <div class="vocab-item"><span class="vocab-word">捕食</span>：抓别的动物当食物</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 一般来说：引出普遍情况。</div>
+                    <div class="grammar-item">2. 这是……的结果：表示因果关系。</div>
+                    <div class="grammar-item">3. 如：举例，“比如”，用来举例子。</div>
+                </div>
+                <div class="vocab-art" data-art="h4t4" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">生态平衡</span>：大自然里面生物平衡</div>
+                    <div class="vocab-item"><span class="vocab-word">盘旋</span>：在空中转圈飞</div>
+                    <div class="vocab-item"><span class="vocab-word">眼神儿</span>：视力、眼睛看东西的能力</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 不是……而是……：否定前者，肯定后者。</div>
+                    <div class="grammar-item">2. 虽然……可是……：转折关系。</div>
+                    <div class="grammar-item">3. 一点儿不+形容词：完全不，一点也不。</div>
+                </div>
+            </div>
+            <!--HSK5生词语法-->
+            <div class="vocab-section" data-level="hsk5">
+                <div class="vocab-art" data-art="h5t1">
+                    <div class="vocab-item"><span class="vocab-word">现存</span>：现在还存在、活着的</div>
+                    <div class="vocab-item"><span class="vocab-word">折射</span>：光线穿过东西改变方向</div>
+                    <div class="vocab-item"><span class="vocab-word">新陈代谢</span>：生物体内物质更新的过程</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 尽管……但……：让步转折，虽然……但是……</div>
+                    <div class="grammar-item">2. 并非：并不是，书面否定词。</div>
+                    <div class="grammar-item">3. 以此：用来借此，书面语，用来达成某个目的。</div>
+                </div>
+                <div class="vocab-art" data-art="h5t2" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">与生俱来</span>：生下来就有的</div>
+                    <div class="vocab-item"><span class="vocab-word">复刻</span>：原样模仿、复制</div>
+                    <div class="vocab-item"><span class="vocab-word">观赏</span>：观看欣赏</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 只有……才……：必要条件，必须满足前面条件，才有后面结果。</div>
+                    <div class="grammar-item">2. 并不：加强否定，“并不是”。</div>
+                    <div class="grammar-item">3. 同时：连词，表示两件事并存。</div>
+                </div>
+                <div class="vocab-art" data-art="h5t3" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">演化</span>：长时间慢慢进化变化</div>
+                    <div class="vocab-item"><span class="vocab-word">角质层</span>：生物外层坚硬薄层</div>
+                    <div class="vocab-item"><span class="vocab-word">咀嚼</span>：用牙齿咬碎食物</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 并不局限于：范围不止……，不只是。</div>
+                    <div class="grammar-item">2. 所以：因果连词，引出结果。</div>
+                    <div class="grammar-item">3. 通过……可以……：凭借某种方式，可以实现某事。</div>
+                </div>
+                <div class="vocab-art" data-art="h5t4" style="display:none;">
+                    <div class="vocab-item"><span class="vocab-word">归巢</span>：回到自己的窝</div>
+                    <div class="vocab-item"><span class="vocab-word">消遣</span>：打发时间，休闲娱乐</div>
+                    <div class="vocab-item"><span class="vocab-word">专注力</span>：集中注意力的能力</div>
+                    <div class="grammar-title">语法点</div>
+                    <div class="grammar-item">1. 不只……还……：递进关系，不仅有A，还存在B。</div>
+                    <div class="grammar-item">2. 对……起到积极作用：书面表达，对某物有好处。</div>
+                    <div class="grammar-item">3. 避免……：防止不好的事情发生。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    //====计时器【倒计时5分钟，句子9秒消失一句】====
+    let timerInterval = null;
+    let sentenceHideTimer = null;
+    // 固定倒计时：5分钟 = 300秒
+    let remainSeconds = 300;
+    const timeDisplay = document.getElementById('timeDisplay');
+    const startTimerBtn = document.getElementById('startTimer');
+    const resetTimerBtn = document.getElementById('resetTimer');
+
+    function formatTime(s) {
+        const min = String(Math.floor(s / 60)).padStart(2,'0');
+        const sec = String(s % 60).padStart(2,'0');
+        return `${min}:${sec}`;
+    }
+
+    // 句子逐句消失：9000毫秒 = 9秒一句
+    function hideSentences() {
+        const currentPanel = document.querySelector('.article-panel.active');
+        const sentences = currentPanel.querySelectorAll('.sentence');
+        let idx = 0;
+        sentenceHideTimer = setInterval(()=>{
+            if(idx >= sentences.length) {
+                clearInterval(sentenceHideTimer);
+                return;
+            }
+            sentences[idx].classList.add('hide');
+            idx++;
+        }, 9000);
+    }
+    function resetSentences() {
+        clearInterval(sentenceHideTimer);
+        document.querySelectorAll('.sentence').forEach(sent => sent.classList.remove('hide'));
+    }
+
+    // 倒计时
+    startTimerBtn.onclick = function(){
+        if(timerInterval) return;
+        timerInterval = setInterval(()=>{
+            remainSeconds--;
+            timeDisplay.textContent = formatTime(remainSeconds);
+            if(remainSeconds <= 0) {
+                clearInterval(timerInterval);
+                alert("时间到！");
+            }
+        },1000);
+        hideSentences();
+    }
+    resetTimerBtn.onclick = function(){
+        clearInterval(timerInterval);
+        clearInterval(sentenceHideTimer);
+        timerInterval = null;
+        remainSeconds = 300;
+        timeDisplay.textContent = formatTime(remainSeconds);
+        resetSentences();
+    }
+
+    //====一级标签 HSK3/4/5切换====
+    const levelTabs = document.querySelectorAll('.level-tab');
+    const levelGroups = document.querySelectorAll('.level-group');
+    const vocabSections = document.querySelectorAll('.vocab-section');
+    levelTabs.forEach(tab=>{
+        tab.onclick = function(){
+            const targetLevel = this.dataset.level;
+            //激活一级标签
+            levelTabs.forEach(t=>t.classList.remove('active'));
+            this.classList.add('active');
+            //切换左侧文章组
+            levelGroups.forEach(g=>g.style.display='none');
+            document.getElementById(targetLevel).style.display='block';
+            //切换右侧生词面板
+            vocabSections.forEach(sec=>sec.classList.remove('active'));
+            document.querySelector(`.vocab-section[data-level="${targetLevel}"]`).classList.add('active');
+            //点击该等级第一篇短文
+            const firstArtTab = document.querySelector(`#${targetLevel} .article-tab`);
+            if(firstArtTab) firstArtTab.click();
+            resetTimerBtn.click();
+        }
+    })
+    //====二级标签 短文T1-T4切换====
+    document.querySelectorAll('.article-tab').forEach(artTab=>{
+        artTab.onclick = function(){
+            const parentGroup = this.closest('.level-group');
+            const targetArt = this.dataset.art;
+            //二级标签激活
+            parentGroup.querySelectorAll('.article-tab').forEach(t=>t.classList.remove('active'));
+            this.classList.add('active');
+            //切换文章面板
+            parentGroup.querySelectorAll('.article-panel').forEach(p=>p.classList.remove('active'));
+            parentGroup.querySelector(`.article-panel[data-art="${targetArt}"]`).classList.add('active');
+            //切换右侧生词短文内容
+            const vocabSection = document.querySelector(`.vocab-section[data-level="${parentGroup.id}"]`);
+            vocabSection.querySelectorAll('.vocab-art').forEach(art=>art.style.display='none');
+            vocabSection.querySelector(`.vocab-art[data-art="${targetArt}"]`).style.display='block';
+            resetTimerBtn.click();
+        }
+    })
+    //====查看答案按钮====
+    document.querySelectorAll('.showAnswerBtn').forEach(btn=>{
+        btn.onclick = function(){
+            const ansBox = this.nextElementSibling;
+            ansBox.classList.toggle('show');
+        }
+    })
+</script>
+</body>
+</html>

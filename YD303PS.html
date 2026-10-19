@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语阅读课文｜原文+简化对照 + 交互习题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #EAE7E2;
+            line-height: 1.7;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(140,130,120,0.12);
+        }
+        h2 {
+            text-align: center;
+            color: #5C544F;
+            margin-bottom:18px;
+            border-bottom:1px solid #D9D2CB;
+            padding-bottom:10px;
+            font-size:20px;
+        }
+        .para-item {
+            margin-bottom: 40px;
+        }
+        .para-item p {
+            font-size:16px;
+            color:#4A4541;
+        }
+        .exercise-title{
+            font-size:19px;
+            font-weight:bold;
+            margin:22px 0 12px;
+            color:#5C544F;
+        }
+        .q-item{
+            margin:14px 0;
+            padding:10px;
+        }
+        .judge-options button{
+            padding:6px 18px;
+            margin:0 8px;
+            border-radius:6px;
+            border:1px solid #C8C0B8;
+            background:#E9E3DD;
+            cursor:pointer;
+            font-size:15px;
+            color:#4A4541;
+        }
+        .judge-options button.right{
+            background:#D8E2DB;
+            border-color:#89A897;
+        }
+        .judge-options button.wrong{
+            background:#E8D9D9;
+            border-color:#C9A8A8;
+        }
+        .answer-text{
+            margin-left:12px;
+            font-weight:bold;
+        }
+        .choice-item{
+            margin:12px 0;
+            color:#4A4541;
+        }
+        .blank-input{
+            padding:4px 8px;
+            width:90px;
+            border:1px solid #C8C0B8;
+            border-radius:4px;
+            background:#fff;
+        }
+        .check-answer-btn{
+            margin:12px 0 20px;
+            padding:8px 16px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        /* 生词蓝色 + 悬浮提示 */
+        .vocab-hover {
+            color: #0044bb;
+            position: relative;
+            cursor: help;
+            font-weight:500;
+        }
+        .vocab-hover .tip {
+            visibility: hidden;
+            position: absolute;
+            left: 0;
+            bottom: 125%;
+            background: #222;
+            color: #fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space: nowrap;
+            z-index: 99;
+            font-size:14px;
+        }
+        .vocab-hover:hover .tip {
+            visibility: visible;
+        }
+        /* 语法红色 */
+        .grammar-red{
+            color:#b82626;
+            font-weight:500;
+        }
+        .vocab-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .vocab-word{
+            font-weight:bold;
+            color:#727A84;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 左上：原文 -->
+        <div class="box">
+            <h2>课文原文</h2>
+            <div class="para-item">
+                <p>【一】我家<span class="vocab-hover">隔壁<span class="tip">隔壁：邻居旁边</span></span>住着一位养鸟的老人。每天早晨，我都<span class="grammar-red">能</span>看见他<span class="grammar-red">把</span>一只脚上<span class="vocab-hover">拴<span class="tip">拴：用绳子绑住</span></span>着绳的鸟放在阳台晾衣服的<span class="vocab-hover">竹竿<span class="tip">竹竿：竹子做的长棍子</span></span>上，<span class="grammar-red">然后</span><span class="grammar-red">把</span>绳子<span class="vocab-hover">缠<span class="tip">缠：一圈圈绕起来</span></span>在上面，<span class="grammar-red">而后</span>回头朝屋里喊到：“快出来吧！”一会儿，一只鸟从里面飞出来，在竹竿上<span class="grammar-red">一</span>驻脚，腾地<span class="grammar-red">又</span>窜出去。那鸟在楼房之间的空间里<span class="vocab-hover">自如<span class="tip">自如：轻松不受限制</span></span>地转着圈，<span class="grammar-red">而</span>那只被拴在竹竿上的鸟也一扇翅膀，等感觉到无法起飞时，就冲着老人叫着。老人不理它，冲着那只飞着的鸟喊：“回来！回来！”那鸟很<span class="vocab-hover">听话<span class="tip">听话：服从指令</span></span>，很快就飞到老人的<span class="vocab-hover">肩头<span class="tip">肩头：肩膀</span></span>。老人把手臂伸直搭着桥，那鸟便<span class="vocab-hover">轻盈<span class="tip">轻盈：轻巧轻快</span></span>地跳到竹竿上，两只鸟嘴对嘴叽叽咕咕地<span class="vocab-hover">亲热<span class="tip">亲热：关系亲近</span></span>起来。老人<span class="vocab-hover">痴痴地<span class="tip">痴痴地：专心一直看着</span></span>望着它们。</p>
+            </div>
+            <div class="para-item">
+                <p>【二】老人是什么时间开始养鸟的，我不知道。<span class="grammar-red">据说</span>，<span class="grammar-red">在我家搬来之前</span>他就已经在这里住了很久了。老人有个好习惯：<span class="grammar-red">不</span>喝酒，<span class="grammar-red">不</span>抽烟，<span class="grammar-red">不</span>下棋，<span class="grammar-red">不</span>玩儿牌。只爱养鸟。老人养鸟<span class="vocab-hover">与众不同<span class="tip">与众不同：和别人不一样</span></span>：不需要<span class="vocab-hover">鸟笼<span class="tip">鸟笼：关鸟的笼子</span></span>。每天早晨七点，他就带着鸟去公园里散步，<span class="grammar-red">然后</span>，<span class="grammar-red">又</span>带着鸟去邮局买报，回家<span class="grammar-red">后</span><span class="grammar-red">把</span>鸟放在那个<span class="vocab-hover">背阴<span class="tip">背阴：没有阳光</span></span>的阳台上再也不出门了。</p>
+            </div>
+            <div class="para-item">
+                <p>【三】一天早上，我<span class="grammar-red">被</span>一阵鸟叫声<span class="vocab-hover">吵醒<span class="tip">吵醒：声音弄醒睡觉的人</span></span>，穿上衣服就来到阳台上。奇怪，老人家的阳台门关着，鸟叫声是从<span class="vocab-hover">门缝<span class="tip">门缝：门的缝隙</span></span>里传出来的。我静静地听了一会儿，鸟还在叫，<span class="grammar-red">可是</span>却不见老人出来。我听到老人家的门<span class="grammar-red">一会儿</span>被撞一下，<span class="grammar-red">隔一会儿</span>又被撞一下。我感到有些<span class="vocab-hover">不妙<span class="tip">不妙：感觉情况不好</span></span>，赶快去敲老人家的门，没人答应。我用力敲，<span class="grammar-red">还是</span>没有回音。我慌了，就大声喊<span class="grammar-red">了起来</span>。楼里的人<span class="grammar-red">被</span>吵醒了，大家告诉我：老人昨天<span class="vocab-hover">昏倒<span class="tip">昏倒：突然晕倒失去意识</span></span>在楼梯上，人们发现后立刻<span class="grammar-red">把</span>他送到医院去了。</p>
+            </div>
+            <div class="para-item">
+                <p>【四】我<span class="vocab-hover">急忙<span class="tip">急忙：快速、立刻</span></span>赶到医院。护士领我来到老人的病床前。等了好长时间，老人睁开了眼睛。他慢慢伸出双手<span class="vocab-hover">紧紧<span class="tip">紧紧：用力抓住不松开</span></span>拉住我说：“鸟……鸟……鸟……”<span class="grammar-red">又</span>过了好一会儿，老人才拿出几把钥匙交给我，慢慢地说：“<span class="grammar-red">把</span>鸟放了吧。”</p>
+            </div>
+            <div class="para-item">
+                <p>【五】我<span class="vocab-hover">安慰<span class="tip">安慰：安抚难过的人</span></span>了老人几句，心情<span class="vocab-hover">沉重<span class="tip">沉重：心里难过</span></span>地回来打开老人家的门。我发现原来这是个两室一厅的单元房，一间是老人的卧室，另一间是给鸟住的。那间鸟住的房间里挂满了<span class="vocab-hover">各式各样<span class="tip">各式各样：很多种类</span></span>的鸟笼。鸟笼很干净。屋子中间<span class="grammar-red">有</span>一根竹竿，上面蹲着两只鸟，一只脚上拴着绳，一只没有。我走上前去，还没伸手，那只没拴绳的鸟<span class="vocab-hover">猛地<span class="tip">猛地：突然一下子</span></span>向我冲来，从我的耳边擦过飞到阳台。我<span class="grammar-red">把</span>那只拴着绳的鸟解开带到阳台上，先飞出来的那只鸟已经站在阳台的竹竿上，<span class="vocab-hover">一动不动<span class="tip">一动不动：完全不动</span></span>地看着我。我把手中的鸟放在阳台地上，拍拍手让它飞走，<span class="grammar-red">可是</span>它却不飞。<span class="grammar-red">而</span>竹竿上的那只鸟却飞下来，两只鸟走到一起叽叽咕咕地叫起来。</p>
+            </div>
+            <div class="para-item">
+                <p>【六】我<span class="grammar-red">给</span>它们<span class="vocab-hover">喂食<span class="tip">喂食：给动物喂食物</span></span>，它们不吃；喂水，也不喝。我捉起它们扔到窗外，它们飞了一圈<span class="grammar-red">又</span>飞回来立在竹竿上，<span class="grammar-red">然后</span>又盯着我叽叽咕咕地叫着。我<span class="grammar-red">又</span><span class="grammar-red">试</span>了几次，它们<span class="grammar-red">还是</span><span class="grammar-red">不肯<span class="tip">不肯：不愿意</span></span>飞走。我<span class="grammar-red">只好</span>锁上老人家的门。第二天，我看见那两只鸟还立在竹竿上。第三天，那两只鸟<span class="grammar-red">还</span>没有飞走。半个月过去了，那两只鸟<span class="grammar-red">还</span>蹲在那儿。</p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para-item">
+                <p>【一】我的<span class="vocab-hover">隔壁<span class="tip">隔壁：邻居旁边</span></span>有一位老人，他喜欢养鸟。每天早上，老人<span class="grammar-red">把</span>一只脚绑着绳子的鸟放在阳台的<span class="vocab-hover">竹竿<span class="tip">竹竿：竹子做的长棍子</span></span>上，<span class="grammar-red">然后</span>朝屋里喊另一只鸟出来。第二只鸟飞出来，在空中转圈。绑着绳子的鸟想飞，<span class="grammar-red">但是</span>飞不起来。老人叫飞鸟回来，鸟听话地落到老人<span class="vocab-hover">肩头<span class="tip">肩头：肩膀</span></span>上，<span class="grammar-red">再</span>跳到竹竿上。两只鸟靠在一起，很<span class="vocab-hover">亲热<span class="tip">亲热：关系亲近</span></span>。老人静静地看着它们。</p>
+            </div>
+            <div class="para-item">
+                <p>【二】我不知道老人什么时候开始养鸟。<span class="grammar-red">在我搬来这里之前</span>，老人就住在这里很久了。老人<span class="grammar-red">不</span>喝酒、<span class="grammar-red">不</span>抽烟、<span class="grammar-red">不</span>下棋、<span class="grammar-red">不</span>打牌，他最喜欢养鸟。老人养鸟不用<span class="vocab-hover">鸟笼<span class="tip">鸟笼：关鸟的笼子</span></span>。每天早上七点，老人带着鸟去公园散步，<span class="grammar-red">再</span>去邮局买报纸。回家<span class="grammar-red">之后</span>，<span class="grammar-red">就</span><span class="grammar-red">把</span>鸟放在<span class="vocab-hover">背阴<span class="tip">背阴：没有阳光</span></span>的阳台。</p>
+            </div>
+            <div class="para-item">
+                <p>【三】一天早上，鸟叫声<span class="grammar-red">把</span>我<span class="vocab-hover">吵醒<span class="tip">吵醒：声音弄醒睡觉的人</span></span>。我走到阳台，发现老人家阳台门关着，鸟从门里发出叫声。我听见门不断被撞，心里觉得<span class="vocab-hover">不妙<span class="tip">不妙：感觉情况不好</span></span>。我敲门，没有人回答。我大声喊叫。邻居告诉我，老人昨天在楼梯<span class="vocab-hover">昏倒<span class="tip">昏倒：突然晕倒失去意识</span></span>，<span class="grammar-red">已经</span><span class="grammar-red">被</span>送到医院。</p>
+            </div>
+            <div class="para-item">
+                <p>【四】我<span class="vocab-hover">急忙<span class="tip">急忙：快速、立刻</span></span>赶到医院。护士带我到老人床边。很久<span class="grammar-red">之后</span>老人才睁开眼睛，<span class="vocab-hover">紧紧<span class="tip">紧紧：用力抓住不松开</span></span>抓住我，只说“鸟”。过一会儿，老人把钥匙给我，慢慢地告诉我：<span class="grammar-red">把</span>鸟放走。</p>
+            </div>
+            <div class="para-item">
+                <p>【五】我<span class="vocab-hover">安慰<span class="tip">安慰：安抚难过的人</span></span>老人，回到老人家开门。房子是两室一厅，一间老人住，一间给鸟住。鸟的房间<span class="grammar-red">有</span>很多干净鸟笼。屋子中间竹竿上<span class="grammar-red">有</span>两只鸟，一只脚上有绳子，一只没有。我刚靠近，没绳子的鸟飞到阳台。我解开另一只鸟的绳子带到阳台。我拍手让鸟飞走，鸟<span class="grammar-red">不肯</span>飞。两只鸟走到一起，叽叽地叫。</p>
+            </div>
+            <div class="para-item">
+                <p>【六】我<span class="grammar-red">给</span>鸟食物和水，它们不吃不喝。我<span class="grammar-red">把</span>鸟扔到窗外，它们飞一圈，<span class="grammar-red">又</span>回到竹竿上。我<span class="grammar-red">试</span>了好几次，鸟<span class="grammar-red">还是</span>不愿意离开。我<span class="grammar-red">只好</span>锁上门。第二天、第三天，两只鸟<span class="grammar-red">都</span>还在竹竿上。半个月过去了，它们<span class="grammar-red">依然</span>留在那里。</p>
+            </div>
+        </div>
+        <!-- 左下：练习题 -->
+        <div class="box">
+            <h2>课后练习题</h2>
+            <button class="check-answer-btn" onclick="resetAllAnswers()">🔄 重置全部答案</button>
+            <div class="exercise-title">一、判断题（点击 ✓ / ✗）</div>
+            <div class="q-item" data-answer="true">
+                <span>1. 老人养鸟，其中一只鸟的脚上拴着绳子。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>2. 老人每天早上八点带鸟出门散步。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>3. 老人喝酒，但是不抽烟。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>4. 老人养鸟，平时不用鸟笼。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>5. 老人昏倒后，邻居把他送到医院。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>6. 老人在医院要求“把鸟放了吧”。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>7. 老人家里只有一个房间。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>8. “我”解开绳子之后，两只鸟马上飞向远方，再也没有回来。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>9. 两只鸟不吃“我”给的食物，也不喝水。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>10. 半个月之后，两只鸟依然留在阳台竹竿上。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+
+            <div class="exercise-title">二、选择题（单选）</div>
+            <div class="choice-item">
+                <p>1. 老人每天早晨几点带鸟出门散步？</p>
+                <label><input type="radio" name="q1" value="A"> A.7点</label>
+                <label><input type="radio" name="q1" value="B"> B.8点</label>
+                <label><input type="radio" name="q1" value="C"> C.9点</label>
+            </div>
+            <div class="choice-item">
+                <p>2. 老人有什么习惯？</p>
+                <label><input type="radio" name="q2" value="A"> A.爱下棋</label>
+                <label><input type="radio" name="q2" value="B"> B.爱养鸟</label>
+                <label><input type="radio" name="q2" value="C"> C.爱打牌</label>
+            </div>
+            <div class="choice-item">
+                <p>3. 老人晕倒在哪里？</p>
+                <label><input type="radio" name="q3" value="A"> A.家里床上</label>
+                <label><input type="radio" name="q3" value="B"> B.楼梯上</label>
+                <label><input type="radio" name="q3" value="C"> C.公园</label>
+            </div>
+            <div class="choice-item">
+                <p>4. 老人住的房子是？</p>
+                <label><input type="radio" name="q4" value="A"> A.一室一厅</label>
+                <label><input type="radio" name="q4" value="B"> B.两室一厅</label>
+                <label><input type="radio" name="q4" value="C"> C.三室一厅</label>
+            </div>
+            <div class="choice-item">
+                <p>5. 老人让“我”做什么？</p>
+                <label><input type="radio" name="q5" value="A"> A.卖掉鸟</label>
+                <label><input type="radio" name="q5" value="B"> B.把鸟放走</label>
+                <label><input type="radio" name="q5" value="C"> C.送给别人鸟</label>
+            </div>
+            <div class="choice-item">
+                <p>6. 鸟的房间里面有很多什么？</p>
+                <label><input type="radio" name="q6" value="A"> A.花盆</label>
+                <label><input type="radio" name="q6" value="B"> B.鸟笼</label>
+                <label><input type="radio" name="q6" value="C"> C.书本</label>
+            </div>
+            <div class="choice-item">
+                <p>7. 没有拴绳子的鸟，看见“我”之后飞到哪里？</p>
+                <label><input type="radio" name="q7" value="A"> A.阳台</label>
+                <label><input type="radio" name="q7" value="B"> B.屋外大树</label>
+                <label><input type="radio" name="q7" value="C"> C.医院</label>
+            </div>
+            <div class="choice-item">
+                <p>8. 我把鸟扔到窗外，鸟怎么做？</p>
+                <label><input type="radio" name="q8" value="A"> A.直接飞走不回来</label>
+                <label><input type="radio" name="q8" value="B"> B.飞一圈回到竹竿</label>
+                <label><input type="radio" name="q8" value="C"> C.立刻落地</label>
+            </div>
+            <div class="choice-item">
+                <p>9. 老人带鸟出门不会去哪个地方？</p>
+                <label><input type="radio" name="q9" value="A"> A.公园</label>
+                <label><input type="radio" name="q9" value="B"> B.邮局</label>
+                <label><input type="radio" name="q9" value="C"> C.医院</label>
+            </div>
+            <div class="choice-item">
+                <p>10. 两只鸟最后在阳台待了多久？</p>
+                <label><input type="radio" name="q10" value="A"> A.3天</label>
+                <label><input type="radio" name="q10" value="B"> B.一周</label>
+                <label><input type="radio" name="q10" value="C"> C.半个月</label>
+            </div>
+            <button class="check-answer-btn" onclick="checkChoice()">核对选择题答案</button>
+            <div id="choiceResult"></div>
+
+            <div class="exercise-title">三、填空题</div>
+            <div>
+                1. 老人不喝酒，不抽烟，不下棋，不玩<input class="blank-input" id="b1">。
+            </div>
+            <div style="margin:8px 0;">
+                2. 老人每天早晨七点，带着鸟去<input class="blank-input" id="b2">里散步。
+            </div>
+            <div style="margin:8px 0;">
+                3. 一天早上，老人昏倒在<input class="blank-input" id="b3">上，被送到医院。
+            </div>
+            <div style="margin:8px 0;">
+                4. 老人把<input class="blank-input" id="b4">交给我，让我打开家门。
+            </div>
+            <div style="margin:8px 0;">
+                5. 老人的房子是两室一厅，一间卧室，一间给<input class="blank-input" id="b5">住。
+            </div>
+            <div style="margin:8px 0;">
+                6. 鸟的房间挂满了各式各样的鸟<input class="blank-input" id="b6">。
+            </div>
+            <div style="margin:8px 0;">
+                7. 我把拴在鸟脚上的<input class="blank-input" id="b7">解开。
+            </div>
+            <div style="margin:8px 0;">
+                8. 我给鸟喂食，它们不吃；喂<input class="blank-input" id="b8">，也不喝。
+            </div>
+            <div style="margin:8px 0;">
+                9. 我捉起鸟扔到<input class="blank-input" id="b9">，鸟飞一圈又回来。
+            </div>
+            <div style="margin:8px 0;">
+                10. 半个月过去了，两只鸟还<input class="blank-input" id="b10">在竹竿上。
+            </div>
+            <button class="check-answer-btn" onclick="checkBlank()">核对填空答案</button>
+            <div id="blankResult"></div>
+        </div>
+        <!-- 右下：生词 + 语法 -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise-title">一、生词</div>
+            <div class="vocab-item">
+                <span class="vocab-word">隔壁</span>：旁边的房间、邻居家。例：我家隔壁有一个超市。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">拴</span>：用绳子绑住东西，不让它跑走。例：拴绳子，拴小狗。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">阳台</span>：房子外面，可以晒太阳的平台。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">竹竿</span>：长长的、竹子做的棍子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">缠</span>：一圈一圈绕上去。例：把绳子缠在棍子上。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">自如</span>：做事情很轻松，没有困难。例：小鸟在空中自如地飞。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">听话</span>：别人说什么，它就怎么做。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">肩头</span>：肩膀。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">轻盈</span>：很轻、动作软软的，不重。例：小鸟轻盈地飞。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">亲热</span>：关系很好，很亲近。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">痴痴地</span>：一直看着，看得很专心。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">据说</span>：别人这么说，我没有亲眼看见。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">与众不同</span>：和别的人、别的东西不一样。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">鸟笼</span>：关小鸟的笼子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">背阴</span>：太阳照不到的地方。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">吵醒</span>：声音太大，把睡觉的人弄醒。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">门缝</span>：门和墙中间小小的缝隙。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">不妙</span>：感觉事情不好，有危险。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">昏倒</span>：突然失去意识，倒在地上。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">急忙</span>：很快、马上做一件事。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">紧紧</span>：抓得很用力，不松开。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">安慰</span>：别人难过的时候，你劝他、让他不伤心。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">沉重</span>：心里难过、不轻松。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">各式各样</span>：很多很多不一样的种类。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">猛地</span>：突然、一下子。例：他猛地站起来。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">一动不动</span>：完全不动，保持一样的姿势。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">喂食</span>：给动物吃东西。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">不肯</span>：不愿意，不想做。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">只好</span>：没有别的办法，只能这样做。
+            </div>
+
+            <div class="exercise-title">二、语法</div>
+            <div class="vocab-item">
+                <span class="grammar-red">1. 把字句：把 + 宾语 + 动词</span><br>
+                用法：强调对某个东西做动作。<br>
+                原文例子：把一只脚上拴着绳的鸟放在阳台。<br>
+                简单例句：我把书放在桌子上。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">2. 被字句：名词 + 被 + 人/事物 + 动词</span><br>
+                用法：表示一件东西受到别人动作的影响，被动。<br>
+                原文例子：我被一阵鸟叫声吵醒。<br>
+                例句：杯子被弟弟打碎了。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">3. 一……就……</span><br>
+                用法：第一件事一发生，马上发生第二件事。<br>
+                原文：在竹竿上一驻脚，腾地又窜出去。<br>
+                例句：我一到家，就喝水。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">4. ……之前</span><br>
+                用法：在一件事情发生以前。<br>
+                原文：在我家搬来之前他就已经在这里住了很久。<br>
+                例句：吃饭之前，我洗手。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">5. ……之后</span><br>
+                用法：一件事情做完以后。<br>
+                例句：吃完早饭之后，我去上班。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">6. 据说</span><br>
+                用法：听说，用来讲别人说的消息，不一定亲眼看到。<br>
+                原文：据说，在我家搬来之前他就已经在这里住了很久了。<br>
+                例句：据说明天会下雨。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">7. 只好 + 动词</span><br>
+                用法：没有别的选择，只能这么做。<br>
+                原文：我只好锁上老人家的门。<br>
+                例句：下雨了，我只好在家。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">8. 不……，不……</span><br>
+                用法：同时否定两件事情，描写习惯。<br>
+                原文：不喝酒，不抽烟，不下棋，不玩儿牌。<br>
+                例句：他不看电视，不玩手机。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">9. 可是 / 但是，转折连词</span><br>
+                用法：前面说一件事，后面意思反过来。<br>
+                原文：我敲门，没人答应，可是鸟还在叫。<br>
+                例句：天气冷，可是他不穿外套。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">10. 能 / 能够，能愿动词</span><br>
+                用法：有能力、可以做某事。<br>
+                原文：我都能看见他。<br>
+                例句：我能说汉语。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">11. 还是，仍然，表示依旧</span><br>
+                用法：情况没有改变，和之前一样。<br>
+                原文：我用力敲，还是没有回音。<br>
+                例句：我等了很久，他还是没来。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">12. 一会儿……，隔一会儿……</span><br>
+                用法：表示动作不断重复，过一段时间发生一次。<br>
+                原文：门一会儿被撞一下，隔一会儿又被撞一下。<br>
+                例句：雨一会儿大，隔一会儿又小。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">13. 有……：存现句</span><br>
+                用法：介绍某个地方存在什么东西。<br>
+                原文：屋子中间有一根竹竿。<br>
+                例句：桌子上有一本书。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">14. 给 + 人 + 动词，给字句</span><br>
+                用法：为某人做一件事。<br>
+                原文：我给它们喂食。<br>
+                例句：我给妈妈打电话。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">15. 越……越……</span><br>
+                用法：一件事跟着另一件慢慢变化。<br>
+                拓展例句：天气越来越冷。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">16. 动词 + 起来</span><br>
+                用法：动作开始、或者从静止开始行动。<br>
+                原文：大声喊了起来。<br>
+                例句：大家笑了起来。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">17. 形容词 + 地 + 动词</span><br>
+                用法：用词语描写动作是什么样子。<br>
+                原文：静静地听、慢慢地说。<br>
+                例句：他慢慢地走路。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">18. 数量短语：量词 + 名词</span><br>
+                用法：汉语名词前面一般要加量词。<br>
+                原文：一位养鸟的老人，几把钥匙。<br>
+                例句：一本书，一个苹果。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">19. 而，连词，表示承接或者对比</span><br>
+                用法：连接两个句子，有对比、顺承的意思。<br>
+                原文：而那只被拴在竹竿上的鸟也一扇翅膀。<br>
+                例句：他喜欢看书，而我喜欢听音乐。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">20. 动词重叠</span><br>
+                用法：表示动作时间短、尝试做一做。<br>
+                例句：我试一试这件衣服。
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 判断题点击逻辑
+    function judgeCheck(btn, userSelect) {
+        const item = btn.closest(".q-item");
+        const realAns = item.dataset.answer === "true";
+        const span = item.querySelector(".answer-text");
+        const buttons = item.querySelectorAll("button");
+        buttons.forEach(b=>b.classList.remove("right","wrong"));
+        if(userSelect === realAns){
+            btn.classList.add("right");
+            span.textContent = " ✔ 正确";
+            span.style.color="#597c69";
+        }else{
+            btn.classList.add("wrong");
+            span.textContent = " ✘ 错误";
+            span.style.color="#b46464";
+        }
+    }
+
+    //选择题标准答案
+    const choiceAns = {
+        q1:"A",q2:"B",q3:"B",q4:"B",q5:"B",
+        q6:"B",q7:"A",q8:"B",q9:"C",q10:"C"
+    };
+    function checkChoice(){
+        let score=0;
+        let total=10;
+        for(let key in choiceAns){
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+            if(selected && selected.value === choiceAns[key]) score++;
+        }
+        document.getElementById("choiceResult").innerText = `选择题：答对${score}/${total}题`;
+    }
+
+    //填空标准答案
+    const blankAns = ["牌","公园","楼梯","钥匙","鸟","笼","绳子","水","窗外","蹲"];
+    function checkBlank(){
+        let score=0;
+        for(let i=0;i<10;i++){
+            const input = document.getElementById("b"+(i+1));
+            if(input.value.trim() === blankAns[i]) score++;
+        }
+        document.getElementById("blankResult").innerText = `填空题：答对${score}/10题`;
+    }
+
+    // 重置全部答案功能
+    function resetAllAnswers(){
+        //重置判断题
+        document.querySelectorAll(".q-item").forEach(item=>{
+            const btns = item.querySelectorAll("button");
+            btns.forEach(b=>b.classList.remove("right","wrong"));
+            item.querySelector(".answer-text").textContent = "";
+        })
+        //重置选择题单选框
+        document.querySelectorAll('input[type="radio"]').forEach(radio=>radio.checked=false);
+        document.getElementById("choiceResult").textContent="";
+        //重置填空输入框
+        document.querySelectorAll(".blank-input").forEach(input=>input.value="");
+        document.getElementById("blankResult").textContent="";
+    }
+</script>
+</body>
+</html>

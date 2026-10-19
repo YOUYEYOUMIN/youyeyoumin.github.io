@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语阅读｜十姐妹 原文+简化对照+交互习题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #EAE7E2;
+            line-height: 1.7;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(140,130,120,0.12);
+        }
+        h2 {
+            text-align: center;
+            color: #5C544F;
+            margin-bottom:18px;
+            border-bottom:1px solid #D9D2CB;
+            padding-bottom:10px;
+            font-size:20px;
+        }
+        .para-item {
+            margin-bottom: 24px;
+        }
+        .para-item p {
+            font-size:16px;
+            color:#4A4541;
+        }
+        .exercise-title{
+            font-size:19px;
+            font-weight:bold;
+            margin:22px 0 12px;
+            color:#5C544F;
+        }
+        .q-item{
+            margin:18px 0;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:8px;
+        }
+        .choice-item label{
+            display:block;
+            margin:6px 0;
+            cursor:pointer;
+        }
+        .answer-text{
+            margin-top:10px;
+            font-weight:bold;
+        }
+        .check-answer-btn{
+            margin:12px 0 20px;
+            padding:8px 16px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        /* 生词蓝色 */
+        .vocab-blue {
+            color: #0044bb;
+            font-weight:500;
+        }
+        /* 语法红色 */
+        .grammar-red{
+            color:#b82626;
+            font-weight:500;
+        }
+        .vocab-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .vocab-word{
+            font-weight:bold;
+            color:#0044bb;
+        }
+        .grammar-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .grammar-title{
+            font-weight:bold;
+            color:#b82626;
+        }
+        /* 正确答案绿色样式 */
+        .correct-ans{
+            color:#009933;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 左上：原文 -->
+        <div class="box">
+            <h2>课文原文</h2>
+            <div class="para-item">
+                <p>“十姐妹”是一种鸟的名字。我女儿上幼儿园那年，有一个星期天，我跟她说：“走，爸爸带你<span class="grammar-red">逛...去</span><span class="vocab-blue">逛</span>鸟市去。”进了鸟市一看，啊！这里<span class="grammar-red">真是……！</span>鸟的世界，各种颜色的鸟都有。女儿指着<span class="vocab-blue">笼子</span>里一对<span class="vocab-blue">羽毛</span>灰白<span class="vocab-blue">相间</span>的小鸟，对我说：“爸爸，这种鸟儿好看，我想要。”我问卖鸟的老人：“大爷，这是什么鸟儿？”“这叫‘十姐妹’，十块钱一对，买回去给孩子玩儿吧。”</p>
+            </div>
+            <div class="para-item">
+                <p>时间过得真快。<span class="vocab-blue">如今</span>，我女儿都上三年级了，这对“十姐妹”还活着。一天，女儿翻开作文本，站在我跟前念道：“‘十姐妹’是非常可爱的小鸟，它们的<span class="vocab-blue">脑袋</span><span class="grammar-red">圆圆的</span>，嘴巴尖尖的，眼睛亮亮的，全身的羽毛<span class="grammar-red">又……又……</span>干净又漂亮，配上长尾巴，真像穿了一件<span class="vocab-blue">燕尾服</span>。<span class="grammar-red">在……时间里</span>和‘十姐妹’<span class="vocab-blue">相处</span>三年多的时间里，我们已经成为好朋友了，它<span class="grammar-red">让 + 人 + 动词</span>我懂得人类要<span class="vocab-blue">对待</span>各种动物……”这篇作文后边，老师拿红笔写了个5分，还写了一句话：“<span class="grammar-red">要从小学会……</span>学会用爱心对待世界上所有美丽的生命。”打这以后，女儿每天给“十姐妹”添食添水，<span class="grammar-red">就连……都……</span>阳台上落只家雀儿都不去<span class="vocab-blue">惊动</span>。</p>
+            </div>
+            <div class="para-item">
+                <p>“十姐妹”<span class="grammar-red">不仅……也……</span>孩子喜欢，大人也喜欢。<span class="vocab-blue">初冬</span>，落日红红的，<span class="grammar-red">无意中，……</span>我看见妻子站在阳台上对着“十姐妹”发呆，<span class="grammar-red">等……时</span>我走到她身旁时，心也<span class="vocab-blue">猛地</span>颤了一下。冷风中，笼子里的“十姐妹”头挨头、翅贴翅地紧紧靠在一块儿，它们身上的羽毛被日光染红了。偶尔，这对鸟儿嘴里发出叽叽咕咕的低声叫，像是在说悄悄话。正巧，不知楼上谁家的花盆从大风刮下来，“咣当”一声，吓得“十姐妹”在笼子里又飞又撞，<span class="grammar-red">可……</span>没过多会儿，它们就<span class="vocab-blue">恢复</span>了平静，相依相偎地闭上眼睛，身子靠得更紧了，<span class="grammar-red">看上去像……</span>像只“双头鸟”。瞧着“十姐妹”的亲热样儿，我和妻子真舍不得走开。鸟是如此，<span class="vocab-blue">何况</span>人类？<span class="vocab-blue">相伴</span>相守到白头，这是生命的一种幸福。</p>
+            </div>
+            <div class="para-item">
+                <p><span class="grammar-red">有一回……</span>，给它们收拾完“房间”以后，忘了关笼门，<span class="grammar-red">眼看着……</span>“十姐妹”越飞越远，<span class="grammar-red">心想</span>“十姐妹”飞走了，不会回来了。<span class="grammar-red">可是，没想到……</span>，天黑之前，我听见阳台那边又传来“十姐妹”的叫声，也许是玩儿得渴了，饿了，累了，“十姐妹”又<span class="vocab-blue">自觉</span>地回到了阳台上这个“家”中，继续过这种早已习惯的笼中生活。后来，我<span class="vocab-blue">故意</span>经常打开笼门给“十姐妹”<span class="vocab-blue">放风</span>，不过甭担心，玩儿够了它们<span class="vocab-blue">准</span>能回来。它们的恋“家”和依人使我觉得它们更加可爱。<span class="grammar-red">就在……之前</span>两天之前，我<span class="vocab-blue">惊喜</span>地发现笼子里多了两只小“十姐妹”——一家四口了！</p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para-item">
+                <p>“十姐妹”是一种小鸟。女儿上幼儿园的时候，一个周日，我带她去鸟市场。市场里有很多不同颜色的鸟。女儿看见<span class="vocab-blue">笼子</span>里一对灰白<span class="vocab-blue">羽毛</span><span class="vocab-blue">相间</span>的小鸟，她说很喜欢，想要。卖鸟老人告诉我，这种鸟叫十姐妹，十元一对，可以买给孩子玩。</p>
+            </div>
+            <div class="para-item">
+                <p>时间过得很快。<span class="vocab-blue">如今</span>女儿已经上小学三年级，这两只小鸟还活着。一天女儿读她的作文，作文写十姐妹很可爱，<span class="vocab-blue">脑袋</span>圆、嘴巴尖、羽毛干净好看，长尾巴像<span class="vocab-blue">燕尾服</span>。和小鸟<span class="vocab-blue">相处</span>三年，她们成了好朋友，女儿知道人要爱护动物。老师给作文打了5分，告诉她要<span class="vocab-blue">对待</span>所有生命。从那之后，女儿每天给鸟喂食、加水，不会<span class="vocab-blue">惊动</span>阳台的小鸟。</p>
+            </div>
+            <div class="para-item">
+                <p>不只是孩子喜欢十姐妹，大人也很喜欢。<span class="vocab-blue">初冬</span>傍晚，红色夕阳下，我看见妻子安静看着鸟。冷风吹着，两只小鸟头靠头、翅膀贴在一起。它们偶尔小声叫，好像在说悄悄话。楼上花盆掉下来吓到它们，小鸟在笼子里乱飞。但是很快，它们<span class="vocab-blue">恢复</span>平静，紧紧靠在一起。看着它们，我和妻子不想离开。鸟儿这样互相陪伴，<span class="vocab-blue">何况</span>人也一样。<span class="vocab-blue">相伴</span>到老，是生命的幸福。</p>
+            </div>
+            <div class="para-item">
+                <p>有一次，打扫鸟笼后，我忘记关上笼子门。小鸟飞远了，我以为它们不会回来。可是天黑前，小鸟<span class="vocab-blue">自觉</span>回来了。它们渴了、饿了，主动回到阳台的家，继续在笼子里生活。之后我常常<span class="vocab-blue">故意</span>打开笼子门，让小鸟<span class="vocab-blue">放风</span>一会儿，它们玩够<span class="vocab-blue">准</span>能回家。小鸟很恋家，更加可爱。两天前，我很<span class="vocab-blue">惊喜</span>看见笼子里多了两只小鸟，它们变成一家四口。</p>
+            </div>
+        </div>
+        <!-- 左下：同义替换选择题（20题：前10词语，后10句子） -->
+        <div class="box">
+            <h2>同义替换选择题（20题）</h2>
+            <button class="check-answer-btn" onclick="checkAllSynonym()">✅ 核对全部答案</button>
+            <div id="synonymResult"></div>
+            <p style="margin-bottom:8px;font-weight:bold;">一、词语同义（1-10）</p>
+            <!-- Q1 -->
+            <div class="q-item" data-ans="B">
+                <p>1. 时间过得真快。【过得真快】的同义短语是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s1" value="A">A. 时间很慢</label>
+                    <label><input type="radio" name="s1" value="B">B. 时间很快</label>
+                    <label><input type="radio" name="s1" value="C">C. 时间停止</label>
+                    <label><input type="radio" name="s1" value="D">D. 时间重来</label>
+                </div>
+            </div>
+            <!-- Q2 -->
+            <div class="q-item" data-ans="C">
+                <p>2. 如今，我女儿都上三年级了。【如今】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s2" value="A">A. 过去</label>
+                    <label><input type="radio" name="s2" value="B">B. 以后</label>
+                    <label><input type="radio" name="s2" value="C">C. 现在</label>
+                    <label><input type="radio" name="s2" value="D">D. 刚才</label>
+                </div>
+            </div>
+            <!-- Q3 -->
+            <div class="q-item" data-ans="A">
+                <p>3. 它们的脑袋圆圆的。【脑袋】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s3" value="A">A. 头</label>
+                    <label><input type="radio" name="s3" value="B">B. 身体</label>
+                    <label><input type="radio" name="s3" value="C">C. 尾巴</label>
+                    <label><input type="radio" name="s3" value="D">D. 翅膀</label>
+                </div>
+            </div>
+            <!-- Q4 -->
+            <div class="q-item" data-ans="D">
+                <p>4. 要从小学会用爱心对待生命。【对待】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s4" value="A">A. 放弃</label>
+                    <label><input type="radio" name="s4" value="B">B. 忘记</label>
+                    <label><input type="radio" name="s4" value="C">C. 寻找</label>
+                    <label><input type="radio" name="s4" value="D">D. 看待、照料</label>
+                </div>
+            </div>
+            <!-- Q5 -->
+            <div class="q-item" data-ans="B">
+                <p>5. 就连阳台上落只家雀儿都不去惊动。【惊动】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s5" value="A">A. 欢迎</label>
+                    <label><input type="radio" name="s5" value="B">B. 打扰、吓着</label>
+                    <label><input type="radio" name="s5" value="C">C. 帮助</label>
+                    <label><input type="radio" name="s5" value="D">D. 抓住</label>
+                </div>
+            </div>
+            <!-- Q6 -->
+            <div class="q-item" data-ans="C">
+                <p>6. 无意中我看见妻子站在阳台。【无意中】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s6" value="A">A. 故意</label>
+                    <label><input type="radio" name="s6" value="B">B. 努力</label>
+                    <label><input type="radio" name="s6" value="C">C. 不小心、偶然</label>
+                    <label><input type="radio" name="s6" value="D">D. 马上</label>
+                </div>
+            </div>
+            <!-- Q7 -->
+            <div class="q-item" data-ans="A">
+                <p>7. 心也猛地颤了一下。【猛地】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s7" value="A">A. 突然</label>
+                    <label><input type="radio" name="s7" value="B">B. 慢慢</label>
+                    <label><input type="radio" name="s7" value="C">C. 常常</label>
+                    <label><input type="radio" name="s7" value="D">D. 终于</label>
+                </div>
+            </div>
+            <!-- Q8 -->
+            <div class="q-item" data-ans="D">
+                <p>8. 像是在说悄悄话。【悄悄话】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s8" value="A">A. 大声说话</label>
+                    <label><input type="radio" name="s8" value="B">B. 唱歌</label>
+                    <label><input type="radio" name="s8" value="C">C. 吵架</label>
+                    <label><input type="radio" name="s8" value="D">D. 小声说话</label>
+                </div>
+            </div>
+            <!-- Q9 -->
+            <div class="q-item" data-ans="B">
+                <p>9. 可没过多会儿，它们就恢复了平静。【恢复】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s9" value="A">A. 丢掉</label>
+                    <label><input type="radio" name="s9" value="B">B. 回到原来状态</label>
+                    <label><input type="radio" name="s9" value="C">C. 忘记</label>
+                    <label><input type="radio" name="s9" value="D">D. 改变</label>
+                </div>
+            </div>
+            <!-- Q10 -->
+            <div class="q-item" data-ans="C">
+                <p>10. 相依相偎地闭上眼睛。【相依相偎】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s10" value="A">A. 互相远离</label>
+                    <label><input type="radio" name="s10" value="B">B. 互相打架</label>
+                    <label><input type="radio" name="s10" value="C">C. 紧紧靠在一起</label>
+                    <label><input type="radio" name="s10" value="D">D. 互相追赶</label>
+                </div>
+            </div>
+            <p style="margin:20px 0 8px;font-weight:bold;">二、句子同义（11-20）【新增10题】</p>
+            <!-- Q11 句子 -->
+            <div class="q-item" data-ans="B">
+                <p>11. 时间过得真快。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s11" value="A">A. 时间走得很慢。</label>
+                    <label><input type="radio" name="s11" value="B">B. 时光很快过去了。</label>
+                    <label><input type="radio" name="s11" value="C">C. 时间停下来不走。</label>
+                    <label><input type="radio" name="s11" value="D">D. 时间可以重来。</label>
+                </div>
+            </div>
+            <!-- Q12 -->
+            <div class="q-item" data-ans="C">
+                <p>12. 就连阳台上落只家雀儿都不去惊动。意思相同的一句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s12" value="A">A. 阳台的小鸟，我都会吓它。</label>
+                    <label><input type="radio" name="s12" value="B">B. 只有大的鸟，我才不去打扰。</label>
+                    <label><input type="radio" name="s12" value="C">C. 就算小鸟落在阳台，我也不打扰。</label>
+                    <label><input type="radio" name="s12" value="D">D. 阳台没有小鸟会落下来。</label>
+                </div>
+            </div>
+            <!-- Q13 -->
+            <div class="q-item" data-ans="D">
+                <p>13. 鸟是如此，何况人类？同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s13" value="A">A. 鸟儿这样，人不用这样。</label>
+                    <label><input type="radio" name="s13" value="B">B. 人和鸟完全不一样。</label>
+                    <label><input type="radio" name="s13" value="C">C. 人应该学鸟儿分开生活。</label>
+                    <label><input type="radio" name="s13" value="D">D. 鸟儿尚且这样，人更应该如此。</label>
+                </div>
+            </div>
+            <!-- Q14 -->
+            <div class="q-item" data-ans="A">
+                <p>14. 眼看着“十姐妹”越飞越远。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s14" value="A">A. 我亲眼看着小鸟飞向远方。</label>
+                    <label><input type="radio" name="s14" value="B">B. 我看不见小鸟飞向哪里。</label>
+                    <label><input type="radio" name="s14" value="C">C. 小鸟飞得不远，就在旁边。</label>
+                    <label><input type="radio" name="s14" value="D">D. 小鸟害怕，不敢飞。</label>
+                </div>
+            </div>
+            <!-- Q15 -->
+            <div class="q-item" data-ans="B">
+                <p>15. 玩儿够了它们准能回来。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s15" value="A">A. 玩够了，它们可能不会回来。</label>
+                    <label><input type="radio" name="s15" value="B">B. 玩够之后，它们一定能回家。</label>
+                    <label><input type="radio" name="s15" value="C">C. 它们不想回来继续玩。</label>
+                    <label><input type="radio" name="s15" value="D">D. 它们永远留在外面。</label>
+                </div>
+            </div>
+            <!-- Q16 -->
+            <div class="q-item" data-ans="C">
+                <p>16. 在和‘十姐妹’相处三年多的时间里，我们已经成为好朋友。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s16" value="A">A. 我们只认识小鸟几天。</label>
+                    <label><input type="radio" name="s16" value="B">B. 我们从来不是好朋友。</label>
+                    <label><input type="radio" name="s16" value="C">C. 三年多一起生活，我们成了好朋友。</label>
+                    <label><input type="radio" name="s16" value="D">D. 三年之后我们才第一次见面。</label>
+                </div>
+            </div>
+            <!-- Q17 -->
+            <div class="q-item" data-ans="D">
+                <p>17. 可没过多会儿，它们就恢复了平静。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s17" value="A">A. 它们一直很害怕，不会安静。</label>
+                    <label><input type="radio" name="s17" value="B">B. 很久之后它们才安静。</label>
+                    <label><input type="radio" name="s17" value="C">C. 它们永远不能平静下来。</label>
+                    <label><input type="radio" name="s17" value="D">D. 但是没过多久，它们就安静下来。</label>
+                </div>
+            </div>
+            <!-- Q18 -->
+            <div class="q-item" data-ans="A">
+                <p>18. 我和妻子真舍不得走开。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s18" value="A">A. 我和妻子不想离开这里。</label>
+                    <label><input type="radio" name="s18" value="B">B. 我和妻子马上就要离开。</label>
+                    <label><input type="radio" name="s18" value="C">C. 我和妻子必须快点走。</label>
+                    <label><input type="radio" name="s18" value="D">D. 我和妻子不想看见小鸟。</label>
+                </div>
+            </div>
+            <!-- Q19 -->
+            <div class="q-item" data-ans="B">
+                <p>19. 就在两天之前，我惊喜地发现笼子里多了两只小鸟。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s19" value="A">A. 两天后，我看见小鸟飞走了。</label>
+                    <label><input type="radio" name="s19" value="B">B. 两天前，我惊喜看到笼子里多两只小鸟。</label>
+                    <label><input type="radio" name="s19" value="C">C. 很久以前，笼子里就有小鸟。</label>
+                    <label><input type="radio" name="s19" value="D">D. 两天前，笼子里小鸟变少两只。</label>
+                </div>
+            </div>
+            <!-- Q20 -->
+            <div class="q-item" data-ans="C">
+                <p>20. 它们又自觉地回到了阳台上这个“家”中。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s20" value="A">A. 别人强迫小鸟回到阳台。</label>
+                    <label><input type="radio" name="s20" value="B">B. 小鸟不想回到阳台的家。</label>
+                    <label><input type="radio" name="s20" value="C">C. 小鸟主动回到阳台的家。</label>
+                    <label><input type="radio" name="s20" value="D">D. 小鸟回到别的地方安家。</label>
+                </div>
+            </div>
+        </div>
+        <!-- 右下：生词 + 语法 -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise-title">一、生词（20个，蓝色）</div>
+            <div class="vocab-item">
+                <span class="vocab-word">逛</span>：出去走走，参观。例：逛超市、逛公园。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">笼子</span>：关鸟、小动物的容器。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">羽毛</span>：小鸟身上的毛。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">相间</span>：一个颜色和另一个颜色交替。灰白相间。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">如今</span>：现在，现如今。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">脑袋</span>：头。例：脑袋圆圆的。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">燕尾服</span>：一种正式长衣服，课文用来比喻鸟尾巴。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">相处</span>：一起生活、互相来往。例：和朋友好好相处。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">对待</span>：对人/事物的方式。例：用心对待小动物。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">惊动</span>：打扰、使受到惊吓。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">初冬</span>：冬天刚开始。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">猛地</span>：突然，一下子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">恢复</span>：变回原来状态。例：恢复平静。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">何况</span>：连词，表示更进一层。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">相伴</span>：陪伴，一起。相伴到老。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">自觉</span>：自己主动，不用别人催促。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">故意</span>：特意，有意去做一件事。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">放风</span>：让笼子里动物出来活动。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">准</span>：副词，一定、肯定。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">惊喜</span>：又意外，又开心。
+            </div>
+
+            <div class="exercise-title">二、语法（20条，红色）</div>
+            <div class="grammar-item">
+                <span class="grammar-title">1. 动词+去：逛...去</span><br>
+                用法：表示要去做一件事。原文：爸爸带你逛鸟市去。例句：我买东西去。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">2. 真是……！感叹句</span><br>
+                用法：用来感叹，加强语气。原文：这里真是鸟的世界！例句：这里真是好看！
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">3. 形容词重叠：圆圆的、尖尖的、亮亮的</span><br>
+                用法：描写样子，加强形容词。原文：脑袋圆圆的。例句：大大的苹果。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">4. 又……又……</span><br>
+                用法：同时有两种特点。原文：羽毛又干净又漂亮。例句：又大又甜。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">5. 在……时间里</span><br>
+                用法：在一段时间范围之内。原文：在和十姐妹相处三年多的时间里。例句：在上课的时间里，不要说话。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">6. 让 + 人 + 动词</span><br>
+                用法：使某人产生感受。原文：它让我懂得人类要爱护动物。例句：这件事让我开心。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">7. 要从小学会……</span><br>
+                用法：表示应该、需要做某事。原文：要从小学会用爱心对待生命。例句：要学会保护自己。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">8. 就连……都……</span><br>
+                用法：举例子，表示程度深。原文：就连阳台上落只家雀儿都不去惊动。例句：就连小孩都知道。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">9. 不仅……也……</span><br>
+                用法：递进，不止前者，后者也一样。原文：十姐妹不仅孩子喜欢，大人也喜欢。例句：他不仅会英语，也会汉语。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">10. 无意中，……</span><br>
+                用法：偶然，不是特意。原文：无意中我看见妻子站在阳台。例句：无意中，我看见了老朋友。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">11. 等……时 / 等……以后</span><br>
+                用法：等到某个时间发生。原文：等我走到她身旁时。例句：等我到家时，天黑了。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">12. 可……</span><br>
+                用法：但是，表示转折。原文：可没过多会儿，它们就恢复平静。例句：很累，可我不想休息。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">13. 看上去像……</span><br>
+                用法：外表看起来好像是。原文：看上去像只双头鸟。例句：云朵看上去像小羊。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">14. 何况……？反问递进</span><br>
+                用法：连前面都是这样，后面更不用说。原文：鸟是如此，何况人类？例句：大人都难，何况小孩？
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">15. 有一回……</span><br>
+                用法：讲过去的一件事，有一次。原文：有一回，给它们收拾完房间。例句：有一回，我迟到了。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">16. 眼看着……</span><br>
+                用法：亲眼看着事情发生。原文：眼看着十姐妹越飞越远。例句：眼看着天黑了。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">17. 心想 + 想法</span><br>
+                用法：心里这样想。原文：心想“十姐妹”飞走了，不会回来了。例句：我心想，今天下雨。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">18. 可是，没想到……</span><br>
+                用法：转折，事情和想的不一样。原文：可是，没想到，天黑之前，我听见叫声。例句：我以为会下雨，可是没想到是晴天。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">19. 不过甭担心</span><br>
+                用法：不过不用担心。表安抚。原文：不过甭担心，玩儿够了它们准能回来。例句：不过甭担心，我会帮你。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">20. 就在……之前</span><br>
+                用法：在某个时间不久前。原文：就在两天之前，我惊喜地发现。例句：就在下课之前，老师来了。
+            </div>
+        </div>
+    </div>
+
+<script>
+    //同义题答案字典
+    const synAns = {
+        s1:"B",s2:"C",s3:"A",s4:"D",s5:"B",
+        s6:"C",s7:"A",s8:"D",s9:"B",s10:"C",
+        s11:"B",s12:"C",s13:"D",s14:"A",s15:"B",
+        s16:"C",s17:"D",s18:"A",s19:"B",s20:"C"
+    }
+    function checkAllSynonym(){
+        let score=0;
+        let total=20;
+        // 清除上一轮答案
+        document.querySelectorAll(".ans-hint").forEach(el=>el.innerHTML="");
+        for(let key in synAns){
+            const qItem = document.querySelector(`input[name="${key}"]`).closest(".q-item");
+            const hintDom = qItem.querySelector(".ans-hint");
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+            if(selected && selected.value === synAns[key]){
+                score++;
+                hintDom.innerHTML = `<span class="correct-ans">✅正确</span>`;
+            }else{
+                hintDom.innerHTML = `<span class="correct-ans">✅正确答案：${synAns[key]}</span>`;
+            }
+        }
+        document.getElementById("synonymResult").innerText = `✅ 同义选择题结果：答对${score}/${total}题`;
+    }
+</script>
+</body>
+</html>

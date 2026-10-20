@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4G0004语法闪卡｜各类副词 HSK4</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:680px;
+    height:600px;
+    margin-bottom:24px;
+}
+.flashcard {
+    width:100%;
+    height:100%;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding:36px 28px;
+    border-radius:22px;
+    background:#ffffff;
+    overflow-y:auto;
+    text-align:center;
+}
+.card-back{display:none; background:#ffffff;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;}
+h2{font-size:26px;color:#222;margin-bottom:18px;text-align:center;}
+.label-title{font-weight:bold;font-size:19px;text-align:center;margin-top:20px;margin-bottom:12px;}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{font-size:18px;line-height:1.85;color:#222;margin-bottom:10px;text-align:center;}
+.grammar-hl{color:#204070;font-weight:bold;}
+.err{color:#c82424;font-weight:bold;}
+.ok{color:#1f8030;font-weight:bold;}
+.click-hint{position:absolute;bottom:16px;left:0;right:0;font-size:15px;color:#666;text-align:center;}
+.nav-bar{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+.nav-btn{
+    padding:12px 26px;
+    border:none;
+    border-radius:12px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:17px;
+    cursor:pointer;
+}
+.nav-btn:hover{background:#949088;}
+.page-info{font-size:18px;color:#333;min-width:130px;text-align:center;}
+.card-stack{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+.card-stack > div{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+.card-stack > div.active{
+    display:block;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack" id="cardStack">
+<!-- 卡0 重新 -->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>重新（chóng xīn）｜频率副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>再一次从头做某件事，把之前做过的重做一遍。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>重新 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.写错了，请<span class="grammar-hl">重新</span>写一遍。</p>
+            <p>2.他决定<span class="grammar-hl">重新</span>开始学习。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>放在主语后、动词前；表示动作再次重来，不是简单重复。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>重新作业。 <span class="ok">✔</span>重新写作业。</p>
+            <p><span class="err">✖</span>重新我读。 <span class="ok">✔</span>我重新读一遍。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡1 往往 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>往往（wǎng wǎng）｜频率副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>根据经验，事情常常这样发生，带有规律性。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 往往 + 动词/形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.冬天这里<span class="grammar-hl">往往</span>会下雪。</p>
+            <p>2.周末他<span class="grammar-hl">往往</span>在家休息。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>用于客观经验、习惯；不用于未来一次性事件。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>明天往往下雨。 <span class="ok">✔</span>春天往往下雨。</p>
+            <p><span class="err">✖</span>往往我早起。 <span class="ok">✔</span>新年第一天我往往会早起。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡2 偶尔 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>偶尔（ǒu ěr）｜频率副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>不是经常，间或、有时候发生，次数少。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 偶尔 + 动词；也可句首</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我<span class="grammar-hl">偶尔</span>去看电影。</p>
+            <p>2.<span class="grammar-hl">偶尔</span>我会不吃早饭。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>表示发生频次低；和“经常”语义相反。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>偶尔跑步每天。 <span class="ok">✔</span>我偶尔跑步。</p>
+            <p><span class="err">✖</span>偶尔热闹。 <span class="ok">✔</span>这里偶尔很热闹。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡3 再次 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>再次（zài cì）｜频率副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>再一次，动作又发生一次，书面口语都可用。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>再次 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.欢迎<span class="grammar-hl">再次</span>来到这里。</p>
+            <p>2.问题<span class="grammar-hl">再次</span>出现了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>指动作重复发生；侧重又一次发生，不一定重做。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>再次作业。 <span class="ok">✔</span>再次检查作业。</p>
+            <p><span class="err">✖</span>再次我提问。 <span class="ok">✔</span>我再次提出问题。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡4 老 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>老（lǎo）｜频率副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>口语，总是、经常，动作频繁发生。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 老 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.他<span class="grammar-hl">老</span>忘带钥匙。</p>
+            <p>2.机器<span class="grammar-hl">老</span>出问题。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>仅限口语；“老”做副词≠年纪大；只能放在动词前。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>老他迟到。 <span class="ok">✔</span>他老迟到。</p>
+            <p><span class="err">✖</span>老美丽。 <span class="ok">✔</span>老发生这种情况。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡5 故意 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>故意（gù yì）｜方式副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>有意识、存心去做一件事。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 故意 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.他不是<span class="grammar-hl">故意</span>弄坏的。</p>
+            <p>2.不要<span class="grammar-hl">故意</span>打扰别人。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>表示主观有意；放在主语之后，动词之前。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>故意他吵闹。 <span class="ok">✔</span>他故意吵闹。</p>
+            <p><span class="err">✖</span>故意开心。 <span class="ok">✔</span>故意生气。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡6 互相 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>互相（hù xiāng）｜方式副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>双方彼此之间，你对我、我对你。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>复数主语 + 互相 + 动词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.同学之间<span class="grammar-hl">互相</span>帮助。</p>
+            <p>2.我们<span class="grammar-hl">互相</span>学习。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>主语必须是两个人或多个人；不能用于单人。只能做副词，不能修饰名词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我互相学习。 <span class="ok">✔</span>我们互相学习。</p>
+            <p><span class="err">✖</span>互相朋友。 <span class="ok">✔</span>朋友互相支持。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡7 相互 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>相互（xiāng hù）｜方式副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>义同“互相”，书面色彩更强，彼此双向。可作副词，也可作形容词修饰名词。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>复数主语 + 相互 + 动词；相互 + 的 + 名词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.两国<span class="grammar-hl">相互</span>尊重。</p>
+            <p>2.大家<span class="grammar-hl">相互</span>理解。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>多用于书面；主语必须是多方；可以修饰名词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我相互帮忙。 <span class="ok">✔</span>大家相互帮忙。</p>
+            <p><span class="err">✖</span>相互吃饭。 <span class="ok">✔</span>相互交流想法。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡8 辨析：互相 VS 相互 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>辨析：互相 VS 相互｜HSK4</h2>
+            <div class="label-title">【相同点】</div>
+            <p>作副词放在动词前，表彼此双向，大多可以互换。</p>
+            <p>同学们<span class="grammar-hl">互相</span>帮助 = 同学们<span class="grammar-hl">相互</span>帮助</p>
+            <div class="label-title">【记忆口诀】</div>
+            <p>动词前面，互相、相互都可以；</p>
+            <p>修饰名词，只能用<span class="grammar-hl">相互</span>。</p>
+            <p>口语多用互相，书面多用相互。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【核心区别】</div>
+            <p><span class="grammar-hl">互相</span>：只能是副词，只能修饰动词，不能修饰名词，偏口语。</p>
+            <p><span class="grammar-hl">相互</span>：副词+形容词；可以修饰名词：相互的关系、相互作用，偏书面。</p>
+            <div class="label-title">【正误对比】</div>
+            <p><span class="ok">✔</span>他们互相学习。</p>
+            <p><span class="ok">✔</span>他们相互学习。</p>
+            <p><span class="err">✖</span>处理好互相的关系。</p>
+            <p><span class="ok">✔</span>处理好相互的关系。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡9 却 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>却（què）｜关联副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>表示转折，事情跟预想不一样。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>前小句，主语 + 却 + 小句</p>
+            <div class="label-title">【例句】</div>
+            <p>1.天很冷，他<span class="grammar-hl">却</span>只穿一件衣服。</p>
+            <p>2.这件东西不贵，<span class="grammar-hl">却</span>很好用。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>放在主语之后；表转折，语义类似“但是”，是副词不是连词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>却他不来。 <span class="ok">✔</span>大家都来了，他却不来。</p>
+            <p><span class="err">✖</span>却我喜欢。 <span class="ok">✔</span>很难看，我却很喜欢。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡10 也许 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>也许（yě xǔ）｜情态副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>猜测、可能性，或许、可能。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>也许 + 小句；主语 + 也许 + 动词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">也许</span>明天会下雨。</p>
+            <p>2.他<span class="grammar-hl">也许</span>已经回家了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>表示不确定推测；可以放在句首或者主语后面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>也许明天的雨。 <span class="ok">✔</span>也许明天会下雨。</p>
+            <p><span class="err">✖</span>也许他回家。 <span class="ok">✔</span>他也许回家了。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 卡11 恐怕 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>恐怕（kǒng pà）｜情态副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>推测，多半，常常带有担心的语气。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>恐怕 + 小句</p>
+            <div class="label-title">【例句】</div>
+            <p>1.时间太晚，我们<span class="grammar-hl">恐怕</span>来不及了。</p>
+            <p>2.这件事<span class="grammar-hl">恐怕</span>没有那么简单。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>说话人主观推测，常暗含担忧；多放句首或主语后。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>恐怕他的迟到。 <span class="ok">✔</span>他恐怕要迟到。</p>
+            <p><span class="err">✖</span>恐怕下雨的。 <span class="ok">✔</span>恐怕要下雨。</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button class="nav-btn" id="prevBtn">上一张</button>
+<div class="page-info" id="pageText">1 / 12</div>
+<button class="nav-btn" id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        if(i===current){
+            el.classList.add("active");
+        }else{
+            el.classList.remove("active");
+        }
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

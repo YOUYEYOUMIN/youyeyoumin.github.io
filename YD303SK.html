@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK鸟类阅读｜课文习题 + 生词语法对照</title>
+<style>
+:root{
+  --m-bg:#eef1f4;
+  --m-card:#ffffff;
+  --m-line:#d7dee4;
+  --m-tab-inactive:#c9d3dc;
+  --m-tab-active:#5f7a92;
+  --m-art-inactive:#e3e9ef;
+  --m-art-active:#7f97ad;
+  --m-text:#2f3a44;
+  --m-sub:#5c6b78;
+  --m-question-bg:#f4f7fa;
+  --m-opt-border:#b9c4ce;
+  --m-opt-selected:#c9d8e6;
+  --blue-word:#3f6ea5;
+  --red-grammar:#b04a4a;
+  --green-right:#3f8f5a;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft Yahei",sans-serif;}
+
+body{
+  background:var(--m-bg);
+  color:var(--m-text);
+  padding:14px;
+}
+
+.level-tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+
+.tab-lv{
+  padding:9px 16px;
+  border:none;
+  border-radius:8px;
+  background:var(--m-tab-inactive);
+  color:#222;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.tab-lv.active{
+  background:var(--m-tab-active);
+  color:#fff;
+}
+
+.art-tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.tab-art{
+  padding:7px 13px;
+  border:none;
+  border-radius:6px;
+  background:var(--m-art-inactive);
+  color:var(--m-text);
+  cursor:pointer;
+}
+
+.tab-art.active{
+  background:var(--m-art-active);
+  color:#fff;
+}
+
+.container{
+  display:grid;
+  grid-template-columns:1fr 0.7fr;
+  gap:16px;
+  height:calc(100vh - 160px);
+}
+
+.panel-left,.panel-right{
+  background:var(--m-card);
+  border:1px solid var(--m-line);
+  border-radius:12px;
+  padding:20px;
+  overflow:auto;
+}
+
+h3{
+  margin:8px 0 12px;
+  color:var(--m-text);
+}
+
+p{
+  line-height:1.75;
+  margin:9px 0;
+  font-size:16px;
+}
+
+.question-block{
+  margin:16px 0;
+  padding:14px;
+  background:var(--m-question-bg);
+  border:1px solid var(--m-line);
+  border-radius:9px;
+}
+
+.opt{
+  display:inline-block;
+  margin:5px 7px;
+  padding:5px 9px;
+  border:1px solid var(--m-opt-border);
+  border-radius:5px;
+  cursor:pointer;
+  user-select:none;
+  background:#fff;
+  color:var(--m-text);
+}
+
+.opt.selected{
+  background:var(--m-opt-selected);
+}
+
+.answer-mark{
+  color:var(--green-right);
+  font-weight:bold;
+  margin-left:10px;
+}
+
+.control-bar{
+  margin:16px 0;
+  display:flex;
+  gap:10px;
+}
+
+.btn-ctrl{
+  padding:9px 15px;
+  border:none;
+  border-radius:8px;
+  background:var(--m-art-active);
+  color:#fff;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.tooltip{
+  position:relative;
+  color:var(--blue-word);
+  font-weight:500;
+}
+
+.tooltip-gram{
+  color:var(--red-grammar);
+  font-weight:500;
+  position:relative;
+}
+
+.tip{
+  visibility:hidden;
+  position:absolute;
+  z-index:999;
+  bottom:115%;
+  left:0;
+  background:#333;
+  color:#fff;
+  padding:7px 11px;
+  border-radius:6px;
+  white-space:nowrap;
+  font-size:14px;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+
+.tooltip:hover .tip,
+.tooltip-gram:hover .tip{
+  visibility:visible;
+  opacity:1;
+}
+
+.panel-right h4{
+  margin-top:16px;
+  margin-bottom:7px;
+  color:var(--m-sub);
+  border-bottom:1px solid var(--m-line);
+  padding-bottom:4px;
+}
+
+ul{
+  padding-left:22px;
+  line-height:1.75;
+}
+</style>
+</head>
+
+<body>
+
+<div class="level-tabs" id="levelTabs">
+  <button class="tab-lv active" data-lv="hsk3">HSK3 简单</button>
+  <button class="tab-lv" data-lv="hsk4">HSK4 中等</button>
+  <button class="tab-lv" data-lv="hsk5">HSK5 难</button>
+  <button class="tab-lv" data-lv="hsk6">HSK6 偏难</button>
+</div>
+
+<div class="art-tabs" id="artTabs"></div>
+
+<div class="container">
+  <div class="panel-left" id="panelLeft"></div>
+  <div class="panel-right" id="panelRight"></div>
+</div>
+
+<script>
+const data = {
+
+hsk3:[
+{
+title:"短文1｜蜂鸟",
+text:`
+<p>蜂鸟是世界上最小的鸟，生活在南美洲。</p>
+<p>它的大小和人的大拇指差不多。</p>
+<p>它的羽毛很细，阳光照上去，羽毛会有不同的颜色。</p>
+<p>蜂鸟有细细长长的嘴，爱吃花蜜和小花上的虫子。</p>
+`,
+ques:[
+{q:"1. 蜂鸟生活在南美洲。",type:"tf",ans:"对"},
+{q:"2. 蜂鸟很大，比人的手还要大。",type:"tf",ans:"错"},
+{q:"3. 蜂鸟长长的嘴，可以帮它吃到花蜜。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"最小",py:"zuì xiǎo",mean:"体积、尺寸特别小"},
+{w:"南美洲",py:"Nánměizhōu",mean:"大洲名字"},
+{w:"大小",py:"dà xiǎo",mean:"物体的尺寸"},
+{w:"大拇指",py:"dà mǔ zhǐ",mean:"手上第一个指头"},
+{w:"羽毛",py:"yǔ máo",mean:"鸟身上的毛"},
+{w:"阳光",py:"yáng guāng",mean:"太阳的光"},
+{w:"细细长长",py:"xì xì cháng cháng",mean:"又细又长"},
+{w:"花蜜",py:"huā mì",mean:"花里面甜甜的液体"},
+{w:"虫子",py:"chóng zi",mean:"小昆虫"}
+],
+gram:[
+{g:"和……差不多",exp:"表示两者比较，水平、大小接近。例句：我的书和你的书差不多。"},
+{g:"动词+上去",exp:"表示接触之后出现某种效果。例句：摸上去很软；照上去有颜色。"}
+]
+},
+{
+title:"短文2｜鹦鹉",
+text:`
+<p>鹦鹉又叫鹦哥，住在很热的树林里。</p>
+<p>鹦鹉主要吃果子，可以活很长时间。</p>
+<p>它的头圆圆的，上嘴大，向下弯。</p>
+<p>鹦鹉的羽毛很漂亮，有白色、红色、黄色、绿色。</p>
+<p>人们训练它以后，鹦鹉可以学人的声音说话。</p>
+`,
+ques:[
+{q:"1. 鹦鹉生活在热带的树林。",type:"tf",ans:"对"},
+{q:"2. 鹦鹉天生就会说话，不用别人教。",type:"tf",ans:"错"},
+{q:"3. 鹦鹉有好看的彩色羽毛。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"鹦鹉",py:"yīng wǔ",mean:"一种鸟"},
+{w:"又叫",py:"yòu jiào",mean:"另一个名字叫"},
+{w:"树林",py:"shù lín",mean:"很多树的地方"},
+{w:"主要",py:"zhǔ yào",mean:"大部分、最重要的"},
+{w:"果子",py:"guǒ zi",mean:"果实"},
+{w:"活",py:"huó",mean:"生存、活着"},
+{w:"圆圆的",py:"yuán yuán de",mean:"形状是圆形"},
+{w:"向下弯",py:"xiàng xià wān",mean:"往下面弯曲"},
+{w:"漂亮",py:"piào liang",mean:"好看"},
+{w:"训练",py:"xùn liàn",mean:"教动物学会本领"},
+{w:"声音",py:"shēng yīn",mean:"发出的声响"}
+],
+gram:[
+{g:"……又叫……",exp:"介绍事物别名。例句：土豆又叫马铃薯。"},
+{g:"……以后",exp:"动作完成之后，发生后面事情。例句：吃完饭以后，我去散步。"}
+]
+},
+{
+title:"短文3｜鸟的喙",
+text:`
+<p>鸟的嘴，名字叫喙。</p>
+<p>不同的鸟，嘴的样子不一样。</p>
+<p>鸟的嘴不只是用来吃东西，还可以整理羽毛、打架、做鸟窝。</p>
+<p>吃虫子、花蜜的鸟，嘴细长；吃种子的鸟，嘴短短的；吃鱼的鸟，嘴又宽又大。</p>
+`,
+ques:[
+{q:"1. “喙”就是鸟的嘴巴。",type:"tf",ans:"对"},
+{q:"2. 鸟的嘴只能用来吃饭。",type:"tf",ans:"错"},
+{q:"3. 吃鱼的鸟，嘴巴宽大。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"喙",py:"huì",mean:"鸟的嘴巴"},
+{w:"不同",py:"bù tóng",mean:"不一样"},
+{w:"样子",py:"yàng zi",mean:"外形、模样"},
+{w:"整理",py:"zhěng lǐ",mean:"收拾、整理整齐"},
+{w:"打架",py:"dǎ jià",mean:"互相争斗"},
+{w:"鸟窝",py:"niǎo wō",mean:"鸟住的窝"},
+{w:"种子",py:"zhǒng zi",mean:"植物的种子"},
+{w:"细长",py:"xì cháng",mean:"又细又长"},
+{w:"短短的",py:"duǎn duǎn de",mean:"很短"},
+{w:"又宽又大",py:"yòu kuān yòu dà",mean:"又宽又大"}
+],
+gram:[
+{g:"不只是……，还可以……",exp:"递进，表示不止一件事，还有别的。例句：他不只是会唱歌，还会跳舞。"},
+{g:"又A又B",exp:"同时具备两种特点。例句：苹果又红又甜。"},
+{g:"分号；",exp:"分开并列的几个句子，说明几种情况。"}
+]
+},
+{
+title:"短文4｜老王和鸽子",
+text:`
+<p>鸽子是人类的好朋友。</p>
+<p>老王退休以后，养了十几只鸽子，已经很多年了。</p>
+<p>老王养鸽子不是为了卖钱，也不只是好玩。</p>
+<p>他想活动身体，练习眼睛。</p>
+<p>每天早上，老王带鸽子出去放飞。</p>
+<p>鸽子飞得很远，最后还能回到老王身边。</p>
+<p>养鸽子让老王开心，身体也更好了。</p>
+`,
+ques:[
+{q:"1. 老王养鸽子，是为了卖鸽子赚钱。",type:"tf",ans:"错"},
+{q:"2. 老王每天早上都会出去放飞鸽子。",type:"tf",ans:"对"},
+{q:"3. 鸽子飞远以后，还能飞回来。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"鸽子",py:"gē zi",mean:"一种鸟"},
+{w:"人类",py:"rén lèi",mean:"人"},
+{w:"退休",py:"tuì xiū",mean:"年纪大不工作"},
+{w:"十几只",py:"shí jǐ zhī",mean:"十到十九个"},
+{w:"卖钱",py:"mài qián",mean:"卖掉换钱"},
+{w:"活动身体",py:"huó dòng shēn tǐ",mean:"锻炼身体"},
+{w:"练习",py:"liàn xí",mean:"学习练习"},
+{w:"放飞",py:"fàng fēi",mean:"放开让鸟飞"},
+{w:"最后",py:"zuì hòu",mean:"末尾、结果"},
+{w:"回到身边",py:"huí dào shēn biān",mean:"回到旁边"}
+],
+gram:[
+{g:"不是为了……，也不只是……",exp:"说明目的，否定两种原因。例句：我学习不是为了考试，也不只是好玩。"},
+{g:"让 + 人 + 形容词",exp:"使某人产生某种状态。例句：运动让我很累；聊天让我高兴。"}
+]
+}
+],
+
+hsk4:[
+{
+title:"短文1｜蜂鸟",
+text:`
+<p>蜂鸟是鸟类中最小的一种，产于南美洲。</p>
+<p>蜂鸟的大小跟大拇指差不多，羽毛很细，在阳光照射下可以呈现出不同的颜色。</p>
+<p>蜂鸟的嘴又细又长，喜欢吃花蜜和花上的小昆虫。</p>
+`,
+ques:[
+{q:"1）根据本文我们知道：",type:"abcd",opts:["A.蜂鸟喜欢花儿","B.蜂鸟有很多种颜色","C.任何一种鸟都比蜂鸟大","D.蜂鸟的毛很少"],ans:"C"},
+{q:"2）在阳光照射下：",type:"abcd",opts:["A.蜂鸟可以改变颜色","B.人们可以看到蜂鸟的羽毛是有颜色的","C.蜂鸟能认识多种颜色","D.蜂鸟跟别的鸟颜色不一样"],ans:"B"}
+],
+voc:[
+{w:"鸟类",py:"niǎo lèi",mean:"鸟这一类动物"},
+{w:"产于",py:"chǎn yú",mean:"出产、生长在某地"},
+{w:"照射",py:"zhào shè",mean:"光线照到物体"},
+{w:"呈现",py:"chéng xiàn",mean:"表现出、显示出来"},
+{w:"昆虫",py:"kūn chóng",mean:"虫子"}
+],
+gram:[
+{g:"A跟B差不多",exp:"用于事物对比。例句：这条河跟那条河差不多长。"},
+{g:"在……下",exp:"表示条件、环境。例句：在灯光下看书。"}
+]
+},
+{
+title:"短文2｜鹦鹉",
+text:`
+<p>鹦鹉，也叫鹦哥，生活在热带树林中，主要吃果实，寿命较长。</p>
+<p>鹦鹉的头是圆的，上嘴大，且向下弯曲，下嘴短小。</p>
+<p>鹦鹉的羽毛色彩十分美丽，有白、赤、黄、绿等色。</p>
+<p>经过训练，鹦鹉能模仿人说话的声音。</p>
+`,
+ques:[
+{q:"1）根据本文我们知道：",type:"abcd",opts:["A.鹦鹉能学“说话”","B.鹦鹉的嘴有的大、有的小","C.鹦鹉喜欢吃水果，所以能活很多年","D.鹦鹉有四种颜色"],ans:"A"},
+{q:"2）“鹦鹉”很可能是：",type:"abcd",opts:["A.热带的树","B.一种漂亮的鸟","C.能使人长寿的水果","D.鸟的哥哥"],ans:"B"}
+],
+voc:[
+{w:"热带",py:"rè dài",mean:"很热的地区"},
+{w:"果实",py:"guǒ shí",mean:"果子"},
+{w:"寿命",py:"shòu mìng",mean:"活的时间长短"},
+{w:"较长",py:"jiào cháng",mean:"比较长"},
+{w:"弯曲",py:"wān qū",mean:"弯起来"},
+{w:"色彩",py:"sè cǎi",mean:"颜色"},
+{w:"十分",py:"shí fēn",mean:"很、非常"},
+{w:"经过",py:"jīng guò",mean:"经历过"},
+{w:"模仿",py:"mó fǎng",mean:"照着样子学"}
+],
+gram:[
+{g:"等",exp:"列举之后用，表示还有其他。例：桌子上有苹果、香蕉等水果。"},
+{g:"经过……，……",exp:"经历某个过程之后得到结果。例句：经过努力，他考过了HSK4。"}
+]
+},
+{
+title:"短文3｜鸟的喙",
+text:`
+<p>鸟类的嘴的形状各种各样，这是它们适应生存环境与取食生活习性的结果。</p>
+<p>鸟的嘴叫做“喙”(huì)。</p>
+<p>鸟喙的用途不仅是取食，还用来整理羽毛、打斗、筑巢等。</p>
+<p>鸟喙很发达，而且根据不同的生活习性形成各种形态。</p>
+<p>一般来说，吃昆虫和吸食花蜜的鸟类的喙细长，如蜂鸟的喙；食植物种子和幼芽的鸟类的喙短小，如麻雀的喙；而捕食鱼类的鸟类的喙宽大。</p>
+`,
+ques:[
+{q:"1）这段话主要说的是：",type:"abcd",opts:["A.鸟的嘴只是用来取食的","B.鸟类的嘴形状很多","C.吃昆虫的鸟飞得很快","D.蜂鸟只吃蜂蜜"],ans:"B"},
+{q:"2）下面哪一项文中没提到？",type:"abcd",opts:["A.喙是鸟的嘴","B.蜂鸟的嘴细长","C.鸟没有牙","D.有吃鱼的鸟"],ans:"C"}
+],
+voc:[
+{w:"各种各样",py:"gè zhǒng gè yàng",mean:"很多不一样的"},
+{w:"适应",py:"shì yìng",mean:"适合环境"},
+{w:"生存",py:"shēng cún",mean:"活下去"},
+{w:"环境",py:"huán jìng",mean:"周围的条件"},
+{w:"习性",py:"xí xìng",mean:"习惯"},
+{w:"取食",py:"qǔ shí",mean:"找东西吃"},
+{w:"筑巢",py:"zhù cháo",mean:"做鸟窝"},
+{w:"发达",py:"fā dá",mean:"长得很好、功能强"},
+{w:"形态",py:"xíng tài",mean:"样子、外形"},
+{w:"幼芽",py:"yòu yá",mean:"小小的芽"},
+{w:"捕食",py:"bǔ shí",mean:"抓别的动物当食物"}
+],
+gram:[
+{g:"不仅……，还……",exp:"递进关系，和“不只是……还”相近。例句：他不仅会汉语，还会英语。"},
+{g:"根据……",exp:"按照、依据某个条件。例句：根据天气，我们决定不去爬山。"},
+{g:"一般来说",exp:"通常、大部分情况是这样。例句：一般来说，早上八点上课。"},
+{g:"如",exp:"比如，用来举例子。例句：很多水果很甜，如苹果、橙子。"}
+]
+},
+{
+title:"短文4｜老王和鸽子",
+text:`
+<p>鸽子，是人类的朋友。养鸽子，放鸽子，对生态平衡，对人的身体健康都很有好处。</p>
+<p>老王退休后开始养鸽子，已经有些“历史”了。他一共养了十来只鸽子。</p>
+<p>他说，我养鸽子不是为了卖，也不仅仅是为了玩儿，而是想活动活动手脚，也练练眼神儿。</p>
+<p>早晨，老人骑上自行车，带着十几只鸽子来到立交桥的绿地上放鸽。</p>
+<p>他拿着一根绑着红绸的小棍一挥，正在地上吃食的鸽子一下子就飞起来，在头上盘旋着。</p>
+<p>老人的目光一直跟随着鸽子。鸽子飞远了，变成一个个小点，他还望着那个方向。</p>
+<p>老人说，他现在虽然已经70多岁了，可是眼神儿一点儿不比50多岁的差。</p>
+<p>一会儿，在天空的另一个方向，一个个小点由小变大，老人说：“看，它们飞回来了。”果然，是那十几只鸽子。它们越来越近，一会儿一只只地落下来。</p>
+<p>老王每天早上都要带着他的这十几只鸽子来放飞。养鸽子给他带来了不少乐趣，也锻炼了身体。</p>
+`,
+ques:[
+{q:"1）老王养鸽子是为了：",type:"abcd",opts:["A.好玩儿","B.卖钱","C.锻炼身体和眼神儿","D.和鸽子成为好朋友"],ans:"C"},
+{q:"2）老王养鸽子有：",type:"abcd",opts:["A.三年多了","B.时间不长","C.五六年了","D.很多年了"],ans:"D"}
+],
+voc:[
+{w:"生态",py:"shēng tài",mean:"生态"},
+{w:"平衡",py:"píng héng",mean:"平衡"},
+{w:"身体健康",py:"shēn tǐ jiàn kāng",mean:"身体好"},
+{w:"十来只",py:"shí lái zhī",mean:"大约十只"},
+{w:"立交桥",py:"lì jiāo qiáo",mean:"立交桥"},
+{w:"绿地",py:"lǜ dì",mean:"绿色的空地"},
+{w:"盘旋",py:"pán xuán",mean:"转圈飞"},
+{w:"目光",py:"mù guāng",mean:"视线"},
+{w:"跟随",py:"gēn suí",mean:"跟着"},
+{w:"果然",py:"guǒ rán",mean:"和想的一样"},
+{w:"乐趣",py:"lè qù",mean:"好玩的感觉"}
+],
+gram:[
+{g:"不是……，而是……",exp:"否定前面，肯定后面，表对比。例句：我不是不想学，而是没有时间。"},
+{g:"虽然……可是……",exp:"转折。例句：虽然天气冷，可是他还是出门了。"},
+{g:"一点儿不比……差",exp:"和……一样好，甚至更好。例句：我的汉语一点儿不比他差。"},
+{g:"越来越+形容词",exp:"慢慢变化。例句：天越来越黑。"}
+]
+}
+],
+
+hsk5:[
+{
+title:"短文1｜蜂鸟",
+text:`
+<p>蜂鸟是体型十分小巧的鸟类，大多栖息在美洲的热带、亚热带区域。</p>
+<p>和多数鸟儿不一样，蜂鸟可以在空中保持悬停，依靠这个本领，它们能够稳稳停在花朵前面采食花蜜。</p>
+<p>蜂鸟细长尖锐的喙，可以深入花蕊内部，获取甜甜的花蜜，它们也会捕捉花上的小昆虫补充营养。</p>
+<p>蜂鸟的羽毛细密轻薄，在阳光照射下会折射出丰富的色彩，可这并不是羽毛本身带有彩色染料。</p>
+<p>因为消耗能量很快，蜂鸟需要频繁进食，如果长时间找不到食物，身体会快速变得虚弱。</p>
+<p>虽然蜂鸟个子很小，但部分蜂鸟拥有很强的迁徙能力，可以飞行很远的距离寻找合适的生存环境。</p>
+`,
+ques:[
+{q:"1. 蜂鸟能够悬停在空中，主要帮助它做什么？",type:"abcd",opts:["A.躲避天上的老鹰","B.停在花前采食花蜜","C.和别的蜂鸟打架","D.方便长时间睡觉"],ans:"B"},
+{q:"2. 根据短文，蜂鸟羽毛的彩色来自哪里？",type:"abcd",opts:["A.羽毛本身的彩色染料","B.吃进去花蜜的颜色","C.阳光照射产生的折射效果","D.环境泥土染上去的颜色"],ans:"C"},
+{q:"3. 下面哪一项说法符合短文内容？",type:"abcd",opts:["A.蜂鸟只生活在欧洲大陆","B.蜂鸟能量消耗快，需要经常吃东西","C.所有蜂鸟都完全不能长途飞行","D.蜂鸟的嘴巴又短又厚"],ans:"B"}
+],
+voc:[
+{w:"体型",py:"tǐ xíng",mean:"身体大小"},
+{w:"小巧",py:"xiǎo qiǎo",mean:"小小的"},
+{w:"栖息",py:"qī xī",mean:"动物停留、住在某处"},
+{w:"亚热带",py:"yà rè dài",mean:"不太热的热带地区"},
+{w:"悬停",py:"xuán tíng",mean:"停在空中不动"},
+{w:"本领",py:"běn lǐng",mean:"能力"},
+{w:"花蕊",py:"huā ruǐ",mean:"花中心"},
+{w:"捕捉",py:"bǔ zhuō",mean:"抓住"},
+{w:"营养",py:"yíng yǎng",mean:"养分"},
+{w:"细密",py:"xì mì",mean:"细又密"},
+{w:"轻薄",py:"qīng bó",mean:"轻、薄"},
+{w:"折射",py:"zhé shè",mean:"光线拐弯"},
+{w:"染料",py:"rǎn liào",mean:"颜料"},
+{w:"消耗",py:"xiāo hào",mean:"用掉"},
+{w:"能量",py:"néng liàng",mean:"力气、能量"},
+{w:"频繁",py:"pín fán",mean:"次数很多"},
+{w:"虚弱",py:"xū ruò",mean:"没有力气"},
+{w:"迁徙",py:"qiān xǐ",mean:"动物换地方生活"}
+],
+gram:[
+{g:"依靠……，……",exp:"借着某个条件做事情。例句：依靠地图，我找到了车站。"},
+{g:"因为……，所以……",exp:"因果。例句：因为下雨，所以我们不出去。"},
+{g:"如果……，……",exp:"假设条件。例句：如果明天有空，我来看你。"},
+{g:"虽然……，但……",exp:"转折。例句：虽然他很忙，但是愿意帮忙。"}
+]
+},
+{
+title:"短文2｜鹦鹉",
+text:`
+<p>鹦鹉大多栖息在热带丛林，种类繁多，羽毛色彩艳丽，因此常常被当作观赏鸟类。</p>
+<p>它们的上喙粗壮并且向下弯曲，这个结构可以轻松咬开坚硬的果壳，取出里面的果肉和种子。</p>
+<p>很多人以为鹦鹉天生就懂人类的语言，其实并不是这样。</p>
+<p>鹦鹉只是拥有不错的声音模仿能力，经过反复训练，可以复刻人说话的声调，但大多并不理解话语的含义。</p>
+<p>野外的鹦鹉喜欢成群活动，以果实、嫩芽作为主要食物。</p>
+<p>值得注意的是，不少野生鹦鹉属于保护动物，私自捕捉和家庭饲养会违反相关规定。</p>
+`,
+ques:[
+{q:"1. 鹦鹉粗壮弯曲的上喙主要作用是？",type:"abcd",opts:["A.用来快速挖泥土","B.咬开坚硬果壳获取食物","C.专门用来模仿人类说话","D.帮助飞得更快更高"],ans:"B"},
+{q:"2. 关于鹦鹉模仿人声，短文的看法是？",type:"abcd",opts:["A.鹦鹉听懂人话之后才会模仿说话","B.天生就理解人类全部语言","C.可以模仿声调，但一般不懂话的意思","D.所有鹦鹉不用训练就会说句子"],ans:"C"},
+{q:"3. 下面哪一条是短文提醒我们的？",type:"abcd",opts:["A.野生保护类鹦鹉不能私自捕捉饲养","B.鹦鹉只适合单独一只生活，不能成群","C.鹦鹉只能吃肉类，不能吃果实","D.鹦鹉全部生活在寒冷北方森林"],ans:"A"}
+],
+voc:[
+{w:"丛林",py:"cóng lín",mean:"树林"},
+{w:"繁多",py:"fán duō",mean:"数量很多"},
+{w:"艳丽",py:"yàn lì",mean:"好看、颜色亮"},
+{w:"观赏",py:"guān shǎng",mean:"欣赏"},
+{w:"粗壮",py:"cū zhuàng",mean:"粗、结实"},
+{w:"坚硬",py:"jiān yìng",mean:"很硬"},
+{w:"果壳",py:"guǒ ké",mean:"果子外面的硬皮"},
+{w:"天生",py:"tiān shēng",mean:"生来就有"},
+{w:"反复",py:"fǎn fù",mean:"一次又一次"},
+{w:"复刻",py:"fù kè",mean:"模仿、复制"},
+{w:"声调",py:"shēng diào",mean:"声调"},
+{w:"含义",py:"hán yì",mean:"意思"},
+{w:"成群",py:"chéng qún",mean:"一群一群"},
+{w:"值得注意",py:"zhí de zhù yì",mean:"要小心、留意"},
+{w:"野生",py:"yě shēng",mean:"野外的"},
+{w:"私自",py:"sī zì",mean:"自己偷偷做"},
+{w:"违反",py:"wéi fǎn",mean:"不遵守"},
+{w:"规定",py:"guī dìng",mean:"规则"}
+],
+gram:[
+{g:"因此",exp:"所以，表结果。例句：他生病了，因此没来上课。"},
+{g:"被当作……",exp:"被看成、用作。例句：这个杯子被当作礼物送给朋友。"},
+{g:"以为……其实……",exp:"想法和真实情况不一样。例句：我以为很难，其实很简单。"},
+{g:"以……作为……",exp:"把A当成B。例句：我们以汉语作为学习重点。"}
+]
+},
+{
+title:"短文3｜鸟的喙",
+text:`
+<p>鸟类的嘴巴生物学上叫作喙，它不只是鸟类取食的工具，还有很多别的用处。</p>
+<p>鸟儿可以利用喙梳理全身凌乱的羽毛，也能用它收集树枝、干草，搭建属于自己的鸟巢。</p>
+<p>鸟没有牙齿，无法咀嚼，食物都要依靠喙处理之后直接吞咽进胃部。</p>
+<p>不同鸟类生存环境和吃食习惯不一样，喙的外形也就出现明显差别。</p>
+<p>吃花蜜、小虫的鸟，喙细长有力；吃植物种子的鸟，喙短而厚实；吃鱼的水鸟，喙宽大扁平。</p>
+<p>喙外层的角质层会不断磨损，同时持续生长，所以正常使用不会被完全消耗损坏。</p>
+`,
+ques:[
+{q:"1. 短文没有提到鸟喙的哪一项功能？",type:"abcd",opts:["A.梳理整理羽毛","B.收集材料搭建鸟巢","C.在水下帮助鸟儿呼吸","D.处理食物方便吞咽"],ans:"C"},
+{q:"2. 吃植物种子的鸟类，它的喙一般是什么样子？",type:"abcd",opts:["A.短而厚实","B.细长尖锐","C.又薄又透明","D.完全软软没有硬度"],ans:"A"},
+{q:"3. 关于鸟喙角质层，短文怎么说？",type:"abcd",opts:["A.一旦磨损就永远不能恢复","B.会磨损，但同时会持续生长","C.不会产生任何磨损","D.全部由柔软羽毛组成"],ans:"B"}
+],
+voc:[
+{w:"生物学",py:"shēng wù xué",mean:"研究生物的科学"},
+{w:"工具",py:"gōng jù",mean:"用品、器具"},
+{w:"凌乱",py:"líng luàn",mean:"不整齐"},
+{w:"干草",py:"gān cǎo",mean:"干的草"},
+{w:"搭建",py:"dā jiàn",mean:"建造"},
+{w:"咀嚼",py:"jǔ jué",mean:"嚼碎"},
+{w:"吞咽",py:"tūn yàn",mean:"咽下去"},
+{w:"胃部",py:"wèi bù",mean:"胃"},
+{w:"明显",py:"míng xiǎn",mean:"容易看出来"},
+{w:"差别",py:"chā bié",mean:"不一样"},
+{w:"厚实",py:"hòu shi",mean:"厚、结实"},
+{w:"扁平",py:"biǎn píng",mean:"扁扁的"},
+{w:"角质层",py:"jiǎo zhì céng",mean:"表层硬的部分"},
+{w:"磨损",py:"mó sǔn",mean:"慢慢磨掉"},
+{w:"持续",py:"chí xù",mean:"一直"},
+{w:"消耗",py:"xiāo hào",mean:"用完"},
+{w:"损坏",py:"sǔn huài",mean:"坏掉"}
+],
+gram:[
+{g:"利用……",exp:"使用某个东西做事情。例句：我利用空闲时间看书。"},
+{g:"无法",exp:"不能，没有办法。例句：这里没有网，我无法发消息。"},
+{g:"……也就……",exp:"前面的情况带来后面的结果。例句：天气冷，大家也就穿得多了。"},
+{g:"同时",exp:"两件事一起发生。例句：他一边走路，同时听音乐。"}
+]
+},
+{
+title:"短文4｜老王和鸽子",
+text:`
+<p>退休多年的老王饲养了十几只家鸽，这已经成为他日常生活重要的爱好。</p>
+<p>老王养鸽子并不是指望靠售卖鸽子获得收入，更多是精神上的消遣，同时活动筋骨、锻炼视力。</p>
+<p>每到天气晴好的清晨，老王就会带着鸽子到郊外空地放飞。</p>
+<p>家鸽具备出色的归巢本领，就算被带到陌生的远处，也能够辨别方位，跨越距离回到自己原来的住处。</p>
+<p>放飞的时候，老王会长久地望向天空，追踪鸽群飞行的轨迹。</p>
+<p>不过老王也明白，城市养鸽要遵守管理规定，控制数量，不能给周围邻居的生活带去困扰。</p>
+`,
+ques:[
+{q:"1. 老王养鸽子主要目的不包括下面哪一项？",type:"abcd",opts:["A.卖掉鸽子赚钱","B.当做精神消遣爱好","C.活动自己的身体筋骨","D.锻炼自己的视力"],ans:"A"},
+{q:"2. 家鸽“归巢的本领”指什么？",type:"abcd",opts:["A.害怕看见陌生的环境","B.可以从远方辨别方向飞回自己的住处","C.只愿意在下雨天出门飞行","D.可以很快吃掉很多粮食"],ans:"B"},
+{q:"3. 老王对城市养鸽有什么认识？",type:"abcd",opts:["A.鸽子越多，养起来越有意思","B.城市里完全不允许任何人养鸽子","C.应当遵守规定，不给邻居带来困扰","D.放飞鸽子只能选择下雨天清晨"],ans:"C"}
+],
+voc:[
+{w:"饲养",py:"sì yǎng",mean:"养动物"},
+{w:"家鸽",py:"jiā gē",mean:"家里养的鸽子"},
+{w:"指望",py:"zhǐ wàng",mean:"希望得到"},
+{w:"售卖",py:"shòu mài",mean:"卖出"},
+{w:"收入",py:"shōu rù",mean:"赚到的钱"},
+{w:"消遣",py:"xiāo qiǎn",mean:"打发时间的爱好"},
+{w:"筋骨",py:"jīn gǔ",mean:"身体"},
+{w:"视力",py:"shì lì",mean:"眼睛看东西的能力"},
+{w:"晴好",py:"qíng hǎo",mean:"天气好、晴天"},
+{w:"郊外",py:"jiāo wài",mean:"城市外面"},
+{w:"空地",py:"kòng dì",mean:"空的地方"},
+{w:"出色",py:"chū sè",mean:"很好"},
+{w:"归巢",py:"guī cháo",mean:"回窝"},
+{w:"陌生",py:"mò shēng",mean:"不熟悉"},
+{w:"辨别",py:"biàn bié",mean:"分清"},
+{w:"方位",py:"fāng wèi",mean:"方向"},
+{w:"跨越",py:"kuà yuè",mean:"跨过"},
+{w:"追踪",py:"zhuī zōng",mean:"跟着看"},
+{w:"轨迹",py:"guǐ jì",mean:"路线"},
+{w:"遵守",py:"zūn shǒu",mean:"按照规定做"},
+{w:"困扰",py:"kùn rǎo",mean:"麻烦别人"}
+],
+gram:[
+{g:"并不是……",exp:"否定，不是。例句：他并不是不想去，是没有时间。"},
+{g:"就算……也……",exp:"让步，即使。例句：就算下雨，我也要去。"},
+{g:"不过",exp:"但是、可是，转折。例句：这件衣服很好看，不过很贵。"},
+{g:"给……带去……",exp:"带给某人某物/某种影响。例句：热闹给大家带去快乐。"}
+]
+}
+],
+
+hsk6:[
+{
+title:"短文1｜蜂鸟",
+text:`
+<p>蜂鸟是现存鸟类当中体型最小的类群，其自然原生栖息地集中分布在南美洲区域。</p>
+<p>这类鸟类体型十分小巧，成年个体大小基本和人类大拇指相近。</p>
+<p>蜂鸟体表覆盖细密的羽毛，羽毛的微观结构具备光学折射特性，当太阳光照射到羽毛表面时，就会折射出丰富多变的色彩。</p>
+<p>值得注意的是，这种色彩变化来自光线的折射作用，并非羽毛本身含有的色素发生改变。</p>
+<p>蜂鸟演化出细长尖锐的喙，这一身体构造，是长期适应取食习性演化形成的。</p>
+<p>在日常觅食活动中，花蜜是蜂鸟最主要的能量来源，它们同时也会捕食附着在花朵上的小型昆虫，以此补充身体所需的蛋白质。</p>
+<p>蜂鸟的飞行能力极具特点，它们可以在空中保持悬停，方便将喙探入花蕊深处获取花蜜。</p>
+<p>不同于多数鸟类，蜂鸟新陈代谢速率极高，因此需要频繁进食来维持身体运转。</p>
+<p>尽管蜂鸟体型微小，但它们对生存环境的要求较高，依赖开花植物充足的区域。在热带、亚热带的丛林环境中，蜂鸟种群分布相对密集。</p>
+`,
+ques:[
+{q:"1. 原句：蜂鸟体表覆盖细密的羽毛，羽毛的微观结构具备光学折射特性，当太阳光照射到羽毛表面时，就会折射出丰富多变的色彩。",type:"abcd",opts:["A. 阳光照射蜂鸟羽毛时，因为羽毛特殊结构，会呈现多种不同颜色","B. 蜂鸟可以主动改变羽毛里的色素，从而变换自身颜色","C. 南美洲的蜂鸟天生带有五颜六色的色素羽毛","D. 蜂鸟只有在晴天的时候才会长出彩色羽毛"],ans:"A"},
+{q:"2. 原句：蜂鸟拥有细长尖锐的喙，这一身体构造，是长期适应取食习性演化形成的。",type:"abcd",opts:["A. 蜂鸟细长的嘴，是慢慢进化出来，方便它寻找食物","B. 蜂鸟的喙会随着年龄增长不断变长变尖","C. 所有南美洲小鸟都长着细长尖锐的喙","D. 蜂鸟用细长的喙，主要用来和别的鸟类争斗"],ans:"A"},
+{q:"3. 原句：它们可以在空中保持悬停，方便将喙探入花蕊深处获取花蜜。",type:"abcd",opts:["A. 蜂鸟停在花朵上面休息，顺便吸食花蜜","B. 蜂鸟能够停在空中不动，便于伸嘴到花里面采花蜜","C. 蜂鸟只能落在花枝上，才能吃到里面的花蜜","D. 蜂鸟飞行速度很快，飞过花朵就能带走花蜜"],ans:"B"}
+],
+voc:[
+{w:"现存",py:"xiàn cún",mean:"现在还存在的"},
+{w:"类群",py:"lèi qún",mean:"一类生物"},
+{w:"原生",py:"yuán shēng",mean:"本来就在这里的"},
+{w:"栖息地",py:"qī xī dì",mean:"生活的地方"},
+{w:"集中",py:"jí zhōng",mean:"聚在一起"},
+{w:"个体",py:"gè tǐ",mean:"一个生物"},
+{w:"微观",py:"wēi guān",mean:"很小、肉眼不容易看见"},
+{w:"光学",py:"guāng xué",mean:"和光有关的"},
+{w:"特性",py:"tè xìng",mean:"特点"},
+{w:"色素",py:"sè sù",mean:"颜色物质"},
+{w:"演化",py:"yǎn huà",mean:"慢慢进化"},
+{w:"构造",py:"gòu zào",mean:"结构"},
+{w:"觅食",py:"mì shí",mean:"找食物"},
+{w:"附着",py:"fù zhuó",mean:"粘在上面"},
+{w:"蛋白质",py:"dàn bái zhì",mean:"营养物质"},
+{w:"新陈代谢",py:"xīn chén dài xiè",mean:"身体能量更新"},
+{w:"速率",py:"sù lǜ",mean:"速度"},
+{w:"维持",py:"wéi chí",mean:"保持"},
+{w:"运转",py:"yùn zhuǎn",mean:"正常工作"},
+{w:"种群",py:"zhǒng qún",mean:"一群同类生物"},
+{w:"密集",py:"mì jí",mean:"很多、靠得近"}
+],
+gram:[
+{g:"当……时",exp:"时间状语，当某个事情发生的时候。例句：当春天到来时，花儿会开。"},
+{g:"并非……",exp:"并不是（书面）。例句：这个想法并非所有人都同意。"},
+{g:"以此……",exp:"用这个办法来……例句：他每天复习，以此提高汉语水平。"},
+{g:"不同于……",exp:"和……不一样。例句：这个方法不同于以前的办法。"},
+{g:"尽管……，但……",exp:"书面转折。例句：尽管很难，但是他没有放弃。"}
+]
+},
+{
+title:"短文2｜鹦鹉",
+text:`
+<p>鹦鹉，也常被称作鹦哥，是广泛分布于热带林区的一类鸟类。</p>
+<p>多数鹦鹉以各类植物果实作为主要食物来源，该物种普遍具备较长的自然寿命。</p>
+<p>从外形特征来看，鹦鹉头部呈圆形，上喙体积偏大，向下弯曲，下喙相对短小。</p>
+<p>这种独特的嘴部结构，方便它们咬开坚硬的果壳，获取内部果肉。</p>
+<p>鹦鹉的羽毛色彩丰富绚丽，常见包含白色、红色、黄色、绿色等多种色系。</p>
+<p>鹦鹉拥有发达的鸣管，具备模仿声音的生理基础，但这类模仿能力并非与生俱来。</p>
+<p>只有经过持续、规范的人工训练，部分鹦鹉才能够复刻人类说话的声音。</p>
+<p>需要区分的是，鹦鹉仅仅是复刻声音，并不代表它能够理解人类语言的含义。</p>
+<p>不同品种的鹦鹉体型差异巨大，栖息地也覆盖热带雨林、草原等多种热带环境。</p>
+<p>在野外环境中，鹦鹉大多成群活动，依靠果实、种子维持生存。</p>
+<p>因为艳丽的外表与声音模仿能力，长期以来鹦鹉被很多人当作观赏鸟类。同时，不少野生鹦鹉品种属于保护动物，私自捕捉、饲养会违反相关规定。</p>
+`,
+ques:[
+{q:"1. 原句：鹦鹉拥有发达的鸣管，具备模仿声音的生理基础，但这类模仿能力并非与生俱来。",type:"abcd",opts:["A. 鹦鹉天生就能听懂并且理解人类说的话","B. 鹦鹉身体条件可以模仿声音，但这个能力不是出生就有","C. 所有鹦鹉都可以不用训练，直接模仿人的声音","D. 鹦鹉只能模仿大自然里的风声，不能模仿人声"],ans:"B"},
+{q:"2. 原句：这种独特的嘴部结构，方便它们咬开坚硬的果壳，获取内部果肉。",type:"abcd",opts:["A. 鹦鹉特殊的嘴巴，便于咬开果壳吃到里面的果肉","B. 鹦鹉的嘴弯曲短小，很难咬开任何坚硬果实","C. 鹦鹉只吃柔软嫩叶，不需要咬开果壳","D. 鹦鹉用爪子剥开果壳，嘴巴只用来喝水"],ans:"A"},
+{q:"3. 原句：只有经过持续、规范的人工训练，部分鹦鹉才能够复刻人类说话的声音。",type:"abcd",opts:["A. 只要是人养的鹦鹉，全都可以流利与人对话","B. 经过长期规范的人工训练，一些鹦鹉可以模仿人说话的声音","C. 鹦鹉学会说话之后，就可以明白人的想法","D. 在野外长大的鹦鹉，天生就会模仿人类说话"],ans:"B"}
+],
+voc:[
+{w:"广泛",py:"guǎng fàn",mean:"范围很大"},
+{w:"物种",py:"wù zhǒng",mean:"生物种类"},
+{w:"普遍",py:"pǔ biàn",mean:"大多数都是"},
+{w:"特征",py:"tè zhēng",mean:"特点"},
+{w:"独特",py:"dú tè",mean:"不一样的"},
+{w:"绚丽",py:"xuàn lì",mean:"好看、色彩多"},
+{w:"色系",py:"sè xì",mean:"一类颜色"},
+{w:"鸣管",py:"míng guǎn",mean:"鸟发声器官"},
+{w:"生理",py:"shēng lǐ",mean:"身体本身的"},
+{w:"与生俱来",py:"yǔ shēng jù lái",mean:"生来就有"},
+{w:"持续",py:"chí xù",mean:"一直"},
+{w:"规范",py:"guī fàn",mean:"正规的"},
+{w:"品种",py:"pǐn zhǒng",mean:"种类"},
+{w:"差异巨大",py:"chā yì jù dà",mean:"差别很大"},
+{w:"覆盖",py:"fù gài",mean:"包含"},
+{w:"依靠",py:"yī kào",mean:"依赖"}
+],
+gram:[
+{g:"从……来看",exp:"从某个角度看。例句：从发音来看，他进步很大。"},
+{g:"只有……才……",exp:"必要条件。例句：只有多练习，才能学好汉语。"},
+{g:"需要……的是",exp:"书面，用来引出提醒。例句：需要说明的是，考试不能迟到。"},
+{g:"长期以来",exp:"很长一段时间里。例句：长期以来，中国人喜欢喝茶。"}
+]
+},
+{
+title:"短文3｜鸟类的喙",
+text:`
+<p>鸟类的嘴在生物学上被命名为喙。</p>
+<p>多种多样的喙形态，是鸟类长期适应生存环境与觅食习惯演化的结果。</p>
+<p>喙的功能并不局限于获取食物，它还拥有多重用途：鸟类可以借助喙梳理、整理全身羽毛，也可以用喙进行同类之间的争斗，还能够利用喙收集材料、搭建鸟巢。</p>
+<p>不同食性的鸟类，喙的形态存在明显区别。</p>
+<p>以花蜜、昆虫为食物来源的鸟类，一般长着细长的喙，蜂鸟就是典型代表；主要食用植物种子与嫩芽的鸟类，喙短小有力，麻雀属于这类；捕食鱼类的水鸟，则长出宽大的喙，便于在水中捕捉猎物。</p>
+<p>喙是鸟类十分重要的器官，直接关系到鸟类觅食、生存的能力。</p>
+<p>鸟类没有牙齿，无法咀嚼食物，所以全部食物都依靠喙处理之后，直接吞咽进入体内。</p>
+<p>喙外层的角质层会缓慢磨损，同时持续生长，不会因为长期使用而彻底消耗。</p>
+<p>通过观察鸟类喙的外形，研究者可以快速判断该鸟类大致的食性，推测它所处的生存环境。这也是生物学家研究鸟类分类与生态习性的重要依据之一。</p>
+`,
+ques:[
+{q:"1. 原句：多种多样的喙形态，是鸟类长期适应生存环境与觅食习惯演化的结果。",type:"abcd",opts:["A. 鸟类嘴的不同样子，是为适应环境和吃食，慢慢进化而来","B. 鸟喙的形状会在一年之中，随季节自动变化","C. 同一种鸟类，每一只的喙外形都完全不一样","D. 鸟类可以自由改变喙的样子，适应不同食物"],ans:"A"},
+{q:"2. 原句：喙的功能并不局限于获取食物，它还拥有多重用途。",type:"abcd",opts:["A. 鸟的嘴唯一的用处就是寻找和吃掉食物","B. 除了吃东西，鸟嘴还有很多其他作用","C. 鸟类只用爪子收集材料搭建鸟巢","D. 鸟类整理羽毛的时候，不会使用自己的喙"],ans:"B"},
+{q:"3. 原句：鸟类没有牙齿，无法咀嚼食物，所以全部食物都依靠喙处理之后，直接吞咽进入体内。",type:"abcd",opts:["A. 鸟儿没有牙齿嚼食物，要用嘴处理食物再吞下去","B. 鸟类的牙齿长在喙里面，可以咬碎种子","C. 鸟类吃东西，会先把食物嚼碎再吞进胃里","D. 喙可以代替胃，直接消化鸟类吃的食物"],ans:"A"}
+],
+voc:[
+{w:"命名",py:"mìng míng",mean:"起名"},
+{w:"局限",py:"jú xiàn",mean:"只在某个范围"},
+{w:"多重",py:"duō chóng",mean:"好几种"},
+{w:"借助",py:"jiè zhù",mean:"借助、利用"},
+{w:"争斗",py:"zhēng dòu",mean:"争斗、打架"},
+{w:"食性",py:"shí xìng",mean:"吃食物的习惯"},
+{w:"典型代表",py:"diǎn xíng dài biǎo",mean:"典型例子"},
+{w:"猎物",py:"liè wù",mean:"被捕食的动物"},
+{w:"器官",py:"qì guān",mean:"身体器官"},
+{w:"直接关系到",py:"zhí jiē guān xì dào",mean:"直接影响、关系到"},
+{w:"缓慢",py:"huǎn màn",mean:"缓慢"},
+{w:"研究者",py:"yán jiū zhě",mean:"研究者"},
+{w:"判断",py:"pàn duàn",mean:"判断"},
+{w:"大致",py:"dà zhì",mean:"大概、大致"},
+{w:"推测",py:"tuī cè",mean:"推测、猜想"},
+{w:"分类",py:"fēn lèi",mean:"分类"},
+{w:"依据",py:"yī jù",mean:"根据、依据"}
+],
+gram:[
+{g:"是……的结果",exp:"表示某种原因造成的结果。例句：他的成功是长期努力的结果。"},
+{g:"并不局限于",exp:"不只是、不限于。例句：这个方法的作用并不局限于提高速度。"},
+{g:"通过……可以……",exp:"借助某种方式做到某事。例句：通过阅读，我们可以了解世界。"},
+{g:"……之一",exp:"表示其中一个。例句：这也是重要原因之一。"}
+]
+},
+{
+title:"短文4｜饲养鸽子的益处",
+text:`
+<p>鸽子属于和人类关系密切的鸟类。</p>
+<p>科学的饲养与放飞鸽子的活动，能够对生态平衡起到积极作用，同时对人类身心健康产生正面影响。</p>
+<p>饲养鸽子的行为在世界各地拥有很长的历史。</p>
+<p>对于饲养者而言，这项活动的价值不只体现在经济层面，更多存在于身心锻炼与精神消遣。</p>
+<p>以退休人群为例，不少老年人饲养鸽子，目的并不是售卖鸽子换取收入，也不单单是打发空闲时间。</p>
+<p>日常带着鸽子外出放飞，可以帮助饲养者活动肢体，持续锻炼视力。</p>
+<p>鸽子具备很强的归巢能力，被带到陌生地点放飞之后，它们能够辨别方位，跨越一定距离，重新回到原本的巢穴。</p>
+<p>饲养者在放飞过程中，需要持续观察鸽子飞行的轨迹，这个过程可以锻炼专注力。</p>
+<p>长期坚持这项爱好，不仅可以丰富退休后的日常生活，带来精神愉悦，还能够促进肢体活动，达到健身的效果。</p>
+<p>当然饲养鸽子也要遵守城市管理规定，控制饲养数量，避免对周边居民的生活造成干扰。</p>
+`,
+ques:[
+{q:"1. 原句：科学的饲养与放飞鸽子的活动，能够对生态平衡起到积极作用，同时对人类身心健康产生正面影响。",type:"abcd",opts:["A. 合理饲养放飞鸽子，有利于生态，也有益于人的身心","B. 大量随便放养鸽子，一定会破坏当地的生态环境","C. 养鸽子只能让人心情变好，对身体没有帮助","D. 只有老年人养鸽子，才可以保持身体健康"],ans:"A"},
+{q:"2. 原句：不少老年人饲养鸽子，目的并不是售卖鸽子换取收入，也不单单是打发空闲时间。",type:"abcd",opts:["A.很多老人养鸽子，不是为了卖鸽子赚钱，也不只是消磨空闲时间","B.老年人养鸽子主要就是为了卖鸽子赚钱","C.老人养鸽子只是没事干打发时间，没有别的意义","D.所有老人养鸽子都可以赚到很多钱"],ans:"A"},
+{q:"3. 原句：当然饲养鸽子也要遵守城市管理规定，控制饲养数量，避免对周边居民的生活造成干扰。",type:"abcd",opts:["A.养鸽子应当遵守规定，管好数量，不要打扰邻居","B.城市完全禁止任何人饲养鸽子","C.鸽子越多，饲养的效果就越好","D.居民不应该干涉别人养鸽子"],ans:"A"}
+],
+voc:[
+{w:"密切",py:"mì qiè",mean:"关系很近"},
+{w:"科学",py:"kē xué",mean:"科学、合理的"},
+{w:"积极作用",py:"jī jí zuò yòng",mean:"积极作用"},
+{w:"身心健康",py:"shēn xīn jiàn kāng",mean:"身体和心理健康"},
+{w:"正面影响",py:"zhèng miàn yǐng xiǎng",mean:"正面影响"},
+{w:"层面",py:"céng miàn",mean:"方面、层面"},
+{w:"肢体",py:"zhī tǐ",mean:"肢体、手脚"},
+{w:"专注力",py:"zhuān zhù lì",mean:"专注力"},
+{w:"愉悦",py:"yú yuè",mean:"愉快、愉悦"},
+{w:"促进",py:"cù jìn",mean:"促进、推动"},
+{w:"避免",py:"bì miǎn",mean:"避免、防止"},
+{w:"周边",py:"zhōu biān",mean:"附近、周边"},
+{w:"干扰",py:"gān rǎo",mean:"干扰、打扰"}
+],
+gram:[
+{g:"对……起到……作用",exp:"表示对某事物产生某种作用。例句：运动对健康起到积极作用。"},
+{g:"以……为例",exp:"以某事物作为例子。例句：以学习汉语为例，坚持练习很重要。"},
+{g:"不仅……，还……",exp:"表示递进关系。例句：他不仅学习好，还喜欢运动。"},
+{g:"避免……",exp:"防止发生不好的情况。例句：请保持安静，避免影响他人。"}
+]
+}
+]
+};
+
+let curLv = "hsk3";
+let curArtIdx = 0;
+let answerState = {};
+
+// 给课文文本自动包裹生词、语法悬浮标签
+function markText(text, vocList, gramList){
+    let html = text;
+    // 先处理生词（蓝色tooltip），长词优先
+    const vocSorted = [...vocList].sort((a,b)=>b.w.length - a.w.length);
+    vocSorted.forEach(v=>{
+        const reg = new RegExp(v.w,"g");
+        html = html.replace(reg,`<span class="tooltip">${v.w}<span class="tip">${v.py}｜${v.mean}</span></span>`);
+    })
+    // 再处理语法（红色tooltip），长条目优先
+    const gramSorted = [...gramList].sort((a,b)=>b.g.length - a.g.length);
+    gramSorted.forEach(g=>{
+        const reg = new RegExp(g.g,"g");
+        html = html.replace(reg,`<span class="tooltip-gram">${g.g}<span class="tip">${g.exp}</span></span>`);
+    })
+    return html;
+}
+
+function renderArtTabs(){
+  const wrap = document.getElementById("artTabs");
+  const list = data[curLv];
+  wrap.innerHTML = "";
+  list.forEach((item,idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "tab-art"+(idx===curArtIdx?" active":"");
+    btn.innerText = item.title;
+    btn.onclick = ()=>{curArtIdx=idx;renderAll();};
+    wrap.appendChild(btn);
+  })
+}
+
+function renderAll(){
+  renderArtTabs();
+  const art = data[curLv][curArtIdx];
+  const leftDom = document.getElementById("panelLeft");
+  const rightDom = document.getElementById("panelRight");
+  answerState = {};
+
+  // 课文自动标记生词、语法悬浮
+  const markedText = markText(art.text, art.voc, art.gram);
+  let htmlLeft = `<h3>${art.title}</h3>${markedText}<div class="control-bar"><button class="btn-ctrl" id="checkBtn">核对答案</button><button class="btn-ctrl" id="resetBtn">重置</button></div>`;
+
+  art.ques.forEach((q,qi)=>{
+    htmlLeft += `<div class="question-block"><p>${q.q}</p>`;
+    if(q.type==="tf"){
+      htmlLeft += `<span class="opt" data-qi="${qi}" data-v="对">✔</span><span class="opt" data-qi="${qi}" data-v="错">✘</span><span class="answer-mark" id="ans${qi}"></span>`;
+    }else{
+      q.opts.forEach(opt=>{
+        htmlLeft += `<span class="opt" data-qi="${qi}" data-v="${opt[0]}">${opt}</span>`;
+      })
+      htmlLeft += `<span class="answer-mark" id="ans${qi}"></span>`;
+    }
+    htmlLeft += `</div>`;
+  })
+
+  leftDom.innerHTML = htmlLeft;
+
+  // 右侧：完整展示生词（词+拼音+释义），语法（语法+讲解）
+  let htmlRight = `<h4>生词</h4><ul>`;
+  art.voc.forEach(v=>{
+    htmlRight += `<li>${v.w} ｜ ${v.py} ｜ ${v.mean}</li>`
+  })
+  htmlRight += `</ul><h4>语法</h4><ul>`;
+  art.gram.forEach(g=>{
+    htmlRight += `<li>${g.g} ｜ ${g.exp}</li>`
+  })
+  htmlRight += `</ul>`;
+  rightDom.innerHTML = htmlRight;
+
+  document.querySelectorAll(".opt").forEach(el=>{
+    el.onclick = function(){
+      const qi = this.dataset.qi;
+      const val = this.dataset.v;
+      answerState[qi] = val;
+      document.querySelectorAll(`.opt[data-qi="${qi}"]`).forEach(o=>o.classList.remove("selected"));
+      this.classList.add("selected");
+    }
+  })
+
+  document.getElementById("checkBtn").onclick = ()=>{
+    art.ques.forEach((q,qi)=>{
+      const span = document.getElementById("ans"+qi);
+      span.innerText = "【正确："+q.ans+"】";
+    })
+  }
+
+  document.getElementById("resetBtn").onclick = ()=>{
+    renderAll();
+  }
+}
+
+document.querySelectorAll(".tab-lv").forEach(btn=>{
+  btn.onclick = function(){
+    document.querySelectorAll(".tab-lv").forEach(b=>b.classList.remove("active"));
+    this.classList.add("active");
+    curLv = this.dataset.lv;
+    curArtIdx = 0;
+    renderAll();
+  }
+})
+
+window.onload = ()=>{renderAll();}
+</script>
+
+</body>
+</html>

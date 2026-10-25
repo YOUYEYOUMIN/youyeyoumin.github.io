@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4生词交互词卡｜播放、博士、不必、不便、不断、不够、不过、不论、步、部</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:860px;
+    margin-bottom:30px;
+}
+.flashcard {
+    width:100%;
+    min-height:820px;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding: clamp(24px,4vw,40px) clamp(20px,4vw,44px);
+    border-radius:26px;
+    background:#ffffff;
+    overflow:auto;
+}
+.card-back{display:none; background:#ffffff; border-radius:26px;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;width:100%;}
+.img-placeholder{
+    width: min(320px, 100%);
+    max-width:100%;
+    height:auto;
+    margin:24px auto 0 auto;
+    border-radius:14px;
+    overflow:hidden;
+}
+.img-placeholder img{
+    width:100%;
+    height:auto;
+    object-fit:cover;
+    display:block;
+    margin:0 auto;
+}
+.img-placeholder img:broken {
+    display:none !important;
+}
+h2{
+    font-size: clamp(32px,7vw,44px);
+    color:#b58a3c;
+    font-weight:800;
+    margin-bottom:14px;
+    text-align:center;
+}
+.pinyin-text{
+    font-size: clamp(22px,5vw,28px);
+    color:#333;
+    margin-bottom:12px;
+    text-align:center;
+}
+.pos-text{
+    font-size: clamp(18px,4vw,22px);
+    color:#555;
+    margin-bottom:20px;
+    text-align:center;
+}
+.label-title{
+    font-weight:bold;
+    font-size: clamp(18px,4vw,21px);
+    margin-top:24px;
+    margin-bottom:10px;
+}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{
+    font-size: clamp(16px,3.5vw,19px);
+    line-height:1.85;
+    color:#222;
+    margin-bottom:10px;
+}
+.word-highlight{
+    color:#b58a3c;
+    font-weight:800;
+}
+.nav-bar{
+    display:flex;
+    gap:24px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+.nav-bar button{
+    padding:14px 32px;
+    border:none;
+    border-radius:14px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+}
+#pageText{
+    font-size:20px;
+    color:#333;
+    min-width:140px;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack">
+<!--卡0 播放 -->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>播放</h2>
+            <div class="pinyin-text">bōfàng</div>
+            <div class="pos-text">动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bofang.jpg" alt="播放" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">播放</span>音乐、<span class="word-highlight">播放</span>视频、<span class="word-highlight">播放</span>新闻</p>
+            <div class="label-title">例句</div>
+            <p>1.手机正在<span class="word-highlight">播放</span>音乐。</p>
+            <p>2.电视<span class="word-highlight">播放</span>今天的新闻。</p>
+            <div class="label-title">易错提示</div>
+            <p>多用于音频、视频节目；后面接声音、影片类名词。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①电脑<span class="word-highlight">播放</span>电影。（）</p>
+            <p>②我<span class="word-highlight">播放</span>书。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>放映</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡1 博士 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>博士</h2>
+            <div class="pinyin-text">bóshì</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/boshi.jpg" alt="博士" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>读<span class="word-highlight">博士</span>、<span class="word-highlight">博士</span>学位、<span class="word-highlight">博士</span>生</p>
+            <div class="label-title">例句</div>
+            <p>1.他正在读<span class="word-highlight">博士</span>。</p>
+            <p>2.<span class="word-highlight">博士</span>是很高的学位。</p>
+            <div class="label-title">易错提示</div>
+            <p>学位名称；区别：学士、硕士、博士。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①他拿到了<span class="word-highlight">博士</span>学位。（）</p>
+            <p>②我读博士一次。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡2 不必 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>不必</h2>
+            <div class="pinyin-text">búbì</div>
+            <div class="pos-text">副词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bubi.jpg" alt="不必" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">不必</span>担心、<span class="word-highlight">不必</span>客气、<span class="word-highlight">不必</span>着急</p>
+            <div class="label-title">例句</div>
+            <p>1.这点小事，你<span class="word-highlight">不必</span>担心。</p>
+            <p>2.大家<span class="word-highlight">不必</span>等我吃饭。</p>
+            <div class="label-title">易错提示</div>
+            <p>表示“不需要、用不着”，后面接动词。≠“不一定”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①你<span class="word-highlight">不必</span>客气。（）</p>
+            <p>②这件事<span class="word-highlight">不必</span>昨天。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>用不着、无需</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡3 不便 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>不便</h2>
+            <div class="pinyin-text">búbiàn</div>
+            <div class="pos-text">形容词、动词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bubian.jpg" alt="不便" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>行动<span class="word-highlight">不便</span>、交通<span class="word-highlight">不便</span>、诸多<span class="word-highlight">不便</span></p>
+            <div class="label-title">例句</div>
+            <p>1.这里交通很<span class="word-highlight">不便</span>。（形容词）</p>
+            <p>2.我身体不舒服，<span class="word-highlight">不便</span>出门。（动词）</p>
+            <div class="label-title">易错提示</div>
+            <p>形容词：不方便；动词：不适宜、不宜做某事。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①老人腿脚行动<span class="word-highlight">不便</span>。（）</p>
+            <p>②我<span class="word-highlight">不便</span>一杯水。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>不方便</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡4 不断 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>不断</h2>
+            <div class="pinyin-text">búduàn</div>
+            <div class="pos-text">动词、副词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/buduan.jpg" alt="不断" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">不断</span>进步、<span class="word-highlight">不断</span>努力、<span class="word-highlight">不断</span>变化</p>
+            <div class="label-title">例句</div>
+            <p>1.我们要<span class="word-highlight">不断</span>学习新的知识。</p>
+            <p>2.雨<span class="word-highlight">不断</span>地下。</p>
+            <div class="label-title">易错提示</div>
+            <p>表示连续不停，后面接持续性动词。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①科技<span class="word-highlight">不断</span>发展。（）</p>
+            <p>②我<span class="word-highlight">不断</span>苹果。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>不停、持续</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡5 不够 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>不够</h2>
+            <div class="pinyin-text">búgòu</div>
+            <div class="pos-text">动词、副词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bugou.jpg" alt="不够" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>时间<span class="word-highlight">不够</span>、钱<span class="word-highlight">不够</span>、<span class="word-highlight">不够</span>好</p>
+            <div class="label-title">例句</div>
+            <p>1.我的时间<span class="word-highlight">不够</span>了。（动词）</p>
+            <p>2.这件衣服<span class="word-highlight">不够</span>大。（副词）</p>
+            <div class="label-title">易错提示</div>
+            <p>动词：数量不足；副词：达不到某种程度。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①水<span class="word-highlight">不够</span>喝。（）</p>
+            <p>②我<span class="word-highlight">不够</span>书本。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡6 不过 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>不过</h2>
+            <div class="pinyin-text">búguò</div>
+            <div class="pos-text">连词、副词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/buguo.jpg" alt="不过" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>只是<span class="word-highlight">不过</span>、<span class="word-highlight">不过</span>也好</p>
+            <div class="label-title">例句</div>
+            <p>1.这件衣服很漂亮，<span class="word-highlight">不过</span>太贵。（连词，转折）</p>
+            <p>2.他<span class="word-highlight">不过</span>二十岁。（副词，仅仅）</p>
+            <div class="label-title">易错提示</div>
+            <p>连词表转折≈“但是”；副词表限定≈“仅仅、只是”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①我想去，<span class="word-highlight">不过</span>没有时间。（）</p>
+            <p>②我<span class="word-highlight">不过</span>桌子高。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>但是、只是</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡7 不论 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>不论</h2>
+            <div class="pinyin-text">búlùn</div>
+            <div class="pos-text">连词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bulun.jpg" alt="不论" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p><span class="word-highlight">不论</span>白天黑夜、<span class="word-highlight">不论</span>好坏</p>
+            <div class="label-title">例句</div>
+            <p>1.<span class="word-highlight">不论</span>天气好不好，我们都要上课。</p>
+            <p>2.<span class="word-highlight">不论</span>是谁，都要遵守规则。</p>
+            <div class="label-title">易错提示</div>
+            <p>条件连词，后面搭配“都 / 总”；≈“不管”。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①<span class="word-highlight">不论</span>刮风下雨，他都坚持跑步。（）</p>
+            <p>②我<span class="word-highlight">不论</span>苹果。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+            <div class="label-title">近义词</div>
+            <p>不管</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡8 步 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>步</h2>
+            <div class="pinyin-text">bù</div>
+            <div class="pos-text">名词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bu.jpg" alt="步" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>一<span class="word-highlight">步</span>、跑<span class="word-highlight">步</span>、进<span class="word-highlight">步</span></p>
+            <div class="label-title">例句</div>
+            <p>1.我向前走了一<span class="word-highlight">步</span>。</p>
+            <p>2.学习要一<span class="word-highlight">步</span>一<span class="word-highlight">步</span>来。</p>
+            <div class="label-title">易错提示</div>
+            <p>名词：脚步；用于走路、阶段。合成词：跑步、进步。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①做事要一<span class="word-highlight">步</span>一步来。（）</p>
+            <p>②我吃一<span class="word-highlight">步</span>面包。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡9 部 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>部</h2>
+            <div class="pinyin-text">bù</div>
+            <div class="pos-text">名词、量词 · HSK4</div>
+            <div class="img-placeholder">
+                <img src="HSK4V0005/bu2.jpg" alt="部" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">常用短语</div>
+            <p>内<span class="word-highlight">部</span>、外<span class="word-highlight">部</span>、一<span class="word-highlight">部</span>电影</p>
+            <div class="label-title">例句</div>
+            <p>1.公司内<span class="word-highlight">部</span>开会。（名词）</p>
+            <p>2.我看了一<span class="word-highlight">部</span>很好看的电影。（量词）</p>
+            <div class="label-title">易错提示</div>
+            <p>名词：部分、部门；量词，用于电影、电话、机器。区分同音字：步 / 部。</p>
+            <div class="label-title">留学生高频错题（判断对错）</div>
+            <p>①这是一<span class="word-highlight">部</span>电视剧。（）</p>
+            <p>②一<span class="word-highlight">部</span>面包。（）</p>
+            <p>参考答案：①（√） ②（×）</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button id="prevBtn">上一张</button>
+<div id="pageText">1 / 10</div>
+<button id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        el.style.display = i===current ? "block":"none";
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HSK4G0005语法闪卡｜语气副词 HSK4</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+    background-color:#e8e6e2;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+}
+.flashcard-wrap {
+    width:100%;
+    max-width:680px;
+    height:600px;
+    margin-bottom:24px;
+}
+.flashcard {
+    width:100%;
+    height:100%;
+    position:relative;
+    cursor:pointer;
+}
+.card-face {
+    position:absolute;
+    inset:0;
+    padding:36px 28px;
+    border-radius:22px;
+    background:#ffffff;
+    overflow-y:auto;
+    text-align:center;
+}
+.card-back{display:none; background:#ffffff;}
+.flashcard.flipped .card-front{display:none;}
+.flashcard.flipped .card-back{display:block;}
+.card-content{position:relative;z-index:1;}
+h2{font-size:26px;color:#222;margin-bottom:18px;text-align:center;}
+.label-title{font-weight:bold;font-size:19px;text-align:center;margin-top:20px;margin-bottom:12px;}
+.card-content>.label-title:first-of-type{margin-top:0;}
+p{font-size:18px;line-height:1.85;color:#222;margin-bottom:10px;text-align:center;}
+.grammar-hl{color:#204070;font-weight:bold;}
+.err{color:#c82424;font-weight:bold;}
+.ok{color:#1f8030;font-weight:bold;}
+.click-hint{position:absolute;bottom:16px;left:0;right:0;font-size:15px;color:#666;text-align:center;}
+.nav-bar{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+.nav-btn{
+    padding:12px 26px;
+    border:none;
+    border-radius:12px;
+    background:#b8b4ad;
+    color:#fff;
+    font-size:17px;
+    cursor:pointer;
+}
+.nav-btn:hover{background:#949088;}
+.page-info{font-size:18px;color:#333;min-width:130px;text-align:center;}
+.card-stack{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+.card-stack > div{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+.card-stack > div.active{
+    display:block;
+}
+</style>
+</head>
+<body>
+<div class="flashcard-wrap">
+<div class="card-stack" id="cardStack">
+<!--卡0 才 -->
+<div class="flashcard-item active">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>才（cái）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>强调时间晚、数量少、条件限制；表示“仅仅、刚刚”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 才 + 动词/形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.晚上十点，他<span class="grammar-hl">才</span>回到家。</p>
+            <p>2.三个人<span class="grammar-hl">才</span>吃了一碗饭。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>放在主语之后动词前面；“才”侧重晚、少；和“就”语义对比。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>才他回家。 <span class="ok">✔</span>他晚上十点才回家。</p>
+            <p><span class="err">✖</span>才三个人饭。 <span class="ok">✔</span>三个人才吃一碗饭。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡1 就 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>就（jiù）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>强调时间早、数量少、事情马上发生。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 就 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.六点他<span class="grammar-hl">就</span>起床了。</p>
+            <p>2.我吃一口<span class="grammar-hl">就</span>饱了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>“就”表示早、快；和“才”形成对比；放主语后动词前。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>就他起床。 <span class="ok">✔</span>他六点就起床。</p>
+            <p><span class="err">✖</span>就一口饱。 <span class="ok">✔</span>吃一口就饱了。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡2 并 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>并（bìng）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>副词“并不”加强否定语气；连词连接先后动作。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 并不 + 形容词/动词；动词1 并 动词2</p>
+            <div class="label-title">【例句】</div>
+            <p>1.这件事<span class="grammar-hl">并不</span>简单。</p>
+            <p>2.我们讨论<span class="grammar-hl">并</span>通过了计划。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>副词：只能用于否定“并不”；连词连接动作，不能连接名词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我并苹果香蕉。 <span class="ok">✔</span>我买了苹果，并买了香蕉。</p>
+            <p><span class="err">✖</span>并很开心。 <span class="ok">✔</span>我并不开心。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡3 还 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>还（hái）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>仍然、依然；另外追加；表示反问语气。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 还 + 动词/形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.天黑了，他<span class="grammar-hl">还</span>在工作。</p>
+            <p>2.我想买书，<span class="grammar-hl">还</span>想买笔。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>放主语之后；多重语义：仍旧、此外、反问。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>还他看书。 <span class="ok">✔</span>他还在看书。</p>
+            <p><span class="err">✖</span>还书笔。 <span class="ok">✔</span>我买书，还买笔。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡4 竟然 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>竟然（jìng rán）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>结果出乎意料，想不到。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 竟然 + 动词/形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.这么简单的题，他<span class="grammar-hl">竟然</span>做错了。</p>
+            <p>2.没想到，他<span class="grammar-hl">竟然</span>不来了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>强调和预想不一样；放在主语后面。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>竟然他迟到。 <span class="ok">✔</span>他竟然迟到了。</p>
+            <p><span class="err">✖</span>竟然作业。 <span class="ok">✔</span>他竟然忘记写作业。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡5 究竟 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>究竟（jiū jìng）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用于问句，追问真相，“到底”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>究竟 + 疑问小句</p>
+            <div class="label-title">【例句】</div>
+            <p>1.你<span class="grammar-hl">究竟</span>想干什么？</p>
+            <p>2.这件事<span class="grammar-hl">究竟</span>是谁做的？</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>多用于疑问句；不用于陈述句。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我究竟知道了。 <span class="ok">✔</span>我想知道这究竟是为什么？</p>
+            <p><span class="err">✖</span>究竟他来了。 <span class="ok">✔</span>他究竟来不来？</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡6 正好 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>正好（zhèng hǎo）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>时间、数量、情况刚刚好，不多不少。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 正好 + 动词/数量</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我到车站，火车<span class="grammar-hl">正好</span>开走。</p>
+            <p>2.这个杯子<span class="grammar-hl">正好</span>适合我用。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>描述巧合、刚好匹配；可放主语前或主语后。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>正好杯子。 <span class="ok">✔</span>这个杯子正好合适。</p>
+            <p><span class="err">✖</span>正好我饭。 <span class="ok">✔</span>我正好要吃饭。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡7 到底 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>到底（dào dǐ）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>问句追问；也表示“终于”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>到底 + 疑问小句；主语 + 到底 + 动词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.你<span class="grammar-hl">到底</span>去不去？</p>
+            <p>2.努力很久，我们<span class="grammar-hl">到底</span>成功了。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>一是追问（疑问句）；二是表最终结果。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>到底他书。 <span class="ok">✔</span>他到底读不读书？</p>
+            <p><span class="err">✖</span>到底吃饭。 <span class="ok">✔</span>我们到底吃上饭了。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡8 难道 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>难道（nán dào）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>反问句，加强反问语气，不需要回答。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>难道 + 小句 + 吗？</p>
+            <div class="label-title">【例句】</div>
+            <p>1.<span class="grammar-hl">难道</span>你不知道这件事吗？</p>
+            <p>2.<span class="grammar-hl">难道</span>这样还不够吗？</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>只用反问句，句末常搭配“吗”；不能用在陈述句。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>难道我知道。 <span class="ok">✔</span>难道我不知道吗？</p>
+            <p><span class="err">✖</span>难道他吃饭。 <span class="ok">✔</span>难道他不吃饭吗？</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡9 千万 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>千万（qiān wàn）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>用于祈使句，恳切提醒、劝告，千万要 / 千万不要。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>千万 + 要 / 不要 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.出门<span class="grammar-hl">千万</span>要小心。</p>
+            <p>2.你<span class="grammar-hl">千万</span>别忘记带钥匙。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>只能用于劝告、提醒的祈使句，不用于陈述事实。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>我千万看书。 <span class="ok">✔</span>你千万要好好看书。</p>
+            <p><span class="err">✖</span>千万他回家。 <span class="ok">✔</span>你千万早点回家。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡10 确实 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>确实（què shí）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>加强肯定，客观确认事实，“的确”。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 确实 + 动词/形容词</p>
+            <div class="label-title">【例句】</div>
+            <p>1.这个地方<span class="grammar-hl">确实</span>很美。</p>
+            <p>2.我<span class="grammar-hl">确实</span>没有时间。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>用来确认事实；放主语后；不用于命令句。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>确实很美这个地方。 <span class="ok">✔</span>这个地方确实很美。</p>
+            <p><span class="err">✖</span>确实你去。 <span class="ok">✔</span>你确实可以去。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡11 只好 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>只好（zhǐ hǎo）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>没有别的选择，不得已，只能这样做。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 只好 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.下雨了，我们<span class="grammar-hl">只好</span>待在家里。</p>
+            <p>2.没有票，我<span class="grammar-hl">只好</span>改时间。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>表示客观无奈的选择；主语之后，动词之前。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>只好待家里下雨。 <span class="ok">✔</span>下雨，我们只好待家里。</p>
+            <p><span class="err">✖</span>只好苹果。 <span class="ok">✔</span>没别的，我只好买苹果。</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--卡12 差（一）点儿 -->
+<div class="flashcard-item">
+<div class="flashcard" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+        <div class="card-content">
+            <h2>差（一）点儿（chà yì diǎnr）｜语气副词 HSK4</h2>
+            <div class="label-title">【使用范围】</div>
+            <p>几乎、险些，事情几乎发生但是最后没有发生。</p>
+            <div class="label-title">【常用句式】</div>
+            <p>主语 + 差（一）点儿 + 动词短语</p>
+            <div class="label-title">【例句】</div>
+            <p>1.我<span class="grammar-hl">差一点儿</span>就迟到了。</p>
+            <p>2.他<span class="grammar-hl">差一点儿</span>摔倒。</p>
+        </div>
+        <div class="click-hint">👆点击卡片翻转</div>
+    </div>
+    <div class="card-face card-back">
+        <div class="card-content">
+            <div class="label-title">【使用限制（易错点）】</div>
+            <p>事情几乎要发生，实际没发生；后面接动词。</p>
+            <div class="label-title">【常见错误】</div>
+            <p><span class="err">✖</span>差一点儿迟到我。 <span class="ok">✔</span>我差一点儿迟到。</p>
+            <p><span class="err">✖</span>差一点儿苹果。 <span class="ok">✔</span>我差一点儿买到苹果。</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="nav-bar">
+<button class="nav-btn" id="prevBtn">上一张</button>
+<div class="page-info" id="pageText">1 / 13</div>
+<button class="nav-btn" id="nextBtn">下一张</button>
+</div>
+<script>
+const items = Array.from(document.querySelectorAll(".flashcard-item"));
+const total = items.length;
+let current = 0;
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const pageText = document.getElementById("pageText");
+function render(){
+    items.forEach((el,i)=>{
+        if(i===current){
+            el.classList.add("active");
+        }else{
+            el.classList.remove("active");
+        }
+    })
+    pageText.innerText = `${current+1} / ${total}`;
+}
+prevBtn.onclick = ()=>{
+    if(current>0){
+        current--;
+        render();
+    }
+}
+nextBtn.onclick = ()=>{
+    if(current < total-1){
+        current++;
+        render();
+    }
+}
+render();
+</script>
+</body>
+</html>

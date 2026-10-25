@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK阅读｜课文习题 + 生词语法对照</title>
+<style>
+:root{
+  --m-bg:#eef1f4;
+  --m-card:#ffffff;
+  --m-line:#d7dee4;
+  --m-tab-inactive:#c9d3dc;
+  --m-tab-active:#5f7a92;
+  --m-art-inactive:#e3e9ef;
+  --m-art-active:#7f97ad;
+  --m-text:#2f3a44;
+  --m-sub:#5c6b78;
+  --m-question-bg:#f4f7fa;
+  --m-opt-border:#b9c4ce;
+  --m-opt-selected:#c9d8e6;
+  --blue-word:#3f6ea5;
+  --red-grammar:#b04a4a;
+  --green-right:#3f8f5a;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft Yahei",sans-serif;}
+body{
+  background:var(--m-bg);
+  color:var(--m-text);
+  padding:14px;
+}
+.level-tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.tab-lv{
+  padding:9px 16px;
+  border:none;
+  border-radius:8px;
+  background:var(--m-tab-inactive);
+  color:#222;
+  cursor:pointer;
+  font-size:16px;
+}
+.tab-lv.active{
+  background:var(--m-tab-active);
+  color:#fff;
+}
+.art-tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.tab-art{
+  padding:7px 13px;
+  border:none;
+  border-radius:6px;
+  background:var(--m-art-inactive);
+  color:var(--m-text);
+  cursor:pointer;
+}
+.tab-art.active{
+  background:var(--m-art-active);
+  color:#fff;
+}
+.container{
+  display:grid;
+  grid-template-columns:1fr 0.7fr;
+  gap:16px;
+  height:calc(100vh - 160px);
+}
+.panel-left,.panel-right{
+  background:var(--m-card);
+  border:1px solid var(--m-line);
+  border-radius:12px;
+  padding:20px;
+  overflow:auto;
+}
+h3{
+  margin:8px 0 12px;
+  color:var(--m-text);
+}
+p{
+  line-height:1.75;
+  margin:9px 0;
+  font-size:16px;
+}
+.question-block{
+  margin:16px 0;
+  padding:14px;
+  background:var(--m-question-bg);
+  border:1px solid var(--m-line);
+  border-radius:9px;
+}
+.opt{
+  display:inline-block;
+  margin:5px 7px;
+  padding:5px 9px;
+  border:1px solid var(--m-opt-border);
+  border-radius:5px;
+  cursor:pointer;
+  user-select:none;
+  background:#fff;
+  color:var(--m-text);
+}
+.opt.selected{
+  background:var(--m-opt-selected);
+}
+.answer-mark{
+  color:var(--green-right);
+  font-weight:bold;
+  margin-left:10px;
+}
+.control-bar{
+  margin:16px 0;
+  display:flex;
+  gap:10px;
+}
+.btn-ctrl{
+  padding:9px 15px;
+  border:none;
+  border-radius:8px;
+  background:var(--m-art-active);
+  color:#fff;
+  cursor:pointer;
+  font-size:15px;
+}
+.tooltip{
+  position:relative;
+  color:var(--blue-word);
+  font-weight:500;
+}
+.tooltip-gram{
+  color:var(--red-grammar);
+  font-weight:500;
+  position:relative;
+}
+.tip{
+  visibility:hidden;
+  position:absolute;
+  z-index:999;
+  bottom:115%;
+  left:0;
+  background:#333;
+  color:#fff;
+  padding:7px 11px;
+  border-radius:6px;
+  white-space:nowrap;
+  font-size:14px;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.tooltip:hover .tip,
+.tooltip-gram:hover .tip{
+  visibility:visible;
+  opacity:1;
+}
+.panel-right h4{
+  margin-top:16px;
+  margin-bottom:7px;
+  color:var(--m-sub);
+  border-bottom:1px solid var(--m-line);
+  padding-bottom:4px;
+}
+ul{
+  padding-left:22px;
+  line-height:1.75;
+}
+</style>
+</head>
+<body>
+<div class="level-tabs" id="levelTabs">
+  <button class="tab-lv active" data-lv="hsk3">HSK3 简单</button>
+  <button class="tab-lv" data-lv="hsk4">HSK4 中等</button>
+  <button class="tab-lv" data-lv="hsk5">HSK5 难</button>
+  <button class="tab-lv" data-lv="hsk6">HSK6 偏难</button>
+</div>
+<div class="art-tabs" id="artTabs"></div>
+<div class="container">
+  <div class="panel-left" id="panelLeft"></div>
+  <div class="panel-right" id="panelRight"></div>
+</div>
+<script>
+const data = {
+// ========= HSK3 简单改写版（判断题） =========
+hsk3:[
+{
+title:"短文1｜驻华大使史密斯",
+text:`
+<p>史密斯先生是外国的驻华大使。他长得很像运动员。</p>
+<p>上大学的时候，他打过冰球。现在他在北京组织了一个少年国际冰球队。</p>
+<p>这个队有25个孩子，有加拿大、俄罗斯的孩子，也有中国孩子。大使当这个队的教练。</p>
+<p>大使说，外交官要学会很快适应别的国家的文化。</p>
+<p>他到每个国家，都会学习当地的语言，了解当地文化。来到中国以后，他的语言学得很快。</p>
+<p>他觉得中国的以后会很好。很多中国年轻人努力学习、努力工作。不少中国学生去外国学习。这样对中国很好，也可以让不同国家的人更加了解。他希望中国明天更好。</p>
+`,
+ques:[
+{q:"1.史密斯先生以前打过冰球。",type:"tf",ans:"对"},
+{q:"2.冰球队里没有中国少年。",type:"tf",ans:"错"},
+{q:"3.外交官要学会适应别的国家的文化。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"大使",py:"dà shǐ",mean:"国家派到外国的代表"},
+{w:"运动员",py:"yùn dòng yuán",mean:"做体育运动的人"},
+{w:"冰球",py:"bīng qiú",mean:"冰上的球类运动"},
+{w:"组织",py:"zǔ zhī",mean:"把人集合起来做队伍"},
+{w:"少年",py:"shào nián",mean:"年纪不大的孩子"},
+{w:"教练",py:"jiào liàn",mean:"教运动员的人"},
+{w:"外交官",py:"wài jiāo guān",mean:"处理国家之间事情的人"},
+{w:"适应",py:"shì yìng",mean:"习惯新的环境"},
+{w:"当地",py:"dāng dì",mean:"那个地方的"},
+{w:"留学生",py:"liú xué shēng",mean:"在外国读书的学生"}
+],
+gram:[
+{g:"……的时候",exp:"表示某个时间。例句：吃饭的时候不要看电视。"},
+{g:"觉得",exp:"心里认为。例句：我觉得这本书很好。"},
+{g:"对……很好",exp:"对人或者事情有好处。例句：运动对身体很好。"}
+]
+},
+{
+title:"短文2｜老罗",
+text:`
+<p>老罗本来不姓罗，他叫罗伯特。为什么大家叫他老罗，有一个小故事。</p>
+<p>有一次，罗伯特跟朋友去饭馆吃饭。服务员拿来菜单，大家说：“罗伯特，你先点菜。”</p>
+<p>服务员听错了，问：“您要点萝卜炖羊肉吗？”大家听了都大笑。</p>
+<p>罗伯特想，我要有一个简单好懂的中国名字。后来，他跟朋友说：“以后叫我老罗。”</p>
+<p>很多事情上，老罗都学中国人。吃饭用筷子，过春节穿有寿字的衣服，去朋友家玩。他很喜欢喝二锅头。喝多的时候，他会开玩笑说自己找不着北。</p>
+`,
+ques:[
+{q:"1.老罗本来叫罗伯特。",type:"tf",ans:"对"},
+{q:"2.服务员把罗伯特听成萝卜炖羊肉。",type:"tf",ans:"对"},
+{q:"3.老罗不想学中国人的生活习惯。",type:"tf",ans:"错"}
+],
+voc:[
+{w:"饭馆",py:"fàn guǎn",mean:"吃饭的地方"},
+{w:"菜单",py:"cài dān",mean:"写菜的单子"},
+{w:"点菜",py:"diǎn cài",mean:"选要吃的菜"},
+{w:"听错",py:"tīng cuò",mean:"听得不对"},
+{w:"简单",py:"jiǎn dān",mean:"不复杂"},
+{w:"开玩笑",py:"kāi wán xiào",mean:"说笑话"}
+],
+gram:[
+{g:"为什么……，有一个小故事",exp:"解释事情的来由。"},
+{g:"跟……去……",exp:"和别人一起去。例句：我跟朋友去公园。"},
+{g:"以后",exp:"从现在往后。例句：以后我要好好学习。"}
+]
+},
+{
+title:"短文3｜北京的环境",
+text:`
+<p>我喜欢保护环境。我看到北京种了很多树，我印象很深。</p>
+<p>树可以给我们氧气，夏天树下很凉快，鸟儿也可以住在树上。种树还可以让雨变多一点。</p>
+<p>北京下雨不多，人又很多，水不够用。我建议：中国人和在北京的外国人，都要节约用水。水很宝贵，没有水，人不能活。</p>
+<p>北京很干净。干净的城市不只是靠清洁工，每一个人都要爱护环境。垃圾要收好，处理好。</p>
+<p>我不是北京人，我在这里住的时间不长。我希望北京，这个中国的首都，可以一直很漂亮。</p>
+`,
+ques:[
+{q:"1.种树对鸟儿有好处。",type:"tf",ans:"对"},
+{q:"2.北京的水非常多，用不完。",type:"tf",ans:"错"},
+{q:"3.保护环境需要每个人努力。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"保护环境",py:"bǎo hù huán jìng",mean:"保护我们生活的地方"},
+{w:"种树",py:"zhòng shù",mean:"把树苗种到土里"},
+{w:"印象",py:"yìn xiàng",mean:"心里记得的样子"},
+{w:"凉快",py:"liáng kuai",mean:"不热，很舒服"},
+{w:"建议",py:"jiàn yì",mean:"告诉别人自己的想法"},
+{w:"节约用水",py:"jié yuē yòng shuǐ",mean:"不要浪费水"},
+{w:"宝贵",py:"bǎo guì",mean:"很珍贵，很重要"},
+{w:"首都",py:"shǒu dū",mean:"一个国家最重要的城市"}
+],
+gram:[
+{g:"……可以……",exp:"表示能够做某事。例句：跑步可以锻炼身体。"},
+{g:"不只是……还要……",exp:"不只这一件，还有另外一件。"},
+{g:"希望……",exp:"心里盼望一件好事发生。"}
+]
+},
+{
+title:"短文4｜“中国通”大赛",
+text:`
+<p>去年五月，我和朋友参加了“中国通”大赛，这个比赛很特别。</p>
+<p>准备比赛很辛苦，时间少，要学的东西很多。题目有中国语言、文化、历史、艺术等等。三个星期，我要记两百多道题，看很多书。有时候学习到早上。老师帮助我们，我们准备得很充分。</p>
+<p>先进行初赛。16个学校一百多人参加。选出好的选手，再进行半决赛。最后选出18个人参加电视的决赛，我就是其中一个。</p>
+<p>决赛的时候，现场很热闹。清华大学和北京大学得到第一名，我们学校是第四名。最后我们一起唱比赛的主题歌。</p>
+`,
+ques:[
+{q:"1.“中国通”大赛准备工作很辛苦。",type:"tf",ans:"对"},
+{q:"2.作者没有参加决赛。",type:"tf",ans:"错"},
+{q:"3.一共有18个人参加电视决赛。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"大赛",py:"dà sài",mean:"大型的比赛"},
+{w:"特别",py:"tè bié",mean:"不一样的"},
+{w:"辛苦",py:"xīn kǔ",mean:"很累不容易"},
+{w:"选手",py:"xuǎn shǒu",mean:"参加比赛的人"},
+{w:"初赛",py:"chū sài",mean:"第一轮比赛"},
+{w:"半决赛",py:"bàn jué sài",mean:"决赛之前的比赛"},
+{w:"决赛",py:"jué sài",mean:"最后一次比赛"}
+],
+gram:[
+{g:"……等等",exp:"还有很多别的东西，不用全部说完。"},
+{g:"在……帮助下",exp:"得到别人的帮助。例句：在同学帮助下我做完作业。"},
+{g:"其中一个",exp:"很多里面的一个。"}
+]
+}
+],
+
+// ========= HSK4：原始原文+原始题目原样放入 =========
+hsk4:[
+{
+title:"短文1｜驻华大使史密斯",
+text:`
+<p>史密斯先生是某国驻华大使。他看起来像个运动员。大使先生在大学时曾经是个冰球运动员，现在他在北京组织了一个少年国际冰球队。这个队共有25人，成员来自加拿大、俄罗斯，也有中国少年。大使是这个少年冰球队的专职教练。</p>
+<p>大使认为，作为一个外交官，最重要的素质是适应，必须要很快适应另一个国家的文化。他每到一个国家都认真学习当地的语言，了解当地的文化。来到中国后，大使的语言天赋再次得到了验证。</p>
+<p>“我对中国的未来非常乐观，因为我看到中国青年在勤奋地学习和工作着，不少中国留学生还到外国留学，这对中国的经济建设和社会发展很有好处，也有利于加强中外文化交流，增进彼此的了解。我衷心地祝愿中国的明天更加美好。”</p>
+`,
+ques:[
+{q:"1) 本文主要介绍了：",type:"abcd",opts:["A. 一支冰球队","B. 中国留学生到外国留学","C. 一位在中国的外国大使","D. 一个冰球运动员"],ans:"C"},
+{q:"2) 这位大使认为：",type:"abcd",opts:["A. 青年人应该努力学习，努力工作","B. 尽快适应一个国家的文化很重要","C. 作为外交官，最主要的是身体素质要好","D. 国际冰球队要有中国少年参加"],ans:"B"},
+{q:"3) 文中“成员”的意思是：",type:"abcd",opts:["A. 成为运动员","B. 当冰球队队员","C.（冰球队）队员","D. 作为队员"],ans:"C"}
+],
+voc:[
+{w:"驻华大使",py:"zhù huá dà shǐ",mean:"驻在中国的外国大使"},
+{w:"冰球",py:"bīng qiú",mean:"冰上球类运动"},
+{w:"组织",py:"zǔ zhī",mean:"建立、安排队伍"},
+{w:"成员",py:"chéng yuán",mean:"队伍里面的人"},
+{w:"专职教练",py:"zhuān zhí jiào liàn",mean:"专门做教练的人"},
+{w:"外交官",py:"wài jiāo guān",mean:"处理国与国事务的人"},
+{w:"素质",py:"sù zhì",mean:"人的品质能力"},
+{w:"适应",py:"shì yìng",mean:"习惯新环境"},
+{w:"天赋",py:"tiān fù",mean:"天生的才能"},
+{w:"验证",py:"yàn zhèng",mean:"证明是真的"},
+{w:"乐观",py:"lè guān",mean:"看好未来"},
+{w:"勤奋",py:"qín fèn",mean:"努力认真"},
+{w:"留学生",py:"liú xué shēng",mean:"到国外读书的学生"},
+{w:"祝愿",py:"zhù yuàn",mean:"真心希望变好"}
+],
+gram:[
+{g:"曾经",exp:"过去有过经历。例句：我曾经去过广州。"},
+{g:"作为……",exp:"以某种身份。例句：作为老师，我要帮助学生。"},
+{g:"有利于",exp:"对……有好处。例句：运动有利于身体健康。"}
+]
+},
+{
+title:"短文2｜老罗",
+text:`
+<p>老罗本不姓罗，他的名字叫罗伯特。大家所以叫他老罗，有这样一段故事。</p>
+<p>一次，罗伯特和我们几个朋友一起去一家饭馆吃饭。当服务员递上菜单时，我们几个都很客气地对他说：“您先点，罗伯特。”谁知，服务小姐睁着大眼睛问：“您是先点萝卜炖羊肉吗？”我们听了都哈哈大笑起来。罗伯特明白了我们笑的原因后，觉得自己应该有一个更通俗、更易懂、更有中国味的“大号”。想了几天之后，他对我们说：“以后，大家就叫我‘老罗’吧。老东西的‘老’，姓罗的‘罗’！”就像名字一样，老罗在很多事情上都很追求中国化，吃饭用筷子，春节时他也穿着满身寿字的衣服一家一家串，他还迷上了北京人爱喝的“二锅头”，高兴时，多喝两口，还会摸着脑门儿说上一句：“有点儿找不着北了。”</p>
+`,
+ques:[
+{q:"1) 老罗这个人：",type:"abcd",opts:["A. 本来就姓罗","B. 常常不知道东南西北","C. 喜欢吃萝卜炖羊肉","D. 是一个喜欢中国的外国人"],ans:"D"},
+{q:"2) 文中“大号”的意思是：",type:"abcd",opts:["A. 尺寸大的","B. 大的号码","C. 名字","D. 大房子"],ans:"C"}
+],
+voc:[
+{w:"饭馆",py:"fàn guǎn",mean:"吃饭的店铺"},
+{w:"菜单",py:"cài dān",mean:"写菜品的单子"},
+{w:"客气",py:"kè qi",mean:"有礼貌"},
+{w:"哈哈大笑",py:"hā hā dà xiào",mean:"大声地笑"},
+{w:"通俗",py:"tōng sú",mean:"简单好懂"},
+{w:"易懂",py:"yì dǒng",mean:"容易明白"},
+{w:"追求",py:"zhuī qiú",mean:"向往、想要做到"},
+{w:"中国化",py:"zhōng guó huà",mean:"变得符合中国习惯"},
+{w:"春节",py:"chūn jié",mean:"中国农历新年"},
+{w:"迷上",py:"mí shàng",mean:"非常喜爱"},
+{w:"脑门儿",py:"nǎo ménr",mean:"人的额头"}
+],
+gram:[
+{g:"大家所以……，有这样一段故事",exp:"解释事情的由来。"},
+{g:"谁知",exp:"没想到。例句：我去找他，谁知他不在家。"},
+{g:"就像……一样",exp:"和……情况相同。例句：就像朋友一样帮助我。"}
+]
+},
+{
+title:"短文3｜北京的环境",
+text:`
+<p>作为一名环境保护活动的积极参与者，我对过去几年北京在植树造林方面所取得的成绩印象很深。树木能加大空气中的氧气，夏天树木给人们绿荫，给鸟儿创造优美的环境。同时，很重要的一点是，能使降雨量逐步增加。北京是一个干旱的城市，人口又很多，所以我想北京供水一定很紧张。在这里，我想提一个建议：应该对所有来北京的人，不管是我们这些外国人还是中国人，说明这种情况，并要求他们处处节约用水。要让每一个人都明白：水是非常宝贵的，没有水我们谁也活不了。</p>
+<p>北京是一个十分清洁的城市。清洁的环境不能只靠清洁工每天辛勤的劳动，还要靠每一个人的爱护和保持。废物、垃圾等要收集好、处理好、利用好。</p>
+<p>我虽然不是北京市民，在北京的时间也不是很长，但我愿北京作为中华人民共和国的首都，作为一个世界闻名的大城市，永远美丽。</p>
+`,
+ques:[
+{q:"1) 本文的作者是：",type:"abcd",opts:["A. 一个北京人","B. 一位外国人","C. 一个中国人","D. 一位清洁工人"],ans:"B"},
+{q:"2) 作者希望北京市：",type:"abcd",opts:["A. 鸟多一些","B. 向人们宣传节约用水","C. 人们都能爱护和保持城市的清洁","D. B和C两项"],ans:"D"}
+],
+voc:[
+{w:"环境保护",py:"huán jìng bǎo hù",mean:"保护自然环境"},
+{w:"植树造林",py:"zhí shù zào lín",mean:"种树，建造树林"},
+{w:"绿荫",py:"lǜ yīn",mean:"树下阴凉的地方"},
+{w:"干旱",py:"gān hàn",mean:"雨水少"},
+{w:"供水",py:"gōng shuǐ",mean:"供应生活用水"},
+{w:"紧张",py:"jǐn zhāng",mean:"不够、缺少"},
+{w:"建议",py:"jiàn yì",mean:"提出想法意见"},
+{w:"宝贵",py:"bǎo guì",mean:"珍贵重要"},
+{w:"辛勤",py:"xīn qín",mean:"辛苦努力"},
+{w:"市民",py:"shì mín",mean:"城市居民"},
+{w:"首都",py:"shǒu dū",mean:"国家的中心城市"},
+{w:"闻名",py:"wén míng",mean:"有名的"}
+],
+gram:[
+{g:"对……印象很深",exp:"记忆很深刻。例句：我对那次旅行印象很深。"},
+{g:"不管……还是……",exp:"无论哪一种。例句：不管大人还是小孩都要遵守规则。"},
+{g:"虽然……但……",exp:"转折。虽然情况A，但是情况B。"}
+]
+},
+{
+title:"短文4｜“中国通”大赛",
+text:`
+<p>去年5月我和几个朋友参加了“中国通”大赛，这是一场不同寻常的比赛。</p>
+<p>比赛的准备阶段很艰苦，时间紧，内容多，比赛题涉及中国的语言、文化、历史、政治、法律、艺术以及风俗习惯等许多方面。在3个星期内，我要记下200多道题，还要看很多书。那些日子，我吃不好，睡不好，有时要一直学习到第二天早上。虽然题目很多，有的也很难，但是很有意思。在老师的帮助下，我们准备得很充分。</p>
+<p>先进行初赛。共有16所院校的100多名选手参赛，这些选手是从北京几千名外国留学生中选出来的。经过初赛和半决赛，最后剩下6个学校的18位选手，参加电视直播的最后决赛。我就是这18个选手中的一个。</p>
+<p>决赛这天，除了我们18位选手以外，赛场上还有不少不同肤色、不同国籍的青年。场内一会儿鸦雀无声，一会儿掌声雷动。最后，清华大学和北京大学并列第一名，我们学校得了第四名。我们非常高兴。最后，我们18位选手和主持人一起唱起了这次大赛的主题歌：“在这东方神秘的国度里，你们、他们、我们在这里相聚。中国、世界，世界、中国，永远在你们、他们、我们的记忆里……”</p>
+`,
+ques:[
+{q:"1) 本文主要是讲的是：",type:"abcd",opts:["A. 北京有几千名外国留学生","B. 共有18个选手参加决赛","C. 一个外国留学生参加“中国通”大赛的事","D. “中国通”大赛决赛"],ans:"C"},
+{q:"2) 根据本文，下列几项中不对的是：",type:"abcd",opts:["A. 我没参加决赛","B. 有16个学校的留学生参加了初赛","C. 老师帮助我们准备这次比赛","D. 比赛题范围很广"],ans:"A"},
+{q:"3) 文中“决赛”的意思是：",type:"abcd",opts:["A. 决定比赛","B. 最后的比赛","C. 很快比赛","D. 坚决比赛"],ans:"B"}
+],
+voc:[
+{w:"大赛",py:"dà sài",mean:"大型比赛"},
+{w:"不同寻常",py:"bù tóng xún cháng",mean:"特别、不普通"},
+{w:"艰苦",py:"jiān kǔ",mean:"辛苦困难"},
+{w:"涉及",py:"shè jí",mean:"包含、关系到"},
+{w:"风俗习惯",py:"fēng sú xí guàn",mean:"民间习惯风俗"},
+{w:"院校",py:"yuàn xiào",mean:"学校"},
+{w:"选手",py:"xuǎn shǒu",mean:"参赛的人"},
+{w:"初赛",py:"chū sài",mean:"第一轮比赛"},
+{w:"半决赛",py:"bàn jué sài",mean:"决赛之前一轮比赛"},
+{w:"直播",py:"zhí bō",mean:"电视实时播放"},
+{w:"肤色",py:"fū sè",mean:"皮肤颜色"},
+{w:"鸦雀无声",py:"yā què wú shēng",mean:"非常安静"},
+{w:"掌声雷动",py:"zhǎng shēng léi dòng",mean:"掌声很大"},
+{w:"并列",py:"bìng liè",mean:"名次一样"},
+{w:"主题歌",py:"zhǔ tí gē",mean:"活动代表歌曲"}
+],
+gram:[
+{g:"在……的帮助下",exp:"得到别人帮助。"},
+{g:"经过……",exp:"经历某个过程。"},
+{g:"一会儿……一会儿……",exp:"情况交替变化。"}
+]
+}],
+
+// ========= HSK5 完全保留上一版不变 =========
+hsk5:[
+{
+title:"短文1｜驻华大使史密斯",
+text:`
+<p>史密斯先生作为一国驻华大使，外形颇有运动员的气质。大学时代他曾作为冰球运动员参与训练，来到北京之后，牵头组建起一支少年国际冰球队。</p>
+<p>这支队伍共计二十五名青少年，成员分别来自加拿大、俄罗斯以及中国本土，史密斯本人兼任这支队伍的专职教练。</p>
+<p>大使提出，外交官最为关键的素养就是适应能力，必须快速接纳并适应异国文化。每派驻到一个国家，他都会潜心学习当地语言，深度体察本土社会文化。来到中国之后，他出众的语言天赋再一次得到印证。</p>
+<p>对于中国未来的发展，大使持十分乐观的态度。他观察到大批中国青年勤恳学习、努力奋斗，不少青年人选择远赴海外留学。在他看来，这类交流既有益于国内经济建设与社会进步，也能够推动中外文化双向交流，加深各国人民之间的相互理解。他发自内心地祝愿中国拥有更加灿烂的明天。</p>
+`,
+ques:[
+{q:"1.史密斯在北京做了什么事情？",type:"abcd",opts:["A.在中国当冰球运动员参加比赛","B.组建少年国际冰球队并且兼任教练","C.到加拿大俄罗斯学习语言","D.专门教中国青年打冰球赚钱"],ans:"B"},
+{q:"2.外交官最重要的素养大使认为是？",type:"abcd",opts:["A.很好的运动能力","B.很高的语言考试分数","C.快速适应异国文化的能力","D.会打冰球的本领"],ans:"C"},
+{q:"3.大使怎样看待中国人去外国留学？",type:"abcd",opts:["A.完全没有用处，浪费时间","B.有利于建设国家，促进中外交流","C.只是为了看外国风景","D.会让中国青年不想回国"],ans:"B"}
+],
+voc:[
+{w:"颇有",py:"pō yǒu",mean:"很有、有一些"},
+{w:"牵头",py:"qiān tóu",mean:"带头做一件事"},
+{w:"共计",py:"gòng jì",mean:"一共、总共"},
+{w:"兼任",py:"jiān rèn",mean:"同时做两份工作"},
+{w:"素养",py:"sù yǎng",mean:"人的修养能力"},
+{w:"接纳",py:"jiē nà",mean:"接受"},
+{w:"派驻",py:"pài zhù",mean:"被派到国外工作"},
+{w:"潜心",py:"qián xīn",mean:"专心认真"},
+{w:"体察",py:"tǐ chá",mean:"体会观察"},
+{w:"印证",py:"yìn zhèng",mean:"证明、得到验证"},
+{w:"持……态度",py:"chí …… tài dù",mean:"抱有某种看法"},
+{w:"勤恳",py:"qín kěn",mean:"勤劳踏实"},
+{w:"双向交流",py:"shuāng xiàng jiāo liú",mean:"互相来往交流"},
+{w:"灿烂",py:"càn làn",mean:"美好辉煌"}
+],
+gram:[
+{g:"作为……",exp:"以某种身份。例句：作为老师，我关心学生。"},
+{g:"在……看来",exp:"某人的观点。例句：在专家看来，这件事值得重视。"},
+{g:"既有益于……，也能够……",exp:"两件好处。递进。"}
+]
+},
+{
+title:"短文2｜老罗",
+text:`
+<p>老罗并非本姓罗，本名罗伯特。“老罗”这个称呼背后，有一段十分有趣的生活插曲。</p>
+<p>一次罗伯特随同友人前往餐馆就餐，服务员递上菜单，众人礼貌示意让他优先点菜。不料语音的近似造成误会，服务员把“罗伯特”误听成菜名“萝卜炖羊肉”，引得在场所有人哄堂大笑。</p>
+<p>经历这件趣事之后，罗伯特意识到自己需要一个通俗接地气、饱含中国韵味的别名。经过数日思索，他向身边朋友宣布，往后大家就叫他老罗。</p>
+<p>不只是名字，老罗在日常生活方方面面都主动融入中国式生活。吃饭习惯使用筷子；春节期间，他身着印满寿字纹样的传统服饰走访亲友。他还十分喜爱北京特产二锅头。兴致高涨喝上几杯之后，还会半开玩笑地感叹自己“有点儿找不着北了”。</p>
+`,
+ques:[
+{q:"1.大家为什么叫罗伯特“老罗”？",type:"abcd",opts:["A.他本来就姓罗","B.听错名字闹出笑话，他想要一个中国名字","C.他很爱吃萝卜炖羊肉","D.大家觉得他年纪很老"],ans:"B"},
+{q:"2.下面哪一项不属于老罗的中国化生活？",type:"abcd",opts:["A.吃饭用筷子","B.春节穿中式衣服串门","C.喜欢喝二锅头","D.经常去国外旅行"],ans:"D"}
+],
+voc:[
+{w:"称呼",py:"chēng hū",mean:"叫人的叫法"},
+{w:"插曲",py:"chā qǔ",mean:"一件小的故事片段"},
+{w:"随同",py:"suí tóng",mean:"跟别人一起"},
+{w:"就餐",py:"jiù cān",mean:"吃饭（书面）"},
+{w:"示意",py:"shì yì",mean:"用动作表达意思"},
+{w:"近似",py:"jìn sì",mean:"很接近"},
+{w:"误听",py:"wù tīng",mean:"听错"},
+{w:"哄堂大笑",py:"hōng táng dà xiào",mean:"一屋子人大笑"},
+{w:"接地气",py:"jiē dì qì",mean:"通俗贴近普通人"},
+{w:"饱含",py:"bǎo hán",mean:"充满"},
+{w:"思索",py:"sī suǒ",mean:"思考"},
+{w:"走访亲友",py:"zǒu fǎng qīn yǒu",mean:"拜访亲戚朋友"},
+{w:"兴致高涨",py:"xìng zhì gāo zhǎng",mean:"兴趣很高"},
+{w:"感叹",py:"gǎn tàn",mean:"感慨地说"}
+],
+gram:[
+{g:"经历……之后",exp:"一件事发生过后。例句：经历挫折之后，他变得更成熟。"},
+{g:"不只是……，方方面面都……",exp:"不止一点，很多地方都这样。"},
+{g:"半开玩笑地",exp:"说话带着玩笑，不完全认真。"}
+]
+},
+{
+title:"短文3｜北京的环境",
+text:`
+<p>我是一名积极投身环保事业的参与者。近几年北京大力推进植树造林，取得的实际成效令我印象深刻。树木可以释放氧气，夏季提供大片树荫，为鸟类营造优良生存环境，同时还能够逐步提升当地降雨量。</p>
+<p>北京本身属于干旱区域，人口基数庞大，城市供水压力突出。我建议，无论是来华外国人还是中国民众，都应当认清水资源紧缺的现实，树立节约用水意识。水资源弥足珍贵，离开水人类便无法生存。</p>
+<p>北京整体市容干净整洁。美好的城市环境不能单纯依靠环卫工人日复一日的辛苦劳作，更需要全体市民自觉爱护与维护。各类垃圾与废弃物应当妥善收集、处理并且加以再利用。</p>
+<p>虽然我并非北京本地居民，在此居住时间也有限，但我由衷期盼，作为首都、世界知名大都市的北京，可以长久保持美丽的面貌。</p>
+`,
+ques:[
+{q:"1.植树造林给北京带来的好处，文中没有提到哪一项？",type:"abcd",opts:["A.释放氧气，提供树荫","B.帮助城市工厂生产更多商品","C.给鸟儿创造好环境","D.慢慢增加降雨量"],ans:"B"},
+{q:"2.作者认为城市好环境依靠什么？",type:"abcd",opts:["A.只靠清洁工辛苦干活就足够","B.只靠多种树就全部解决","C.清洁工劳动加上全体市民爱护维护","D.减少城市人口就可以保护环境"],ans:"C"}
+],
+voc:[
+{w:"投身",py:"tóu shēn",mean:"投入去做事业"},
+{w:"推进",py:"tuī jìn",mean:"推动开展工作"},
+{w:"成效",py:"chéng xiào",mean:"工作带来的效果"},
+{w:"释放",py:"shì fàng",mean:"放出来"},
+{w:"营造",py:"yíng zào",mean:"创造出环境"},
+{w:"基数",py:"jī shù",mean:"基础的数量"},
+{w:"突出",py:"tū chū",mean:"问题明显"},
+{w:"认清",py:"rèn qīng",mean:"清楚地认识到"},
+{w:"树立意识",py:"shù lì yì shí",mean:"建立想法观念"},
+{w:"弥足珍贵",py:"mí zú zhēn guì",mean:"非常珍贵"},
+{w:"市容",py:"shì róng",mean:"城市的外表面貌"},
+{w:"单纯",py:"dān chún",mean:"只、仅仅"},
+{w:"大都市",py:"dà dū shì",mean:"很大的城市"},
+{w:"长久",py:"cháng jiǔ",mean:"长时间"}
+],
+gram:[
+{g:"令……印象深刻",exp:"使某人印象很深。"},
+{g:"无论是……还是……",exp:"不管哪一类对象。"},
+{g:"不能单纯依靠……，更需要……",exp:"否定单一条件，强调另外条件。"}
+]
+},
+{
+title:"短文4｜“中国通”大赛",
+text:`
+<p>去年五月，我随同数位友人参加“中国通”大赛，这是一场规格非同一般的知识竞赛。</p>
+<p>备赛过程十分艰辛，时间紧迫，考察范围覆盖中国语言、历史、文化、法律、艺术、民俗等诸多领域。三周之内，我需要记忆两百多道题目，阅读大量参考书籍。那段时期常常睡眠不足，时常学习直至凌晨。尽管题目量大难度不小，但内容十分有趣。得益于老师的辅导，我们的准备工作做得相当完备。</p>
+<p>赛事流程分为初赛、半决赛、决赛。初赛汇集来自16所院校的上百名留学生选手，全部从北京数千外国留学生当中筛选而出。经过多轮角逐，最终六所学校合计十八名选手获得电视直播决赛资格，我便是其中一员。</p>
+<p>决赛现场汇聚来自多国的青年观众。赛场时而鸦雀无声，时而掌声轰鸣。决赛结果，清华与北大并列第一，我们学校取得第四名。比赛结束，十八位选手同主持人共同唱响赛事主题歌，所有人内心都充满激动。</p>
+`,
+ques:[
+{q:"1.为什么备赛的过程很辛苦？",type:"abcd",opts:["A.比赛没有老师辅导","B.时间紧、题目多、范围广","C.不允许看书复习","D.要天天参加体育训练"],ans:"B"},
+{q:"2.下面哪一项表述符合文章？",type:"abcd",opts:["A.初赛选手全部来自北京本地中学学生","B.作者没有进入决赛环节","C.一共十八名选手参加电视直播的决赛","D.最后比赛只有一所学校拿到第一名"],ans:"C"}
+],
+voc:[
+{w:"规格",py:"guī gé",mean:"活动的级别规模"},
+{w:"非同一般",py:"fēi tóng yì bān",mean:"不普通、很特别"},
+{w:"考察",py:"kǎo chá",mean:"考试检查知识"},
+{w:"覆盖",py:"fù gài",mean:"包含各个方面"},
+{w:"民俗",py:"mín sú",mean:"民间风俗习惯"},
+{w:"参考书籍",py:"cān kǎo shū jí",mean:"用来学习的书"},
+{w:"睡眠不足",py:"shuì mián bù zú",mean:"睡得不够"},
+{w:"得益于",py:"dé yì yú",mean:"多亏、得到好处"},
+{w:"辅导",py:"fǔ dǎo",mean:"指导教学"},
+{w:"完备",py:"wán bèi",mean:"准备得齐全充分"},
+{w:"汇集",py:"huì jí",mean:"聚集到一起"},
+{w:"筛选而出",py:"shāi xuǎn ér chū",mean:"挑选出来"},
+{w:"角逐",py:"jué zhú",mean:"竞争比赛"},
+{w:"资格",py:"zī gé",mean:"可以参加比赛的条件"},
+{w:"轰鸣",py:"hōng míng",mean:"声音很大"}
+],
+gram:[
+{g:"尽管……，但……",exp:"转折。虽然但是。"},
+{g:"得益于……",exp:"多亏某人某事。"},
+{g:"经过……，最终……",exp:"经历过程得到最后结果。"}
+]
+}],
+
+// ========= HSK6 完全保留上一版不变 =========
+hsk6:[
+{
+title:"短文1｜驻华大使史密斯",
+text:`
+<p>史密斯先生作为一国派驻中国的外交大使，外形具备运动员的气质。早在大学阶段，他便曾经作为冰球运动员参与竞技活动。赴北京履职之后，他牵头筹办起一支少年国际冰球队。</p>
+<p>这支队伍总计二十五名青少年队员，人员分别来自加拿大、俄罗斯以及中国本土，史密斯本人同时兼任这支队伍的专职教练。</p>
+<p>在这位外交官的认知当中，一名外交人员最为核心的素养即是跨文化适应能力，需要快速接纳、融入异邦的社会文化。每当派驻到一个全新国度，他都会潜心钻研当地语言，深度体察当地社会风俗。来到中国之后，他过人的语言天赋再度得到实践层面的印证。</p>
+<p>针对中国未来发展前景，大使持乐观的判断。他观察到大批中国青年勤勉治学、奋力实干，不少青年选择远赴海外完成学业。他认为这类跨国交流，一方面有益于本国经济建设与社会整体演进，另一方面亦能够推动中外之间双向的文化互动，增进各国国民之间的相互认知与理解。他由衷期许中华民族的未来能够愈发美好。</p>
+`,
+ques:[
+{q:"1.原句：在这位外交官的认知当中，一名外交人员最为核心的素养即是跨文化适应能力，需要快速接纳、融入异邦的社会文化。",type:"abcd",opts:["A.外交官最重要的是可以快速适应别的国家的文化","B.外交官一定要会打冰球运动","C.外交官必须会说很多国家的语言","D.外交官要经常组织少年体育队伍"],ans:"A"},
+{q:"2.原句：他认为这类跨国交流，一方面有益于本国经济建设与社会整体演进，另一方面亦能够推动中外之间双向的文化互动。",type:"abcd",opts:["A.跨国交流只对中国经济有好处，文化没有意义","B.跨国交流既利于国家社会发展，也促进中外文化互相往来","C.出国留学会让青年不愿意回到祖国","D.只有冰球运动才算跨国交流"],ans:"B"}
+],
+voc:[
+{w:"派驻",py:"pài zhù",mean:"国家派到国外工作"},
+{w:"履职",py:"lǚ zhí",mean:"执行自己的工作职务"},
+{w:"筹办",py:"chóu bàn",mean:"策划组织活动队伍"},
+{w:"认知",py:"rèn zhī",mean:"认识、看法"},
+{w:"核心",py:"hé xīn",mean:"最重要的"},
+{w:"跨文化",py:"kuà wén huà",mean:"不同文化之间"},
+{w:"异邦",py:"yì bāng",mean:"别的国家（书面）"},
+{w:"潜心钻研",py:"qián xīn zuān yán",mean:"专心深入学习"},
+{w:"再度",py:"zài dù",mean:"再一次"},
+{w:"勤勉治学",py:"qín miǎn zhì xué",mean:"勤奋努力学习"},
+{w:"奋力实干",py:"fèn lì shí gàn",mean:"努力踏实地工作"},
+{w:"演进",py:"yǎn jìn",mean:"发展进步"},
+{w:"互动",py:"hù dòng",mean:"互相交流来往"},
+{w:"期许",py:"qī xǔ",mean:"期待、祝愿（书面）"}
+],
+gram:[
+{g:"在……的认知当中",exp:"某人的观点看法。书面。"},
+{g:"一方面……另一方面……",exp:"两件并列的方面。"},
+{g:"针对……，持……判断",exp:"对于某事持有某种看法。"}
+]
+},
+{
+title:"短文2｜老罗",
+text:`
+<p>老罗原本并不姓罗，其本名为罗伯特。“老罗”这一称谓的由来，源自一段颇为诙谐的生活轶事。</p>
+<p>某次罗伯特随同数位友人赴餐馆用餐，侍者递送菜单，众人礼貌示意，请他优先点餐。由于语音发音相近，侍者发生听觉上的误判，将人名“罗伯特”混淆为菜肴“萝卜炖羊肉”，引得在场众人哄堂大笑。</p>
+<p>经历这桩趣闻之后，罗伯特萌生想法，希望拥有一个通俗质朴、饱含中式韵味的别名。数日斟酌，他向身边友人宣告，往后众人可以称他为老罗。</p>
+<p>不止是称谓，在日常生活诸多层面，老罗都主动接纳中国式的生活方式。就餐习惯使用筷子；每逢春节，他身着印满寿纹的传统服饰，四处走访亲友。他对北京地方特产二锅头颇为喜爱。酒酣兴浓之时，他还会半戏谑地感慨自己已经“有点儿找不着北了”。</p>
+`,
+ques:[
+{q:"1.原句：“老罗”这一称谓的由来，源自一段颇为诙谐的生活轶事。",type:"abcd",opts:["A.老罗这个名字来自一件好玩好笑的小故事","B.老罗从小家里就叫他老罗","C.因为他爱吃萝卜炖羊肉，所以叫老罗","D.老罗是中国家人给他起的正式姓氏"],ans:"A"},
+{q:"2.原句：不止是称谓，在日常生活诸多层面，老罗都主动接纳中国式的生活方式。",type:"abcd",opts:["A.老罗只改名字，生活习惯完全不变","B.除名字以外，很多生活方面他主动接受中国方式","C.老罗只愿意过自己本国的生活习惯","D.老罗完全忘记自己原来的名字罗伯特"],ans:"B"}
+],
+voc:[
+{w:"称谓",py:"chēng wèi",mean:"称呼叫法"},
+{w:"由来",py:"yóu lái",mean:"来源、来历"},
+{w:"源自",py:"yuán zì",mean:"来自于"},
+{w:"诙谐",py:"huī xié",mean:"幽默好笑"},
+{w:"轶事",py:"yì shì",mean:"有趣的小故事"},
+{w:"侍者",py:"shì zhě",mean:"服务员（书面）"},
+{w:"误判",py:"wù pàn",mean:"判断错误"},
+{w:"混淆",py:"hùn xiáo",mean:"弄混两件事物"},
+{w:"萌生想法",py:"méng shēng xiǎng fǎ",mean:"心里产生想法"},
+{w:"质朴",py:"zhì pǔ",mean:"简单通俗"},
+{w:"斟酌",py:"zhēn zhuó",mean:"仔细思考考虑"},
+{w:"宣告",py:"xuān gào",mean:"正式告诉大家"},
+{w:"寿纹",py:"shòu wén",mean:"代表长寿的花纹图案"},
+{w:"酒酣兴浓",py:"jiǔ hān xìng nóng",mean:"喝酒喝得高兴的时候"},
+{w:"戏谑",py:"xì xuè",mean:"开玩笑，打趣"}
+],
+gram:[
+{g:"……的由来，源自……",exp:"说明一件事物的来历。"},
+{g:"由于……，发生……",exp:"因果，因为某个原因产生结果。"},
+{g:"不止是……，诸多层面……",exp:"不只是一点，很多方面。"}
+]
+},
+{
+title:"短文3｜北京的环境",
+text:`
+<p>我是一名积极投身环境保护事业的参与者。近些年来北京大力推进植树造林工程，其所取得的实际成效，令我留下极为深刻的印象。林木能够释放氧气，夏季馈赠大片树荫，为鸟类营建优良的栖息环境，与此同时，亦可以促使区域降雨量逐步抬升。</p>
+<p>北京属于干旱少雨的城市，人口基数庞大，城市供水的压力十分突出。就此我提出建议：无论外籍在华人士，抑或是本国国民，都应当认清水资源紧缺的客观现实，树立节约用水的意识。水资源弥足珍贵，一旦失去水源，人类便无从生存。</p>
+<p>北京整体市容面貌干净有序。优良的城市环境，并不能单纯依托环卫工人日复一日的辛劳劳作，更有赖于全体市民自觉加以爱护与维护。各类垃圾与废弃物，应当得到妥善收集、处置以及二次利用。</p>
+<p>尽管我并非土生土长的北京居民，在此居留的时间也较为有限，但我由衷期许，作为首都与国际性大都市的北京，可以长久维系秀美宜人的城市风貌。</p>
+`,
+ques:[
+{q:"1.原句：优良的城市环境，并不能单纯依托环卫工人日复一日的辛劳劳作，更有赖于全体市民自觉加以爱护与维护。",type:"abcd",opts:["A.好城市环境既要清洁工辛苦劳动，也需要全体市民爱护维护","B.城市环境好坏完全只依靠清洁工的劳动","C.市民不用做任何事，只交给清洁工就够","D.想要环境变好，只要多种树就全部解决"],ans:"A"},
+{q:"2.原句：水资源弥足珍贵，一旦失去水源，人类便无从生存。",type:"abcd",opts:["A.水很宝贵，没有水人活不下去","B.水很多，不用担心缺水问题","C.只有外国人才需要节约用水","D.北京的水可以无限使用"],ans:"A"}
+],
+voc:[
+{w:"工程",py:"gōng chéng",mean:"大型工作项目"},
+{w:"馈赠",py:"kuì zèng",mean:"给予、送给（书面）"},
+{w:"营建",py:"yíng jiàn",mean:"建造创造环境"},
+{w:"栖息",py:"qī xī",mean:"动物居住停留"},
+{w:"抬升",py:"tái shēng",mean:"提高、上升"},
+{w:"抑或是",py:"yì huò shì",mean:"或者是（书面）"},
+{w:"客观现实",py:"kè guān xiàn shí",mean:"真实存在的实际情况"},
+{w:"无从",py:"wú cóng",mean:"没有办法（书面）"},
+{w:"依托",py:"yī tuō",mean:"依靠"},
+{w:"有赖于",py:"yǒu lài yú",mean:"需要依靠……才能实现"},
+{w:"处置",py:"chǔ zhì",mean:"处理"},
+{w:"土生土长",py:"tǔ shēng tǔ zhǎng",mean:"本地出生长大"},
+{w:"居留",py:"jū liú",mean:"停留居住"},
+{w:"维系",py:"wéi xì",mean:"保持住状态"},
+{w:"秀美宜人",py:"xiù měi yí rén",mean:"美丽让人舒服"},
+{w:"风貌",py:"fēng mào",mean:"样子面貌"}
+],
+gram:[
+{g:"与此同时，亦可以……",exp:"同时还可以。书面表达。"},
+{g:"无论……抑或是……",exp:"不管……还是……书面句式。"},
+{g:"并不能单纯……，更有赖于……",exp:"不只依靠前者，更需要后者。"}
+]
+},
+{
+title:"短文4｜“中国通”大赛",
+text:`
+<p>去年五月，我与数位友人一同参与“中国通”大赛，这是一场规格非同寻常的知识竞赛活动。</p>
+<p>备赛阶段任务艰巨，时间十分紧迫，考察范畴覆盖中国语言、历史、文化、律法、艺术、民俗风尚等诸多板块。三周之内，我需要识记两百余道题目，同时阅读大量参考典籍。那段时日我常常睡眠匮乏，时常研习直至凌晨。尽管题目体量庞大，部分题目难度较高，但是内容饶有趣味。得益于教师的悉心辅导，我们的备考准备做得相当充分。</p>
+<p>整个赛事分为初赛、半决赛、决赛三个阶段。初赛汇集来自十六所院校百余名留学生选手，全部从北京数千名外籍留学生当中遴选而出。历经多轮激烈角逐，最终六所学校合计十八名选手取得电视直播决赛的参赛资格，我正是这十八人中的一员。</p>
+<p>决赛现场汇聚多国青年观众。赛场之内时而万籁俱寂，时而掌声如潮。赛事落幕，清华大学与北京大学并列摘得桂冠，我校取得第四名。比赛结束，十八位参赛选手同主持人共同齐唱赛事主题歌，所有人内心都满怀激动。</p>
+`,
+ques:[
+{q:"1.原句：备赛阶段任务艰巨，时间十分紧迫，考察范畴覆盖中国语言、历史、文化、律法、艺术、民俗风尚等诸多板块。",type:"abcd",opts:["A.备赛任务重，时间紧，考试知识范围很广","B.比赛只考中国历史，别的内容都不考","C.比赛时间很多，不需要紧张复习","D.参赛选手不需要看书做题"],ans:"A"},
+{q:"2.原句：历经多轮激烈角逐，最终六所学校合计十八名选手取得电视直播决赛的参赛资格。",type:"abcd",opts:["A.决赛一共有十八名选手来自六所学校","B.初赛一共只有十八个人参加","C.所有报名的人都可以直接参加决赛","D.决赛选手全部来自同一所大学"],ans:"A"}
+],
+voc:[
+{w:"范畴",py:"fàn chóu",mean:"范围（书面）"},
+{w:"律法",py:"lǜ fǎ",mean:"法律（书面）"},
+{w:"民俗风尚",py:"mín sú fēng shàng",mean:"民间风俗风气"},
+{w:"板块",py:"bǎn kuài",mean:"方面、部分"},
+{w:"识记",py:"shí jì",mean:"记住、记下来"},
+{w:"典籍",py:"diǎn jí",mean:"书籍（书面）"},
+{w:"匮乏",py:"kuì fá",mean:"缺少、不足"},
+{w:"研习",py:"yán xí",mean:"学习研究"},
+{w:"体量庞大",py:"tǐ liàng páng dà",mean:"数量很大"},
+{w:"饶有趣味",py:"ráo yǒu qù wèi",mean:"很有意思（书面）"},
+{w:"悉心辅导",py:"xī xīn fǔ dǎo",mean:"用心仔细指导"},
+{w:"遴选",py:"lín xuǎn",mean:"挑选选拔（书面）"},
+{w:"历经",py:"lì jīng",mean:"经历过"},
+{w:"万籁俱寂",py:"wàn lài jù jì",mean:"环境十分安静"},
+{w:"掌声如潮",py:"zhǎng shēng rú cháo",mean:"掌声像潮水一样"},
+{w:"落幕",py:"luò mù",mean:"活动结束"},
+{w:"摘得桂冠",py:"zhāi dé guì guàn",mean:"拿到第一名（书面）"}
+],
+gram:[
+{g:"尽管……，但是……",exp:"书面转折，虽然但是。"},
+{g:"得益于……",exp:"多亏……的帮助。"},
+{g:"历经……，最终……",exp:"经历过程，最后得到结果。"}
+]
+}]
+};
+
+let curLv = "hsk3";
+let curArtIdx = 0;
+let answerState = {};
+function markText(text, vocList, gramList){
+    let html = text;
+    const vocSorted = [...vocList].sort((a,b)=>b.w.length - a.w.length);
+    vocSorted.forEach(v=>{
+        const reg = new RegExp(v.w,"g");
+        html = html.replace(reg,`<span class="tooltip">${v.w}<span class="tip">${v.py}｜${v.mean}</span></span>`);
+    })
+    const gramSorted = [...gramList].sort((a,b)=>b.g.length - a.g.length);
+    gramSorted.forEach(g=>{
+        const reg = new RegExp(g.g,"g");
+        html = html.replace(reg,`<span class="tooltip-gram">${g.g}<span class="tip">${g.exp}</span></span>`);
+    })
+    return html;
+}
+function renderArtTabs(){
+  const wrap = document.getElementById("artTabs");
+  const list = data[curLv];
+  wrap.innerHTML = "";
+  list.forEach((item,idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "tab-art"+(idx===curArtIdx?" active":"");
+    btn.innerText = item.title;
+    btn.onclick = ()=>{curArtIdx=idx;renderAll();};
+    wrap.appendChild(btn);
+  })
+}
+function renderAll(){
+  renderArtTabs();
+  const art = data[curLv][curArtIdx];
+  const leftDom = document.getElementById("panelLeft");
+  const rightDom = document.getElementById("panelRight");
+  answerState = {};
+  const markedText = markText(art.text, art.voc, art.gram);
+  let htmlLeft = `<h3>${art.title}</h3>${markedText}<div class="control-bar"><button class="btn-ctrl" id="checkBtn">核对答案</button><button class="btn-ctrl" id="resetBtn">重置</button></div>`;
+  art.ques.forEach((q,qi)=>{
+    htmlLeft += `<div class="question-block"><p>${q.q}</p>`;
+    if(q.type==="tf"){
+      htmlLeft += `<span class="opt" data-qi="${qi}" data-v="对">✔</span><span class="opt" data-qi="${qi}" data-v="错">✘</span><span class="answer-mark" id="ans${qi}"></span>`;
+    }else{
+      q.opts.forEach(opt=>{
+        htmlLeft += `<span class="opt" data-qi="${qi}" data-v="${opt[0]}">${opt}</span>`;
+      })
+      htmlLeft += `<span class="answer-mark" id="ans${qi}"></span>`;
+    }
+    htmlLeft += `</div>`;
+  })
+  leftDom.innerHTML = htmlLeft;
+  let htmlRight = `<h4>生词</h4><ul>`;
+  art.voc.forEach(v=>{
+    htmlRight += `<li>${v.w} ｜ ${v.py} ｜ ${v.mean}</li>`
+  })
+  htmlRight += `</ul><h4>语法</h4><ul>`;
+  art.gram.forEach(g=>{
+    htmlRight += `<li>${g.g} ｜ ${g.exp}</li>`
+  })
+  htmlRight += `</ul>`;
+  rightDom.innerHTML = htmlRight;
+  document.querySelectorAll(".opt").forEach(el=>{
+    el.onclick = function(){
+      const qi = this.dataset.qi;
+      const val = this.dataset.v;
+      answerState[qi] = val;
+      document.querySelectorAll(`.opt[data-qi="${qi}"]`).forEach(o=>o.classList.remove("selected"));
+      this.classList.add("selected");
+    }
+  })
+  document.getElementById("checkBtn").onclick = ()=>{
+    art.ques.forEach((q,qi)=>{
+      const span = document.getElementById("ans"+qi);
+      span.innerText = "【正确："+q.ans+"】";
+    })
+  }
+  document.getElementById("resetBtn").onclick = ()=>{
+    renderAll();
+  }
+}
+document.querySelectorAll(".tab-lv").forEach(btn=>{
+  btn.onclick = function(){
+    document.querySelectorAll(".tab-lv").forEach(b=>b.classList.remove("active"));
+    this.classList.add("active");
+    curLv = this.dataset.lv;
+    curArtIdx = 0;
+    renderAll();
+  }
+})
+window.onload = ()=>{renderAll();}
+</script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语阅读课文｜难忘广州｜原文+简化对照 + 交互习题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #EAE7E2;
+            line-height: 1.7;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(140,130,120,0.12);
+        }
+        h2 {
+            text-align: center;
+            color: #5C544F;
+            margin-bottom:18px;
+            border-bottom:1px solid #D9D2CB;
+            padding-bottom:10px;
+            font-size:20px;
+        }
+        .para-item {
+            margin-bottom: 22px;
+        }
+        .para-item p {
+            font-size:16px;
+            color:#4A4541;
+        }
+        .exercise-title{
+            font-size:19px;
+            font-weight:bold;
+            margin:22px 0 12px;
+            color:#5C544F;
+        }
+        .q-item{
+            margin:14px 0;
+            padding:10px;
+        }
+        .judge-options button{
+            padding:6px 18px;
+            margin:0 8px;
+            border-radius:6px;
+            border:1px solid #C8C0B8;
+            background:#E9E3DD;
+            cursor:pointer;
+            font-size:15px;
+            color:#4A4541;
+        }
+        .judge-options button.right{
+            background:#D8E2DB;
+            border-color:#89A897;
+        }
+        .judge-options button.wrong{
+            background:#E8D9D9;
+            border-color:#C9A8A8;
+        }
+        .answer-text{
+            margin-left:12px;
+            font-weight:bold;
+        }
+        .choice-item{
+            margin:12px 0;
+            color:#4A4541;
+        }
+        .blank-input{
+            padding:4px 8px;
+            width:90px;
+            border:1px solid #C8C0B8;
+            border-radius:4px;
+            background:#fff;
+        }
+        .check-answer-btn{
+            margin:12px 0 20px;
+            padding:8px 16px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        /* 生词蓝色 + 悬浮提示 */
+        .vocab-hover {
+            color: #0044bb;
+            position: relative;
+            cursor: help;
+            font-weight:500;
+        }
+        .vocab-hover .tip {
+            visibility: hidden;
+            position: absolute;
+            left: 0;
+            bottom: 125%;
+            background: #222;
+            color: #fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space: nowrap;
+            z-index: 99;
+            font-size:14px;
+        }
+        .vocab-hover:hover .tip {
+            visibility: visible;
+        }
+        /* 语法红色 */
+        .grammar-red{
+            color:#b82626;
+            font-weight:500;
+        }
+        .vocab-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .vocab-word{
+            font-weight:bold;
+            color:#727A84;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 左上：原文 -->
+        <div class="box">
+            <h2>课文原文｜难忘广州</h2>
+            <div class="para-item">
+                <p>去年夏天，我和我的<span class="vocab-hover">同屋<span class="tip">同屋：住同一个房间的人</span></span>一起去香港旅行，回北京时，要在广州<span class="vocab-hover">转车<span class="tip">转车：中途换交通工具</span></span>，<span class="grammar-red">顺便</span>在那儿玩儿了一天。</p>
+            </div>
+            <div class="para-item">
+                <p>那天晚上，我们到广州的时候太晚了，火车已经开了。我们<span class="grammar-red">只好</span>在车站附近的一个<span class="vocab-hover">旅店<span class="tip">旅店：小旅馆</span></span>里住下，第二天<span class="grammar-red">再</span>回北京。第二天早上，我们6点就起床了，连早饭也没<span class="vocab-hover">顾得上<span class="tip">顾得上：来得及做某事</span></span>吃就去火车站了，<span class="grammar-red">可是</span>等了两个小时也没买到票。然后，我们<span class="grammar-red">又</span>坐出租车去了飞机场，结果<span class="vocab-hover">白跑一趟<span class="tip">白跑一趟：跑过去没有办成事</span></span>，飞机票也卖光了。没办法，我们<span class="grammar-red">又</span>回到了火车站。</p>
+            </div>
+            <div class="para-item">
+                <p>火车站的人比早上更多了，<span class="vocab-hover">人山人海<span class="tip">人山人海：人非常多</span></span>。当时正是最热的时候，加上我们<span class="grammar-red">又……又……</span>急又累，简直不知<span class="vocab-hover">如何是好<span class="tip">如何是好：不知道怎么办</span></span>。我们在广州没有朋友，谁也不认识，身上带的钱也不多了，怎么办？</p>
+            </div>
+            <div class="para-item">
+                <p>快到中午了，我们一点儿都不想吃饭。站在<span class="vocab-hover">闷热<span class="tip">闷热：又热又不通风</span></span>的售票大厅前，一边擦汗一边交谈。这时，车站的一个工作人员向我们走过来，她用汉语和我们说话，<span class="grammar-red">可是</span>，我们急得一句汉语也说不出来。她以为我们不会说汉语，就跑去叫来一个<span class="vocab-hover">翻译<span class="tip">翻译：帮人转换语言的人</span></span>。翻译带我们到了办公室，让我们坐下休息，还倒水给我们喝。<span class="grammar-red">当……以后</span>我们把困难告诉他们以后，他们马上去为我们买票。虽然最后只买到<span class="vocab-hover">硬卧票<span class="tip">硬卧票：火车硬床铺位的票</span></span>，<span class="grammar-red">但</span>我们却高兴得不得了。我们要回北京，只要是能回去，什么票都行。拿着两张火车票，我们连声说：“谢谢！谢谢！”</p>
+            </div>
+            <div class="para-item">
+                <p>车票解决了，我们的心情也<span class="vocab-hover">愉快<span class="tip">愉快：开心、高兴</span></span>了。离开车的时间还有几个小时，我们俩决定先去吃饭。我们来到一家饭馆，点好菜，正在等菜时，我的朋友突然觉得很不舒服，<span class="vocab-hover">头晕<span class="tip">头晕：脑袋发昏不舒服</span></span>得厉害。这时，我慌了，刚刚买到了车票，现在朋友又病了，我们<span class="vocab-hover">人生地不熟<span class="tip">人生地不熟：在外地不认识人不熟悉地方</span></span>，医院在哪儿？到哪儿去买药？热心的饭店服务员看到后，马上跑了过来，问明情况后，赶快帮我把朋友送到了医院。大夫及时为朋友看了病。朋友吃了药，又在医院躺了一会儿，感觉好多了。医生说问题不大，可以坐车回北京了。我们向医生道了谢，到了火车站，登上了回北京的火车。</p>
+            </div>
+            <div class="para-item">
+                <p>在广州遇到的这两件事深深地印在我们的心中。我们感谢火车站的工作人员、饭店的服务员还有医院的大夫，我们会永远记住他们。</p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para-item">
+                <p>去年夏天，我和同屋去香港旅行。回北京，要在广州转车，我们顺便在广州玩一天。</p>
+            </div>
+            <div class="para-item">
+                <p>我们晚上到广州太晚，火车开走了。我们只好住在车站附近的小旅店。第二天早上六点起床，没吃早饭就去火车站，但是买不到火车票。我们坐出租车去机场，飞机票也卖完了，白跑一趟。我们又回到火车站。</p>
+            </div>
+            <div class="para-item">
+                <p>火车站人山人海，人特别多。天气很热，我们又着急又累，不知道怎么办。在广州我们没有朋友，身上的钱也不多。</p>
+            </div>
+            <div class="para-item">
+                <p>快中午，我们不想吃饭。车站的工作人员过来和我们说话。我们太急，说不出汉语。她找来翻译。翻译把我们带到办公室，给我们倒水。我们把困难告诉他们，他们帮我们买到硬卧票。只要可以回北京，什么票我们都可以。我们非常高兴，不停地说谢谢。</p>
+            </div>
+            <div class="para-item">
+                <p>车票的问题解决了，我们心情很愉快。离开车还有几个小时，我们去饭馆吃饭。正在等菜，我的朋友突然头晕很厉害。我很慌张。我们人生地不熟，不知道医院在哪里。服务员热心帮忙，把朋友送到医院。大夫给朋友看病吃药。朋友感觉好多了，医生说可以坐火车回北京。我们谢过医生，登上回北京的火车。</p>
+            </div>
+            <div class="para-item">
+                <p>在广州发生的两件事，我们记得很清楚。我们感谢帮助我们的人，会永远记住他们。</p>
+            </div>
+        </div>
+        <!-- 左下：练习题 -->
+        <div class="box">
+            <h2>课后练习题</h2>
+            <button class="check-answer-btn" onclick="resetAllAnswers()">🔄 重置全部答案</button>
+            <div class="exercise-title">一、判断题（点击 ✓ / ✗）</div>
+            <div class="q-item" data-answer="true">
+                <span>1. 从香港回北京，他们需要在广州转车。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>2. 他们晚上到广州，顺利坐上回北京的火车。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>3. 他们在机场买到了飞机票。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>4. 当时火车站的人非常多，人山人海。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>5. 车站工作人员以为他们不会说汉语，叫来了翻译。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>6. 最后他们买到了很贵的高铁一等座车票。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>7. 车票解决以后，朋友突然头晕，身体不舒服。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="false">
+                <span>8. 朋友生病以后，没有人愿意帮助他们。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>9. 饭店服务员帮忙把生病的朋友送到医院。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+            <div class="q-item" data-answer="true">
+                <span>10. 在广州遇到的两件好事，他们会永远记住。</span>
+                <div class="judge-options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer-text"></span>
+                </div>
+            </div>
+
+            <div class="exercise-title">二、选择题（单选）</div>
+            <div class="choice-item">
+                <p>1. 他们去哪里旅行之后，在广州转车？</p>
+                <label><input type="radio" name="q1" value="A"> A.香港</label>
+                <label><input type="radio" name="q1" value="B"> B.上海</label>
+                <label><input type="radio" name="q1" value="C"> C.成都</label>
+            </div>
+            <div class="choice-item">
+                <p>2. 第二天早上几点他们就起床了？</p>
+                <label><input type="radio" name="q2" value="A"> A.5点</label>
+                <label><input type="radio" name="q2" value="B"> B.6点</label>
+                <label><input type="radio" name="q2" value="C"> C.7点</label>
+            </div>
+            <div class="choice-item">
+                <p>3. 他们去飞机场买票，结果怎么样？</p>
+                <label><input type="radio" name="q3" value="A"> A.买到两张机票</label>
+                <label><input type="radio" name="q3" value="B"> B.机票卖光，白跑一趟</label>
+                <label><input type="radio" name="q3" value="C"> C.飞机晚点</label>
+            </div>
+            <div class="choice-item">
+                <p>4. 车站工作人员为什么叫来翻译？</p>
+                <label><input type="radio" name="q4" value="A"> A.以为他们不会说汉语</label>
+                <label><input type="radio" name="q4" value="B"> B.他们想学习翻译</label>
+                <label><input type="radio" name="q4" value="C"> C.翻译想坐车回北京</label>
+            </div>
+            <div class="choice-item">
+                <p>5. 最后他们买到什么火车票？</p>
+                <label><input type="radio" name="q5" value="A"> A.软卧票</label>
+                <label><input type="radio" name="q5" value="B"> B.硬卧票</label>
+                <label><input type="radio" name="q5" value="C"> C.站票</label>
+            </div>
+            <div class="choice-item">
+                <p>6. 车票解决以后，他们打算先做什么？</p>
+                <label><input type="radio" name="q6" value="A"> A.先去吃饭</label>
+                <label><input type="radio" name="q6" value="B"> B.马上去医院</label>
+                <label><input type="radio" name="q6" value="C"> C.马上上火车</label>
+            </div>
+            <div class="choice-item">
+                <p>7. 在饭馆，朋友身体出现什么问题？</p>
+                <label><input type="radio" name="q7" value="A"> A.头晕得厉害</label>
+                <label><input type="radio" name="q7" value="B"> B.特别开心</label>
+                <label><input type="radio" name="q7" value="C"> C.想吃很多菜</label>
+            </div>
+            <div class="choice-item">
+                <p>8. 是谁帮忙把朋友送到医院？</p>
+                <label><input type="radio" name="q8" value="A"> A.出租车司机</label>
+                <label><input type="radio" name="q8" value="B"> B.饭店服务员</label>
+                <label><input type="radio" name="q8" value="C"> C.火车站翻译</label>
+            </div>
+            <div class="choice-item">
+                <p>9. 医生看完朋友，觉得朋友怎么样？</p>
+                <label><input type="radio" name="q9" value="A"> A.问题不大，可以坐火车</label>
+                <label><input type="radio" name="q9" value="B"> B.必须住院一个月</label>
+                <label><input type="radio" name="q9" value="C"> C.不能离开广州</label>
+            </div>
+            <div class="choice-item">
+                <p>10. 文中一共写了几件发生在广州的事？</p>
+                <label><input type="radio" name="q10" value="A"> A.两件</label>
+                <label><input type="radio" name="q10" value="B"> B.三件</label>
+                <label><input type="radio" name="q10" value="C"> C.四件</label>
+            </div>
+            <button class="check-answer-btn" onclick="checkChoice()">核对选择题答案</button>
+            <div id="choiceResult"></div>
+            <div class="exercise-title">三、填空题</div>
+            <div>
+                1. 去年夏天，我和我的<input class="blank-input" id="b1">一起去香港旅行。
+            </div>
+            <div style="margin:8px 0;">
+                2. 回北京的时候，我们要在<input class="blank-input" id="b2">转车。
+            </div>
+            <div style="margin:8px 0;">
+                3. 我们没买到火车票，去飞机场也是<input class="blank-input" id="b3">一趟。
+            </div>
+            <div style="margin:8px 0;">
+                4. 火车站人很多，真是<input class="blank-input" id="b4">人海。
+            </div>
+            <div style="margin:8px 0;">
+                5. 车站工作人员叫来一位<input class="blank-input" id="b5">帮助我们沟通。
+            </div>
+            <div style="margin:8px 0;">
+                6. 最后我们买到了<input class="blank-input" id="b6">火车票。
+            </div>
+            <div style="margin:8px 0;">
+                7. 车票解决，我们打算先去<input class="blank-input" id="b7">。
+            </div>
+            <div style="margin:8px 0;">
+                8. 在饭馆，我的朋友突然<input class="blank-input" id="b8">得厉害。
+            </div>
+            <div style="margin:8px 0;">
+                9. 热心的<input class="blank-input" id="b9">帮忙把朋友送到医院。
+            </div>
+            <div style="margin:8px 0;">
+                10. 在广州的两件事深深地<input class="blank-input" id="b10">在我们心中。
+            </div>
+            <button class="check-answer-btn" onclick="checkBlank()">核对填空答案</button>
+            <div id="blankResult"></div>
+        </div>
+        <!-- 右下：生词 + 语法 -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise-title">一、生词</div>
+            <div class="vocab-item">
+                <span class="vocab-word">同屋</span>：住在同一个房间的人。例：我的同屋是一位留学生。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">转车</span>：中途换别的交通工具。例：我要在上海转车。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">顺便</span>：做一件事的同时，再做另外一件。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">旅店</span>：小型旅馆，可以住宿。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">顾得上</span>：时间来得及，可以做某事。例：太忙，顾不上吃饭。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">白跑一趟</span>：跑过去，事情没有办成，白白浪费力气。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">人山人海</span>：形容人特别多。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">如何是好</span>：不知道应该怎么办。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">闷热</span>：天气又热，空气不流通。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">翻译</span>：把一种语言换成另外一种语言；做这个工作的人。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">硬卧票</span>：火车上硬床铺位的车票。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">愉快</span>：心里高兴、开心。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">头晕</span>：脑袋昏昏沉沉，身体不舒服。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">人生地不熟</span>：在外地，不认识人，不熟悉环境。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">深深地</span>：程度很深，牢牢地。例：这件事深深地记在心里。
+            </div>
+
+            <div class="exercise-title">二、语法</div>
+            <div class="vocab-item">
+                <span class="grammar-red">1. 只好</span><br>
+                用法：没有别的办法，只能这样。<br>
+                原文：我们只好在车站附近的一个旅店里住下。<br>
+                例句：下雨了，我只好待在家里。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">2. 可是，转折连词</span><br>
+                用法：前面说情况，后面出现相反的结果。<br>
+                原文：可是等了两个小时也没买到票。<br>
+                例句：我很想去，可是我没有时间。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">3. 又……又……</span><br>
+                用法：同时有两种状态。<br>
+                原文：加上我们又急又累。<br>
+                例句：苹果又大又甜。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">4. 当……以后</span><br>
+                用法：某件事情发生完之后。<br>
+                原文：当我们把困难告诉他们以后，他们马上去为我们买票。<br>
+                例句：当吃完饭以后，我们出去散步。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">5. 虽然……但……</span><br>
+                用法：转折，虽然情况A，但是B。<br>
+                原文：虽然最后只买到硬卧票，但我们却高兴得不得了。<br>
+                例句：虽然很累，但是我很开心。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">6. 只要……，……</span><br>
+                用法：满足最低条件就可以。<br>
+                原文：只要是能回去，什么票都行。<br>
+                例句：只要你来，我就很高兴。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">7. 一边……一边……</span><br>
+                用法：两件动作同时做。<br>
+                原文：一边擦汗一边交谈。<br>
+                例句：我一边听音乐，一边看书。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">8. 得（补语）：形容词+得+厉害 / 不得了</span><br>
+                用法：描写动作、状态的程度。<br>
+                原文：头晕得厉害；高兴得不得了。<br>
+                例句：他跑得很快；冷得不得了。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">9. 刚刚……，现在又……</span><br>
+                用法：刚刚发生一件事，接着发生另一件。<br>
+                原文：刚刚买到了车票，现在朋友又病了。
+            </div>
+            <div class="vocab-item">
+                <span class="grammar-red">10. 动词 + 到</span><br>
+                用法：表示动作到达某个地方。例：登上了火车，送到了医院。
+            </div>
+        </div>
+    </div>
+<script>
+    // 判断题点击逻辑
+    function judgeCheck(btn, userSelect) {
+        const item = btn.closest(".q-item");
+        const realAns = item.dataset.answer === "true";
+        const span = item.querySelector(".answer-text");
+        const buttons = item.querySelectorAll("button");
+        buttons.forEach(b=>b.classList.remove("right","wrong"));
+        if(userSelect === realAns){
+            btn.classList.add("right");
+            span.textContent = " ✔ 正确";
+            span.style.color="#597c69";
+        }else{
+            btn.classList.add("wrong");
+            span.textContent = " ✘ 错误";
+            span.style.color="#b46464";
+        }
+    }
+    //选择题标准答案
+    const choiceAns = {
+        q1:"A",q2:"B",q3:"B",q4:"A",q5:"B",
+        q6:"A",q7:"A",q8:"B",q9:"A",q10:"A"
+    };
+    function checkChoice(){
+        let score=0;
+        let total=10;
+        for(let key in choiceAns){
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+            if(selected && selected.value === choiceAns[key]) score++;
+        }
+        document.getElementById("choiceResult").innerText = `选择题：答对${score}/${total}题`;
+    }
+    //填空标准答案
+    const blankAns = ["同屋","广州","白跑","人山","翻译","硬卧","吃饭","头晕","服务员","印"];
+    function checkBlank(){
+        let score=0;
+        for(let i=0;i<10;i++){
+            const input = document.getElementById("b"+(i+1));
+            if(input.value.trim() === blankAns[i]) score++;
+        }
+        document.getElementById("blankResult").innerText = `填空题：答对${score}/10题`;
+    }
+    // 重置全部答案功能
+    function resetAllAnswers(){
+        //重置判断题
+        document.querySelectorAll(".q-item").forEach(item=>{
+            const btns = item.querySelectorAll("button");
+            btns.forEach(b=>b.classList.remove("right","wrong"));
+            item.querySelector(".answer-text").textContent = "";
+        })
+        //重置选择题单选框
+        document.querySelectorAll('input[type="radio"]').forEach(radio=>radio.checked=false);
+        document.getElementById("choiceResult").textContent="";
+        //重置填空输入框
+        document.querySelectorAll(".blank-input").forEach(input=>input.value="");
+        document.getElementById("blankResult").textContent="";
+    }
+</script>
+</body>
+</html>

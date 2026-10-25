@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语阅读｜菲利普 原文+简化对照+交互习题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #EAE7E2;
+            line-height: 1.7;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(140,130,120,0.12);
+        }
+        h2 {
+            text-align: center;
+            color: #5C544F;
+            margin-bottom:18px;
+            border-bottom:1px solid #D9D2CB;
+            padding-bottom:10px;
+            font-size:20px;
+        }
+        .para-item {
+            margin-bottom: 24px;
+        }
+        .para-item p {
+            font-size:16px;
+            color:#4A4541;
+        }
+        .exercise-title{
+            font-size:19px;
+            font-weight:bold;
+            margin:22px 0 12px;
+            color:#5C544F;
+        }
+        .q-item{
+            margin:18px 0;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:8px;
+        }
+        .choice-item label{
+            display:block;
+            margin:6px 0;
+            cursor:pointer;
+        }
+        .answer-text{
+            margin-top:10px;
+            font-weight:bold;
+        }
+        .check-answer-btn{
+            margin:12px 0 20px;
+            padding:8px 16px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        /* 生词蓝色悬浮 */
+        .vocab-blue {
+            color: #0044bb;
+            font-weight:500;
+            position:relative;
+            cursor:help;
+        }
+        .vocab-blue .tip {
+            visibility:hidden;
+            position:absolute;
+            left:0;
+            bottom:125%;
+            z-index:99;
+            background:#222;
+            color:#fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space:nowrap;
+            font-size:13px;
+            opacity:0;
+            transition:opacity 0.2s;
+        }
+        .vocab-blue:hover .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        /* 语法红色 */
+        .grammar-red{
+            color:#b82626;
+            font-weight:500;
+            position:relative;
+            cursor:help;
+        }
+        .grammar-red .tip {
+            visibility:hidden;
+            position:absolute;
+            left:0;
+            bottom:125%;
+            z-index:99;
+            background:#222;
+            color:#fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space:nowrap;
+            font-size:13px;
+            opacity:0;
+            transition:opacity 0.2s;
+        }
+        .grammar-red:hover .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        .vocab-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .vocab-word{
+            font-weight:bold;
+            color:#0044bb;
+        }
+        .grammar-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .grammar-title{
+            font-weight:bold;
+            color:#b82626;
+        }
+        /* 正确答案绿色样式 */
+        .correct-ans{
+            color:#009933;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 左上：原文 -->
+        <div class="box">
+            <h2>课文原文｜菲利普的故事</h2>
+            <div class="para-item">
+                <p>菲利普出生在<span class="vocab-blue">南亚<span class="tip">Nányà：亚洲南部</span></span>的一个小国，<span class="vocab-blue">祖辈<span class="tip">zǔbèi：祖先，上几代人</span></span>是中国人。在战争中菲利普全家到了美国，<span class="grammar-red">加入了<span class="tip">jiārù le：成为某个组织、国家的一员</span></span>美国籍。在家里，菲利普跟妈妈讲潮州话；在学校，他说英语；在太太身边，他就说普通话。</p>
+            </div>
+            <div class="para-item">
+                <p>菲利普家在洛杉矶。他在华盛顿上大学，在纽约工作。他<span class="grammar-red">怎么也没想到<span class="tip">zěn me yě méi xiǎng dào：完全没有想到</span></span>会在中国遇到<span class="vocab-blue">爱情<span class="tip">àiqíng：男女之间的感情</span></span>，而且把自己的家<span class="vocab-blue">安<span class="tip">ān：安置，建立（家）</span></span>在了北京。</p>
+            </div>
+            <div class="para-item">
+                <p>菲利普27岁了，到了该结婚的年龄了，可<span class="grammar-red">一时<span class="tip">yī shí：一段时间内，短期内</span></span>没遇到合适的。一次他来北京出差，发现中国的小姐特别漂亮，在美国怎么就没有见到这么多漂亮的姑娘呢？同事跟他开玩笑说：“你<span class="vocab-blue">干脆<span class="tip">gāncui：索性，直接</span></span><span class="vocab-blue">娶<span class="tip">qǔ：男子结婚，娶妻子</span></span>个中国小姐做太太吧。”可是，他想这次出差时间太短了，爱情不会<span class="vocab-blue">光顾<span class="tip">guānggù：到来，降临</span></span>他的。</p>
+            </div>
+            <div class="para-item">
+                <p>他乘坐的中国国际航空公司的班机在香港<span class="vocab-blue">转机<span class="tip">zhuǎnjī：中途换飞机</span></span>。站在<span class="vocab-blue">机舱<span class="tip">jīcāng：飞机里面的客舱</span></span>门口的是一位可爱的民航小姐。只是<span class="vocab-blue">一瞬间<span class="tip">shùnjiān：很短的时间</span></span>，菲利普觉得她正在看着他，这也许就是<span class="vocab-blue">缘分<span class="tip">yuánfèn：人与人相遇的命运</span></span>。后来阿玲告诉他：从看见他的第一眼起，心里就觉得这个人好<span class="vocab-blue">面熟<span class="tip">miànshú：面孔好像见过，很熟悉</span></span>啊！她跟着菲利普进了舱门，帮他放好了行李。</p>
+            </div>
+            <div class="para-item">
+                <p>飞机飞了两个多小时，菲利普也就看了她两个多小时。他不知道怎么跟她讲话，因为那时他只会普通话说“你好、谢谢”。下飞机前，菲利普<span class="vocab-blue">鼓<span class="tip">gǔ：鼓起（勇气）</span></span>足<span class="vocab-blue">勇气<span class="tip">yǒngqì：胆量</span></span>告诉她，想跟她保持联系，她客气地给了他一个手机号码。后来他打了几次那个电话。开始时没人接听，后来对方接了，可是两个人在电话里谁也听不明白对方说的话，于是他们约好写信。</p>
+            </div>
+            <div class="para-item">
+                <p>菲利普开始用中文写信。<span class="grammar-red">起初<span class="tip">qǐchū：最开始</span></span>，每封信只有几句话，可就是这样，也还要找老师看。慢慢地他感到这样不行，这样要<span class="vocab-blue">失去<span class="tip">shīqù：丢掉，得不到</span></span>她了。于是他又打电话给阿玲，可是那时她总是在天上飞，总也找不到她。找不到人，他就打听她的<span class="vocab-blue">行踪<span class="tip">xíngzōng：人去了哪里</span></span>。当得知阿玲要飞罗马，并且在那里停两天时，他就立刻买好了去罗马的机票，还买了鲜花。</p>
+            </div>
+            <div class="para-item">
+                <p>罗马真大，菲利普找到阿玲时已是晚上10点多了。天下着雨，花儿也<span class="vocab-blue">蔫<span class="tip">niān：花缺水，不精神</span></span>了。他们俩拿着字典，说着英语、意大利语和汉语。“很多人讲着同一种语言彼此却不理解，我们俩语言交流虽然<span class="vocab-blue">暂时<span class="tip">zànshí：短时间内</span></span>有困难，但彼此却心心相通。”菲利普觉得阿玲这话说得很对。他们在罗马只有两天的时间，阿玲回中国了，菲利普也回到了美国。他很想再见到她，于是又飞到了南京，因为阿玲正在那里学习。见到阿玲，菲利普对她说：“我想娶你回家，我要带你回美国。”</p>
+            </div>
+            <div class="para-item">
+                <p>可阿玲却不跟他回去，她说：“父母在，不远行。”阿玲的同事对菲利普说：“阿玲不跟你去美国，那你就到中国来做‘倒插门’<span class="vocab-blue">女婿<span class="tip">nǚxu：女儿的丈夫</span></span>吧。”</p>
+            </div>
+            <div class="para-item">
+                <p>就这样，菲利普“倒插门”来到了北京，和阿玲开了一家旅游<span class="vocab-blue">咨询<span class="tip">zīxún：询问、提供建议</span></span>公司。他们<span class="vocab-blue">策划<span class="tip">cèhuà：计划、设计</span></span>了一条旅游线路，只需花1999美元就可以到美国<span class="vocab-blue">度假<span class="tip">dùjià：休假旅游</span></span>一周，逛迪斯尼乐园，到加勒比海边晒太阳……游客们一定能玩儿得很开心。</p>
+            </div>
+            <div class="para-item">
+                <p>现在菲利普下了班就回家，吃饺子、<span class="vocab-blue">烙饼<span class="tip">làobǐng：一种面食</span></span>、炸酱面，还帮着岳父岳母做家务，有空儿时也偷偷去西餐馆吃次牛排，当然要五成熟的。</p>
+            </div>
+            <div class="para-item">
+                <p>菲利普的父母总是希望他能回美国帮助他们<span class="vocab-blue">经营<span class="tip">jīngyíng：管理做买卖</span></span>产业，“可我想自己干，而且这里有人需要我，我也需要这里。我这个‘倒插门’的女婿还没当够呢。”</p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para-item">
+                <p>菲利普出生在南亚的一个小国，他的祖先是中国人。战争的时候全家搬到美国，成了美国公民。在家跟妈妈说潮州话，学校说英语，跟太太说普通话。</p>
+            </div>
+            <div class="para-item">
+                <p>菲利普家住在洛杉矶，大学在华盛顿读，在纽约工作。他没有想到会在中国遇到爱情，最后把家安在北京。</p>
+            </div>
+            <div class="para-item">
+                <p>他二十七岁，该结婚了，但是短时间没有找到合适的人。一次来北京出差，他觉得中国姑娘很漂亮。同事跟他开玩笑，叫他娶中国太太。但他觉得出差时间太短，遇不到爱情。</p>
+            </div>
+            <div class="para-item">
+                <p>坐飞机在香港转机，他遇到空乘阿玲。第一眼两个人就觉得很有缘分。阿玲给他手机号码。菲利普只会几句中文。下飞机之前鼓起勇气想要联系她。</p>
+            </div>
+            <div class="para-item">
+                <p>打电话两个人听不懂对方说话，于是他们写信。菲利普中文不好，写的信很短，要找老师修改。他打听阿玲的行踪，知道阿玲飞罗马，他马上买机票带着鲜花飞去罗马见她。</p>
+            </div>
+            <div class="para-item">
+                <p>罗马下雨，花都蔫了。两个人用三种语言聊天。虽然语言暂时有困难，但是心里互相理解。阿玲要回中国，菲利普回美国。后来菲利普又飞去南京找阿玲，想要带她回美国结婚。</p>
+            </div>
+            <div class="para-item">
+                <p>阿玲不愿意去美国，她说父母在，不远行。同事建议菲利普来中国做倒插门女婿。</p>
+            </div>
+            <div class="para-item">
+                <p>菲利普来到北京，和阿玲开旅游咨询公司。他们设计美国旅游线路。下班回家吃中国饭菜，也偶尔偷偷吃西餐牛排。</p>
+            </div>
+            <div class="para-item">
+                <p>父母希望他回美国管理生意。菲利普说，他想在中国，这个倒插门女婿他还没当够。</p>
+            </div>
+        </div>
+        <!-- 左下：同义替换选择题（20题：前10词语，后10句子） -->
+        <div class="box">
+            <h2>同义替换选择题（20题）</h2>
+            <button class="check-answer-btn" onclick="checkAllSynonym()">✅ 核对全部答案</button>
+            <div id="synonymResult"></div>
+            <p style="margin-bottom:8px;font-weight:bold;">一、词语同义（1-10）</p>
+            <!-- Q1 -->
+            <div class="q-item" data-ans="A">
+                <p>1. 菲利普出生在<span>南亚</span>的一个小国。【南亚】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s1" value="A">A. 亚洲南部</label>
+                    <label><input type="radio" name="s1" value="B">B. 一个国家的名字</label>
+                    <label><input type="radio" name="s1" value="C">C. 离亚洲很远的南边</label>
+                    <label><input type="radio" name="s1" value="D">D. 南边的亚洲</label>
+                </div>
+            </div>
+            <!-- Q2 -->
+            <div class="q-item" data-ans="D">
+                <p>2. 可<span>一时</span>没遇到合适的。【一时】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s2" value="A">A.一次</label>
+                    <label><input type="radio" name="s2" value="B">B.有时</label>
+                    <label><input type="radio" name="s2" value="C">C.多次</label>
+                    <label><input type="radio" name="s2" value="D">D.(在)一段时间（内）</label>
+                </div>
+            </div>
+            <!-- Q3 -->
+            <div class="q-item" data-ans="C">
+                <p>3.心里就觉得这个人好<span>面熟</span>啊！【面熟】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s3" value="A">A.面熟了</label>
+                    <label><input type="radio" name="s3" value="B">B.面做好了</label>
+                    <label><input type="radio" name="s3" value="C">C.面孔熟悉</label>
+                    <label><input type="radio" name="s3" value="D">D.熟人面前</label>
+                </div>
+            </div>
+            <!-- Q4 -->
+            <div class="q-item" data-ans="B">
+                <p>4.于是他们<span>约好</span>写信。【约好】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s4" value="A">A.大约</label>
+                    <label><input type="radio" name="s4" value="B">B.约定</label>
+                    <label><input type="radio" name="s4" value="C">C.大概</label>
+                    <label><input type="radio" name="s4" value="D">D.商量</label>
+                </div>
+            </div>
+            <!-- Q5 -->
+            <div class="q-item" data-ans="A">
+                <p>5.我们俩语言交流虽然<span>暂时</span>有困难。【暂时】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s5" value="A">A.短时间内</label>
+                    <label><input type="radio" name="s5" value="B">B.很久</label>
+                    <label><input type="radio" name="s5" value="C">C.有时候</label>
+                    <label><input type="radio" name="s5" value="D">D.有时间</label>
+                </div>
+            </div>
+            <!-- Q6 -->
+            <div class="q-item" data-ans="B">
+                <p>6.父母在，不<span>远行</span>。【远行】“行”意思？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s6" value="A">A.可以</label>
+                    <label><input type="radio" name="s6" value="B">B.走</label>
+                    <label><input type="radio" name="s6" value="C">C.能干</label>
+                    <label><input type="radio" name="s6" value="D">D.行为</label>
+                </div>
+            </div>
+            <!-- Q7 -->
+            <div class="q-item" data-ans="C">
+                <p>7.菲利普还帮着岳父岳母做<span>家务</span>。【家务】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s7" value="A">A.大家工作</label>
+                    <label><input type="radio" name="s7" value="B">B.在家学习</label>
+                    <label><input type="radio" name="s7" value="C">C.家里的事</label>
+                    <label><input type="radio" name="s7" value="D">D.作家的工作</label>
+                </div>
+            </div>
+            <!-- Q8 -->
+            <div class="q-item" data-ans="C">
+                <p>8.有空儿时也<span>偷偷</span>去西餐馆吃次牛排。【偷偷】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s8" value="A">A.常常</label>
+                    <label><input type="radio" name="s8" value="B">B.跟朋友一起</label>
+                    <label><input type="radio" name="s8" value="C">C.不让别人知道</label>
+                    <label><input type="radio" name="s8" value="D">D.从来不</label>
+                </div>
+            </div>
+            <!-- Q9 -->
+            <div class="q-item" data-ans="B">
+                <p>9.<span>干脆</span>娶个中国小姐做太太。【干脆】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s9" value="A">A.不干净</label>
+                    <label><input type="radio" name="s9" value="B">B.索性、直接</label>
+                    <label><input type="radio" name="s9" value="C">C.很软弱</label>
+                    <label><input type="radio" name="s9" value="D">D.慢慢的</label>
+                </div>
+            </div>
+            <!-- Q10 -->
+            <div class="q-item" data-ans="D">
+                <p>10.<span>起初</span>，每封信只有几句话。【起初】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s10" value="A">A.最后</label>
+                    <label><input type="radio" name="s10" value="B">B.后来</label>
+                    <label><input type="radio" name="s10" value="C">C.中间</label>
+                    <label><input type="radio" name="s10" value="D">D.最开始</label>
+                </div>
+            </div>
+            <p style="margin:20px 0 8px;font-weight:bold;">二、句子同义（11‑20）</p>
+            <!-- Q11 句子 -->
+            <div class="q-item" data-ans="A">
+                <p>11.两个人在电话里谁也听不明白对方说的话。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s11" value="A">A.在电话里，菲利普听不懂对方说的话，对方也听不懂菲利普说的话。</label>
+                    <label><input type="radio" name="s11" value="B">B.谁也听不懂我们俩在电话里说的话。</label>
+                    <label><input type="radio" name="s11" value="C">C.在给别人打电话的时候，我俩都听不明白。</label>
+                </div>
+            </div>
+            <!-- Q12 -->
+            <div class="q-item" data-ans="C">
+                <p>12.每封信只有几句话，可就是这样，也还要找老师看。意思相同的一句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s12" value="A">A.信很短，所以要让老师看看写得怎么样。</label>
+                    <label><input type="radio" name="s12" value="B">B.我要找老师看看怎么写短信。</label>
+                    <label><input type="radio" name="s12" value="C">C.尽管信不长，可是菲利普还得让老师看看写得对不对。</label>
+                </div>
+            </div>
+            <!-- Q13 -->
+            <div class="q-item" data-ans="B">
+                <p>13.找不到人，他就打听她的行踪。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s13" value="A">A.他找不到别的人，就问她去哪儿了。</label>
+                    <label><input type="radio" name="s13" value="B">B.他找不到她，就问别人她去哪儿了。</label>
+                    <label><input type="radio" name="s13" value="C">C.他没找到人，就问她人都去哪儿了。</label>
+                </div>
+            </div>
+            <!-- Q14 -->
+            <div class="q-item" data-ans="C">
+                <p>14.他很想再见到她，于是又飞到了南京。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s14" value="A">A.他跟她说了“再见”，就坐飞机到了南京。</label>
+                    <label><input type="radio" name="s14" value="B">B.他不想见她了，因此他坐飞机去南京了。</label>
+                    <label><input type="radio" name="s14" value="C">C.他想再次见到她，所以他又坐飞机来到南京。</label>
+                </div>
+            </div>
+            <!-- Q15 -->
+            <div class="q-item" data-ans="B">
+                <p>15.花儿也蔫了。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s15" value="A">A.花儿开得很漂亮</label>
+                    <label><input type="radio" name="s15" value="B">B.花儿缺水，没有精神</label>
+                    <label><input type="radio" name="s15" value="C">C.花儿颜色变红了</label>
+                </div>
+            </div>
+            <!-- Q16 -->
+            <div class="q-item" data-ans="A">
+                <p>16.怎么也没想到会在中国遇到爱情。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s16" value="A">A.完全没有想到会在中国遇到爱情</label>
+                    <label><input type="radio" name="s16" value="B">A.早就想到会在中国遇到爱情</label>
+                    <label><input type="radio" name="s16" value="C">C.希望在中国遇到爱情</label>
+                </div>
+            </div>
+            <!-- Q17 -->
+            <div class="q-item" data-ans="B">
+                <p>17.鼓起勇气告诉她，想跟她保持联系。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s17" value="A">A.没有胆量，不敢和她说话</label>
+                    <label><input type="radio" name="s17" value="B">A.拿出胆量，告诉她希望可以继续来往</label>
+                    <label><input type="radio" name="s17" value="C">C.很生气地跟她说话</label>
+                </div>
+            </div>
+            <!-- Q18 -->
+            <div class="q-item" data-ans="A">
+                <p>18.父母在，不远行。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s18" value="A">A.父母还在世，不要去很远的地方</label>
+                    <label><input type="radio" name="s18" value="B">B.父母在家，孩子一定要走远</label>
+                    <label><input type="radio" name="s18" value="C">C.父母在的时候，不能出门</label>
+                </div>
+            </div>
+            <!-- Q19 -->
+            <div class="q-item" data-ans="C">
+                <p>19.我这个“倒插门”的女婿还没当够呢。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s19" value="A">A.我不想继续在中国生活</label>
+                    <label><input type="radio" name="s19" value="B">B.我想马上回美国</label>
+                    <label><input type="radio" name="s19" value="C">C.我很愿意继续做中国的女婿</label>
+                </div>
+            </div>
+            <!-- Q20 -->
+            <div class="q-item" data-ans="B">
+                <p>20.打听她的行踪。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s20" value="A">A.跟她一起走路</label>
+                    <label><input type="radio" name="s20" value="B">B.问别人她到什么地方去了</label>
+                    <label><input type="radio" name="s20" value="C">C.跟着她到处走</label>
+                </div>
+            </div>
+        </div>
+        <!-- 右下：生词 + 语法 -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise-title">一、生词</div>
+            <div class="vocab-item">
+                <span class="vocab-word">祖辈</span>：祖先，上几代人。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">南亚</span>：亚洲南部地区。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">爱情</span>：男女之间的感情。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">安家</span>：建立家庭，定居。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">干脆</span>：索性，直接。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">娶</span>：男子娶妻结婚。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">光顾</span>：降临、来到。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">转机</span>：中途换乘飞机。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">机舱</span>：飞机客舱。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">一瞬间</span>：极短的时间。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">缘分</span>：人与人相遇的命运。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">面熟</span>：面孔好像见过。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">鼓起勇气</span>：拿出胆量。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">起初</span>：最开始。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">失去</span>：得不到、丢掉。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">行踪</span>：人去往的地方。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">蔫</span>：花草缺水，没有精神。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">暂时</span>：短时间之内。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">女婿</span>：女儿的丈夫。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">咨询</span>：提供询问、建议。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">策划</span>：设计、计划。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">度假</span>：休假旅游。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">经营</span>：管理产业、生意。
+            </div>
+            <div class="exercise-title">二、语法</div>
+            <div class="grammar-item">
+                <span class="grammar-title">1. 加入了（动词+了）</span><br>了表示动作完成。例句：他加入了社团。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">2. 怎么也没想到</span><br>表示完全没有料想到。例句：我怎么也没想到会在这里遇见你。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">3. 一时</span><br>短时间内。例句：我一时想不起来他的名字。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">4. 谁也……不……</span><br>谁也+否定，表示双方都不。例句：电话里我们谁也听不清谁。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">5. 于是</span><br>表示接着发生的结果。例句：下雨了，于是我们回家。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">6. 尽管……可就是……</span><br>转折让步。例句：虽然钱不多，可就是够用。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">7. 得知……</span><br>得到消息，知道。例句：我得知他明天回国。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">8. 虽然……但……</span><br>转折，虽然但是。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">9. 父母在，不远行（文言短句）</span><br>父母还在世，不要出远门。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">10. 还没……够</span><br>表示还没有满足。例句：玩还没玩够。
+            </div>
+        </div>
+    </div>
+<script>
+    //同义题答案字典
+    const synAns = {
+        s1:"A",s2:"D",s3:"C",s4:"B",s5:"A",
+        s6:"B",s7:"C",s8:"C",s9:"B",s10:"D",
+        s11:"A",s12:"C",s13:"B",s14:"C",s15:"B",
+        s16:"A",s17:"B",s18:"A",s19:"C",s20:"B"
+    }
+    function checkAllSynonym(){
+        let score=0;
+        let total=20;
+        // 清除上一轮答案
+        document.querySelectorAll(".ans-hint").forEach(el=>el.innerHTML="");
+        for(let key in synAns){
+            const qItem = document.querySelector(`input[name="${key}"]`).closest(".q-item");
+            const hintDom = qItem.querySelector(".ans-hint");
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+            if(selected && selected.value === synAns[key]){
+                score++;
+                hintDom.innerHTML = `<span class="correct-ans">✅正确</span>`;
+            }else{
+                hintDom.innerHTML = `<span class="correct-ans">✅正确答案：${synAns[key]}</span>`;
+            }
+        }
+        document.getElementById("synonymResult").innerText = `✅ 同义选择题结果：答对${score}/${total}题`;
+    }
+</script>
+</body>
+</html>

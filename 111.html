@@ -1,346 +1,547 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>汉语国际教育本科毕业论文答辩PPT（进阶交互版）</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "SimSun", "Microsoft YaHei", sans-serif;
-        }
-        body {
-            background-color: #f5f5f5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        .slide {
-            width: 1280px;
-            height: 720px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 40px;
-            margin-bottom: 20px;
-            overflow: auto;
-        }
-        .slide h1 {
-            color: #c0392b;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 36px;
-        }
-        .slide h2 {
-            color: #2c3e50;
-            font-size: 28px;
-            margin: 20px 0;
-            border-left: 5px solid #c0392b;
-            padding-left: 15px;
-        }
-        .slide p, .slide li {
-            color: #34495e;
-            font-size: 20px;
-            line-height: 1.8;
-            margin: 10px 0;
-        }
-        .slide ul {
-            margin-left: 40px;
-        }
-        .table-container {
-            margin: 20px 0;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-            font-size: 18px;
-        }
-        th {
-            background-color: #f2f2f2;
-            color: #2c3e50;
-        }
-        .nav {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .nav a {
-            margin: 0 10px;
-            text-decoration: none;
-            color: #c0392b;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .img-placeholder {
-            width: 100%;
-            height: 300px;
-            background-color: #f8f8f8;
-            border: 2px dashed #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px 0;
-            color: #999;
-            font-size: 20px;
-        }
-        /* 偏误例句弹窗样式 */
-        .example-sentence {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-left: 4px solid #c0392b;
-            margin: 15px 0;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .example-sentence:hover {
-            background-color: #f1f1f1;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 30px;
-            width: 60%;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover {
-            color: #c0392b;
-        }
-        .modal h3 {
-            color: #c0392b;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        .modal p {
-            margin: 10px 0;
-            font-size: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK高阶语法练习</title>
+<style>
+:root{
+  --m1:#98a7a6;--m2:#b8b0a9;--m3:#c8c2bc;
+  --bg:#f5f3f0;--card:#fff;
+  --blue:#4278b8;--red:#c95757;--green:#489967;
+  --text:#444
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+body{background:var(--bg);color:var(--text);padding:16px}
+.container{max-width:1400px;margin:0 auto}
+h1{text-align:center;color:var(--m1);margin-bottom:16px;font-size:22px}
+.tag-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tag-btn{padding:6px 10px;border:none;border-radius:6px;background:var(--m3);cursor:pointer;font-size:13px}
+.tag-btn.active{background:var(--m1);color:#fff}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel{background:var(--card);border-radius:10px;padding:18px;min-height:580px}
+.left h2{font-size:17px;margin-bottom:10px;color:var(--red)}
+.gram-info{margin-bottom:12px;padding:10px;background:#f0f2f2;border-radius:6px;font-size:14px;line-height:1.6}
+.gram-title{font-weight:bold;color:var(--blue);font-size:16px;margin-bottom:4px}
+.ques-item{margin:10px 0;font-size:14px;line-height:1.7}
+.right h2{font-size:17px;margin-bottom:10px;color:var(--green)}
+.ans-box{white-space:pre-wrap;font-size:14px;line-height:1.7;color:#333}
+.ans-item{margin:8px 0}
+.ctrl{margin:12px 0;display:flex;gap:8px}
+.ctrl button{padding:6px 10px;border:none;border-radius:6px;background:var(--m2);cursor:pointer}
+@media(max-width:820px){.wrap{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <!-- 封面页 -->
-    <div class="slide" id="cover">
-        <h1>老挝大学生HSK5级连词习得偏误研究</h1>
-        <h2 style="text-align: center; margin-top: 80px;">本科毕业论文答辩</h2>
-        <div style="text-align: center; margin-top: 120px; font-size: 24px;">
-            <p>学生姓名：XXX</p>
-            <p>指导教师：XXX</p>
-            <p>专业：中文师范（汉语国际教育方向）</p>
-            <p>日期：XXXX年XX月XX日</p>
-        </div>
+<div class="container">
+  <h1>HSK高阶语法配套练习（16个语法点）</h1>
+  <div class="tag-bar" id="tagBar"></div>
+  <div class="wrap">
+    <div class="panel left">
+      <div id="leftContent"></div>
     </div>
-
-    <!-- 目录页 -->
-    <div class="slide" id="index">
-        <h1>目录</h1>
-        <div class="nav">
-            <a href="#review">1. 研究回顾</a>
-            <a href="#process">2. 研究过程与方法</a>
-            <a href="#result">3. 核心结果与分析</a>
-            <a href="#conclusion">4. 研究结论与教学建议</a>
-            <a href="#outlook">5. 研究不足与未来展望</a>
-            <a href="#ref-thanks">6. 参考文献与致谢</a>
-        </div>
+    <div class="panel right">
+      <div class="ctrl">
+        <button id="showAnsBtn">显示参考答案</button>
+        <button id="hideAnsBtn">隐藏参考答案</button>
+      </div>
+      <div id="rightContent" class="ans-box"></div>
     </div>
+  </div>
+</div>
 
-    <!-- 1. 研究回顾 -->
-    <div class="slide" id="review">
-        <h1>研究回顾</h1>
-        <p><strong>研究背景</strong>：老挝国立大学孔子学院HSK5级教学中，连词偏误是学生汉语表达的主要障碍</p>
-        <p><strong>研究目标</strong>：分析老挝大学生HSK5级连词偏误类型及成因，提出针对性教学建议</p>
-        <p><strong>核心问题</strong>：1. 连词偏误的主要类型；2. 偏误产生的关键原因；3. 有效教学策略</p>
-        <p style="color: #7f8c8d; margin-top: 20px;">（汇报时长控制：1分钟内）</p>
-    </div>
+<script>
+const data = [
+{
+  title:"一、A是A，B是B",
+  desc:"口语格式，强调前后两种人、两种事物或两种情况完全不相干。<br>例：他是他，我是我，你不要把我们看成一种人。",
+  questions:[
+    "1. 工作是工作，__________，不要把负面情绪带回家。",
+    "2. 玩笑是玩笑，__________，不能真的伤害别人。",
+    "3. 昨天是昨天，__________，计划需要重新调整。",
+    "4. 朋友是朋友，__________，借钱也要写清楚借条。",
+    "5. 喜欢是喜欢，__________，不一定适合一起生活。",
+    "6. 理论是理论，__________，实际操作会困难很多。",
+    "7. 线上是线上，__________，见面聊天感觉不一样。",
+    "8. 礼物是礼物，__________，不能用来交换好处。",
+    "9. 想法是想法，__________，能不能做成还要看条件。",
+    "10. 热闹是热闹，__________，我还是更喜欢安静。"
+  ],
+  answers:[
+    "生活是生活",
+    "伤害是伤害",
+    "今天是今天",
+    "钱是钱",
+    "合适是合适",
+    "实践是实践",
+    "线下是线下",
+    "人情是人情",
+    "现实是现实",
+    "安静是安静"
+  ]
+},
+{
+  title:"二、……不说，还……",
+  desc:"递进关系，相当于“不但……，还……”，多用于口语。<br>例：治疗以后，他的病没好不说，还更严重了。",
+  questions:[
+    "1. 他迟到不说，还________________。",
+    "2. 这个菜不好吃不说，还________________。",
+    "3. 手机摔坏不说，还________________。",
+    "4. 他不帮忙不说，还________________。",
+    "5. 雨没停不说，还________________。",
+    "6. 东西丢了不说，还________________。",
+    "7. 这个方法没用不说，还________________。",
+    "8. 孩子不听话不说，还________________。",
+    "9. 房租贵不说，还________________。",
+    "10. 路上堵车不说，还________________。"
+  ],
+  answers:[
+    "找借口辩解",
+    "很贵",
+    "里面照片都找不回来了",
+    "说风凉话",
+    "刮起了大风",
+    "证件也一起不见了",
+    "浪费很多时间",
+    "跟大人顶嘴",
+    "离地铁站很远",
+    "下起大雨"
+  ]
+},
+{
+  title:"三、连……带……",
+  desc:"表示两种动作同时发生，或者包括前后两项。<br>例：一路上，大家连说带笑，非常轻松。",
+  questions:[
+    "1. 周末出游，我们连吃带玩，________________。",
+    "2. 他连人带行李，________________。",
+    "3. 连老师带学生，________________。",
+    "4. 打扫房间，我连擦带扫，________________。",
+    "5. 买水果连筐带果子，________________。",
+    "6. 大家连说带唱，________________。",
+    "7. 连路费带住宿费，________________。",
+    "8. 弟弟连蹦带跳，________________。",
+    "9. 连原料带加工费，________________。",
+    "10. 他们连哄带劝，________________。"
+  ],
+  answers:[
+    "玩了整整一天",
+    "全都上了车",
+    "一共八十多人",
+    "很快就收拾干净了",
+    "一共花了五十块",
+    "气氛特别热闹",
+    "要三千块左右",
+    "跑回家里",
+    "大概两千元",
+    "终于把老人劝回家"
+  ]
+},
+{
+  title:"四、以至于",
+  desc:"连词，表示前面情况程度很深，引出结果。<br>例：他非常专心地工作，以至于有人敲门都没听到。",
+  questions:[
+    "1. 他太紧张了，以至于________________。",
+    "2. 路上车太多，以至于________________。",
+    "3. 这个故事太感人，以至于________________。",
+    "4. 她每天练习很久，以至于________________。",
+    "5. 房间太黑，以至于________________。",
+    "6. 消息传得太快，以至于________________。",
+    "7. 压力太大，以至于________________。",
+    "8. 声音太小，以至于________________。",
+    "9. 这个地方太美，以至于________________。",
+    "10. 规则太复杂，以至于________________。"
+  ],
+  answers:[
+    "说不出话",
+    "车子走得很慢",
+    "很多人流下眼泪",
+    "嗓子经常不舒服",
+    "看不清东西",
+    "很多人都误会了",
+    "晚上睡不好",
+    "后排听不清楚",
+    "大家不想离开",
+    "学生不容易记住"
+  ]
+},
+{
+  title:"五、一方面……，（另）一方面……",
+  desc:"连接同一事物的两个方面。<br>例：她一方面要准备考试，另一方面又要照顾生病的孩子。",
+  questions:[
+    "1. 学习汉语，一方面要多听，另一方面________________。",
+    "2. 这份工作一方面工资不错，另一方面________________。",
+    "3. 网购一方面很方便，另一方面________________。",
+    "4. 出国读书一方面能开阔眼界，另一方面________________。",
+    "5. 早起一方面空气好，另一方面________________。",
+    "6. 电子书一方面轻便，另一方面________________。",
+    "7. 运动一方面锻炼身体，另一方面________________。",
+    "8. 城市生活一方面机会多，另一方面________________。",
+    "9. 这个方案一方面成本低，另一方面________________。",
+    "10. 交朋友一方面要真诚，另一方面________________。"
+  ],
+  answers:[
+    "要多说多写",
+    "加班比较多",
+    "容易买到假货",
+    "开销很大",
+    "可以有更多时间学习",
+    "看久伤眼睛",
+    "可以放松心情",
+    "生活成本高",
+    "操作简单",
+    "也要互相尊重"
+  ]
+},
+{
+  title:"六、以免",
+  desc:"书面语，意思是“为了避免”，后面接不好的事情。<br>例：不要轻易打开陌生人的邮件，以免电脑染上病毒。",
+  questions:[
+    "1. 记得保存文件，以免________________。",
+    "2. 出门带雨伞，以免________________。",
+    "3. 晚上早点休息，以免________________。",
+    "4. 密码不要随便告诉别人，以免________________。",
+    "5. 过马路小心一点，以免________________。",
+    "6. 提前预约，以免________________。",
+    "7. 把贵重物品收好，以免________________。",
+    "8. 认真检查作业，以免________________。",
+    "9. 说话之前想一想，以免________________。",
+    "10. 开车不要疲劳，以免________________。"
+  ],
+  answers:[
+    "文件丢失",
+    "下雨被淋湿",
+    "第二天犯困",
+    "账号被盗",
+    "发生危险",
+    "没有空位",
+    "被盗",
+    "出现错误",
+    "说错话",
+    "发生车祸"
+  ]
+},
+{
+  title:"七、与其……宁可/不如……",
+  desc:"选择复句，比较两件事，选择后者。<br>例：年轻人与其待在家里靠父母吃饭，不如早点儿出去找工作干。",
+  questions:[
+    "1. 与其在家无聊，不如________________。",
+    "2. 与其等别人帮忙，不如________________。",
+    "3. 与其买便宜质量差的，宁可________________。",
+    "4. 与其随便做决定，不如________________。",
+    "5. 与其生气吵架，不如________________。",
+    "6. 与其只看理论，不如________________。",
+    "7. 与其勉强相处，不如________________。",
+    "8. 与其花很多钱买没用的东西，宁可________________。",
+    "9. 与其慢慢后悔，不如________________。",
+    "10. 与其听别人传言，不如________________。"
+  ],
+  answers:[
+    "出去散散步",
+    "自己想办法",
+    "买贵一点耐用的",
+    "多了解情况",
+    "好好沟通",
+    "动手试一试",
+    "分开",
+    "把钱存起来",
+    "现在努力",
+    "自己去看一看"
+  ]
+},
+{
+  title:"八、除非……才……",
+  desc:"唯一条件，和“只有”接近。<br>例：除非中国队战胜了对手，才能继续参加比赛。",
+  questions:[
+    "1. 除非明天不下雨，我们才________________。",
+    "2. 除非认真复习，你才________________。",
+    "3. 除非他主动道歉，我才________________。",
+    "4. 除非有护照，你才________________。",
+    "5. 除非大家一起合作，我们才________________。",
+    "6. 除非找到钥匙，我们才________________。",
+    "7. 除非你愿意坚持，你才________________。",
+    "8. 除非温度够高，这个材料才________________。",
+    "9. 除非提前报名，你才________________。",
+    "10. 除非听懂规则，你才________________。"
+  ],
+  answers:[
+    "去爬山",
+    "考得好",
+    "原谅他",
+    "可以出国",
+    "完成这个项目",
+    "开门进去",
+    "看到进步",
+    "会融化",
+    "可以参加比赛",
+    "开始游戏"
+  ]
+},
+{
+  title:"九、除非……否则……",
+  desc:"唯一条件，如果不满足前面条件，就会出现后面结果。<br>例：除非提前一个小时到达机场，否则来不及托运行李。",
+  questions:[
+    "1. 除非努力练习，否则________________。",
+    "2. 除非按时出发，否则________________。",
+    "3. 除非他改变想法，否则________________。",
+    "4. 除非有医生证明，否则________________。",
+    "5. 除非提前订票，否则________________。",
+    "6. 除非每天坚持，否则________________。",
+    "7. 除非情况紧急，否则________________。",
+    "8. 除非得到允许，否则________________。",
+    "9. 除非学好基础，否则________________。",
+    "10. 除非减少熬夜，否则________________。"
+  ],
+  answers:[
+    "很难进步",
+    "会迟到",
+    "不会参加",
+    "不能请假",
+    "买不到票",
+    "很难学好",
+    "不要打扰他",
+    "不能进去",
+    "学不好难的内容",
+    "身体容易不舒服"
+  ]
+},
+{
+  title:"十、为……所……",
+  desc:"书面被动句式。<br>例：这个秘密不为他人所知。",
+  questions:[
+    "1. 他的真诚为大家所________________。",
+    "2. 这座古老的建筑为世人所________________。",
+    "3. 这个道理早已为大家所________________。",
+    "4. 她不为困难所________________，一直坚持学习。",
+    "5. 优秀的作品会为读者所________________。",
+    "6. 谎言终究会为事实所________________。",
+    "7. 这种习俗为当地人所________________。",
+    "8. 他不为名利所________________，一心教书。",
+    "9. 这个现象越来越为人们所________________。",
+    "10. 美好的品质会为所有人所________________。"
+  ],
+  answers:[
+    "认可",
+    "熟知",
+    "了解",
+    "吓倒",
+    "喜爱",
+    "揭穿",
+    "重视",
+    "诱惑",
+    "关注",
+    "称赞"
+  ]
+},
+{
+  title:"十一、（就/全）看N的了",
+  desc:"口语，希望、责任放在某人/某事上。<br>例：该准备的都准备好了，下面的工作就看你的了。",
+  questions:[
+    "1. 准备工作都做好了，接下来________________。",
+    "2. 能不能按时完成比赛，________________。",
+    "3. 大家都帮不上忙，这件事________________。",
+    "4. 能不能说服老师，________________。",
+    "5. 机会已经给你了，后面________________。",
+    "6. 队伍能不能赢，________________。",
+    "7. 材料都准备好了，效果________________。",
+    "8. 我们只能提供帮助，最后的结果________________。",
+    "9. 能不能顺利通关，________________。",
+    "10. 剩下的任务交给你，________________。"
+  ],
+  answers:[
+    "就看你的了",
+    "全看队员的状态了",
+    "就看他的了",
+    "就看你的了",
+    "就看你自己了",
+    "就看大家配合了",
+    "就看设计的了",
+    "全看他自己了",
+    "就看你的表现了",
+    "就看你的了"
+  ]
+},
+{
+  title:"十二、V₁了又V₂，V₂了又V₁",
+  desc:"动作交替重复。<br>例：哭了又笑，笑了又哭。",
+  questions:[
+    "1. 他__________，写了又改，改了又写，终于写完作文。",
+    "2. 妹妹__________，抱了又放，放了又抱，很喜欢这个玩偶。",
+    "3. 妈妈__________，叠了又拆，拆了又叠，整理衣服。",
+    "4. 游客__________，来了又走，走了又来。",
+    "5. 他__________，开了又关，关了又开，检查设备。",
+    "6. 小朋友__________，追了又停，停了又追。",
+    "7. 这个订单__________，谈了又变，变了又谈。",
+    "8. 她__________，擦了又看，看了又擦。",
+    "9. 闹钟__________，响了又停，停了又响。",
+    "10. 两个人__________，分了又和好，和好了又分开。"
+  ],
+  answers:[
+    "改了又写，写了又改",
+    "放了又抱，抱了又放",
+    "拆了又叠，叠了又拆",
+    "走了又来，来了又走",
+    "关了又开，开了又关",
+    "停了又追，追了又停",
+    "变了又谈，谈了又变",
+    "看了又擦，擦了又看",
+    "停了又响，响了又停",
+    "好了又分，分了又和好"
+  ]
+},
+{
+  title:"十三、你V你的，我V我的",
+  desc:"各做各的，互不干扰。<br>例：我们俩兴趣不同，你玩你的，我玩我的。",
+  questions:[
+    "1. 不用管我，你忙你的，________________。",
+    "2. 你们继续讨论，________________。",
+    "3. 你走你的，________________，我还要再坐一会儿。",
+    "4. 你说你的，________________，我心里有主意。",
+    "5. 你们玩你们的，________________。",
+    "6. 你看你的书，________________。",
+    "7. 你担心你的，________________。",
+    "8. 你喜欢安静，我爱热闹，________________。",
+    "9. 你拍你的视频，________________。",
+    "10. 你坚持你的想法，________________。"
+  ],
+  answers:[
+    "我做我的",
+    "我想我的",
+    "我留我的",
+    "我想我的",
+    "我做我的作业",
+    "我刷我的手机",
+    "我不担心我的",
+    "你安静你的，我热闹我的",
+    "我录我的音频",
+    "我保留我的"
+  ]
+},
+{
+  title:"十四、V（了）就V（了）（呗）",
+  desc:"表示无所谓、可以接受。<br>例：丢了就丢了呗，别伤心。",
+  questions:[
+    "1. 晚了就晚了呗，________________。",
+    "2. 贵了就贵了呗，________________。",
+    "3. 输了就输了呗，________________。",
+    "4. 忘带就忘带了呗，________________。",
+    "5. 慢就慢了呗，________________。",
+    "6. 错了就错了呗，________________。",
+    "7. 少就少了呗，________________。",
+    "8. 凉了就凉了呗，________________。",
+    "9. 麻烦就麻烦了呗，________________。",
+    "10. 不去就不去了呗，________________。"
+  ],
+  answers:[
+    "下次早点就行",
+    "质量好就值得",
+    "下次继续努力",
+    "下次记得带上",
+    "安全最重要",
+    "改过来就好",
+    "够用就行",
+    "重新热一下就好",
+    "能办好就可以",
+    "以后还有机会"
+  ]
+},
+{
+  title:"十五、爱怎么V就怎么V",
+  desc:"不加干涉，想怎么做就怎么做。<br>例：我爱怎么用就怎么用。",
+  questions:[
+    "1. 这是他自己的事情，他________________。",
+    "2. 我不管别人，别人________________。",
+    "3. 规则在这里，他________________。",
+    "4. 这笔钱是你的，你________________。",
+    "5. 他想怎么安排时间，________________。",
+    "6. 怎么写是你的自由，你________________。",
+    "7. 别人爱怎么评价就怎么评价，________________。",
+    "8. 房间交给你，你________________。",
+    "9. 这个节目他爱怎么演就怎么演，________________。",
+    "10. 路线你定，你________________。"
+  ],
+  answers:[
+    "爱怎么做就怎么做",
+    "爱怎么说就怎么说",
+    "爱怎么理解就怎么理解",
+    "爱怎么花就怎么花",
+    "爱怎么安排就怎么安排",
+    "爱怎么写就怎么写",
+    "我不在乎",
+    "爱怎么布置就怎么布置",
+    "我们只负责观看",
+    "爱怎么选就怎么选"
+  ]
+},
+{
+  title:"十六、重读“是”（的确、实在）",
+  desc:"重读“是”，加强肯定，=的确、实在。<br>例：大家是很累，但是没人离开。",
+  questions:[
+    "1. 这件衣服__________好看，就是太贵了。",
+    "2. 他__________努力，但是进步比较慢。",
+    "3. 这个地方__________远，路上要花很久。",
+    "4. 我__________想去，可是没有时间。",
+    "5. 这个方法__________有用，你可以试一试。",
+    "6. 他__________善良，常常帮助别人。",
+    "7. 这个菜__________辣，你少吃一点。",
+    "8. 这本书__________有意思，我推荐给你。",
+    "9. 今天__________热，记得多喝水。",
+    "10. 他们__________熟悉，认识很多年了。"
+  ],
+  answers:[
+    "是",
+    "是",
+    "是",
+    "是",
+    "是",
+    "是",
+    "是",
+    "是",
+    "是",
+    "是"
+  ]
+}
+];
 
-    <!-- 2. 研究过程与方法 -->
-    <div class="slide" id="process">
-        <h1>研究过程与方法</h1>
-        <h2>一、研究对象</h2>
-        <p>老挝国立大学孔子学院20XX级中文师范专业学生，共60人，HSK4级均已通过</p>
-        <h2>二、研究工具</h2>
-        <ul>
-            <li>语料库：收集学生期末作文、HSK模拟题作答语料共120篇</li>
-            <li>调查问卷：设计连词习得情况问卷，发放60份，回收有效问卷58份</li>
-            <li>访谈提纲：针对10名不同水平学生开展半结构化访谈</li>
-        </ul>
-        <div class="img-placeholder">
-            此处插入：研究对象基本信息统计表/访谈现场照片
-        </div>
-        <h2>三、研究步骤</h2>
-        <p>语料收集 → 偏误标注与分类 → 统计分析偏误频率 → 探讨成因 → 提出教学建议</p>
-    </div>
+let currentIdx = 0;
+let showAnswer = false;
+const tagBar = document.getElementById("tagBar");
+const leftContent = document.getElementById("leftContent");
+const rightContent = document.getElementById("rightContent");
+const showAnsBtn = document.getElementById("showAnsBtn");
+const hideAnsBtn = document.getElementById("hideAnsBtn");
 
-    <!-- 3. 核心结果与分析 -->
-    <div class="slide" id="result">
-        <h1>核心结果与分析</h1>
-        <h2>一、偏误类型统计（占比）</h2>
-        <ul>
-            <li>遗漏偏误：40%（最主要类型，如遗漏“虽然…但是…”中的“但是”）</li>
-            <li>误代偏误：35%（如用“和”代替“并且”）</li>
-            <li>错序偏误：15%（如“我不但喜欢汉语”错序为“不但我喜欢汉语”）</li>
-            <li>过度泛化：10%（如滥用“所以”连接无因果关系的句子）</li>
-        </ul>
-        <div class="img-placeholder">
-            此处插入：偏误类型占比柱状图
-        </div>
-        <h2>二、典型偏误例句分析（点击查看详情）</h2>
-        <!-- 例句1 -->
-        <div class="example-sentence" onclick="openModal('modal1')">
-            <p><strong>学生原句</strong>：我喜欢吃米饭，<del>和</del>喜欢吃面条。</p>
-            <p><strong>修改后</strong>：我喜欢吃米饭，<ins>并且</ins>喜欢吃面条。</p>
-        </div>
-        <!-- 例句2 -->
-        <div class="example-sentence" onclick="openModal('modal2')">
-            <p><strong>学生原句</strong>：<del>虽然</del>他学习很努力，成绩很好。</p>
-            <p><strong>修改后</strong>：<ins>因为</ins>他学习很努力，成绩很好。</p>
-        </div>
-        <!-- 例句3 -->
-        <div class="example-sentence" onclick="openModal('modal3')">
-            <p><strong>学生原句</strong>：<del>不但我</del>喜欢汉语，还喜欢中国文化。</p>
-            <p><strong>修改后</strong>：我<ins>不但</ins>喜欢汉语，还喜欢中国文化。</p>
-        </div>
-    </div>
+function renderTags(){
+  tagBar.innerHTML = "";
+  data.forEach((item,idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "tag-btn"+(idx===currentIdx?" active":"");
+    btn.innerText = item.title;
+    btn.onclick = ()=>{currentIdx=idx;showAnswer=false;render()};
+    tagBar.appendChild(btn);
+  })
+}
+function render(){
+  const item = data[currentIdx];
+  let qhtml = `<h2>${item.title}</h2><div class="gram-info"><div class="gram-title">语法说明</div>${item.desc}</div>`;
+  item.questions.forEach(q=>{
+    qhtml += `<div class="ques-item">${q}</div>`
+  })
+  leftContent.innerHTML = qhtml;
 
-    <!-- 4. 研究结论与教学建议 -->
-    <div class="slide" id="conclusion">
-        <h1>研究结论与教学建议</h1>
-        <h2>一、核心结论</h2>
-        <ul>
-            <li>老挝大学生HSK5级连词偏误以遗漏和误代为主，受母语负迁移影响显著</li>
-            <li>学生对成对连词（如“虽然…但是…”）的掌握弱于单个连词（如“并且”）</li>
-            <li>教材中连词讲解缺乏老挝语对比，是偏误产生的重要教学因素</li>
-        </ul>
-        <h2>二、教学建议</h2>
-        <ul>
-            <li>对比教学：增加汉语连词与老挝语对应表达的对比讲解</li>
-            <li>针对性练习：设计“补全成对连词”“辨析易混淆连词”专项练习</li>
-            <li>语料输入：补充老挝学生地道汉语表达的范文，强化正例示范</li>
-        </ul>
-        <div class="img-placeholder">
-            此处插入：设计的连词专项练习示例
-        </div>
-    </div>
-
-    <!-- 5. 研究不足与未来展望 -->
-    <div class="slide" id="outlook">
-        <h1>研究不足与未来展望</h1>
-        <h2>一、研究不足</h2>
-        <ul>
-            <li>样本量较小，仅选取本校60名学生，结论普适性有待验证</li>
-            <li>研究范围较窄，仅覆盖HSK5级大纲中的12个高频连词</li>
-            <li>未开展教学实验，教学建议的有效性缺乏实践检验</li>
-        </ul>
-        <h2>二、未来展望</h2>
-        <ul>
-            <li>扩大样本范围，纳入老挝其他高校汉语专业学生进行对比研究</li>
-            <li>拓展研究内容，涵盖HSK5级全部连词及不同学习阶段的习得规律</li>
-            <li>开展教学干预实验，验证本研究提出的教学建议的有效性</li>
-        </ul>
-    </div>
-
-    <!-- 6. 参考文献与致谢 -->
-    <div class="slide" id="ref-thanks">
-        <h1>参考文献与致谢</h1>
-        <h2>一、参考文献</h2>
-        <ul>
-            <li>[1] 张三. 东南亚留学生汉语连词习得研究[J]. 汉语学习,20XX(XX):XX-XX.</li>
-            <li>[2] 李四. HSK5级语法考点解析[M]. 北京: 北京语言大学出版社,20XX.</li>
-            <li>[3] 王五. 老挝留学生汉语习得偏误分析[J]. 世界汉语教学,20XX(XX):XX-XX.</li>
-        </ul>
-        <h2>二、致谢</h2>
-        <p>感谢指导教师在论文选题、研究设计与撰写过程中的悉心指导！</p>
-        <p>感谢老挝国立大学孔子学院提供的研究平台与调研支持！</p>
-        <p>感谢参与本次研究的所有学生！</p>
-    </div>
-
-    <!-- 偏误例句弹窗1 -->
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modal1')">&times;</span>
-            <h3>偏误详情解析</h3>
-            <p><strong>偏误类型</strong>：误代偏误</p>
-            <p><strong>成因分析</strong>：老挝语中“和”与“并且”对应的词汇为同一个，学生受母语负迁移影响，无法区分二者在汉语中的用法差异——“和”多用于连接名词/名词短语，“并且”多用于连接动词/动词短语。</p>
-            <p><strong>教学启示</strong>：设计“连词+短语类型”匹配练习，让学生明确不同连词的搭配规则。</p>
-        </div>
-    </div>
-
-    <!-- 偏误例句弹窗2 -->
-    <div id="modal2" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modal2')">&times;</span>
-            <h3>偏误详情解析</h3>
-            <p><strong>偏误类型</strong>：误代偏误+逻辑搭配错误</p>
-            <p><strong>成因分析</strong>：学生混淆了转折连词“虽然…但是…”与因果连词“因为…所以…”的逻辑关系，仅记住了成对连词的形式，未理解其内在逻辑语义。</p>
-            <p><strong>教学启示</strong>：结合语境讲解连词的逻辑关系，用例句对比转折与因果的语义差异。</p>
-        </div>
-    </div>
-
-    <!-- 偏误例句弹窗3 -->
-    <div id="modal3" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modal3')">&times;</span>
-            <h3>偏误详情解析</h3>
-            <p><strong>偏误类型</strong>：错序偏误</p>
-            <p><strong>成因分析</strong>：汉语中“不但…还…”的结构规则为“主语+不但+谓语1+还+谓语2”，学生未掌握该语序规则，照搬母语语序导致偏误。</p>
-            <p><strong>教学启示</strong>：总结成对连词的语序公式，通过句型变换练习强化学生记忆。</p>
-        </div>
-    </div>
-
-    <script>
-        // 目录平滑跳转
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // 弹窗打开函数
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = "block";
-        }
-
-        // 弹窗关闭函数
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-
-        // 点击弹窗外部关闭
-        window.onclick = function(event) {
-            if (event.target.className === "modal") {
-                event.target.style.display = "none";
-            }
-        }
-    </script>
+  let ahtml = `<h2>参考答案</h2>`;
+  if(showAnswer){
+    item.answers.forEach((ans,i)=>{
+      ahtml += `<div class="ans-item">${i+1}. ${ans}</div>`
+    })
+  }else{
+    ahtml += `<div style="color:#999">点击上方按钮显示答案</div>`
+  }
+  rightContent.innerHTML = ahtml;
+  renderTags();
+}
+showAnsBtn.onclick = ()=>{showAnswer=true;render()}
+hideAnsBtn.onclick = ()=>{showAnswer=false;render()}
+render();
+</script>
 </body>
 </html>

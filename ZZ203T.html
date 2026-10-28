@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>乖乖回家之路｜课文交互学习</title>
+<!-- 引入Sortable拖拽库（CDN，不用改任何页面结构） -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;}
+body{background:#f4f2ee;padding:16px;color:#444;}
+.container{max-width:1400px;margin:0 auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+/* 顶部段落切换按钮 */
+.tab-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;justify-content:center;}
+.tab-btn{padding:9px 15px;border:none;border-radius:8px;background:#d9d3cc;color:#333;font-size:15px;cursor:pointer;transition:0.25s;}
+.tab-btn.active{background:#8c9b94;color:#fff;}
+.tab-btn:hover{opacity:0.85;}
+/* ========== 左右分栏 ========== */
+.main-row{
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+.left-panel,
+.right-panel{
+    background:#ffffff;
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.left-panel{line-height:2.1;font-size:17px;}
+.right-panel{background:#f7f5f1;}
+/* 段落内容块 */
+.block-item{display:none;}
+.block-item.active{display:block;animation:fade 0.35s ease;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+/* 课文挖空 */
+.blank-input{width:110px;border:1px solid #b8b8b8;border-radius:4px;padding:2px 4px;font-size:17px;text-align:center;background:#fff;}
+.wrong{border:2px solid #e06c6c;background:#ffe9e9;color:#c82222;}
+.right{border:2px solid #72b884;background:#edf8f0;color:#1e7032;}
+/* 拖拽句子排序 */
+.sort-wrap{margin:18px 0;padding:14px;background:#efede8;border-radius:10px;}
+.sort-title{font-weight:bold;margin-bottom:10px;font-size:17px;color:#555;}
+.sort-item{padding:9px 12px;background:#fff;border:1px solid #c8c2b8;border-radius:6px;margin:8px 0;cursor:grab;line-height:1.6;}
+.sort-item:active{cursor:grabbing;}
+.sort-btn{margin-top:10px;padding:7px 12px;border:none;border-radius:6px;background:#8c9b94;color:#fff;cursor:pointer;}
+.sort-result{margin-top:8px;padding:8px;display:none;border-radius:6px;}
+.sort-res-ok{background:#eaf4ec;color:#2b613a;display:block;}
+.sort-res-err{background:#f9e8e8;color:#882f2f;display:block;}
+/* 问答题 */
+.question-wrap{margin-top:20px;padding-top:14px;border-top:1px solid #ccc;}
+.q-item{margin:12px 0;}
+.q-text{font-weight:500;margin-bottom:6px;}
+.q-answer-input{width:100%;min-height:55px;border:1px solid #bbbbbb;border-radius:6px;padding:8px;font-size:16px;background:#fff;}
+.q-show-ans{margin-top:8px;padding:10px;background:#f0f2f1;border-radius:6px;display:none;white-space:pre-line;}
+/* 右侧生词与语法卡片 */
+.right-panel h3{margin-bottom:12px;color:#4a5f58;font-size:19px;border-left:4px solid #8c9b94;padding-left:8px;}
+.word-card{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #ddd;}
+.word-title{font-weight:bold;color:#546e7a;font-size:18px;margin-bottom:4px;}
+.grammar-card{margin:18px 0;padding:14px;background:#eef1f0;border-radius:10px;}
+.grammar-title{font-weight:bold;color:#4a5f58;margin-bottom:8px;font-size:17px;}
+.grammar-note{font-size:15px;color:#555;margin:6px 0;padding-left:4px;border-left:3px solid #8c9b94;}
+/* 补全句子练习 */
+.complete-exercise{margin-top:12px;}
+.complete-q{margin-bottom:6px;}
+.complete-ta{width:100%;min-height:60px;border:1px solid #c2c9c6;border-radius:6px;padding:8px;font-size:16px;background:#fff;}
+.answer-btn{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#8c9b94;color:#fff;cursor:pointer;}
+.answer-btn:hover{opacity:0.85;}
+.show-answer{margin-top:8px;color:#333;font-weight:500;display:none;padding:6px 8px;background:#e8eceb;border-radius:4px;white-space:pre-line;}
+/* 重置按钮 */
+.reset-btn{margin-left:8px;padding:8px 14px;border:none;border-radius:6px;background:#c27c7c;color:#fff;cursor:pointer;}
+.reset-btn:hover{opacity:0.85;}
+/* 语法综合练习专用 */
+.grammar-ex-item{margin:16px 0;padding-bottom:12px;border-bottom:1px solid #ddd;}
+.grammar-ex-q{margin-bottom:6px;font-size:17px;}
+.grammar-ex-input{width:100%;min-height:50px;border:1px solid #bbbbbb;border-radius:6px;padding:8px;font-size:16px;}
+/* 移动端小屏幕自动上下堆叠 */
+@media(max-width:900px){
+  .main-row{
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部切换按钮，新增【语法综合练习】 -->
+  <div class="tab-buttons">
+    <button class="tab-btn" onclick="switchTab(-1)">语法综合练习</button>
+    <button class="tab-btn active" onclick="switchTab(0)">第1段</button>
+    <button class="tab-btn" onclick="switchTab(1)">第2段</button>
+    <button class="tab-btn" onclick="switchTab(2)">第3段</button>
+    <button class="tab-btn" onclick="switchTab(3)">第4段</button>
+    <button class="tab-btn" onclick="switchTab(4)">第5段</button>
+    <button class="tab-btn" onclick="switchTab(5)">第6段</button>
+  </div>
+  <!-- ========== 左右分栏容器 ========== -->
+  <div class="main-row">
+    <!-- 左栏：课文挖空 + 句子拖拽排序 + 问答题 / 语法练习面板 -->
+    <div class="left-panel">
+      <!-- ========== 新增：语法综合练习面板 ========== -->
+      <div class="block-item" id="Lminus1">
+        <h3 style="margin-bottom:14px;color:#4a5f58;">📖语法综合练习（本篇全部语法点）</h3>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">1. 用“由于……”完成句子：__________，小狗冻得浑身发抖。</div>
+          <textarea class="grammar-ex-input" id="gEx0"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(0)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns0">参考答案：由于天气很冷</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">2. 用“似乎”改写：看起来他今天不太高兴。</div>
+          <textarea class="grammar-ex-input" id="gEx1"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(1)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns1">参考答案：他今天似乎不太高兴。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">3. 用“……般地”造句：小鸟__________飞向天空。</div>
+          <textarea class="grammar-ex-input" id="gEx2"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(2)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns2">参考答案：小鸟箭一般地飞向天空。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">4. 用“……得什么似的”改写：孩子们玩得特别开心。</div>
+          <textarea class="grammar-ex-input" id="gEx3"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(3)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns3">参考答案：孩子们玩得开心得什么似的。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">5. 用“因此”完成：外面下大雨，__________我们不能出去。</div>
+          <textarea class="grammar-ex-input" id="gEx4"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(4)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns4">参考答案：因此</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">6. 用“以致”造句：他常常熬夜，__________早上起不来。</div>
+          <textarea class="grammar-ex-input" id="gEx5"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(5)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns5">参考答案：他常常熬夜，以致早上起不来。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">7. 用“假如”写假设句子：__________，我就带你出去玩。</div>
+          <textarea class="grammar-ex-input" id="gEx6"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(6)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns6">参考答案：假如明天天气好，我就带你出去玩。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">8. 用“格外”完成：今天过节，街上__________热闹。</div>
+          <textarea class="grammar-ex-input" id="gEx7"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(7)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns7">参考答案：格外</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">9. 用“尽管……但是……”造句：__________，但是他还是坚持学习。</div>
+          <textarea class="grammar-ex-input" id="gEx8"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(8)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns8">参考答案：尽管他很累，但是他还是坚持学习。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">10.用“不……不……”改写：只有努力，才能学好中文。</div>
+          <textarea class="grammar-ex-input" id="gEx9"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(9)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns9">参考答案：不努力，就学不好中文。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">11.用“有着”完成：这座古城__________悠久的历史。</div>
+          <textarea class="grammar-ex-input" id="gEx10"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(10)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns10">参考答案：这座古城有着悠久的历史。</div>
+        </div>
+        <button class="answer-btn" onclick="resetGrammarAll()">🔄全部重置语法练习</button>
+      </div>
+
+      <!-- 第1段左 -->
+      <div class="block-item active" id="L0">
+        <p>2009年春节刚过，在四川东南部一条公路上，一个名叫贾俊的农村医生开着车回家。突然，从路边的杂草中冒出一条大狗，看样子是母的，不像当地的狗。由于在寒冷的天气中<input class="blank-input" data-ans="待" type="text">了一夜，它冻得<input class="blank-input" data-ans="浑身" type="text">发抖，眼睛里充满害怕的<input class="blank-input" data-ans="神情" type="text">。它似乎在等谁，<input class="blank-input" data-ans="趴" type="text">在路边，不知道该怎么办才好。</p>
+        <br>
+        <p>贾俊觉得这条狗像是走丢的小孩儿，很可怜它。可是，看见它是个结结实实的<input class="blank-input" data-ans="家伙" type="text">，有什么脾气也不知道，又有些<input class="blank-input" data-ans="犹豫" type="text">。只见那条狗慢慢地爬起来，尾巴摇晃得特别可爱，没有一点儿想咬人的意思。于是，贾俊举起手<input class="blank-input" data-ans="招呼" type="text">它：“来，来，来！谁不要你了？跟我走，我带你回家。”</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(0)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox0"></div>
+          <button class="sort-btn" onclick="checkSort(0)">检查排序</button>
+          <div class="sort-result" id="sortRes0"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q1：贾俊在哪里遇到这条大狗？刚见到狗的时候，狗是什么样子？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">贾俊在四川东南部的公路上遇到大狗。狗冻得浑身发抖，神情很害怕，趴在路边。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q2：一开始贾俊为什么犹豫要不要带狗回家？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">狗的个子很大，贾俊不知道它有没有坏脾气。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第2段左 -->
+      <div class="block-item" id="L1">
+        <p>那条狗很<input class="blank-input" data-ans="懂事" type="text">，一下子跳上车。贾俊让它坐在副驾驶座位上。汽车开动了，它透过挡风玻璃往前看，有时，还<input class="blank-input" data-ans="撒娇" type="text"><input class="blank-input" data-ans="般" type="text">地把头靠在贾俊身上，贾俊高兴得不住地叫它“乖乖”。</p>
+        <br>
+        <p>到家后，贾俊首先要为乖乖弄好饭吃。他<input class="blank-input" data-ans="特意" type="text">为乖乖煮了一大<input class="blank-input" data-ans="罐" type="text">肉，乖乖<input class="blank-input" data-ans="狼吞虎咽" type="text">地吃了一顿。贾俊又在<input class="blank-input" data-ans="卫生间" type="text">给乖乖洗了澡。吃饱喝足、洗过澡的乖乖立刻变得精神起来，对贾俊特别<input class="blank-input" data-ans="亲热" type="text">。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(1)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox1"></div>
+          <button class="sort-btn" onclick="checkSort(1)">检查排序</button>
+          <div class="sort-result" id="sortRes1"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q3：回到家，贾俊为乖乖做了哪两件事情？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">贾俊给乖乖煮肉吃饭，还在卫生间给乖乖洗澡。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第3段左 -->
+      <div class="block-item" id="L2">
+        <p>当贾俊的妻子抱着孩子回家的时候，乖乖像个主人似的跑过去迎接，吓了她一大跳。贾俊把事情经过告诉妻子，还说打算<input class="blank-input" data-ans="收养" type="text">它，妻子一听就生气了。她忘不了，她的腿在半年前曾经被山上的一条狗咬得血流不止，她<input class="blank-input" data-ans="特地" type="text">打了预防针，以致刚刚半岁的女儿连妈妈的奶都不能吃了。她担心自己的孩子也被这条大狗咬伤，因此不容许这个大家伙留在家里。她和贾俊大吵了一架，抱着孩子离家而去。贾俊<input class="blank-input" data-ans="赶忙" type="text">用手机给妻子发了<input class="blank-input" data-ans="信息" type="text">。</p>
+        <br>
+        <p>妻子看见贾俊的信息，心软了，同意暂时把乖乖留在家里。贾俊对乖乖<input class="blank-input" data-ans="格外" type="text"><input class="blank-input" data-ans="用心" type="text">，他发现，这条狗好像懂人话。乖乖有着良好的“<input class="blank-input" data-ans="教养" type="text">”。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(2)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox2"></div>
+          <button class="sort-btn" onclick="checkSort(2)">检查排序</button>
+          <div class="sort-result" id="sortRes2"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q4：妻子一开始为什么不同意乖乖留在家？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">妻子以前被狗咬过，她害怕大狗会咬伤自己的孩子。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第4段左 -->
+      <div class="block-item" id="L3">
+        <p>一岁的女儿也喜欢乖乖，总去摸它。一次，女儿坐在学步车里跑，一下子撞到了乖乖的腿，它没有生气，更没有去<input class="blank-input" data-ans="攻击" type="text">孩子，还用头顶着学步车跟女儿玩儿。有时，乖乖还和女儿一起看<input class="blank-input" data-ans="动画片" type="text">，一动不动地看很长时间。乖乖给贾俊的家庭带来了<input class="blank-input" data-ans="欢乐" type="text">。</p>
+        <br>
+        <p>有时，乖乖也会情绪不好，似乎是想念<input class="blank-input" data-ans="老家" type="text">和主人了。有个人<input class="blank-input" data-ans="认" type="text">出乖乖是拉布拉多犬，是很值钱的<input class="blank-input" data-ans="宝贝" type="text">。这时贾俊想：<input class="blank-input" data-ans="假如" type="text">我要了乖乖，心里总是会不<input class="blank-input" data-ans="踏实" type="text">的。它应该回到原来主人身边。贾俊开始打听。他<input class="blank-input" data-ans="暗暗" type="text"><input class="blank-input" data-ans="盼" type="text">着找不到原来的主人。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(3)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox3"></div>
+          <button class="sort-btn" onclick="checkSort(3)">检查排序</button>
+          <div class="sort-result" id="sortRes3"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q5：为什么贾俊心里不踏实？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">乖乖有自己原来的主人，贾俊觉得乖乖应该回到原来主人那里。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第5段左 -->
+      <div class="block-item" id="L4">
+        <p>不愿意发生的事情终于出现了。贾俊的朋友告诉他，在二百里外有一个<input class="blank-input" data-ans="救援" type="text">队，前些日子丢了两只救援犬。原来救援队训练的时候出了车祸，狗跑丢了。贾俊捡到乖乖的时间和狗丢失的时间差不多。贾俊又用手机发去了乖乖的照片，救援队告诉贾俊：乖乖就是丢失的淑娴。</p>
+        <br>
+        <p>当救援队队长来领乖乖时，正好是乖乖到贾俊家的第十九天。贾俊担心有人错领，还<input class="blank-input" data-ans="查看" type="text">了队长的<input class="blank-input" data-ans="证件" type="text">。队长看到乖乖被照顾得很好，就要给贾俊<input class="blank-input" data-ans="报酬" type="text">表示感谢。贾俊拒绝了队长的<input class="blank-input" data-ans="心意" type="text">。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(4)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox4"></div>
+          <button class="sort-btn" onclick="checkSort(4)">检查排序</button>
+          <div class="sort-result" id="sortRes4"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q6：队长来接乖乖的时候，贾俊做了什么？贾俊接受报酬了吗？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">贾俊查看了队长的证件；贾俊没有接受报酬。</div>
+          </div>
+        </div>
+      </div>
+      <!-- 第6段左 -->
+      <div class="block-item" id="L5">
+        <p>尽管失去乖乖的心情很不<input class="blank-input" data-ans="好受" type="text">，但是，贾俊一家还是同意让乖乖跟着救援队队长回家。乖乖很难过，被带走的时候不断回头。乖乖的“丈夫”班克<input class="blank-input" data-ans="至今" type="text">还不知道在什么地方。贾俊决定努力去找，他<input class="blank-input" data-ans="衷心" type="text"><input class="blank-input" data-ans="祝愿" type="text">乖乖和班克早点儿<input class="blank-input" data-ans="团圆" type="text">。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(5)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox5"></div>
+          <button class="sort-btn" onclick="checkSort(5)">检查排序</button>
+          <div class="sort-result" id="sortRes5"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q7：故事最后贾俊有什么心愿？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">贾俊衷心祝愿乖乖和班克可以早点团圆。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 右栏：生词 + HSK4语法 + 补全句子练习 -->
+    <div class="right-panel">
+      <div class="block-item active" id="R0">
+        <h3>生词（第1段）HSK4</h3>
+        <div class="word-card">
+          <div class="word-title">待 dāi 动</div>
+          <div>停留，留在某个地方。例：待在家里。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">浑身 húnshēn 名</div>
+          <div>全身，整个身体。例：浑身发抖。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">神情 shénqíng 名</div>
+          <div>脸上表现出来的情绪。例：害怕的神情。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">趴 pā 动</div>
+          <div>身体向前，脸朝下。例：趴在地上。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">家伙 jiāhuo 名</div>
+          <div>可以指动物，口语。例：这个大家伙。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">犹豫 yóuyù 动</div>
+          <div>拿不定主意。例：不要犹豫。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">招呼 zhāohu 动</div>
+          <div>叫人、问候。例：招呼小狗过来。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 由于……，…… 【HSK4 原因】</div>
+          <p>说明事情的原因。格式：由于 + 原因，+结果句子。</p>
+          <div class="grammar-note">⚠“由于”放在句子前面，表示原因。</div>
+          <p>例句：由于天气很冷，小狗冻得浑身发抖。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“由于……”写原因。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：由于下雨，我们不能出去散步。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 似乎 【HSK4副词】</div>
+          <p>好像，看起来。表示不太确定。</p>
+          <div class="grammar-note">⚠放在动词前面。</div>
+          <p>例句：它似乎在等什么人。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“似乎”。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：外面似乎要下雨了。</div>
+          </div>
+        </div>
+      </div>
+      <div class="block-item" id="R1">
+        <h3>生词（第2段）HSK4</h3>
+        <div class="word-card">
+          <div class="word-title">懂事 dǒngshì 形</div>
+          <div>明白道理，听话。例：很懂事的孩子。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">撒娇 sājiāo 动</div>
+          <div>做出可爱的样子希望得到喜欢。例：小狗向主人撒娇。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">般 bān 助</div>
+          <div>像……一样。例：撒娇般地。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">特意 tèyì 副</div>
+          <div>专门，为这件事而做。例：特意给你做饭。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">罐 guàn 名</div>
+          <div>装东西的容器。例：一罐肉。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">狼吞虎咽 láng tūn hǔ yàn 成语</div>
+          <div>吃东西吃得很快。例：小狗狼吞虎咽地吃饭。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">卫生间 wèishēngjiān 名</div>
+          <div>厕所。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">亲热 qīnre 形</div>
+          <div>关系很好，很热情。例：对人很亲热。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. ……般地 / ……般的N 【HSK4 比喻】</div>
+          <p>意思是“像……一样”，用来比喻。两种格式：A般的 + 名词 / A般地 + 动词。</p>
+          <div class="grammar-note">⚠书面语，用来描写样子。</div>
+          <p>例句：撒娇般地把头靠在身上。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“……般地”写句子。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：孩子小鸟般地跑向妈妈。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. V/Adj+得+什么似的 【HSK4 口语程度】</div>
+          <p>口语格式，表示程度非常高，很难形容。</p>
+          <div class="grammar-note">⚠放在形容词/动词后面，加强语气。</div>
+          <p>例句：贾俊高兴得什么似的。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“……得什么似的”。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：孩子们玩得开心得什么似的。</div>
+          </div>
+        </div>
+      </div>
+      <div class="block-item" id="R2">
+        <h3>生词（第3段）HSK4</h3>
+        <div class="word-card">
+          <div class="word-title">收养 shōuyǎng 动</div>
+          <div>接收下来抚养。例：收养小狗。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">特地 tèdì 副</div>
+          <div>专门，特意。例：特地去看病。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">赶忙 gǎnmáng 副</div>
+          <div>很快、急忙做。例：赶忙打电话。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">信息 xìnxī 名</div>
+          <div>消息。例：发信息。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">格外 géwài 副</div>
+          <div>特别，比一般更……。例：格外开心。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">用心 yòngxīn 形</div>
+          <div>很认真。例：用心照顾小狗。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">教养 jiàoyǎng 名</div>
+          <div>好的行为习惯。例：有教养。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 因此 【HSK4连词】</div>
+          <p>因为前面的原因，所以……。</p>
+          <p>例句：她害怕大狗，因此不让狗留在家。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“因此”写结果。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：今天下雨，因此我们不去公园。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 以致 【HSK4连词】</div>
+          <p>连接句子，前面的事情造成后面不好的结果。</p>
+          <div class="grammar-note">⚠后面大多是不好、不希望看到的结果。</div>
+          <p>例句：她被狗咬了，打了预防针，以致女儿不能吃奶。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“以致”。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：他每天熬夜，以致上课总是迟到。</div>
+          </div>
+        </div>
+      </div>
+      <div class="block-item" id="R3">
+        <h3>生词（第4段）HSK4</h3>
+        <div class="word-card">
+          <div class="word-title">攻击 gōngjī 动</div>
+          <div>进攻，伤害。例：不要攻击小动物。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">动画片 dònghuàpiàn 名</div>
+          <div>动画视频。例：看动画片。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">欢乐 huānlè 形</div>
+          <div>快乐开心。例：欢乐的家庭。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">老家 lǎojiā 名</div>
+          <div>原来的家乡。例：想念老家。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">认 rèn 动</div>
+          <div>识别，看得出来。例：认出他。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">宝贝 bǎobèi 名</div>
+          <div>很珍贵、很喜欢的人或东西。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">假如 jiǎrú 连</div>
+          <div>如果，假设。例：假如你有一只小狗。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">踏实 tāshi 形</div>
+          <div>心里安稳放心。例：心里不踏实。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">暗暗 àn’àn 副</div>
+          <div>心里，不告诉别人。例：暗暗盼望。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">盼 pàn 动</div>
+          <div>盼望，希望。例：盼着回家。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 假如 【HSK4假设连词】</div>
+          <p>假如 + 假设情况，+结果。等于“如果”。</p>
+          <p>例句：假如天气好，我们就出去玩。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“假如”写假设。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：假如你遇到困难，可以来找我。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 格外 【HSK4副词】</div>
+          <p>比平常更加、特别。修饰形容词、心理动词。</p>
+          <div class="grammar-note">⚠“格外”后面一般是褒义形容词。</div>
+          <p>例句：贾俊对乖乖格外用心。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“格外”。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：今天的月亮格外圆。</div>
+          </div>
+        </div>
+      </div>
+      <div class="block-item" id="R4">
+        <h3>生词（第5段）HSK4</h3>
+        <div class="word-card">
+          <div class="word-title">救援 jiùyuán 动</div>
+          <div>帮助遇到危险的人。例：救援队。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">查看 chákàn 动</div>
+          <div>仔细看一看，检查。例：查看证件。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">证件 zhèngjiàn 名</div>
+          <div>证明身份的卡片文件。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">报酬 bàochou 名</div>
+          <div>工作、帮助以后得到的钱。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">心意 xīnyì 名</div>
+          <div>心里的感情、好意。例：谢谢你的心意。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 担心 【HSK4动词】</div>
+          <p>心里害怕不好的事情发生。</p>
+          <p>例句：贾俊担心有人错领走乖乖。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“担心”写句子。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：妈妈担心我路上不安全。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 拒绝 【HSK4动词】</div>
+          <p>不接受别人给的东西、好意、要求。</p>
+          <div class="grammar-note">⚠拒绝 + 名词（礼物、报酬、心意）</div>
+          <p>例句：贾俊拒绝了队长的心意。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用上“拒绝”。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：我拒绝了他的礼物。</div>
+          </div>
+        </div>
+      </div>
+      <div class="block-item" id="R5">
+        <h3>生词（第6段）HSK4</h3>
+        <div class="word-card">
+          <div class="word-title">好受 hǎoshòu 形</div>
+          <div>感觉舒服。否定：不好受。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">至今 zhìjīn 副</div>
+          <div>直到现在。例：至今还没有消息。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">衷心 zhōngxīn 形</div>
+          <div>真心，发自内心。例：衷心祝愿。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">祝愿 zhùyuàn 动</div>
+          <div>希望别人过得好。例：祝愿你幸福。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">团圆 tuányuán 动</div>
+          <div>亲人分开以后重新相聚。例：家人团圆。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 尽管……，但是……【HSK4转折】</div>
+          <p>虽然一件事是这样，可是结果不一样。</p>
+          <div class="grammar-note">⚠“尽管”放在前面，“但是”后面写转折。</div>
+          <p>例句：尽管心里不好受，但是贾俊还是让乖乖回去。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：用“尽管……，但是……”写句子。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：尽管很累，但是我还是要学习中文。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 不……不…… 【HSK4 双重否定】</div>
+          <p>口语固定结构，双重否定，意思是“只有A，才B”。</p>
+          <div class="grammar-note">⚠不叫它吃，它从来不自吃 = 只有叫它吃，它才吃。</div>
+          <p>例句：不叫它吃，它从来不自吃。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">改写句子：用“不……不……”改写：只有努力，才能学好中文。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：不努力，就学不好中文。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">补充：有着 【HSK4动词】</div>
+          <p>意思是“具有、存在着”，后面一般接抽象名词，书面语。</p>
+          <div class="grammar-note">⚠宾语一般不少于三个音节。</div>
+          <p>例句：乖乖有着良好的教养。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">完成句子：北京是一座古城，有着__________。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：悠久的历史。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+//每一段排序原始数据 id代表正确顺序
+const sortSource = [
+  [
+    {id:1,txt:"2009年春节刚过，在四川东南部一条公路上，一个名叫贾俊的农村医生开着车回家。"},
+    {id:2,txt:"突然，从路边的杂草中冒出一条大狗，看样子是母的，不像当地的狗。"},
+    {id:3,txt:"由于在寒冷的天气中待了一夜，它冻得浑身发抖，眼睛里充满害怕的神情。它似乎在等谁，趴在路边，不知道该怎么办才好。"},
+    {id:4,txt:"贾俊觉得这条狗像是走丢的小孩儿，很可怜它。可是，看见它是个结结实实的家伙，有什么脾气也不知道，又有些犹豫。"},
+    {id:5,txt:"只见那条狗慢慢地爬起来，尾巴摇晃得特别可爱，没有一点儿想咬人的意思。于是，贾俊举起手招呼它：“来，来，来！谁不要你了？跟我走，我带你回家。”"}
+  ],
+  [
+    {id:1,txt:"那条狗很懂事，一下子跳上车。贾俊让它坐在副驾驶座位上。"},
+    {id:2,txt:"汽车开动了，它透过挡风玻璃往前看，有时，还撒娇般地把头靠在贾俊身上，贾俊高兴得不住地叫它“乖乖”。"},
+    {id:3,txt:"到家后，贾俊首先要为乖乖弄好饭吃。他特意为乖乖煮了一大罐肉，乖乖狼吞虎咽地吃了一顿。"},
+    {id:4,txt:"贾俊又在卫生间给乖乖洗了澡。吃饱喝足、洗过澡的乖乖立刻变得精神起来，对贾俊特别亲热。"}
+  ],
+  [
+    {id:1,txt:"当贾俊的妻子抱着孩子回家的时候，乖乖像个主人似的跑过去迎接，吓了她一大跳。贾俊把事情经过告诉妻子，还说打算收养它，妻子一听就生气了。"},
+    {id:2,txt:"她忘不了，她的腿在半年前曾经被山上的一条狗咬得血流不止，她特地打了预防针，以致刚刚半岁的女儿连妈妈的奶都不能吃了。"},
+    {id:3,txt:"她担心自己的孩子也被这条大狗咬伤，因此不容许这个大家伙留在家里。她和贾俊大吵了一架，抱着孩子离家而去。"},
+    {id:4,txt:"贾俊赶忙用手机给妻子发了信息。妻子看见贾俊的信息，心软了，同意暂时把乖乖留在家里。"},
+    {id:5,txt:"贾俊对乖乖格外用心，他发现，这条狗好像懂人话。乖乖有着良好的“教养”。"}
+  ],
+  [
+    {id:1,txt:"一岁的女儿也喜欢乖乖，总去摸它。一次，女儿坐在学步车里跑，一下子撞到了乖乖的腿，它没有生气，更没有去攻击孩子，还用头顶着学步车跟女儿玩儿。"},
+    {id:2,txt:"有时，乖乖还和女儿一起看动画片，一动不动地看很长时间。乖乖给贾俊的家庭带来了欢乐。"},
+    {id:3,txt:"有时，乖乖也会情绪不好，似乎是想念老家和主人了。有个人认出乖乖是拉布拉多犬，是很值钱的宝贝。"},
+    {id:4,txt:"这时贾俊想：假如我要了乖乖，心里总是会不踏实的。它应该回到原来主人身边。贾俊开始打听。他暗暗盼着找不到原来的主人。"}
+  ],
+  [
+    {id:1,txt:"不愿意发生的事情终于出现了。贾俊的朋友告诉他，在二百里外有一个救援队，前些日子丢了两只救援犬。"},
+    {id:2,txt:"原来救援队训练的时候出了车祸，狗跑丢了。贾俊捡到乖乖的时间和狗丢失的时间差不多。"},
+    {id:3,txt:"贾俊又用手机发去了乖乖的照片，救援队告诉贾俊：乖乖就是丢失的淑娴。"},
+    {id:4,txt:"当救援队队长来领乖乖时，正好是乖乖到贾俊家的第十九天。贾俊担心有人错领，还查看了队长的证件。"},
+    {id:5,txt:"队长看到乖乖被照顾得很好，就要给贾俊报酬表示感谢。贾俊拒绝了队长的心意。"}
+  ],
+  [
+    {id:1,txt:"尽管失去乖乖的心情很不好受，但是，贾俊一家还是同意让乖乖跟着救援队队长回家。"},
+    {id:2,txt:"乖乖很难过，被带走的时候不断回头。"},
+    {id:3,txt:"乖乖的“丈夫”班克至今还不知道在什么地方。"},
+    {id:4,txt:"贾俊决定努力去找，他衷心祝愿乖乖和班克早点儿团圆。"}
+  ]
+];
+//打乱数组工具
+function shuffle(arr){
+    let tmp = [...arr];
+    for(let i=tmp.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [tmp[i],tmp[j]] = [tmp[j],tmp[i]];
+    }
+    return tmp;
+}
+let sortableInstances = {};
+//渲染排序盒子：自动打乱 + 初始化Sortable拖拽
+function renderSortBox(idx){
+    const box = document.getElementById("sortBox"+idx);
+    box.innerHTML = "";
+    //销毁旧实例，防止重复绑定
+    if(sortableInstances[idx]){
+        sortableInstances[idx].destroy();
+        delete sortableInstances[idx];
+    }
+    const list = shuffle(sortSource[idx]);
+    list.forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.dataset.id = item.id;
+        div.innerText = item.txt;
+        box.appendChild(div);
+    });
+    //初始化Sortable
+    sortableInstances[idx] = new Sortable(box,{
+        animation:150,
+        ghostClass:'sort-ghost'
+    });
+}
+
+// 显示语法综合练习答案
+function showGrammarAns(num){
+    document.getElementById("gAns"+num).style.display="block";
+}
+//重置全部语法综合练习
+function resetGrammarAll(){
+    for(let i=0;i<=10;i++){
+        document.getElementById("gEx"+i).value="";
+        document.getElementById("gAns"+i).style.display="none";
+    }
+}
+
+//切换段落：-1代表语法综合练习，0‑5课文段落
+function switchTab(index){
+  document.querySelectorAll(".left-panel .block-item").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll(".right-panel .block-item").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach((btn,i)=>{
+    btn.classList.remove('active');
+  });
+  const btns = document.querySelectorAll(".tab-btn");
+  if(index === -1){
+    btns[0].classList.add("active");
+    document.getElementById("Lminus1").classList.add("active");
+  }else{
+    btns[index+1].classList.add("active");
+    document.getElementById("L"+index).classList.add("active");
+    document.getElementById("R"+index).classList.add("active");
+    renderSortBox(index);
+  }
+}
+
+//检查课文挖空
+function checkAllBlank(btn){
+  const parent = btn.parentElement;
+  const inputs = parent.querySelectorAll('.blank-input');
+  inputs.forEach(input=>{
+    const answer = input.dataset.ans;
+    if(input.value.trim() === answer){
+      input.classList.add("right");
+      input.classList.remove("wrong");
+    }else{
+      input.classList.add("wrong");
+      input.classList.remove("right");
+    }
+  });
+}
+//🔄重置本段：清空输入框、隐藏答案提示、重新生成本段打乱的句子排序
+function resetSection(idx){
+    const block = document.getElementById("L"+idx);
+    block.querySelectorAll(".blank-input").forEach(i=>{i.value="";i.classList.remove("right","wrong");});
+    block.querySelectorAll(".q-answer-input").forEach(t=>t.value="");
+    block.querySelectorAll(".q-show-ans").forEach(d=>d.style.display="none");
+    const resEl = document.getElementById("sortRes"+idx);
+    if(resEl) resEl.style.display="none";
+    renderSortBox(idx);
+}
+//检查句子排序
+function checkSort(idx){
+  const box = document.getElementById("sortBox"+idx);
+  const resDom = document.getElementById("sortRes"+idx);
+  const items = box.querySelectorAll(".sort-item");
+  let arr = [];
+  items.forEach(it=>arr.push(it.dataset.id));
+  const correctIds = sortSource[idx].map(x=>String(x.id));
+  if(arr.join(",") === correctIds.join(",")){
+    resDom.className = "sort-result sort-res-ok";
+    resDom.style.display="block";
+    resDom.innerText = "✅排序完全正确！";
+  }else{
+    resDom.className = "sort-result sort-res-err";
+    resDom.style.display="block";
+    resDom.innerText = "❌顺序不对，请重新拖拽调整句子顺序。";
+  }
+}
+//页面初始化渲染第0段打乱排序
+renderSortBox(0);
+</script>
+</body>
+</html>

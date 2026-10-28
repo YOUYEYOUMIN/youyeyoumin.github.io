@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>57生词综合练习游戏（积分+限时闯关）</title>
+<style>
+:root{
+    --bg-main:#f4f6f9;
+    --card-bg:#ffffff;
+    --primary-dark:#344966; /*莫兰迪深蓝色（主色，按钮、标题）*/
+    --card-light-blue:#b8c8dd; /*消消乐方块：莫兰迪浅蓝*/
+    --text-normal:#2c384b;
+    --red:#c96567;
+    --green:#6a9988;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui, sans-serif;}
+body{background:var(--bg-main);padding:20px;color:var(--text-normal);min-height:100vh;}
+.container{max-width:780px;margin:0 auto;}
+h1{text-align:center;margin-bottom:12px;color:var(--primary-dark);font-size:28px;}
+.score-time-bar{display:flex;justify-content:space-between;background:var(--card-bg);padding:14px 18px;border-radius:12px;margin-bottom:16px;font-size:20px;flex-wrap:wrap;gap:10px;}
+.tab-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:12px 16px;border:none;border-radius:10px;background:var(--card-light-blue);color:#2c384b;cursor:pointer;font-size:18px;}
+.tab-btn.active{background:var(--primary-dark);color:#fff;}
+.game-box{background:var(--card-bg);border-radius:16px;padding:26px;box-shadow:0 4px 12px rgba(52,73,102,0.12);min-height:460px;font-size:19px;}
+.hide{display:none;}
+/* ==========拖拽配对 左右卡片等高对齐========== */
+.pair-wrap{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px 18px;
+    margin-top:22px;
+}
+.pair-row{
+    display:contents;
+}
+.drag-item,
+.drop-item{
+    height:56px;
+    min-height:56px;
+    max-height:56px;
+    padding:0 14px;
+    border-radius:8px;
+    font-size:19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+.drag-item{
+    border:1px solid var(--card-light-blue);
+    background:#fff;
+    cursor:grab;
+}
+.drop-item{
+    border:1px dashed var(--primary-dark);
+    background:#fff;
+    text-align:center;
+}
+/* 听写 */
+.input-word{padding:10px;width:260px;border:1px solid var(--card-light-blue);border-radius:6px;font-size:20px;margin:10px 0;}
+/* 消消乐方块：莫兰迪浅蓝，文字全部居中 */
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px;}
+.card-item{padding:14px;background:var(--card-light-blue);border-radius:8px;text-align:center;cursor:pointer;font-size:19px;color:#2c384b;display:flex;align-items:center;justify-content:center;min-height:80px;}
+.card-item.matched{visibility:hidden;}
+.card-item.active{background:var(--primary-dark);color:white;}
+/* 通用按钮 莫兰迪深蓝 */
+.check-btn{margin-top:14px;padding:11px 18px;border:none;border-radius:8px;background:var(--primary-dark);color:white;cursor:pointer;font-size:18px;}
+.correct{color:var(--green);font-weight:bold;font-size:19px;}
+.wrong{color:var(--red);font-weight:bold;font-size:19px;}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>生词综合练习游戏</h1>
+    <!-- 积分+倒计时面板 限时10分钟 -->
+    <div class="score-time-bar">
+        <div>总分：<span id="totalScore">0</span> 分</div>
+        <div>剩余时间：<span id="timer">--</span></div>
+        <div><button class="check-btn" onclick="startTimer(600)">开始闯关(10分钟)</button></div>
+    </div>
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="match">词义拖拽配对</button>
+        <button class="tab-btn" data-tab="dict">听写自测</button>
+        <button class="tab-btn" data-tab="xiaoxiao">生词消消乐</button>
+    </div>
+    <!-- 拖拽配对【拖入后同时显示生词+释义】 -->
+    <div id="match" class="game-box tab-content">
+        <p>左边：生词｜右边：词义框。把生词拖到对应释义框，拖入后框内会同时显示生词和释义</p>
+        <div class="pair-wrap" id="pairWrap">
+            <div class="pair-col" id="leftList"></div>
+            <div class="pair-col" id="rightList"></div>
+        </div>
+        <button class="check-btn" onclick="checkMatch()">核对配对</button>
+        <button class="check-btn" onclick="buildMatch()">换一组生词（全部57词循环）</button>
+    </div>
+    <!-- 听写自测 -->
+    <div id="dict" class="game-box tab-content hide">
+        <div id="dictPrompt"></div>
+        <input class="input-word" id="dictInput" placeholder="在这里输入生词">
+        <br>
+        <button class="check-btn" onclick="checkDict()">确认</button>
+        <button class="check-btn" onclick="nextDict()">下一题（57词循环）</button>
+        <div id="dictResult"></div>
+    </div>
+    <!-- 消消乐 -->
+    <div id="xiaoxiao" class="game-box tab-content hide">
+        <p>点击两张卡片，如果生词和词义匹配，卡片就会消失！点【重新开始】换一组生词</p>
+        <div class="match-grid" id="xiaoxiaoGrid"></div>
+        <button class="check-btn" onclick="buildXiaoxiao()">重新开始</button>
+    </div>
+</div>
+<script>
+//完整57个HSK生词库
+const wordList = [
+    {w:"乖",mean:"听话，行为好"},
+    {w:"待",mean:"停留，处在某处"},
+    {w:"浑身",mean:"全身，整个身体"},
+    {w:"神情",mean:"脸上表现出来的情绪样子"},
+    {w:"趴",mean:"身体向前卧倒，脸朝下"},
+    {w:"家伙",mean:"指动物，也可指人"},
+    {w:"犹豫",mean:"拿不定主意，迟疑"},
+    {w:"招呼",mean:"问候，打招呼"},
+    {w:"懂事",mean:"明白事理，善解人意"},
+    {w:"驾驶",mean:"操纵车辆行驶"},
+    {w:"撒娇",mean:"故意做出娇柔的姿态求取宠爱"},
+    {w:"般",mean:"一样、似的，表示种类样子"},
+    {w:"特意",mean:"专门、特地做某事"},
+    {w:"罐",mean:"圆筒状用来装东西的容器"},
+    {w:"狼吞虎咽",mean:"吃东西又急又快"},
+    {w:"卫生间",mean:"厕所，洗漱如厕的房间"},
+    {w:"足",mean:"足够，充足"},
+    {w:"亲热",mean:"关系亲密，态度热情"},
+    {w:"收养",mean:"把别人孩子接收过来当自家抚养"},
+    {w:"特地",mean:"专门，为了某件事特别去做"},
+    {w:"预防",mean:"事先防备，防止坏事发生"},
+    {w:"一直",mean:"始终，不间断地"},
+    {w:"容许",mean:"允许、准许"},
+    {w:"吵架",mean:"发生口角，激烈争吵"},
+    {w:"赶忙",mean:"急忙，赶紧"},
+    {w:"信息",mean:"消息、资讯"},
+    {w:"老婆",mean:"妻子，丈夫的配偶"},
+    {w:"格外",mean:"特别，超出一般程度"},
+    {w:"用心",mean:"认真，投入心思"},
+    {w:"显示",mean:"显现、表现出来"},
+    {w:"教养",mean:"文化品德修养"},
+    {w:"攻击",mean:"进攻，打击对方"},
+    {w:"动画片",mean:"动画制作的影视片子"},
+    {w:"欢乐",mean:"开心、快乐"},
+    {w:"老家",mean:"故乡，自己的祖籍家乡"},
+    {w:"认",mean:"辨别、识别出来"},
+    {w:"属于",mean:"归某人或某事物所有"},
+    {w:"值",mean:"有价值，值得"},
+    {w:"宝贝",mean:"珍贵喜爱的人或物品"},
+    {w:"假如",mean:"如果，表示假设"},
+    {w:"踏实",mean:"心里安稳，放心不焦虑"},
+    {w:"暗暗",mean:"私下里，不公开地"},
+    {w:"盼",mean:"盼望，殷切期待"},
+    {w:"救援",mean:"救助、援救遇到危难的对象"},
+    {w:"今后",mean:"从今以后，未来"},
+    {w:"祸",mean:"灾祸，不好的灾难"},
+    {w:"丢失",mean:"东西遗失，失掉"},
+    {w:"手机",mean:"移动电话，移动通信设备"},
+    {w:"查看",mean:"仔细检查观看"},
+    {w:"证件",mean:"证明身份资格的文件"},
+    {w:"报酬",mean:"劳动之后得到的酬劳金钱"},
+    {w:"心意",mean:"内心的情意、想法"},
+    {w:"好受",mean:"心里或身体感觉舒服"},
+    {w:"至今",mean:"直到现在"},
+    {w:"衷心",mean:"发自内心，真心诚意"},
+    {w:"祝愿",mean:"对别人表达美好的希望"},
+    {w:"团圆",mean:"亲人分散之后相聚在一起"}
+];
+//全局积分、计时器
+let totalScore = 0;
+let timerId = null;
+let remainSec = 0;
+//配对游标
+let matchPoolIndex = 0;
+//听写游标
+let dictIdx=0;
+//消消乐游标
+let xiaoxiaoIndex =0;
+//更新分数显示
+function updateScore(){
+    document.getElementById("totalScore").innerText = totalScore;
+}
+//开始限时 10分钟=600秒
+function startTimer(seconds){
+    if(timerId) clearInterval(timerId);
+    remainSec = seconds;
+    timerId = setInterval(()=>{
+        remainSec--;
+        document.getElementById("timer").innerText = remainSec + "秒";
+        if(remainSec <=0){
+            clearInterval(timerId);
+            alert("时间到！闯关结束，你的总分："+totalScore);
+        }
+    },1000);
+}
+//切换标签
+const tabs = document.querySelectorAll(".tab-btn");
+tabs.forEach(btn=>{
+    btn.onclick=()=>{
+        tabs.forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".tab-content").forEach(box=>box.classList.add("hide"));
+        document.getElementById(btn.dataset.tab).classList.remove("hide");
+    }
+})
+// ==========拖拽配对：逐行等高对齐版本==========
+function buildMatch(){
+    const left = document.getElementById("leftList");
+    const right = document.getElementById("rightList");
+    left.innerHTML="";
+    right.innerHTML="";
+    const sliceEnd = Math.min(matchPoolIndex+8, wordList.length);
+    const sample = wordList.slice(matchPoolIndex, sliceEnd);
+    if(sample.length ===0){
+        matchPoolIndex =0;
+        return buildMatch();
+    }
+    matchPoolIndex = sliceEnd;
+    //打乱释义顺序
+    const shuffledMean = [...sample].sort(()=>Math.random()-0.5);
+    sample.forEach((item,index)=>{
+        //左侧生词
+        const drag = document.createElement("div");
+        drag.className = "drag-item";
+        drag.innerText = item.w;
+        drag.draggable = true;
+        drag.ondragstart = e=>{
+            e.dataTransfer.setData("text", JSON.stringify(item));
+        };
+        left.appendChild(drag);
+        //右侧释义
+        const meaningItem = shuffledMean[index];
+        const drop = document.createElement("div");
+        drop.className = "drop-item";
+        drop.dataset.ansWord = meaningItem.w;
+        drop.innerText = meaningItem.mean;
+        drop.ondragover = e=>e.preventDefault();
+        drop.ondrop = e=>{
+            e.preventDefault();
+            const data = JSON.parse(e.dataTransfer.getData("text"));
+            drop.dataset.userWord = data.w;
+            drop.innerText = data.w + " — " + meaningItem.mean;
+        };
+        right.appendChild(drop);
+    });
+}
+function checkMatch(){
+    const drops = document.querySelectorAll(".drop-item");
+    drops.forEach(d=>{
+        if(d.dataset.userWord === d.dataset.ansWord){
+            d.style.background="#eaf5f0";
+            d.style.borderColor="#6a9988";
+            totalScore +=10; updateScore();
+        }else if(d.dataset.userWord){
+            d.style.background="#fce9e9";
+            d.style.borderColor="#c96567";
+        }
+    })
+}
+//听写自测，57词循环
+function loadDict(){
+    const item = wordList[dictIdx];
+    document.getElementById("dictPrompt").innerText="词义："+item.mean;
+    document.getElementById("dictInput").value="";
+    document.getElementById("dictResult").innerText="";
+}
+function checkDict(){
+    const input = document.getElementById("dictInput").value.trim();
+    const item = wordList[dictIdx];
+    const res = document.getElementById("dictResult");
+    if(input === item.w){
+        res.className="correct";res.innerText="答对啦！+10分";
+        totalScore +=10; updateScore();
+    }else{
+        res.className="wrong";res.innerText="不对，正确是："+item.w;
+    }
+}
+function nextDict(){
+    dictIdx = (dictIdx+1) % wordList.length;
+    loadDict();
+}
+//消消乐
+let selectedCard = null;
+function buildXiaoxiao(){
+    const grid = document.getElementById("xiaoxiaoGrid");
+    grid.innerHTML="";
+    selectedCard=null;
+    const sliceEnd = Math.min(xiaoxiaoIndex+8, wordList.length);
+    const sample = wordList.slice(xiaoxiaoIndex, sliceEnd);
+    if(sample.length ===0){
+        xiaoxiaoIndex=0;
+        return buildXiaoxiao();
+    }
+    xiaoxiaoIndex = sliceEnd;
+    let cardPool = [];
+    sample.forEach(x=>{
+        cardPool.push({type:"word",text:x.w,key:x.w});
+        cardPool.push({type:"mean",text:x.mean,key:x.w});
+    })
+    cardPool = cardPool.sort(()=>Math.random()-0.5);
+    cardPool.forEach(card=>{
+        const div = document.createElement("div");
+        div.className="card-item";
+        div.innerText = card.text;
+        div.dataset.key = card.key;
+        div.onclick = ()=>clickXiaoxiao(div);
+        grid.appendChild(div);
+    })
+}
+function clickXiaoxiao(el){
+    if(el.classList.contains("matched")) return;
+    if(!selectedCard){
+        selectedCard = el;
+        el.classList.add("active");
+    }else{
+        if(selectedCard === el){
+            el.classList.remove("active");
+            selectedCard=null;
+            return;
+        }
+        if(selectedCard.dataset.key === el.dataset.key){
+            selectedCard.classList.add("matched");
+            el.classList.add("matched");
+            totalScore +=10; updateScore();
+        }
+        selectedCard.classList.remove("active");
+        el.classList.remove("active");
+        selectedCard=null;
+    }
+}
+//初始化
+buildMatch();
+loadDict();
+buildXiaoxiao();
+updateScore();
+</script>
+</body>
+</html>

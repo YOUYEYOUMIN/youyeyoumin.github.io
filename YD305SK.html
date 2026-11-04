@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK阅读｜课文习题 + 生词语法对照</title>
+<style>
+:root{
+  --m-bg:#eef1f4;
+  --m-card:#ffffff;
+  --m-line:#d7dee4;
+  --m-tab-inactive:#c9d3dc;
+  --m-tab-active:#5f7a92;
+  --m-art-inactive:#e3e9ef;
+  --m-art-active:#7f97ad;
+  --m-text:#2f3a44;
+  --m-sub:#5c6b78;
+  --m-question-bg:#f4f7fa;
+  --m-opt-border:#b9c4ce;
+  --m-opt-selected:#c9d8e6;
+  --blue-word:#3f6ea5;
+  --red-grammar:#b04a4a;
+  --green-right:#3f8f5a;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft Yahei",sans-serif;}
+body{
+  background:var(--m-bg);
+  color:var(--m-text);
+  padding:14px;
+}
+.level-tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.tab-lv{
+  padding:9px 16px;
+  border:none;
+  border-radius:8px;
+  background:var(--m-tab-inactive);
+  color:#222;
+  cursor:pointer;
+  font-size:16px;
+}
+.tab-lv.active{
+  background:var(--m-tab-active);
+  color:#fff;
+}
+.art-tabs{
+  display:flex;
+  gap:4px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.tab-art{
+  padding:7px 13px;
+  border:none;
+  border-radius:6px;
+  background:var(--m-art-inactive);
+  color:var(--m-text);
+  cursor:pointer;
+}
+.tab-art.active{
+  background:var(--m-art-active);
+  color:#fff;
+}
+.container{
+  display:grid;
+  grid-template-columns:1fr 0.7fr;
+  gap:16px;
+  height:calc(100vh - 160px);
+}
+.panel-left,.panel-right{
+  background:var(--m-card);
+  border:1px solid var(--m-line);
+  border-radius:12px;
+  padding:20px;
+  overflow:auto;
+}
+h3{
+  margin:8px 0 12px;
+  color:var(--m-text);
+}
+p{
+  line-height:1.75;
+  margin:9px 0;
+  font-size:16px;
+}
+.question-block{
+  margin:16px 0;
+  padding:14px;
+  background:var(--m-question-bg);
+  border:1px solid var(--m-line);
+  border-radius:9px;
+}
+.opt{
+  display:inline-block;
+  margin:5px 7px;
+  padding:5px 9px;
+  border:1px solid var(--m-opt-border);
+  border-radius:5px;
+  cursor:pointer;
+  user-select:none;
+  background:#fff;
+  color:var(--m-text);
+}
+.opt.selected{
+  background:var(--m-opt-selected);
+}
+.answer-mark{
+  color:var(--green-right);
+  font-weight:bold;
+  margin-left:10px;
+}
+.control-bar{
+  margin:16px 0;
+  display:flex;
+  gap:10px;
+}
+.btn-ctrl{
+  padding:9px 15px;
+  border:none;
+  border-radius:8px;
+  background:var(--m-art-active);
+  color:#fff;
+  cursor:pointer;
+  font-size:15px;
+}
+.tooltip{
+  position:relative;
+  color:var(--blue-word);
+  font-weight:500;
+}
+.tooltip-gram{
+  color:var(--red-grammar);
+  font-weight:500;
+  position:relative;
+}
+.tip{
+  visibility:hidden;
+  position:absolute;
+  z-index:999;
+  bottom:115%;
+  left:0;
+  background:#333;
+  color:#fff;
+  padding:7px 11px;
+  border-radius:6px;
+  white-space:nowrap;
+  font-size:14px;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.tooltip:hover .tip,
+.tooltip-gram:hover .tip{
+  visibility:visible;
+  opacity:1;
+}
+.panel-right h4{
+  margin-top:16px;
+  margin-bottom:7px;
+  color:var(--m-sub);
+  border-bottom:1px solid var(--m-line);
+  padding-bottom:4px;
+}
+ul{
+  padding-left:22px;
+  line-height:1.75;
+}
+</style>
+</head>
+<body>
+<div class="level-tabs" id="levelTabs">
+  <button class="tab-lv active" data-lv="hsk3">HSK3 简单</button>
+  <button class="tab-lv" data-lv="hsk4">HSK4 中等</button>
+  <button class="tab-lv" data-lv="hsk5">HSK5 偏难</button>
+  <button class="tab-lv" data-lv="hsk6">HSK6 难</button>
+</div>
+<div class="art-tabs" id="artTabs"></div>
+<div class="container">
+  <div class="panel-left" id="panelLeft"></div>
+  <div class="panel-right" id="panelRight"></div>
+</div>
+<script>
+const data = {
+// ========= HSK3 简单｜判断题，基于四篇素材简化改写 =========
+hsk3:[
+{
+title:"短文1｜汉斯在北京",
+text:`
+<p>汉斯是美国的研究生，现在在北京大学法律系学习。</p>
+<p>1992年，他第一次来北京。那时候他还在美国上大学。他利用暑假两个月来中国学汉语。</p>
+<p>他很喜欢中国，在中国的时候，他跟中国同学一起吃饭、一起住。</p>
+<p>暑假结束，他回美国读完大学。大学毕业以后，他又来到中国。</p>
+<p>他的父母一开始很担心他，后来来中国看他。看到他汉语说得很好，还有很多中国朋友，父母放心了。</p>
+<p>汉斯每年回美国一次，每次时间很短。他觉得中国就像自己的家。</p>
+`,
+ques:[
+{q:"1.汉斯现在在北京大学学习。",type:"tf",ans:"对"},
+{q:"2.1992年汉斯已经是北大的学生。",type:"tf",ans:"错"},
+{q:"3.汉斯的父母来过中国看他。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"研究生",py:"yán jiū shēng",mean:"大学毕业以后继续读书的学生"},
+{w:"暑假",py:"shǔ jià",mean:"夏天的假期"},
+{w:"利用",py:"lì yòng",mean:"使用时间做事情"},
+{w:"担心",py:"dān xīn",mean:"心里不放心"},
+{w:"放心",py:"fàng xīn",mean:"不再担心"}
+],
+gram:[
+{g:"利用……做……",exp:"使用时间、东西做某事。例句：我利用周末看书。"},
+{g:"……以后",exp:"一件事结束之后。例句：下课以后我回家。"},
+{g:"就像",exp:"好像。例句：这里就像我的家。"}
+]
+},
+{
+title:"短文2｜北京市第55中学",
+text:`
+<p>北京市第55中学是重点中学。1989年，学校成立国际学生部，接收外国孩子来上学。</p>
+<p>国际学生部主要教汉语，还有数学、英语、体育等很多课程。汉语、英语按学生水平分班上课。</p>
+<p>有的学生读完之后跟父母回国，大部分学生参加考试，去中国的大学读书。</p>
+<p>学校生活很丰富。老师自己写教材，还组织参观、比赛、表演，也去敬老院帮助老人。</p>
+<p>二十多年来，来自六十多个国家的学生在这里毕业。学生们很喜欢这所学校。</p>
+`,
+ques:[
+{q:"1.55中国际学生部只教汉语一门课。",type:"tf",ans:"错"},
+{q:"2.国际部的学生全部都会去中国上大学。",type:"tf",ans:"错"},
+{q:"3.学校会组织学生去帮助老人。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"重点中学",py:"zhòng diǎn zhōng xué",mean:"水平比较高的中学"},
+{w:"成立",py:"chéng lì",mean:"建立新的部门、学校"},
+{w:"接收",py:"jiē shōu",mean:"收下学生来上学"},
+{w:"课程",py:"kè chéng",mean:"上课学习的科目"},
+{w:"教材",py:"jiào cái",mean:"上课用的书"},
+{w:"敬老院",py:"jìng lǎo yuàn",mean:"老人生活的地方"}
+],
+gram:[
+{g:"主要",exp:"最重要的。例句：我主要学习汉语。"},
+{g:"有的……大部分……",exp:"一部分怎样，另一部分怎样。"},
+{g:"还",exp:"另外也做某事。例句：我会英语，还会日语。"}
+]
+},
+{
+title:"短文3｜北京语言大学",
+text:`
+<p>北京语言大学是专门教外国人汉语的大学。它1962年创办，后来改过几次名字。</p>
+<p>四十多年来，学校教过来自160多个国家的十万多名外国学生。</p>
+<p>学校老师很多，有很多有经验的老老师，也有年轻老师。</p>
+<p>学校有很大的图书馆，很多语音教室。学校希望做一所面向全世界的好大学。</p>
+`,
+ques:[
+{q:"1.北京语言大学一开始就叫现在这个名字。",type:"tf",ans:"错"},
+{q:"2.很多国家的留学生在这里学习汉语。",type:"tf",ans:"对"},
+{q:"3.学校没有年轻的老师。",type:"tf",ans:"错"}
+],
+voc:[
+{w:"创办",py:"chuàng bàn",mean:"建立学校、公司"},
+{w:"专门",py:"zhuān mén",mean:"只做一件事"},
+{w:"经验",py:"jīng yàn",mean:"做事情得到的知识本领"},
+{w:"图书馆",py:"tú shū guǎn",mean:"很多书的地方"},
+{w:"希望",py:"xī wàng",mean:"心里想做到某事"}
+],
+gram:[
+{g:"后来",exp:"在那之后。例句：我认识他，后来我们成为朋友。"},
+{g:"有……也有……",exp:"两样都存在。例句：教室里有男生，也有女生。"},
+{g:"希望做……",exp:"心里盼望做成某事。"}
+]
+},
+{
+title:"短文4｜老外学书画",
+text:`
+<p>现在很多外国人学中文，还有一些外国人学习中国书法和画画。</p>
+<p>上海有些别墅住着外国人。他们想学更多中国文化，就学习琴棋书画。</p>
+<p>有一些韩国人请老师来家里教中国画。有一位朴先生以前在新加坡学过一点中国画。</p>
+<p>来到上海以后，有中国画家教他，他画得越来越好。他画的梅、兰、竹、菊都很好看。</p>
+`,
+ques:[
+{q:"1.所有外国人学中文都学中国画。",type:"tf",ans:"错"},
+{q:"2.朴先生从来没有学过画画。",type:"tf",ans:"错"},
+{q:"3.朴先生现在中国画画得不错。",type:"tf",ans:"对"}
+],
+voc:[
+{w:"书画",py:"shū huà",mean:"书法和绘画"},
+{w:"别墅",py:"bié shù",mean:"独立的大房子"},
+{w:"请",py:"qǐng",mean:"花钱找人来做事"},
+{w:"以前",py:"yǐ qián",mean:"过去的时候"},
+{w:"越来越",py:"yuè lái yuè",mean:"慢慢变得更加……"}
+],
+gram:[
+{g:"还有一些",exp:"另外一部分。"},
+{g:"就",exp:"于是，接着就做。"},
+{g:"……以后",exp:"做完一件事之后。"}
+]
+}
+],
+// ========= HSK4 中等｜原始四选一，原始素材 =========
+hsk4:[
+{
+title:"短文1｜汉斯在北京",
+text:`
+<p>“1992年我第一次到北京来，说来很奇怪，那时我就有一种回家的感觉。”在北京大学留学生楼的一个小房间里，汉斯给我讲着他在北京的生活和经历。</p>
+<p>汉斯现在是北大法律系的第一位美籍研究生。小的时候，他就迷上了中国，迷上了中国的古老文化。1992年，还在上大学的汉斯，利用两个月的暑假时间到中国来学习汉语。“那两个月，我跟中国同学同吃同住，感觉好极了。”</p>
+<p>两个月的时间很快就过去了，他必须回美国读完他的大学课程。不过，他想好了，大学一毕业他就再回到中国来。</p>
+<p>父母舍不得最小的儿子远离自己，而汉斯却决心已下，毕业后他又回到了中国。父母为他的执著而感动，但总还是不放心，于是亲自来中国“考察”。当听到儿子说着流利的北京话，还学会了中国功夫，又看到儿子有那么多中国朋友，老人放心了。</p>
+<p>“现在连我爸爸妈妈都把中国当成是我的家了。我每年回一次美国，每次不超过两个星期。开始几次，妈妈还对我说：‘你回中国后应该怎么样。’现在她却说：‘你回家后应该怎么样怎么样。’”</p>
+<p>我问汉斯：“那你回来后感觉怎么样？”汉斯说：“我的感觉就是我真的回到了自己的家。”</p>
+`,
+ques:[
+{q:"1) 本文讲的是：",type:"abcd",opts:["A. 一个在北大学习的留学生离开美国的故事","B. 一个美国学生回家了","C. 一个美国学生1992年来北大学习汉语的事","D. 一个美国学生每年回一次美国的事"],ans:"A"},
+{q:"2) 汉斯在哪儿上的大学？",type:"abcd",opts:["A. 北京大学","B. 美国","C. 中国","D. 不知道"],ans:"B"},
+{q:"3) 汉斯第一次来中国是因为他：",type:"abcd",opts:["A. 要学习法律","B. 喜欢中国功夫","C. 喜欢中国的家","D. 要学习汉语"],ans:"D"}
+],
+voc:[
+{w:"美籍",py:"měi jí",mean:"美国国籍"},
+{w:"研究生",py:"yán jiū shēng",mean:"大学毕业之后继续读书的学生"},
+{w:"迷上",py:"mí shàng",mean:"非常喜爱，入迷"},
+{w:"利用",py:"lì yòng",mean:"使用时间或者条件做事情"},
+{w:"暑假",py:"shǔ jià",mean:"夏天的假期"},
+{w:"执著",py:"zhí zhuó",mean:"坚持自己的想法不放弃"},
+{w:"考察",py:"kǎo chá",mean:"实地看一看、了解情况"},
+{w:"流利",py:"liú lì",mean:"说话说得又快又好"}
+],
+gram:[
+{g:"说来很奇怪",exp:"说起来这件事让人感觉奇怪。"},
+{g:"一……就……",exp:"一件事发生之后马上做另一件。例句：一下课我就回家。"},
+{g:"为……而感动",exp:"因为某事内心受到触动。"}
+]
+},
+{
+title:"短文2｜北京市第55中学",
+text:`
+<p>北京市第55中学是一所市重点学校。1989年学校成立了国际学生部，招收外国驻华使馆官员以及在京的外国商社人员子女入学。</p>
+<p>国际学生部以汉语教学为主要教学任务。基本课程有：汉语、英语、数学、物理、化学、生物、历史、美术、音乐、体育、计算机等。其中汉语和英语按学生水平分班授课。学成之后，有些学生随父母回国，而大部分学生通过国家教育部举办的外国留学生考试，升入中国各大学继续学习。</p>
+<p>学生们在这里的学习生活是丰富多彩的。老师们为了让这些小留学生们在较短的时间内掌握标准的汉语，自己编写适合他们使用的教材，让他们在轻松愉快的气氛中渡过汉语入门关。除了上课，学校还组织他们进行各种活动：参观访问、体育比赛、文艺演出，他们还到敬老院帮助老人。这些活动不但丰富了学生们的知识，使他们学会了一些课堂上学不到的东西，还加深了学生们对中国的了解。</p>
+<p>20多年来，已有60多个国家和地区的学生从这个学校毕业。学生们怀念这所学校，他们说：“无论走到哪里，我们永远都是55中的学生。”</p>
+`,
+ques:[
+{q:"1) 本文主要介绍了：",type:"abcd",opts:["A. 北京市55中学","B. 在55中学习的外国学生们的情况","C. 北京市的重点中学","D. 有60多个国家和地区的学生在55中学学习"],ans:"B"},
+{q:"2) 在55中学学习的外国学生：",type:"abcd",opts:["A. 上课时很少说汉语","B. 毕业后全部升入中国的大学","C. 使用的教材跟中国学生一样","D. 他们的父（母）在北京工作"],ans:"D"},
+{q:"3) 本文没有介绍：",type:"abcd",opts:["A. 学生们学习什么课程","B. 他们从55中毕业以后去哪儿","C. 一共有多少外国学生从55中学毕业","D. 学生们的学习生活怎么样"],ans:"C"}
+],
+voc:[
+{w:"重点学校",py:"zhòng diǎn xué xiào",mean:"教学水平比较高的学校"},
+{w:"招收",py:"zhāo shōu",mean:"接收学生来上学"},
+{w:"商社",py:"shāng shè",mean:"商业公司"},
+{w:"分班授课",py:"fēn bān shòu kè",mean:"按水平分成不同班级上课"},
+{w:"丰富多彩",py:"fēng fù duō cǎi",mean:"内容多，各种各样"},
+{w:"教材",py:"jiào cái",mean:"上课用的书本"},
+{w:"敬老院",py:"jìng lǎo yuàn",mean:"老年人生活的地方"}
+],
+gram:[
+{g:"以……为主要任务",exp:"把某事当做最主要的工作。"},
+{g:"不但……还……",exp:"递进，不止前面，还有后面。"},
+{g:"无论……都……",exp:"不管什么情况，结果不变。"}
+]
+},
+{
+title:"短文3｜北京语言大学",
+text:`
+<p>北京语言大学创办于1962年。1964年6月，定名为北京语言学院。1996年6月，经中国教育部批准，更名为北京语言文化大学。2002年7月经批准简化为北京语言大学。</p>
+<p>北京语言大学是中国唯一一所以对来华留学生进行汉语和中华文化教育为主要任务的国际型大学。建校40多年来，已经为世界上160多个国家和地区培养了10万多名懂汉语、熟悉中华文化的外国留学生。近年来，每年都有近万名外国留学生在这里学习。</p>
+<p>北京语言大学从事对外汉语和中华文化教育历史最长，规模最大，师资力量也最雄厚。全校800多名教师和专职人员中，有教授、副教授300多名，他们中有很多长期从事对外汉语教学和研究的专家学者，也有不少近些年参加这一工作的青年教师。北京语言大学已成为中国对外汉语教学与研究的主要基地。</p>
+<p>学校校园占地38公顷，校舍建筑面积24万平方米，图书馆藏书近百万册，几十个新建的现代化语音教室和语音实验室为对外语言教学研究发挥着重要作用。今后学校还将不断努力，把她办成一所面向世界、高水平、有特色的国际型大学。</p>
+`,
+ques:[
+{q:"1) 本文主要介绍了：",type:"abcd",opts:["A. 北京语言大学教师的情况","B. 北京语言大学的情况","C. 有多少留学生在北京语言大学学习","D. 北京语言大学的成立时间"],ans:"B"},
+{q:"2) 根据本文，北京语言大学：",type:"abcd",opts:["A. 创办时不叫这个名字","B. 教授、副教授占教师人数一半以上","C. 是一所面向世界、高水平、有特色的国际型大学","D. 只对留学生进行汉语教育"],ans:"A"}
+],
+voc:[
+{w:"创办",py:"chuàng bàn",mean:"建立、开办学校"},
+{w:"批准",py:"pī zhǔn",mean:"上级同意允许做某事"},
+{w:"更名",py:"gēng míng",mean:"改换名字"},
+{w:"雄厚",py:"xióng hòu",mean:"力量很强"},
+{w:"公顷",py:"gōng qǐng",mean:"土地面积单位"},
+{w:"校舍",py:"xiào shè",mean:"学校的房子建筑"},
+{w:"藏书",py:"cáng shū",mean:"图书馆保存的书籍"}
+],
+gram:[
+{g:"经……批准",exp:"经过上级部门许可。"},
+{g:"从事……工作",exp:"做某种职业、工作。"},
+{g:"把……办成……",exp:"努力把事物建设成为某种样子。"}
+]
+},
+{
+title:"短文4｜老外学书画",
+text:`
+<p>“老外”学中文，在中国改革开放的形势下，早已不是什么新鲜的事了。不过，“老外”学习中国传统的书画，并创作出连一般中国人也自叹不如的书画作品，却不常见。</p>
+<p>在上海西郊的一些花园别墅里，住着不少外国人。他们因工作的需要来到上海，有的还带来了家属，成为上海的特殊居民。他们学会了不少方言俚语，可是仍不满足，他们要了解更多的中国文化。于是，琴棋书画、金石印章便成了他们学习的科目。</p>
+<p>在上海动物园附近的一片别墅里，住着一群来自韩国、喜爱中国书画的学者和专家。为了能系统正规地学习，他们请了几位具有相当水平的书画老师来住所授课。每周一至两次，每次两小时，中间不休息，甚至连水也不喝。功夫不负有心人，经过一段时间的学习，他们进步不小。一位姓朴的先生，原来在新加坡工作时曾向当地的画家学过中国画，不过只是学到一些皮毛。来到上海后，得到真正中国画家的指导，现在竹、兰、菊、梅样样都会画，而且还能一边画一边讲出一些中国画的画法和技巧。如果只观其画，你很难想到这些作品出自一位韩国人之手。</p>
+<p>“老外”们喜爱中国书画艺术，并且真的挥舞着画笔画出了一幅幅漂亮的画，对他们来说，这就是了解中国文化。</p>
+`,
+ques:[
+{q:"1) 本文主要介绍了：",type:"abcd",opts:["A. “老外”学中文","B. 一个韩国人中国画画得很好","C. 在上海的一些韩国人学中国画的事","D. 在上海的一些别墅里住着外国学者、专家"],ans:"C"},
+{q:"2) “老外”的意思是：",type:"abcd",opts:["A. 不是上海人","B. 外国人","C. 不懂中文的人","D. 韩国人"],ans:"B"},
+{q:"3) 本文中的朴先生：",type:"abcd",opts:["A. 到中国以后才学中国画","B. 是新加坡人","C. 以前学过中国画","D. 学过用皮毛作画"],ans:"C"}
+],
+voc:[
+{w:"书画",py:"shū huà",mean:"书法和绘画"},
+{w:"自叹不如",py:"zì tàn bù rú",mean:"自己感叹比不上别人"},
+{w:"别墅",py:"bié shù",mean:"独立的大房子"},
+{w:"俚语",py:"lǐ yǔ",mean:"地方口头俗语"},
+{w:"金石印章",py:"jīn shí yìn zhāng",mean:"篆刻石头印章艺术"},
+{w:"皮毛",py:"pí máo",mean:"一点点表面知识，不深入"},
+{w:"技巧",py:"jì qiǎo",mean:"方法本领"}
+],
+gram:[
+{g:"早已不是……",exp:"很早以前就已经不是新鲜事情。"},
+{g:"因……的需要",exp:"因为某方面的需求。"},
+{g:"功夫不负有心人",exp:"只要肯努力就会有收获。谚语。"}
+]
+}
+],
+// ========= HSK5 偏难｜同一四篇素材书面改写，四选一 =========
+hsk5:[
+{
+title:"短文1｜汉斯在北京",
+text:`
+<p>汉斯是北大法律系第一位美籍研究生，年少时便对中国古老文化怀有浓厚兴趣。1992年尚在美国读本科的他，利用两个月暑假赴北京进修汉语。那段时间他与中国同学同吃同住，获得十分真切的生活体验。</p>
+<p>假期结束之后，汉斯不得不返回美国完成剩余的大学学业，但他已经下定决心，本科毕业就要重返中国。</p>
+<p>父母不舍幼子远走他乡，却被汉斯的执着打动，不过心中依旧牵挂，于是专程来到中国实地考察。当看到儿子能够使用流利的北京口语交流，掌握中国功夫，并且拥有众多中国友人，老人才终于放下心来。</p>
+<p>如今汉斯每年回美国探亲，停留时间不会超过两周。他的父母已经把中国看作汉斯的家。汉斯本人也真切地感受到，中国就是自己的家。</p>
+`,
+ques:[
+{q:"1.汉斯为什么1992年来北京？",type:"abcd",opts:["A.来北大读法律研究生","B.暑假过来进修汉语","C.跟父母一起来中国考察","D.专门来学习中国功夫"],ans:"B"},
+{q:"2.汉斯的父母来中国之后怎么样？",type:"abcd",opts:["A.强烈反对汉斯留在中国","B.看到汉斯的情况之后放心了","C.决定也搬到北京长期居住","D.想把汉斯带回美国读书"],ans:"B"},
+{q:"3.下面哪一项符合文章？",type:"abcd",opts:["A.汉斯每年在美国住两个多月","B.汉斯本科是在北京大学读完的","C.汉斯对中国文化很感兴趣","D.汉斯在北京的时候不和中国同学来往"],ans:"C"}
+],
+voc:[
+{w:"怀有浓厚兴趣",py:"huái yǒu nóng hòu xìng qù",mean:"心里非常感兴趣"},
+{w:"进修",py:"jìn xiū",mean:"进一步学习提高水平"},
+{w:"真切",py:"zhēn qiè",mean:"真实实在"},
+{w:"剩余",py:"shèng yú",mean:"还没有做完的部分"},
+{w:"远走他乡",py:"yuǎn zǒu tā xiāng",mean:"离开家去很远的地方"},
+{w:"专程",py:"zhuān chéng",mean:"专门为一件事跑一趟"},
+{w:"探亲",py:"tàn qīn",mean:"回家看望亲人"}
+],
+gram:[
+{g:"尚……",exp:"还处在某种状态。例句：他尚在读书。"},
+{g:"不得不",exp:"没有别的选择，必须做。"},
+{g:"但……却……",exp:"转折，但是情况不一样。"}
+]
+},
+{
+title:"短文2｜北京市第55中学",
+text:`
+<p>北京市第五十五中学作为市级重点学校，于1989年设立国际学生部，面向驻华使馆、外国商社工作人员的子女开展招生工作。</p>
+<p>汉语教学是国际学生部的核心任务，同时开设多门学科课程。汉语、英语依据学生实际水平实施分层教学。学生完成学业之后，一部分跟随家长返回本国，多数学生参加教育部组织的留学生入学考试，进入国内高校继续深造。</p>
+<p>学校重视小留学生的汉语成长，教师自主开发适配的教学材料，营造轻松的学习氛围帮助学生跨过汉语入门难关。除课堂教学以外，各类社会实践活动丰富着学生的阅历，也加深他们对于中国社会的认知。</p>
+<p>历经二十余年办学，来自六十多个国家与地区的学生从这里毕业，很多学生对母校怀有很深的感情。</p>
+`,
+ques:[
+{q:"1.55中国际学生部招收什么学生？",type:"abcd",opts:["A.北京本地的中学生","B.驻华外国工作人员的子女","C.已经考上大学的外国青年","D.中国去外国的留学生"],ans:"B"},
+{q:"2.国际部大部分学生毕业之后会？",type:"abcd",opts:["A.直接参加工作赚钱","B.参加考试升入中国大学学习","C.留在中学继续读高中","D.全部跟随父母回国生活"],ans:"B"},
+{q:"3.学校组织各种活动的作用，文中没有提到？",type:"abcd",opts:["A.丰富学生的知识阅历","B.加深对中国的了解","C.帮助学生更快找到工作","D.学到课堂以外的东西"],ans:"C"}
+],
+voc:[
+{w:"设立",py:"shè lì",mean:"建立部门机构"},
+{w:"面向",py:"miàn xiàng",mean:"针对某一类对象"},
+{w:"分层教学",py:"fēn céng jiào xué",mean:"按水平分组上课"},
+{w:"深造",py:"shēn zào",mean:"继续学习提高自己"},
+{w:"适配",py:"shì pèi",mean:"适合、匹配需要"},
+{w:"阅历",py:"yuè lì",mean:"经历得到的知识经验"},
+{w:"母校",py:"mǔ xiào",mean:"自己读过书的学校"}
+],
+gram:[
+{g:"作为……",exp:"以某种身份、地位。"},
+{g:"依据……实施……",exp:"按照条件来做某事。"},
+{g:"历经……",exp:"经过一段时间。"}
+]
+},
+{
+title:"短文3｜北京语言大学",
+text:`
+<p>北京语言大学始建于1962年，校名经历数次调整：1964年定名北京语言学院，1996年更名为北京语言文化大学，2002年简化为北京语言大学。</p>
+<p>这是国内唯一一所以来华留学生汉语与中华文化教育为核心任务的国际化大学。四十余年间，学校已经为全球一百六十多个国家培育十万以上掌握汉语、熟悉华夏文化的外籍学子，常年有近万名留学生在校研修。</p>
+<p>学校对外汉语教学历史久、规模大，师资储备十分雄厚，既有深耕本领域多年的专家学者，也涌现出一批青年教学骨干，是国内对外汉语教学研究的重要基地。</p>
+<p>校园硬件条件完备，图书馆、大批现代化语音实验室支撑教学科研，学校致力于建设一所高水平、富有自身特色的世界性大学。</p>
+`,
+ques:[
+{q:"1.北京语言大学名字的变化，下面正确的是？",type:"abcd",opts:["A.从建校开始就叫北京语言大学","B.中间曾经叫北京语言文化大学","C.1962年直接叫北京语言学院","D.学校从来没有改过名字"],ans:"B"},
+{q:"2.北京语言大学主要的任务是？",type:"abcd",opts:["A.只培养中国本地大学生","B.给外国留学生教汉语和中华文化","C.专门培训国内的中学老师","D.研究外国各个国家的历史"],ans:"B"},
+{q:"3.关于学校师资力量说法正确的是？",type:"abcd",opts:["A.学校全部都是年轻老师","B.没有教授、副教授","C.既有老专家，也有青年教师","D.老师数量很少规模很小"],ans:"C"}
+],
+voc:[
+{w:"始建",py:"shǐ jiàn",mean:"开始建立"},
+{w:"数次",py:"shù cì",mean:"好几次"},
+{w:"培育",py:"péi yù",mean:"培养教育学生"},
+{w:"研修",py:"yán xiū",mean:"学习研究进修"},
+{w:"深耕",py:"shēn gēng",mean:"长期专心做一个领域"},
+{w:"骨干",py:"gǔ gàn",mean:"重要的工作人员"},
+{w:"硬件",py:"yìng jiàn",mean:"建筑、设备等物资条件"}
+],
+gram:[
+{g:"经历数次……",exp:"发生过好几次变化。"},
+{g:"既……也……",exp:"两样同时具备。"},
+{g:"致力于",exp:"把力量用在做某件大事。"}
+]
+},
+{
+title:"短文4｜老外学书画",
+text:`
+<p>改革开放之后外国人学习汉语已经十分普遍，但是不少外籍人士钻研中国传统书画，并且创作出水准令普通中国人都赞叹的作品，这样的情况并不多见。</p>
+<p>上海西郊不少花园别墅居住着因工作迁居至此的外国人士，他们不满足于简单掌握日常口语，希望深度体会中国文化，于是投入时间学习琴棋书画、篆刻印章。</p>
+<p>一批热爱国画的韩国学者聘请画师上门授课，学习态度十分刻苦。朴先生早年在新加坡就接触过中国画，仅仅学到一点粗浅技法；迁居上海之后得到专业画家指点，如今梅兰竹菊四类题材都可以熟练创作，作画同时还能够讲解技法，外人很难想象这些作品出自韩国人之手。</p>
+`,
+ques:[
+{q:"1.大多数在上海的外国人为什么要学习书画篆刻？",type:"abcd",opts:["A.想以后在中国当画画老师赚钱","B.想要更深地了解中国文化","C.公司要求他们必须学习画画","D.为了参加画画比赛拿奖"],ans:"B"},
+{q:"2.朴先生在新加坡的时候学画画怎么样？",type:"abcd",opts:["A.已经画得非常完美","B.只学到一点表面粗浅的本事","C.已经得到中国画家的亲自指导","D.完全没有接触过中国画"],ans:"B"},
+{q:"3.根据文章，下面哪一句是正确？",type:"abcd",opts:["A.所有外国人画中国画都比中国人更好","B.韩国学者请老师到住的别墅上课学习书画","C.他们每周上课时间超过五个小时","D.朴先生来到上海才第一次看见中国画"],ans:"B"}
+],
+voc:[
+{w:"钻研",py:"zuān yán",mean:"认真深入学习研究"},
+{w:"水准",py:"shuǐ zhǔn",mean:"水平高低"},
+{w:"迁居",py:"qiān jū",mean:"搬家换到别的地方居住"},
+{w:"粗浅",py:"cū qiǎn",mean:"不深入，表面的"},
+{w:"技法",py:"jì fǎ",mean:"做艺术的方法技巧"},
+{w:"题材",py:"tí cái",mean:"画画描写的内容对象"},
+{w:"熟练",py:"shú liàn",mean:"做得很熟，不困难"}
+],
+gram:[
+{g:"……但是……，这样的情况并不多见",exp:"转折，说明事情比较稀少。"},
+{g:"不满足于……希望……",exp:"不满足现状，追求更高。"},
+{g:"仅仅……；如今……",exp:"对比过去和现在的状态。"}
+]
+}
+],
+// ========= HSK6 难｜高阶书面改写，句子释义类选择题 =========
+hsk6:[
+{
+title:"短文1｜汉斯在北京",
+text:`
+<p>汉斯，北大法律系首位美籍研究生，自少年时代便对华夏古文明心生向往。1992年尚在美国修读本科阶段，他借暑期两月的窗口期赴京修习汉语，与本国学生同吃共居，获得真切的生活体验。</p>
+<p>假期告终，他不得不归国完成剩余学业，但心中已然立定目标，待本科结业即刻重返华夏大地。</p>
+<p>父母不忍幼子远涉重洋，虽被其子的执着所打动，内心依旧存有余虑，于是专程来华实地体察。待目睹其子汉语表达流利，习得中华武术，周遭又有诸多华籍友人，二老方才释怀。</p>
+<p>时至今日，汉斯每年返美省亲，停留时限不逾两周。双亲已然将中国视作汉斯的归宿。于汉斯自身而言，北京早已是精神意义上的故土。</p>
+`,
+ques:[
+{q:"1.原句：父母不忍幼子远涉重洋，虽被其子的执着所打动，内心依旧存有余虑。",type:"abcd",opts:["A.父母舍不得儿子漂洋过海远走，虽然被他的坚持感动，但心里还是担心","B.父母很高兴儿子出国，完全没有任何担心","C.父母坚决反对儿子来到中国生活学习","D.父母希望儿子马上回到美国永远不要再来中国"],ans:"A"},
+{q:"2.原句：于汉斯自身而言，北京早已是精神意义上的故土。",type:"abcd",opts:["A.汉斯出生在北京，所以这里是故乡","B.对汉斯来说，感情上已经把中国当成自己的家","C.汉斯只喜欢北京的风景，不喜欢美国","D.汉斯以后永远不会回美国"],ans:"B"}
+],
+voc:[
+{w:"心生向往",py:"xīn shēng xiàng wǎng",mean:"心里很向往、很喜欢"},
+{w:"窗口期",py:"chuāng kǒu qī",mean:"一段可以用来做事的时间"},
+{w:"告终",py:"gào zhōng",mean:"宣告结束"},
+{w:"远涉重洋",py:"yuǎn shè chóng yáng",mean:"漂洋过海去很远的异国"},
+{w:"体察",py:"tǐ chá",mean:"亲身观察感受"},
+{w:"释怀",py:"shì huái",mean:"放下担心，不再牵挂"},
+{w:"省亲",py:"xǐng qīn",mean:"回去看望亲人（书面）"},
+{w:"归宿",py:"guī sù",mean:"心灵、生活的归属地方"},
+{w:"故土",py:"gù tǔ",mean:"故乡（书面）"}
+],
+gram:[
+{g:"自……便……",exp:"从什么时候起就……书面句式。"},
+{g:"待……方才……",exp:"等到……之后才……书面。"},
+{g:"于……而言",exp:"对于某人来说。"}
+]
+},
+{
+title:"短文2｜北京市第55中学",
+text:`
+<p>北京市第五十五中学作为市级重点学府，于1989年创设国际学生部，面向驻华外交人员、外籍商社雇员的子女开展招生工作。</p>
+<p>汉语为本部核心教学要务，配套开设多门类学科。汉语与英语科目，均按照学员实际学力实施分层施教。完成课业之后，一部分学员随亲眷归国；多数考生经由教育部组织的留学生选拔考试，升入国内高等学府继续修读。</p>
+<p>教师团队自主编撰适配外籍青少年的教学文本，营建松弛愉悦的学习氛围，助力学生逾越汉语入门障碍。课内教学之外，形式多样的社会实践拓宽学员见闻，也促成他们对于当代中国社会更深层次的认知。</p>
+<p>历经二十余载办学，来自六十余个国度与地区的学子自此毕业，不少毕业生对母校怀有深厚的情愫。</p>
+`,
+ques:[
+{q:"1.原句：教师团队自主编撰适配外籍青少年的教学文本，营建松弛愉悦的学习氛围，助力学生逾越汉语入门障碍。",type:"abcd",opts:["A.老师自己编写适合外国青少年的教材，创造轻松环境，帮助学生跨过汉语入门的难关","B.学校直接从国外进口全套原版课本给学生使用","C.学生全部自学汉语，不需要课本也不需要老师","D.汉语入门很难，学校完全不帮助学生解决困难"],ans:"A"},
+{q:"2.原句：形式多样的社会实践拓宽学员见闻，也促成他们对于当代中国社会更深层次的认知。",type:"abcd",opts:["A.社会实践只会让学生玩，学不到任何东西","B.各种各样实践活动扩大学生眼界，加深他们对中国社会的认识","C.社会实践就是上课写作业，不能出门参观","D.社会实践只对中国本地学生有用，外国学生不用参加"],ans:"B"}
+],
+voc:[
+{w:"学府",py:"xué fǔ",mean:"学校（书面）"},
+{w:"创设",py:"chuàng shè",mean:"创立开设部门"},
+{w:"学力",py:"xué lì",mean:"学习能力水平"},
+{w:"分层施教",py:"fēn céng shī jiào",mean:"按水平分组教学"},
+{w:"亲眷",py:"qīn juàn",mean:"亲人家属"},
+{w:"修读",py:"xiū dú",mean:"读书学习（书面）"},
+{w:"编撰",py:"biān zhuàn",mean:"编写书籍材料"},
+{w:"营建",py:"yíng jiàn",mean:"营造、创造（环境）"},
+{w:"逾越",py:"yú yuè",mean:"跨过、越过困难"},
+{w:"情愫",py:"qíng sù",mean:"感情（书面）"}
+],
+gram:[
+{g:"作为……，于……开展……",exp:"书面，以什么身份做什么事。"},
+{g:"经由……",exp:"通过某个途径。"},
+{g:"……促成……",exp:"使得某种结果形成。"}
+]
+},
+{
+title:"短文3｜北京语言大学",
+text:`
+<p>北京语言大学肇始于1962年，校名几经更迭：1964年定名北京语言学院，1996年更名为北京语言文化大学，2002年再度简化为北京语言大学。</p>
+<p>它是国内独树一帜，专门面向来华外籍学员开展汉语及华夏文化教化的高等学府。四十余载耕耘，为寰宇之内一百六十余国度输送十万余名熟稔汉语、通晓中华文脉的海外学子，常年近万名留学生在校修习课业。</p>
+<p>本校对外汉语教学领域积淀最深，办学规模宏大，师资阵容雄厚，既有深耕行业多年的耆宿专家，亦不乏新锐青年教学力量，业已成为国内对外汉语教研的核心重镇。</p>
+<p>校园硬件配套完善，藏书宏富的图书馆、大批现代化语音实验室为教研提供坚实支撑，学校矢志打造一所立足华夏、面向全球的高水平特色大学。</p>
+`,
+ques:[
+{q:"1.原句：本校对外汉语教学领域积淀最深，办学规模宏大，师资阵容雄厚。",type:"abcd",opts:["A.这所学校对外汉语教学历史久，规模大，老师力量很强","B.学校历史很短，规模很小，老师数量不足","C.学校只做理科，不做语言教学","D.学校只招收中国学生，不接收外国人"],ans:"A"},
+{q:"2.原句：业已成为国内对外汉语教研的核心重镇。",type:"abcd",opts:["A.已经变成国内对外汉语教学研究很重要的基地","B.学校已经不再做对外汉语的研究工作","C.学校只研究别的国家的语言，不研究汉语","D.对外汉语教研已经全部搬到别的大学"],ans:"A"}
+],
+voc:[
+{w:"肇始",py:"zhào shǐ",mean:"开始建立（书面）"},
+{w:"更迭",py:"gēng dié",mean:"更换、变化"},
+{w:"独树一帜",py:"dú shù yī zhì",mean:"很有特色，与众不同"},
+{w:"寰宇",py:"huán yǔ",mean:"全世界（书面）"},
+{w:"熟稔",py:"shú rěn",mean:"十分熟悉"},
+{w:"文脉",py:"wén mài",mean:"文化传统脉络"},
+{w:"积淀",py:"jī diàn",mean:"长时间积累下来的东西"},
+{w:"耆宿",py:"qí sù",mean:"行业里年老资深的专家"},
+{w:"新锐",py:"xīn ruì",mean:"年轻有能力的新人"},
+{w:"重镇",py:"zhòng zhèn",mean:"很重要的基地（书面）"},
+{w:"矢志",py:"shǐ zhì",mean:"下定决心立志去做"}
+],
+gram:[
+{g:"几经更迭",exp:"经历好几次改变。"},
+{g:"既……亦……",exp:"书面，既……也……。"},
+{g:"业已",exp:"已经（书面）。"}
+]
+},
+{
+title:"短文4｜老外学书画",
+text:`
+<p>伴随着对外开放不断深化，外籍人士研习汉语早已司空见惯。然则外籍学习者潜心求索中国传统书画，并且产出足以令国人亦为之叹服的艺术作品，此类现象尚属鲜见。</p>
+<p>上海西郊若干花园别墅之中，栖居一批因履职而迁居沪上的外籍人士。他们不囿于日常口语层面的掌握，冀望深入体察华夏文化，故而将琴棋书画、金石篆刻纳入研习范畴。</p>
+<p>部分醉心国画艺术的韩国学人延请画师赴居所面授技艺，学习态度勤勉。朴氏先生早年供职新加坡之时便接触国画，所得不过皮毛之技；移居沪上之后得国内名家点拨，梅兰竹菊皆可挥洒自如，创作之时尚能阐发画理技法，观者很难辨识该作出自域外人士之手。</p>
+`,
+ques:[
+{q:"1.原句：然则外籍学习者潜心求索中国传统书画，并且产出足以令国人亦为之叹服的艺术作品，此类现象尚属鲜见。",type:"abcd",opts:["A.但是外国人认真钻研传统书画，画出连中国人都佩服的作品，这种事不多见","B.外国人都很擅长画画，每个人作品都比中国人好","C.外国人完全不喜欢中国书画，没有人愿意学习","D.所有外国人都必须学习中国传统书画艺术"],ans:"A"},
+{q:"2.原句：他们不囿于日常口语层面的掌握，冀望深入体察华夏文化。",type:"abcd",opts:["A.他们不满足只会日常口语，希望更深地体会中国文化","B.他们只想学会简单口语，不想了解更多文化","C.他们完全不想学习汉语，只想画画","D.他们觉得中国文化没有什么值得学习的地方"],ans:"A"}
+],
+voc:[
+{w:"司空见惯",py:"sī kōng jiàn guàn",mean:"事情很常见不奇怪"},
+{w:"然则",py:"rán zé",mean:"但是（书面）"},
+{w:"潜心求索",py:"qián xīn suǒ qiú",mean:"专心深入钻研探求"},
+{w:"叹服",py:"tàn fú",mean:"赞叹佩服"},
+{w:"鲜见",py:"xiān jiàn",mean:"很少见到"},
+{w:"履职",py:"lǚ zhí",mean:"执行工作职务"},
+{w:"不囿于",py:"bù yòu yú",mean:"不被局限在……"},
+{w:"冀望",py:"jì wàng",mean:"心里希望（书面）"},
+{w:"延请",py:"yán qǐng",mean:"聘请，请人来做事"},
+{w:"勤勉",py:"qín miǎn",mean:"勤奋努力"},
+{w:"点拨",py:"diǎn bō",mean:"高手指点启发"},
+{w:"挥洒自如",py:"huī sǎ zì rú",mean:"画画写文章做得很熟练"},
+{w:"阐发",py:"chǎn fā",mean:"讲清楚道理内容"},
+{w:"域外",py:"yù wài",mean:"外国，境外（书面）"}
+],
+gram:[
+{g:"伴随着……，早已……",exp:"随着某事发展，某事已经变得常见。"},
+{g:"然则……，此类现象尚属鲜见",exp:"书面转折，但是这种情况很少。"},
+{g:"不囿于……，冀望……",exp:"不被局限，希望达成更高目标。"}
+]
+}
+]
+};
+let curLv = "hsk3";
+let curArtIdx = 0;
+let answerState = {};
+function markText(text, vocList, gramList){
+    let html = text;
+    const vocSorted = [...vocList].sort((a,b)=>b.w.length - a.w.length);
+    vocSorted.forEach(v=>{
+        const reg = new RegExp(v.w,"g");
+        html = html.replace(reg,`<span class="tooltip">${v.w}<span class="tip">${v.py}｜${v.mean}</span></span>`);
+    })
+    const gramSorted = [...gramList].sort((a,b)=>b.g.length - a.g.length);
+    gramSorted.forEach(g=>{
+        const reg = new RegExp(g.g,"g");
+        html = html.replace(reg,`<span class="tooltip-gram">${g.g}<span class="tip">${g.exp}</span></span>`);
+    })
+    return html;
+}
+function renderArtTabs(){
+  const wrap = document.getElementById("artTabs");
+  const list = data[curLv];
+  wrap.innerHTML = "";
+  list.forEach((item,idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "tab-art"+(idx===curArtIdx?" active":"");
+    btn.innerText = item.title;
+    btn.onclick = ()=>{curArtIdx=idx;renderAll();};
+    wrap.appendChild(btn);
+  })
+}
+function renderAll(){
+  renderArtTabs();
+  const art = data[curLv][curArtIdx];
+  const leftDom = document.getElementById("panelLeft");
+  const rightDom = document.getElementById("panelRight");
+  answerState = {};
+  const markedText = markText(art.text, art.voc, art.gram);
+  let htmlLeft = `<h3>${art.title}</h3>${markedText}<div class="control-bar"><button class="btn-ctrl" id="checkBtn">核对答案</button><button class="btn-ctrl" id="resetBtn">重置</button></div>`;
+  art.ques.forEach((q,qi)=>{
+    htmlLeft += `<div class="question-block"><p>${q.q}</p>`;
+    if(q.type==="tf"){
+      htmlLeft += `<span class="opt" data-qi="${qi}" data-v="对">✔</span><span class="opt" data-qi="${qi}" data-v="错">✘</span><span class="answer-mark" id="ans${qi}"></span>`;
+    }else{
+      q.opts.forEach(opt=>{
+        htmlLeft += `<span class="opt" data-qi="${qi}" data-v="${opt[0]}">${opt}</span>`;
+      })
+      htmlLeft += `<span class="answer-mark" id="ans${qi}"></span>`;
+    }
+    htmlLeft += `</div>`;
+  })
+  leftDom.innerHTML = htmlLeft;
+  let htmlRight = `<h4>生词</h4><ul>`;
+  art.voc.forEach(v=>{
+    htmlRight += `<li>${v.w} ｜ ${v.py} ｜ ${v.mean}</li>`
+  })
+  htmlRight += `</ul><h4>语法</h4><ul>`;
+  art.gram.forEach(g=>{
+    htmlRight += `<li>${g.g} ｜ ${g.exp}</li>`
+  })
+  htmlRight += `</ul>`;
+  rightDom.innerHTML = htmlRight;
+  document.querySelectorAll(".opt").forEach(el=>{
+    el.onclick = function(){
+      const qi = this.dataset.qi;
+      const val = this.dataset.v;
+      answerState[qi] = val;
+      document.querySelectorAll(`.opt[data-qi="${qi}"]`).forEach(o=>o.classList.remove("selected"));
+      this.classList.add("selected");
+    }
+  })
+  document.getElementById("checkBtn").onclick = ()=>{
+    art.ques.forEach((q,qi)=>{
+      const span = document.getElementById("ans"+qi);
+      span.innerText = "【正确："+q.ans+"】";
+    })
+  }
+  document.getElementById("resetBtn").onclick = ()=>{
+    renderAll();
+  }
+}
+document.querySelectorAll(".tab-lv").forEach(btn=>{
+  btn.onclick = function(){
+    document.querySelectorAll(".tab-lv").forEach(b=>b.classList.remove("active"));
+    this.classList.add("active");
+    curLv = this.dataset.lv;
+    curArtIdx = 0;
+    renderAll();
+  }
+})
+window.onload = ()=>{renderAll();}
+</script>
+</body>
+</html>

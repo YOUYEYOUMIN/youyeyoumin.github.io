@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语阅读｜北语留学生的感悟 原文+简化对照+交互习题</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #EAE7E2;
+            line-height: 1.7;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(140,130,120,0.12);
+        }
+        h2 {
+            text-align: center;
+            color: #5C544F;
+            margin-bottom:18px;
+            border-bottom:1px solid #D9D2CB;
+            padding-bottom:10px;
+            font-size:20px;
+        }
+        .para-item {
+            margin-bottom: 24px;
+        }
+        .para-item p {
+            font-size:16px;
+            color:#4A4541;
+        }
+        .sentence-line{
+            transition: opacity 0.6s ease;
+            opacity:1;
+        }
+        .control-btn-group{
+            margin:10px 0;
+            display:flex;
+            gap:10px;
+        }
+        .exercise-title{
+            font-size:19px;
+            font-weight:bold;
+            margin:22px 0 12px;
+            color:#5C544F;
+        }
+        .q-item{
+            margin:18px 0;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:8px;
+        }
+        .choice-item label{
+            display:block;
+            margin:6px 0;
+            cursor:pointer;
+        }
+        .answer-text{
+            margin-top:10px;
+            font-weight:bold;
+        }
+        .check-answer-btn{
+            margin:12px 0 20px;
+            padding:8px 16px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        /* 生词蓝色悬浮 */
+        .vocab-blue {
+            color: #0044bb;
+            font-weight:500;
+            position:relative;
+            cursor:help;
+        }
+        .vocab-blue .tip {
+            visibility:hidden;
+            position:absolute;
+            left:0;
+            bottom:125%;
+            z-index:99;
+            background:#222;
+            color:#fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space:nowrap;
+            font-size:13px;
+            opacity:0;
+            transition:opacity 0.2s;
+        }
+        .vocab-blue:hover .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        /* 语法红色 */
+        .grammar-red{
+            color:#b82626;
+            font-weight:500;
+            position:relative;
+            cursor:help;
+        }
+        .grammar-red .tip {
+            visibility:hidden;
+            position:absolute;
+            left:0;
+            bottom:125%;
+            z-index:99;
+            background:#222;
+            color:#fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space:nowrap;
+            font-size:13px;
+            opacity:0;
+            transition:opacity 0.2s;
+        }
+        .grammar-red:hover .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        .vocab-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .vocab-word{
+            font-weight:bold;
+            color:#0044bb;
+        }
+        .grammar-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .grammar-title{
+            font-weight:bold;
+            color:#b82626;
+        }
+        /* 正确答案绿色样式 */
+        .correct-ans{
+            color:#009933;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 左上：课文原文，修复逐句消失 -->
+        <div class="box">
+            <h2>课文原文｜北语留学生的感悟</h2>
+            <div class="control-btn-group">
+                <button class="check-answer-btn" id="startDisappearBtn">▶ 开始逐句消失(10秒/句)</button>
+                <button class="check-answer-btn" id="resetShowBtn">↺ 重置显示全部句子</button>
+            </div>
+            <div class="para-item">
+                <p>
+<span class="sentence-line">我来北京语言大学学习汉语，<span class="vocab-blue">一转眼<span class="tip">yī zhuǎn yǎn：时间过得很快，一下子</span></span>已经两年多了。</span>
+<span class="sentence-line">在这两年多的时间里，我的汉语水平<span class="grammar-red">不断<span class="tip">bù duàn：一直持续，不停</span></span>提高，学习汉语的兴趣也<span class="grammar-red">越来越<span class="tip">yuè lái yuè：程度慢慢加深</span></span>大。</span>
+<span class="sentence-line">我不再只注意增加新的汉语知识，而是把汉语当做<span class="vocab-blue">工具<span class="tip">gōng jù：用来做事情的东西</span></span>去了解中国社会、文化、历史和文学。</span>
+                </p>
+            </div>
+            <div class="para-item">
+                <p>
+<span class="sentence-line">我觉得，语言就像一个巨大的、有许多<span class="vocab-blue">抽屉<span class="tip">chōu ti：柜子可以拉开放东西的格子</span></span>的柜子，而学到的知识应该要<span class="vocab-blue">妥当<span class="tip">tuǒ dang：合适，稳妥</span></span>地放进<span class="vocab-blue">适当<span class="tip">shì dàng：正好、合适</span></span>的抽屉里。</span>
+<span class="sentence-line">要用的时候，我们要很快地想起来什么知识在哪个抽屉里，然后从那里把所要的知识抽出来。</span>
+<span class="sentence-line">这里就有一个“<span class="vocab-blue">反应<span class="tip">fǎn yìng：遇到事情之后给出的回应</span></span>速度”问题，它能<span class="vocab-blue">衡量<span class="tip">héng liáng：判断、比较好坏高低</span></span>一个人汉语水平的高低。</span>
+<span class="sentence-line">拿我来说，虽然我的汉语水平还不是很高，但我基本上能用汉语<span class="vocab-blue">思考<span class="tip">sī kǎo：想，动脑筋</span></span>问题，就是说，我考虑问题时不需要先用<span class="vocab-blue">母语<span class="tip">mǔ yǔ：自己从小先说的本国语言</span></span>，然后再把它翻译成汉语。</span>
+<span class="sentence-line">这样我就能对汉语文章的<span class="vocab-blue">原意<span class="tip">yuán yì：本来的意思</span></span>作一个<span class="vocab-blue">初步<span class="tip">chū bù：刚开始、简单的</span></span>的理解。</span>
+<span class="sentence-line">我想，随着汉语水平的提高，我将能用所掌握的汉语知识去阅读和<span class="vocab-blue">欣赏<span class="tip">xīn shǎng：开心地感受美好的事物</span></span>中国的文学作品了。</span>
+                </p>
+            </div>
+            <div class="para-item">
+                <p>
+<span class="sentence-line">我爱文学。</span>
+<span class="sentence-line">我认为，文学作品的语言都是语言的<span class="vocab-blue">精华<span class="tip">jīng huá：最好、最重要的部分</span></span>，它能给人美的<span class="vocab-blue">享受<span class="tip">xiǎng shòu：开心地感受美好的事物</span></span>。</span>
+<span class="sentence-line">阅读<span class="vocab-blue">原著<span class="tip">yuán zhù：原来的书，不是翻译的</span></span>，读者能够更好地理解、体会作者的思想和情感，而阅读翻译的作品就差得多了。</span>
+<span class="sentence-line">记得以前我读英译的中国古诗时，常常不明白诗句说的是什么。</span>
+<span class="sentence-line">而现在我再读这些诗的原作时，我不仅明白了它们的意思，而且觉得它们写得是那么美、那么好。</span>
+<span class="sentence-line">所以，读原著是学习汉语给我带来的最大<span class="vocab-blue">乐趣<span class="tip">lè qù：让人开心、喜欢的事情</span></span>。</span>
+                </p>
+            </div>
+            <div class="para-item">
+                <p>
+<span class="sentence-line">学汉语带给我的<span class="vocab-blue">收获<span class="tip">shōu huò：学到、得到的东西</span></span>还不仅如此。</span>
+<span class="sentence-line">我一直在北京学习，我读过一些有关北京的书，这些书使我对北京的历史、民俗文化、一条条胡同、一个个四合院，都产生了<span class="vocab-blue">浓厚<span class="tip">nóng hòu：很深、很强</span></span>的兴趣，对北京也产生了深深的感情。</span>
+                </p>
+            </div>
+            <div class="para-item">
+                <p>
+<span class="sentence-line">最近我又买了一本北京风光画册，我被画册中那些反映北京<span class="vocab-blue">市容<span class="tip">shì róng：城市的样子、城市面貌</span></span>和北京人生活的照片吸引住了。</span>
+<span class="sentence-line">每到周末，我都带上相机，骑上自行车，到北京的<span class="vocab-blue">大街小巷<span class="tip">dà jiē xiǎo xiàng：城里所有的街道</span></span>去到处走走、看看。</span>
+<span class="sentence-line">我拍了很多照片，认识了很多北京朋友，也了解了不少民俗<span class="vocab-blue">风情<span class="tip">fēng qíng：地方的风俗样子</span></span>。</span>
+<span class="sentence-line">我特别喜欢北京的胡同和四合院。</span>
+<span class="sentence-line">每一条胡同都记下了历史的变化，每一座四合院都<span class="vocab-blue">体现<span class="tip">tǐ xiàn：表现出来、显示出来</span></span>着中国的民风民俗和文化传统，它们都有自己的故事。</span>
+<span class="sentence-line">北京胡同和四合院的发展变化反映了北京社会、政治、经济、文化的发展<span class="vocab-blue">历程<span class="tip">lì chéng：发展的过程</span></span>。</span>
+<span class="sentence-line">我迷上了胡同，迷上了四合院。</span>
+                </p>
+            </div>
+            <div class="para-item">
+                <p>
+<span class="sentence-line">我在北京两年的学习生活很丰富。</span>
+<span class="sentence-line">学习汉语给我打开了了解中国社会、历史、文化的大门。</span>
+<span class="sentence-line">我还打算到中国其他历史文化名城去看看，更多地了解中国。</span>
+                </p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para-item">
+                <p>我来北京语言大学学汉语，一转眼两年多过去了。我的汉语越来越好，对汉语的兴趣也越来越大。我不只学新的汉语知识，我把汉语当作工具，用来了解中国的社会、文化、历史和文学。</p>
+            </div>
+            <div class="para-item">
+                <p>作者把人的大脑比作柜子，知识要放在合适的抽屉。要用的时候，要可以很快拿出来。“反应速度”可以看出你的汉语水平高低。我可以基本用汉语思考，不用母语翻译成汉语。我希望以后可以读中国的文学原著。</p>
+            </div>
+            <div class="para-item">
+                <p>文学作品的语言是精华，可以带给人美的享受。读原著比读翻译的书更好。以前读英文翻译的中国古诗看不懂。现在读中文原作，觉得古诗写得很美。读原著是学汉语最大的乐趣。</p>
+            </div>
+            <div class="para-item">
+                <p>学汉语带给我的收获还有很多。我读很多关于北京的书，对北京历史、胡同、四合院产生很大兴趣，我很喜欢北京。</p>
+            </div>
+            <div class="para-item">
+                <p>我买了一本北京风光画册，被里面的照片吸引。每到周末，我就骑车带上相机，走遍北京大街小巷，拍照片，认识很多北京朋友，了解民俗风情。胡同、四合院记录北京历史，体现中国传统。我非常喜欢胡同和四合院。</p>
+            </div>
+            <div class="para-item">
+                <p>在北京两年生活很丰富。汉语帮我了解中国。我还想去中国别的历史名城，更多地了解中国。</p>
+            </div>
+        </div>
+        <!-- 左下：同义替换选择题（20题：前10词语，后10句子） -->
+        <div class="box">
+            <h2>同义替换选择题（20题）</h2>
+            <button class="check-answer-btn" onclick="checkAllSynonym()">✅ 核对全部答案</button>
+            <div id="synonymResult"></div>
+            <p style="margin-bottom:8px;font-weight:bold;">一、词语同义（1‑10）</p>
+            <div class="q-item" data-ans="B">
+                <p>1. <span>一转眼</span>已经两年多了。【一转眼】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s1" value="A">A.转一下眼睛</label>
+                    <label><input type="radio" name="s1" value="B">B.时间过得很快，一下子</label>
+                    <label><input type="radio" name="s1" value="C">C.过了很多天黑夜</label>
+                    <label><input type="radio" name="s1" value="D">D.两年的夜晚</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>2.把汉语当做<span>工具</span>去了解中国。【工具】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s2" value="A">A.家具柜子</label>
+                    <label><input type="radio" name="s2" value="B">B.书本词典</label>
+                    <label><input type="radio" name="s2" value="C">C.用来做事情的手段</label>
+                    <label><input type="radio" name="s2" value="D">D.旅游的东西</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="D">
+                <p>3.它能<span>衡量</span>一个人汉语水平的高低。【衡量】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s3" value="A">A.测量重量</label>
+                    <label><input type="radio" name="s3" value="B">B.称东西</label>
+                    <label><input type="radio" name="s3" value="C">C.提高水平</label>
+                    <label><input type="radio" name="s3" value="D">D.判断、比较好坏</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>4.我基本上能用汉语<span>思考</span>问题。【思考】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s4" value="A">A.动脑筋想</label>
+                    <label><input type="radio" name="s4" value="B">B.说出来</label>
+                    <label><input type="radio" name="s4" value="C">C.写下来</label>
+                    <label><input type="radio" name="s4" value="D">D.听一听</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>5.文学作品语言都是语言的<span>精华</span>。【精华】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s5" value="A">A.垃圾，没用的</label>
+                    <label><input type="radio" name="s5" value="B">B.最好最重要的部分</label>
+                    <label><input type="radio" name="s5" value="C">C.很长的句子</label>
+                    <label><input type="radio" name="s5" value="D">D.外国文字</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>6.读<span>原著</span>，读者能更好体会作者思想。【原著】意思？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s6" value="A">A.翻译之后的书</label>
+                    <label><input type="radio" name="s6" value="B">B.画画的本子</label>
+                    <label><input type="radio" name="s6" value="C">C.作者原来写的作品，不是译本</label>
+                    <label><input type="radio" name="s6" value="D">D.学生写的作文</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>7.学汉语带给我的<span>收获</span>还不仅如此。【收获】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s7" value="A">A.学到得到的东西</label>
+                    <label><input type="radio" name="s7" value="B">B.地里种的粮食</label>
+                    <label><input type="radio" name="s7" value="C">C.花钱买来的礼物</label>
+                    <label><input type="radio" name="s7" value="D">D.朋友送的书</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>8.都产生了<span>浓厚</span>的兴趣。【浓厚】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s8" value="A">A.很少，一点点</label>
+                    <label><input type="radio" name="s8" value="B">B.很深、很强</label>
+                    <label><input type="radio" name="s8" value="C">C.淡淡的</label>
+                    <label><input type="radio" name="s8" value="D">D.颜色很黑</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>9.每一座四合院都<span>体现</span>中国民风民俗。【体现】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s9" value="A">A.身体休息</label>
+                    <label><input type="radio" name="s9" value="B">B.体会味道</label>
+                    <label><input type="radio" name="s9" value="C">C.表现、显示出来</label>
+                    <label><input type="radio" name="s9" value="D">D.身体检查</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="D">
+                <p>10.发展的<span>历程</span>。【历程】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s10" value="A">A.走路历史</label>
+                    <label><input type="radio" name="s10" value="B">B.旅游路线</label>
+                    <label><input type="radio" name="s10" value="C">C.坐车的道路</label>
+                    <label><input type="radio" name="s10" value="D">D.发展变化的整个过程</label>
+                </div>
+            </div>
+            <p style="margin:20px 0 8px;font-weight:bold;">二、句子同义（11‑20）</p>
+            <div class="q-item" data-ans="A">
+                <p>11.我的汉语水平不断提高，学习汉语的兴趣也越来越大。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s11" value="A">A.我的汉语水平一直在变好，我对汉语的兴趣也变得更强。</label>
+                    <label><input type="radio" name="s11" value="B">B.我的汉语越来越差，我不想学汉语。</label>
+                    <label><input type="radio" name="s11" value="C">C.我的汉语没有变化，兴趣也没有变化。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>12.就是说，我考虑问题时不需要先用母语，然后再把它翻译成汉语。意思相同的一句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s12" value="A">A.我思考问题必须先用母语再翻译成汉语。</label>
+                    <label><input type="radio" name="s12" value="B">B.换句话说，我思考问题不用母语，直接用汉语。</label>
+                    <label><input type="radio" name="s12" value="C">C.我不会说自己的母语。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>13.读原著是学习汉语给我带来的最大乐趣。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s13" value="A">A.读翻译的书是我最大快乐。</label>
+                    <label><input type="radio" name="s13" value="B">B.学习汉语没有给我带来任何快乐。</label>
+                    <label><input type="radio" name="s13" value="C">C.学习汉语最让我开心的事，就是阅读作品的原文。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>14.学汉语带给我的收获还不仅如此。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s14" value="A">A.学汉语我只有这一点收获。</label>
+                    <label><input type="radio" name="s14" value="B">B.学汉语我得到的东西还不止这些。</label>
+                    <label><input type="radio" name="s14" value="C">C.学汉语我什么收获都没有。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>15.我被画册中那些反映北京市容和北京人生活的照片吸引住了。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s15" value="A">A.画册里表现北京城市面貌、百姓生活的照片，让我很感兴趣。</label>
+                    <label><input type="radio" name="s15" value="B">B.我不喜欢画册里面的照片。</label>
+                    <label><input type="radio" name="s15" value="C">C.画册里面没有照片。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>16.每一条胡同都记下了历史的变化。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s16" value="A">A.胡同跟历史变化没有关系。</label>
+                    <label><input type="radio" name="s16" value="B">B.胡同全部都是新修的，没有过去。</label>
+                    <label><input type="radio" name="s16" value="C">A.每一条胡同都可以让人看到历史怎样改变。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>17.我迷上了胡同，迷上了四合院。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s17" value="A">A.我不喜欢胡同、四合院。</label>
+                    <label><input type="radio" name="s17" value="B">A.我非常喜欢胡同和四合院。</label>
+                    <label><input type="radio" name="s17" value="C">C.我只看图片，不去实地看。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>18.学习汉语给我打开了了解中国社会、历史、文化的大门。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s18" value="A">A.汉语帮助我有机会认识中国的社会、历史和文化。</label>
+                    <label><input type="radio" name="s18" value="B">B.学汉语不能帮助我了解中国。</label>
+                    <label><input type="radio" name="s18" value="C">C.学汉语只能看大门。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>19.随着汉语水平的提高，我将能用所掌握的汉语知识去阅读和欣赏中国的文学作品了。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s19" value="A">A.汉语变好以后，我也不能读文学。</label>
+                    <label><input type="radio" name="s19" value="B">B.汉语越差，越可以看懂文学。</label>
+                    <label><input type="radio" name="s19" value="C">C.我的汉语进步以后，我就可以阅读、品味中国文学作品。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>20.我还打算到中国其他历史文化名城去看看，更多地了解中国。同义句： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s20" value="A">A.我不想再去中国别的城市。</label>
+                    <label><input type="radio" name="s20" value="B">B.我计划去中国别的有名历史城市，进一步认识中国。</label>
+                    <label><input type="radio" name="s20" value="C">C.我准备马上回国，不再旅游。</label>
+                </div>
+            </div>
+        </div>
+        <!-- 右下：生词 + 语法 -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise-title">一、生词</div>
+            <div class="vocab-item">
+                <span class="vocab-word">一转眼</span>：时间过得很快，一下子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">工具</span>：用来做事情的东西、手段。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">抽屉</span>：柜子里面可以拉开放东西的格子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">妥当</span>：合适，稳妥。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">适当</span>：正好，合适。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">反应</span>：遇到事情之后给出的回应。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">速度</span>：快慢。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">衡量</span>：判断、比较好坏高低。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">思考</span>：动脑筋想。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">母语</span>：自己从小先说的本国语言。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">原意</span>：本来的意思。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">初步</span>：刚开始，简单的。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">精华</span>：最好、最重要的部分。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">享受</span>：开心感受美好的事物。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">原著</span>：作者原来写的书，不是翻译版本。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">收获</span>：学到、得到的东西。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">浓厚</span>：很深，很强。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">市容</span>：城市的面貌样子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">大街小巷</span>：城市里面所有的街道。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">风情</span>：地方的风俗、样子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">体现</span>：表现出来，显示出来。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">历程</span>：发展变化的整个过程。
+            </div>
+            <div class="exercise-title">二、语法</div>
+            <div class="grammar-item">
+                <span class="grammar-title">1. 一转眼</span><br>表示时间过得飞快。例句：一转眼，一年过去了。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">2. 不断</span><br>一直持续，不停。例句：天气不断变冷。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">3. 越来越……</span><br>程度慢慢加深。例句：天气越来越冷。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">4. 把……当做……</span><br>把A看成B。例句：我把汉语当做工具。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">5. 拿……来说</span><br>举例子，拿A做例子。例句：拿我来说，我很喜欢北京。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">6. 就是说</span><br>换一句话，解释前面的话。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">7. 不仅……而且……</span><br>递进。不但，还。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">8. 还不仅如此</span><br>不止这些，还有别的。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">9. 被……（被动句）</span><br>受到，被什么怎么样。例句：我被照片吸引住了。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">10. 随着……</span><br>跟着A发生变化。例句：随着春天到来，花儿开了。
+            </div>
+        </div>
+    </div>
+<script>
+    //修复：直接操作style.opacity，不依赖css class
+    let disappearTimer = null;
+    let lineIndex = 0;
+    const allLines = Array.from(document.querySelectorAll(".sentence-line"));
+
+    function startDisappear(){
+        clearInterval(disappearTimer);
+        lineIndex = 0;
+        disappearTimer = setInterval(()=>{
+            if(lineIndex >= allLines.length){
+                clearInterval(disappearTimer);
+                return;
+            }
+            allLines[lineIndex].style.opacity = "0";
+            lineIndex++;
+        },10000);
+    }
+    function resetAllLines(){
+        clearInterval(disappearTimer);
+        lineIndex = 0;
+        allLines.forEach(el=>{
+            el.style.opacity = "1";
+        });
+    }
+    document.getElementById("startDisappearBtn").addEventListener("click",startDisappear);
+    document.getElementById("resetShowBtn").addEventListener("click",resetAllLines);
+
+    //同义题答案字典
+    const synAns = {
+        s1:"B",s2:"C",s3:"D",s4:"A",s5:"B",
+        s6:"C",s7:"A",s8:"B",s9:"C",s10:"D",
+        s11:"A",s12:"B",s13:"C",s14:"B",s15:"A",
+        s16:"C",s17:"B",s18:"A",s19:"C",s20:"B"
+    };
+    function checkAllSynonym(){
+        let score=0;
+        let total=20;
+        document.querySelectorAll(".ans-hint").forEach(el=>el.innerHTML="");
+        for(let key in synAns){
+            const qItem = document.querySelector(`input[name="${key}"]`).closest(".q-item");
+            const hintDom = qItem.querySelector(".ans-hint");
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+            if(selected && selected.value === synAns[key]){
+                score++;
+                hintDom.innerHTML = `<span class="correct-ans">✅正确</span>`;
+            }else{
+                hintDom.innerHTML = `<span class="correct-ans">✅正确答案：${synAns[key]}</span>`;
+            }
+        }
+        document.getElementById("synonymResult").innerText = `✅ 同义选择题结果：答对${score}/${total}题`;
+    }
+</script>
+</body>
+</html>

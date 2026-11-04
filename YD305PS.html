@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device‑width, initial‑scale=1.0">
+    <title>汉语阅读课文｜说说我的经历｜原文+简化+进阶对照 + 交互习题</title>
+    <style>
+        * {
+            box-sizing: border‑box;
+            margin: 0;
+            padding: 0;
+            font‑family: "Microsoft YaHei", sans‑serif;
+        }
+        body {
+            padding: 16px;
+            background‑color: #EAE7E2;
+            line‑height: 1.7;
+        }
+        /* 平板横屏优先：4栏布局；小屏幕自动回退2栏 */
+        .grid‑container {
+            display: grid;
+            grid‑template‑columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        @media (max‑width:1200px){
+            .grid‑container{
+                grid‑template‑columns: repeat(2,1fr);
+            }
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 18px;
+            border‑radius: 12px;
+            box‑shadow: 0 2px 8px rgba(140,130,120,0.12);
+            overflow‑y: auto;
+            max‑height: 88vh;
+        }
+        h2 {
+            text‑align: center;
+            color: #5C544F;
+            margin‑bottom:14px;
+            border‑bottom:1px solid #D9D2CB;
+            padding‑bottom:8px;
+            font‑size:18px;
+        }
+        .para‑item {
+            margin‑bottom: 16px;
+        }
+        .para‑item p {
+            font‑size:15px;
+            color:#4A4541;
+        }
+        .exercise‑title{
+            font‑size:17px;
+            font‑weight:bold;
+            margin:18px 0 10px;
+            color:#5C544F;
+        }
+        .q‑item{
+            margin:12px 0;
+            padding:8px;
+        }
+        .judge‑options button{
+            padding:5px 14px;
+            margin:0 6px;
+            border‑radius:5px;
+            border:1px solid #C8C0B8;
+            background:#E9E3DD;
+            cursor:pointer;
+            font‑size:14px;
+            color:#4A4541;
+        }
+        .judge‑options button.right{
+            background:#D8E2DB;
+            border‑color:#89A897;
+        }
+        .judge‑options button.wrong{
+            background:#E8D9D9;
+            border‑color:#C9A8A8;
+        }
+        .answer‑text{
+            margin‑left:10px;
+            font‑weight:bold;
+        }
+        .choice‑item{
+            margin:10px 0;
+            color:#4A4541;
+            font‑size:14px;
+        }
+        .blank‑input{
+            padding:3px 6px;
+            width:80px;
+            border:1px solid #C8C0B8;
+            border‑radius:4px;
+            background:#fff;
+        }
+        .check‑answer‑btn{
+            margin:10px 0 16px;
+            padding:7px 14px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border‑radius:6px;
+            cursor:pointer;
+            font‑size:14px;
+        }
+        /* 生词蓝色悬浮提示 */
+        .vocab‑hover {
+            color: #0044bb;
+            position: relative;
+            cursor: help;
+            font‑weight:500;
+        }
+        .vocab‑hover .tip {
+            visibility: hidden;
+            position: absolute;
+            left: 0;
+            bottom: 120%;
+            background: #222;
+            color: #fff;
+            padding:5px 8px;
+            border‑radius:5px;
+            white‑space: normal;
+            z‑index: 99;
+            font‑size:12px;
+            max‑width:240px;
+        }
+        .vocab‑hover:hover .tip {
+            visibility: visible;
+        }
+        /* 语法红色 */
+        .grammar‑red{
+            color:#b82626;
+            font‑weight:500;
+        }
+        .vocab‑item{
+            margin‑bottom:12px;
+            color:#4A4541;
+            font‑size:14px;
+        }
+        .vocab‑word{
+            font‑weight:bold;
+            color:#727A84;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid‑container">
+        <!-- 左上：原文 -->
+        <div class="box">
+            <h2>课文原文｜说说我的经历</h2>
+            <div class="para‑item">
+                <p>我是个<span class="vocab‑hover">华裔<span class="tip">华裔：祖先有中国血统，人在国外生活</span></span>，在法国的时候不太<span class="vocab‑hover">重视<span class="tip">重视：觉得很重要，认真对待</span></span>学习语言，<span class="grammar‑red">曾</span>学过英语和德语，<span class="grammar‑red">可是</span>现在<span class="vocab‑hover">几乎<span class="tip">几乎：差不多，大部分</span></span>都<span class="vocab‑hover">还给老师<span class="tip">还给老师：以前学的东西差不多全忘了</span></span>了。那时候，我没有觉得学习外语有多么重要。来到中国以后，遇到了不少<span class="vocab‑hover">麻烦事<span class="tip">麻烦事：不好办、困难的事情</span></span>，都是因为我不会说中国话，<span class="grammar‑red">这时……才……</span>我才感到<span class="vocab‑hover">掌握<span class="tip">掌握：学会，会用</span></span>一门外语是多么重要。</p>
+            </div>
+            <div class="para‑item">
+                <p>刚到中国的那些日子是我最<span class="vocab‑hover">痛苦<span class="tip">痛苦：心里很难受</span></span>的时光，我还<span class="vocab‑hover">清楚地<span class="tip">清楚地：记得很明白</span></span>记得。那时，我跟其他国家的留学生一样，一句汉语也不会说。第一天上课，老师对我们<span class="vocab‑hover">提出<span class="tip">提出：说出来，给大家看</span></span>了<span class="vocab‑hover">要求<span class="tip">要求：必须做到的事情</span></span>：进了教室以后，谁也不能说自己的<span class="vocab‑hover">母语<span class="tip">母语：自己国家的语言</span></span>或者是英语、法语等，都要说汉语。开始的几个星期真难过，同学之间、同学和老师之间的<span class="vocab‑hover">交流<span class="tip">交流：说话，互相沟通</span></span>非常困难。有几次，我<span class="grammar‑red">好不容易</span>把我要说的意思说了出来，可是要让大家<span class="vocab‑hover">明白<span class="tip">明白：懂，知道</span></span>我的想法，那可就更难了。为了给大家解释我想说的意思，我说话时总是<span class="vocab‑hover">手舞足蹈<span class="tip">手舞足蹈：手脚一起比划说话</span></span>，那样子一定很<span class="vocab‑hover">可笑<span class="tip">可笑：好玩的、好笑的</span></span>。后来我买了一本<span class="vocab‑hover">《法汉词典》<span class="tip">法汉词典：法语汉语对照的字典</span></span>，它给了我很大的<span class="vocab‑hover">帮助<span class="tip">帮助：给别人支持</span></span>。遇到了不知道的词，<span class="grammar‑red">只要……就……</span>只要查一查词典，问题就解决了。</p>
+            </div>
+            <div class="para‑item">
+                <p>我听一个<span class="vocab‑hover">老同学<span class="tip">老同学：以前在这里学习的学生</span></span>说，去市场买东西要会<span class="vocab‑hover">砍价<span class="tip">砍价：买东西和老板讲便宜一点</span></span>，那样会<span class="vocab‑hover">省钱<span class="tip">省钱：少花金钱</span></span>。那时我<span class="vocab‑hover">最怕<span class="tip">最怕：最害怕，最担心</span></span>一个人出去买东西。我是华裔，如果我不说话，跟中国人没有什么<span class="vocab‑hover">区别<span class="tip">区别：不一样的地方</span></span>。<span class="grammar‑red">如果……就……</span>可是我一张嘴，马上就<span class="vocab‑hover">露馅儿<span class="tip">露馅儿：真实情况被别人看出来</span></span>，那就可能<span class="vocab‑hover">挨宰<span class="tip">挨宰：买东西被卖得很贵，吃亏</span></span>了。那时候我只学会了几句简单的话，“这个”、“那个”掌握得最好，用得也最多，因为买东西时，我叫不出名字，就用手指，再说“我要这个”或者“我要那个”。可是如果碰到我要的东西离我太远，或者我没有看到我要的东西时，“这个”、“那个”就用不上了。</p>
+            </div>
+            <div class="para‑item">
+                <p>记得有一次我要去商店买东西，<span class="vocab‑hover">出发<span class="tip">出发：离开这里去别的地方</span></span>前我查好了我要买的东西的名字，路上还<span class="grammar‑red">一边……一边……</span>一边走一边说着那个词。到了商店，<span class="vocab‑hover">售货员<span class="tip">售货员：商店卖东西的工作人员</span></span>问我要买什么，他说得比较快，我一<span class="vocab‑hover">紧张<span class="tip">紧张：心里很不安，有点慌</span></span>，刚刚背的词一下子忘得<span class="vocab‑hover">干干净净<span class="tip">干干净净：全部，一点没有剩下</span></span>。售货员又问了我几遍，我还是没想起来那个词，只好又用手指一指，说：“那个。”可是，我指的那个方向东西很多，售货员拿过来一个，不是我要的，又拿过来一个，还不是我要的，我也不知道说了多少次“那个”。最后，虽然我买到了要买的东西，但是觉得很<span class="vocab‑hover">不好意思<span class="tip">不好意思：害羞、难为情</span></span>。这时我才<span class="vocab‑hover">体会到<span class="tip">体会到：心里明白、感受到</span></span>学习外语是多么重要，所以从那次以后，我学习非常<span class="vocab‑hover">努力<span class="tip">努力：很认真，不怕辛苦</span></span>。</p>
+            </div>
+            <div class="para‑item">
+                <p><span class="grammar‑red">虽然……可是……</span>我虽然努力学习，可是到现在我的汉语水平还是很差，我说的话别人常常听不懂或者被<span class="vocab‑hover">误解<span class="tip">误解：把别人的话理解错</span></span>。我想可能是我的<span class="vocab‑hover">发音<span class="tip">发音：说话的声音</span></span>不准，也可能是我说话说得不清楚。有一天我碰到了一件很好玩儿的事，就是因为我说不清楚。那天我在一个<span class="vocab‑hover">小摊<span class="tip">小摊：路边很小的卖东西的地方</span></span>上买<span class="vocab‑hover">游泳镜<span class="tip">游泳镜：游泳戴的眼镜</span></span>，他要卖80块钱一副，我想跟他砍砍价，就随便说了一下：“70块。”当时我也不知道他听懂了没有，只听他对我说：“不行，60块。”我听到后<span class="vocab‑hover">大吃一惊<span class="tip">大吃一惊：非常意外，很惊讶</span></span>，<span class="vocab‑hover">没有犹豫<span class="tip">没有犹豫：马上做决定，不思考</span></span>，给了他60块，拿着游泳镜赶快就走了。你说这件事是不是很好玩儿？</p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para‑item">
+                <p>我是<span class="vocab‑hover">华裔<span class="tip">华裔：祖先有中国血统，人在国外生活</span></span>，以前在法国的时候，我不太<span class="vocab‑hover">重视<span class="tip">重视：觉得很重要，认真对待</span></span>语言学习，学过英语、德语，但是<span class="vocab‑hover">几乎<span class="tip">几乎：差不多，大部分</span></span>都<span class="vocab‑hover">还给老师<span class="tip">还给老师：以前学的东西差不多全忘了</span></span>。那时候我觉得学外语不重要。来到中国，因为不会汉语遇到很多<span class="vocab‑hover">麻烦事<span class="tip">麻烦事：不好办、困难的事情</span></span>，我<span class="grammar‑red">这时……才……</span>才知道<span class="vocab‑hover">掌握<span class="tip">掌握：学会，会用</span></span>外语很重要。</p>
+            </div>
+            <div class="para‑item">
+                <p>刚来中国的时候，我一句汉语都不会。上课老师<span class="vocab‑hover">提出<span class="tip">提出：说出来，给大家看</span></span><span class="vocab‑hover">要求<span class="tip">要求：必须做到的事情</span></span>我们只说汉语。刚开始同学之间<span class="vocab‑hover">交流<span class="tip">交流：说话，互相沟通</span></span>特别难，我经常<span class="vocab‑hover">手舞足蹈<span class="tip">手舞足蹈：手脚一起比划说话</span></span>来表达意思。后来我买了一本<span class="vocab‑hover">法汉词典<span class="tip">法汉词典：法语汉语对照的字典</span></span>，遇到不懂的词就查词典，词典给我很大<span class="vocab‑hover">帮助<span class="tip">帮助：给别人支持</span></span>。</p>
+            </div>
+            <div class="para‑item">
+                <p>听一个<span class="vocab‑hover">老同学<span class="tip">老同学：以前在这里学习的学生</span></span>说买东西可以<span class="vocab‑hover">砍价<span class="tip">砍价：买东西和老板讲便宜一点</span></span>，可以<span class="vocab‑hover">省钱<span class="tip">省钱：少花金钱</span></span>。我<span class="vocab‑hover">最怕<span class="tip">最怕：最害怕，最担心</span></span>一个人出去买东西。我不说话的时候，别人看不出我是外国人，和中国人没有<span class="vocab‑hover">区别<span class="tip">区别：不一样的地方</span></span>，但是我一开口就会<span class="vocab‑hover">露馅儿<span class="tip">露馅儿：真实情况被别人看出来</span></span>，可能会<span class="vocab‑hover">挨宰<span class="tip">挨宰：买东西被卖得很贵，吃亏</span></span>。那时候我只会说“这个、那个”，买东西的时候就用手指。东西太远或者看不见的时候，这两句话就没有用了。</p>
+            </div>
+            <div class="para‑item">
+                <p>有一次去商店买东西，<span class="vocab‑hover">出发<span class="tip">出发：离开这里去别的地方</span></span>出门之前我记住了物品的名字。到商店，<span class="vocab‑hover">售货员<span class="tip">售货员：商店卖东西的工作人员</span></span>说得很快，我一<span class="vocab‑hover">紧张<span class="tip">紧张：心里很不安，有点慌</span></span>，单词全部忘得<span class="vocab‑hover">干干净净<span class="tip">干干净净：全部，一点没有剩下</span></span>。我只能一直说“那个”。售货员拿了好几个东西都不是我想要的。最后东西买到了，我感觉很<span class="vocab‑hover">不好意思<span class="tip">不好意思：害羞、难为情</span></span>。这件事之后，我学习汉语特别<span class="vocab‑hover">努力<span class="tip">努力：很认真，不怕辛苦</span></span>。</p>
+            </div>
+            <div class="para‑item">
+                <p><span class="grammar‑red">虽然……可是……</span>虽然我很努力，我的汉语还是不好，别人经常听不懂或者<span class="vocab‑hover">误解<span class="tip">误解：把别人的话理解错</span></span>我的话，可能是我的<span class="vocab‑hover">发音<span class="tip">发音：说话的声音</span></span>不好。有一次在路边<span class="vocab‑hover">小摊<span class="tip">小摊：路边很小的卖东西的地方</span></span>买<span class="vocab‑hover">游泳镜<span class="tip">游泳镜：游泳戴的眼镜</span></span>，老板要80元，我说70元砍价。结果老板说60元卖给我。我<span class="vocab‑hover">大吃一惊<span class="tip">大吃一惊：非常意外，很惊讶</span></span>，<span class="vocab‑hover">没有犹豫<span class="tip">没有犹豫：马上做决定，不思考</span></span>，马上给钱拿东西就走了。这是一件很好玩的小事。</p>
+            </div>
+        </div>
+        <!-- 右二：进阶版本 -->
+        <div class="box">
+            <h2>进阶版本</h2>
+            <div class="para‑item">
+                <p>身为一名<span class="vocab‑hover">华裔<span class="tip">华裔：祖先有中国血统，人在国外生活</span></span>，我早年旅居法国，彼时并未<span class="vocab‑hover">重视<span class="tip">重视：觉得很重要，认真对待</span></span>外语学习。我<span class="grammar‑red">曾</span>修习英语与德语，<span class="grammar‑red">可是</span>如今<span class="vocab‑hover">几乎<span class="tip">几乎：差不多，大部分</span></span>大半知识早已<span class="vocab‑hover">还给老师<span class="tip">还给老师：以前学的东西差不多全忘了</span></span>。彼时我并未意识到<span class="vocab‑hover">掌握<span class="tip">掌握：学会，会用</span></span>外语的价值。来华之后，由于汉语能力不足屡屡遭遇<span class="vocab‑hover">麻烦事<span class="tip">麻烦事：不好办、困难的事情</span></span>，<span class="grammar‑red">这时……才……</span>我才真切<span class="vocab‑hover">体会到<span class="tip">体会到：心里明白、感受到</span></span>掌握一门外语的重要意义。</p>
+            </div>
+            <div class="para‑item">
+                <p>初到中国的那段时光对我而言十分<span class="vocab‑hover">痛苦<span class="tip">痛苦：心里很难受</span></span>。和其他外籍留学生一样，我完全不通汉语。开课之初教师便<span class="vocab‑hover">提出<span class="tip">提出：说出来，给大家看</span></span><span class="vocab‑hover">要求<span class="tip">要求：必须做到的事情</span></span>，教室内禁止使用<span class="vocab‑hover">母语<span class="tip">母语：自己国家的语言</span></span>、英法等语言，只能使用汉语。最初数周<span class="vocab‑hover">交流<span class="tip">交流：说话，互相沟通</span></span>障碍重重。好几回，我<span class="grammar‑red">好不容易</span>拼凑出想要表达的内容，却依旧难以让旁人<span class="vocab‑hover">明白<span class="tip">明白：懂，知道</span></span>我的想法。为传递意图，我常常<span class="vocab‑hover">手舞足蹈<span class="tip">手舞足蹈：手脚一起比划说话</span></span>，模样颇为<span class="vocab‑hover">可笑<span class="tip">可笑：好玩的、好笑的</span></span>。后来购置一本<span class="vocab‑hover">《法汉词典》<span class="tip">法汉词典：法语汉语对照的字典</span></span>，对我助益良多。遇到生僻词语，<span class="grammar‑red">只要……就……</span>只要查阅词典，难题便可化解。</p>
+            </div>
+            <div class="para‑item">
+                <p>从前听一位<span class="vocab‑hover">老同学<span class="tip">老同学：以前在这里学习的学生</span></span>讲起，在集市购物学会<span class="vocab‑hover">砍价<span class="tip">砍价：买东西和老板讲便宜一点</span></span>能够<span class="vocab‑hover">省钱<span class="tip">省钱：少花金钱</span></span>。那时我格外<span class="vocab‑hover">最怕<span class="tip">最怕：最害怕，最担心</span></span>独自外出购物。作为华裔，缄默不语之时，我与普通中国人看上去并无<span class="vocab‑hover">区别<span class="tip">区别：不一样的地方</span></span>。<span class="grammar‑red">如果……就……</span>可一旦开口，便立刻<span class="vocab‑hover">露馅儿<span class="tip">露馅儿：真实情况被别人看出来</span></span>，很有可能遭到<span class="vocab‑hover">挨宰<span class="tip">挨宰：买东西被卖得很贵，吃亏</span></span>。当时我仅掌握少量简单用语，“这个”“那个”使用频率最高。倘若目标物品距离过远或者不在视野之内，这两个说法便派不上用场。</p>
+            </div>
+            <div class="para‑item">
+                <p>记得一回上街采购，出门前我预先记牢货品名称，路上还<span class="grammar‑red">一边……一边……</span>一边行进一边反复默念。抵达店铺之后，<span class="vocab‑hover">售货员<span class="tip">售货员：商店卖东西的工作人员</span></span>语速较快，我<span class="grammar‑red">一……就……</span>一<span class="vocab‑hover">紧张<span class="tip">紧张：心里很不安，有点慌</span></span>，刚刚熟记的词语便忘得<span class="vocab‑hover">干干净净<span class="tip">干干净净：全部，一点没有剩下</span></span>。我只能反复用手指，口中念叨“那个”。售货员数次取出货品，全都并非我所需。尽管最终买到商品，内心却十分<span class="vocab‑hover">不好意思<span class="tip">不好意思：害羞、难为情</span></span>。经此一事，我愈发<span class="vocab‑hover">努力<span class="tip">努力：很认真，不怕辛苦</span></span>学习汉语。</p>
+            </div>
+            <div class="para‑item">
+                <p><span class="grammar‑red">虽然……可是……</span>尽管我刻苦用功，汉语水平依旧有限，我的表述时常被人听不懂甚至遭到<span class="vocab‑hover">误解<span class="tip">误解：把别人的话理解错</span></span>，或许源于<span class="vocab‑hover">发音<span class="tip">发音：说话的声音</span></span>不准或是吐字不清。有一桩趣事便由此发生。某日我在街边<span class="vocab‑hover">小摊<span class="tip">小摊：路边很小的卖东西的地方</span></span>选购<span class="vocab‑hover">游泳镜<span class="tip">游泳镜：游泳戴的眼镜</span></span>，摊主开价八十元一副。我尝试还价七十元。出乎意料摊主回应六十元即可成交。我<span class="vocab‑hover">大吃一惊<span class="tip">大吃一惊：非常意外，很惊讶</span></span>，<span class="vocab‑hover">没有犹豫<span class="tip">没有犹豫：马上做决定，不思考</span></span>，付完钱款便拿着物品匆匆离开。</p>
+            </div>
+        </div>
+        <!-- 右三：全部习题 -->
+        <div class="box">
+            <h2>课后练习题</h2>
+            <button class="check‑answer‑btn" onclick="resetAllAnswers()">🔄 重置全部答案</button>
+
+            <div class="exercise‑title">一、判断题（点击 ✓ / ✗）</div>
+            <div class="q‑item" data‑answer="false">
+                <span>1. “我”出生在中国，一直住在中国。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="true">
+                <span>2. 在法国的时候，“我”学过英语和德语，但是几乎都忘了。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="false">
+                <span>3. 刚到中国，“我”的汉语说得非常流利。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="true">
+                <span>4. 刚上课的时候老师要求课堂只能说汉语。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="true">
+                <span>5. 《法汉词典》帮了“我”很大的忙。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="false">
+                <span>6. “我”非常喜欢一个人出去买东西。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="true">
+                <span>7. “我”不说话的时候，看起来和中国人差别不大。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="false">
+                <span>8. 商店那次，“我”记住的单词一直没有忘记。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="true">
+                <span>9. 买游泳镜时，老板愿意60块卖给“我”。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+            <div class="q‑item" data‑answer="true">
+                <span>10. 经历很多困难之后，“我”学习汉语很努力。</span>
+                <div class="judge‑options">
+                    <button onclick="judgeCheck(this, true)">✓</button>
+                    <button onclick="judgeCheck(this, false)">✗</button>
+                    <span class="answer‑text"></span>
+                </div>
+            </div>
+
+            <div class="exercise‑title">二、普通单选题</div>
+            <div class="choice‑item">
+                <p>1. 故事里的“我”以前住在哪个国家？</p>
+                <label><input type="radio" name="q1" value="A"> A.法国</label>
+                <label><input type="radio" name="q1" value="B"> B.德国</label>
+                <label><input type="radio" name="q1" value="C"> C.中国</label>
+            </div>
+            <div class="choice‑item">
+                <p>2. 刚到中国上课，老师要求大家在教室要说？</p>
+                <label><input type="radio" name="q2" value="A"> A.法语</label>
+                <label><input type="radio" name="q2" value="B"> B.汉语</label>
+                <label><input type="radio" name="q2" value="C"> C.英语</label>
+            </div>
+            <div class="choice‑item">
+                <p>3. “我”遇到不懂的生词，靠什么帮助自己？</p>
+                <label><input type="radio" name="q3" value="A"> A.手机翻译软件</label>
+                <label><input type="radio" name="q3" value="B"> B.法汉词典</label>
+                <label><input type="radio" name="q3" value="C"> C.同学</label>
+            </div>
+            <div class="choice‑item">
+                <p>4. 老同学告诉“我”买东西可以学会什么省钱？</p>
+                <label><input type="radio" name="q4" value="A"> A.砍价</label>
+                <label><input type="radio" name="q4" value="B"> B.讲礼貌</label>
+                <label><input type="radio" name="q4" value="C"> C.手舞足蹈</label>
+            </div>
+            <div class="choice‑item">
+                <p>5. “我”害怕一个人出去买东西，是因为？</p>
+                <label><input type="radio" name="q5" value="A"> A.身上没有钱</label>
+                <label><input type="radio" name="q5" value="B"> B.汉语不好，一开口就露馅儿</label>
+                <label><input type="radio" name="q5" value="C"> C.市场离家太远</label>
+            </div>
+            <div class="choice‑item">
+                <p>6. 商店那次，“我”因为什么忘记要买东西的名字？</p>
+                <label><input type="radio" name="q6" value="A"> A.紧张</label>
+                <label><input type="radio" name="q6" value="B"> B.生气</label>
+                <label><input type="radio" name="q6" value="C"> C.开心</label>
+            </div>
+            <div class="choice‑item">
+                <p>7. 那次商店的经历以后，“我”怎么做？</p>
+                <label><input type="radio" name="q7" value="A"> A.再也不去商店</label>
+                <label><input type="radio" name="q7" value="B"> B.学习汉语非常努力</label>
+                <label><input type="radio" name="q7" value="C"> C.每天只在家看书</label>
+            </div>
+            <div class="choice‑item">
+                <p>8. “我”的汉语说不好，可能是什么原因？</p>
+                <label><input type="radio" name="q8" value="A"> A.发音不准，说话不清楚</label>
+                <label><input type="radio" name="q8" value="B"> B.没有词典</label>
+                <label><input type="radio" name="q8" value="C"> C.不想学习</label>
+            </div>
+            <div class="choice‑item">
+                <p>9. 小摊上，游泳镜老板一开始卖多少钱？</p>
+                <label><input type="radio" name="q9" value="A"> A.60元</label>
+                <label><input type="radio" name="q9" value="B"> B.70元</label>
+                <label><input type="radio" name="q9" value="C"> C.80元</label>
+            </div>
+            <div class="choice‑item">
+                <p>10. 买游泳镜这件好玩的事说明什么？</p>
+                <label><input type="radio" name="q10" value="A"> A.汉语说得不清楚，容易被别人误解</label>
+                <label><input type="radio" name="q10" value="B"> B.老板不想做生意</label>
+                <label><input type="radio" name="q10" value="C"> C.游泳镜很便宜</label>
+            </div>
+
+            <div class="exercise‑title">三、同义句子选择题（进阶10题）</div>
+            <div class="choice‑item">
+                <p>1.句子：可是现在几乎都还给老师了。</p>
+                <label><input type="radio" name="syn1" value="A"> A.可是以前学的差不多都忘记了</label><br>
+                <label><input type="radio" name="syn1" value="B"> B.我把书还给我的老师</label><br>
+                <label><input type="radio" name="syn1" value="C"> C.老师把东西还给我</label>
+            </div>
+            <div class="choice‑item">
+                <p>2.句子：这时我才感到掌握一门外语是多么重要。</p>
+                <label><input type="radio" name="syn2" value="A"> A.以前我就知道外语很重要</label><br>
+                <label><input type="radio" name="syn2" value="B"> B.到了这个时候，我才明白学好外语很重要</label><br>
+                <label><input type="radio" name="syn2" value="C"> C.我觉得外语一点儿也不重要</label>
+            </div>
+            <div class="choice‑item">
+                <p>3.句子：我好不容易把我要说的意思说了出来。</p>
+                <label><input type="radio" name="syn3" value="A"> A.我很轻松就说完了</label><br>
+                <label><input type="radio" name="syn3" value="B"> B.我费了很大力气才把想法说出来</label><br>
+                <label><input type="radio" name="syn3" value="C"> C.我完全不想说话</label>
+            </div>
+            <div class="choice‑item">
+                <p>4.句子：只要查一查词典，问题就解决了。</p>
+                <label><input type="radio" name="syn4" value="A"> A.查词典就可以处理好问题</label><br>
+                <label><input type="radio" name="syn4" value="B"> B.查词典也不能解决问题</label><br>
+                <label><input type="radio" name="syn4" value="C"> C.词典里面没有答案</label>
+            </div>
+            <div class="choice‑item">
+                <p>5.句子：可是我一张嘴，马上就露馅儿。</p>
+                <label><input type="radio" name="syn5" value="A"> A.我一开口，别人就知道我是外国人</label><br>
+                <label><input type="radio" name="syn5" value="B"> B.我嘴巴破了，流出血</label><br>
+                <label><input type="radio" name="syn5" value="C"> C.我不想说话，一直闭着嘴</label>
+            </div>
+            <div class="choice‑item">
+                <p>6.句子：路上还一边走一边说着那个词。</p>
+                <label><input type="radio" name="syn6" value="A"> A.走完路之后，我再读那个词</label><br>
+                <label><input type="radio" name="syn6" value="B"> B.走路的同时反复念那个词语</label><br>
+                <label><input type="radio" name="syn6" value="C"> C.我站在原地念词语，不走路</label>
+            </div>
+            <div class="choice‑item">
+                <p>7.句子：我一紧张，刚刚背的词一下子忘得干干净净。</p>
+                <label><input type="radio" name="syn7" value="A"> A.我一紧张，刚记住的词全部忘掉</label><br>
+                <label><input type="radio" name="syn7" value="B"> B.紧张让我记得更牢</label><br>
+                <label><input type="radio" name="syn7" value="C"> C.我一点儿也不紧张，记得很好</label>
+            </div>
+            <div class="choice‑item">
+                <p>8.句子：虽然我努力学习，可是到现在我的汉语水平还是很差。</p>
+                <label><input type="radio" name="syn8" value="A"> A.我不学习，汉语非常好</label><br>
+                <label><input type="radio" name="syn8" value="B"> B.我很努力，但汉语依旧不好</label><br>
+                <label><input type="radio" name="syn8" value="C"> C.努力之后我的汉语已经很好了</label>
+            </div>
+            <div class="choice‑item">
+                <p>9.句子：我说的话别人常常听不懂或者被误解。</p>
+                <label><input type="radio" name="syn9" value="A"> A.别人经常听不明白，或者理解错我的话</label><br>
+                <label><input type="radio" name="syn9" value="B"> B.大家每次都完全听懂我的话</label><br>
+                <label><input type="radio" name="syn9" value="C"> C.我从来不会被别人误解</label>
+            </div>
+            <div class="choice‑item">
+                <p>10.句子：我听到后大吃一惊，没有犹豫，给了他60块。</p>
+                <label><input type="radio" name="syn10" value="A"> A.我很吃惊，想了很久才给钱</label><br>
+                <label><input type="radio" name="syn10" value="B"> B.我很吃惊，立刻就付了60元</label><br>
+                <label><input type="radio" name="syn10" value="C"> C.我不吃惊，不想给钱</label>
+            </div>
+
+            <div class="exercise‑title">四、填空题</div>
+            <div>
+                1. 我是个<input class="blank‑input" id="b1">，以前住在法国。
+            </div>
+            <div style="margin:6px 0;">
+                2. 刚到中国，我一句<input class="blank‑input" id="b2">也不会说。
+            </div>
+            <div style="margin:6px 0;">
+                3. 为了解释意思，我经常<input class="blank‑input" id="b3">。
+            </div>
+            <div style="margin:6px 0;">
+                4. 我买了一本<input class="blank‑input" id="b4">词典帮助我学习。
+            </div>
+            <div style="margin:6px 0;">
+                5. 买东西学会<input class="blank‑input" id="b5">可以省钱。
+            </div>
+            <div style="margin:6px 0;">
+                6. 我一张嘴就<input class="blank‑input" id="b6">，别人知道我是外国人。
+            </div>
+            <div style="margin:6px 0;">
+                7. 在商店我一<input class="blank‑input" id="b7">，把单词全忘记了。
+            </div>
+            <div style="margin:6px 0;">
+                8. 商店的事情以后，我学习汉语非常<input class="blank‑input" id="b8">。
+            </div>
+            <div style="margin:6px 0;">
+                9. 我的汉语发音不准，别人容易<input class="blank‑input" id="b9">我的意思。
+            </div>
+            <div style="margin:6px 0;">
+                10. 在小摊我想买<input class="blank‑input" id="b10">，发生了一件好玩的事。
+            </div>
+
+            <button class="check‑answer‑btn" onclick="checkAllChoice()">核对单选+同义句答案</button>
+            <div id="choiceResult"></div>
+            <button class="check‑answer‑btn" onclick="checkBlank()">核对填空答案</button>
+            <div id="blankResult"></div>
+        </div>
+        <!-- 最右：生词语法栏（HSK4，大量扩充，解释简单，配例句） -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise‑title">一、生词<span style="color:#0044bb">（蓝色悬浮查看释义｜HSK4水平，解释简单，配例句）</span></div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">华裔</span>：祖先有中国血统，本人在国外生活。<br>例：他是华裔，从小在法国长大。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">重视</span>：认为很重要，认真对待。<br>例：我们要重视学习汉语。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">几乎</span>：差不多，大部分。<br>例：我几乎把单词都忘记了。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">还给老师</span>：以前学过的知识差不多全部忘记。<br>例：很久不用，以前的英语都还给老师。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">麻烦事</span>：困难、不好处理的事情。<br>例：出门忘记带钱，是一件麻烦事。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">痛苦</span>：心里很难受，不开心。<br>例：不会说话的时候，他心里很痛苦。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">清楚地</span>：记得、看得很明白。<br>例：我清楚地记得那一天。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">提出</span>：把想法、要求说出来。<br>例：老师向我们提出新的要求。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">要求</span>：必须做到的规定。<br>例：学校有很多要求。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">母语</span>：自己国家、从小说的语言。<br>例：我的母语不是汉语。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">交流</span>：互相说话、沟通。<br>例：我们用汉语交流。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">明白</span>：懂，理解。<br>例：我不明白这句话的意思。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">手舞足蹈</span>：一边说话一边手脚比划。<br>例：说不清楚，他就手舞足蹈。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">可笑</span>：好笑的、好玩的。<br>例：他的样子很可笑。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">帮助</span>：给别人支持、出力。<br>例：词典给我很多帮助。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">老同学</span>：以前在这里学习的学生。<br>例：我的老同学汉语说得很好。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">砍价</span>：买东西和老板商量，把价格变低。<br>例：在小摊买东西可以砍价。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">省钱</span>：少花金钱。<br>例：砍价可以省钱。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">最怕</span>：最害怕，最担心。<br>例：我最怕一个人出门。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">区别</span>：不一样的地方。<br>例：这两个东西没有区别。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">露馅儿</span>：真实情况被别人看出来。<br>例：一开口，就露馅儿了。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">挨宰</span>：买东西被卖得很贵，自己吃亏。<br>例：不会砍价，就容易挨宰。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">出发</span>：离开这里，去别的地方。<br>例：我们早上八点出发。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">售货员</span>：商店卖东西的工作人员。<br>例：售货员给我拿衣服。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">紧张</span>：心里不安，有点慌。<br>例：考试的时候我有点紧张。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">干干净净</span>：全部、一点也没有剩下。<br>例：我把单词忘得干干净净。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">不好意思</span>：害羞、难为情。<br>例：说错话，我觉得不好意思。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">体会到</span>：心里感受到、明白。<br>例：我体会到学习汉语不容易。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">努力</span>：认真不怕辛苦。<br>例：我每天努力学习。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">误解</span>：把别人的话理解错。<br>例：不要误解我的意思。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">发音</span>：说话的声音。<br>例：他的发音不太准。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">小摊</span>：路边很小的卖东西的地方。<br>例：路边小摊的东西很便宜。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">游泳镜</span>：游泳的时候戴的眼镜。<br>例：游泳的时候要戴游泳镜。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">大吃一惊</span>：非常惊讶、很意外。<br>例：听到这个消息，我大吃一惊。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">没有犹豫</span>：马上做决定，不思考很久。<br>例：我没有犹豫，马上答应。
+            </div>
+            <div class="vocab‑item">
+                <span class="vocab‑word">法汉词典</span>：法语和汉语对照的字典。<br>例：我用一本法汉词典查生词。
+            </div>
+
+            <div class="exercise‑title">二、语法<span style="color:#b82626">（红色标记｜简单解释+例句，适合HSK4）</span></div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">1. 曾</span><br>含义：过去曾经做过某事。<br>例句：我曾在北京生活过两年。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">2. 可是</span><br>含义：表示转折，“但是”。<br>例句：我很想去，可是我没有时间。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">3. 这时……才……</span><br>含义：等到这个时候，才明白、才做某事。<br>例句：这时我才知道学习很重要。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">4. 好不容易</span><br>含义：做一件事很费力，不容易。<br>例句：我好不容易买到火车票。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">5. 只要……就……</span><br>含义：满足条件，就会出现后面的结果。<br>例句：只要努力，就会有进步。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">6. 如果……就……</span><br>含义：假设，如果发生A，就发生B。<br>例句：如果下雨，我就不出门。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">7. 一边……一边……</span><br>含义：两件动作同时做。<br>例句：我一边听音乐，一边写作业。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">8. 一……就……</span><br>含义：一件事情发生，马上出现另一件事。<br>例句：一到晚上，我就想睡觉。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">9. 虽然……可是……</span><br>含义：转折，承认前面情况，后面不一样。<br>例句：虽然很累，可是我很开心。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">10. 动词+得+形容词（程度补语）</span><br>含义：说明动作、状态达到什么程度。<br>例句：忘得干干净净；说得不清楚。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">11. 被（被动）</span><br>含义：表示受到别人带来的情况。<br>例句：我的话被别人误解。
+            </div>
+            <div class="vocab‑item">
+                <span class="grammar‑red">12. 有一次（举例叙事）</span><br>含义：拿过去一件事情举例讲故事。<br>例句：有一次，我去上海旅行。
+            </div>
+        </div>
+    </div>
+<script>
+    //判断题点击逻辑
+    function judgeCheck(btn, userSelect) {
+        const item = btn.closest(".q‑item");
+        const realAns = item.dataset.answer === "true";
+        const span = item.querySelector(".answer‑text");
+        const buttons = item.querySelectorAll("button");
+        buttons.forEach(b=>b.classList.remove("right","wrong"));
+        if(userSelect === realAns){
+            btn.classList.add("right");
+            span.textContent = " ✔ 正确";
+            span.style.color="#597c69";
+        }else{
+            btn.classList.add("wrong");
+            span.textContent = " ✘ 错误";
+            span.style.color="#b46464";
+        }
+    }
+    //普通单选答案
+    const choiceAns = {
+        q1:"A",q2:"B",q3:"B",q4:"A",q5:"B",
+        q6:"A",q7:"B",q8:"A",q9:"C",q10:"A"
+    };
+    //同义句单选答案
+    const synAns = {
+        syn1:"A",syn2:"B",syn3:"B",syn4:"A",syn5:"A",
+        syn6:"B",syn7:"A",syn8:"B",syn9:"A",syn10:"B"
+    };
+    //合并核对普通单选+同义句
+    function checkAllChoice(){
+        let score=0,total=0;
+        for(let k in choiceAns){ total++;
+            let sel = document.querySelector(`input[name="${k}"]:checked`);
+            if(sel && sel.value===choiceAns[k]) score++;
+        }
+        for(let k in synAns){ total++;
+            let sel = document.querySelector(`input[name="${k}"]:checked`);
+            if(sel && sel.value===synAns[k]) score++;
+        }
+        document.getElementById("choiceResult").innerText = `单选+同义句：答对${score}/${total}题`;
+    }
+    //填空标准答案
+    const blankAns = ["华裔","汉语","手舞足蹈","法汉","砍价","露馅儿","紧张","努力","误解","游泳镜"];
+    function checkBlank(){
+        let score=0;
+        for(let i=0;i<10;i++){
+            const input = document.getElementById("b"+(i+1));
+            if(input.value.trim() === blankAns[i]) score++;
+        }
+        document.getElementById("blankResult").innerText = `填空题：答对${score}/10题`;
+    }
+    //重置全部
+    function resetAllAnswers(){
+        document.querySelectorAll(".q‑item").forEach(item=>{
+            const btns = item.querySelectorAll("button");
+            btns.forEach(b=>b.classList.remove("right","wrong"));
+            item.querySelector(".answer‑text").textContent = "";
+        });
+        document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+        document.querySelectorAll(".blank‑input").forEach(i=>i.value="");
+        document.getElementById("choiceResult").textContent="";
+        document.getElementById("blankResult").textContent="";
+    }
+</script>
+</body>
+</html>

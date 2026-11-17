@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI-241 课堂抽签</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Roboto, sans-serif; }
+  body { background: #f5f4f2; color: #2b2b2b; padding: 24px; min-height: 100vh; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 24px; }
+  header h1 { font-size: 26px; font-weight: 700; letter-spacing: 2px; }
+  header p { margin-top: 6px; color: #8a857f; font-size: 14px; }
+
+  .main { display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-bottom: 20px; }
+
+  .card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
+
+  .roster h3, .stage h3 { font-size: 15px; font-weight: 600; color: #555; margin-bottom: 14px; letter-spacing: 1px; }
+  .roster .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 56vh; overflow-y: auto; }
+  .roster .item { padding: 8px 6px; text-align: center; background: #faf9f7; border-radius: 12px; font-size: 14px; color: #3a3a3a; }
+  .roster .item.picked { background: #eef3f9; color: #5b83ad; font-weight: 600; }
+
+  .stage { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 340px; }
+  .stage .big { font-size: 64px; font-weight: 700; min-height: 88px; display: flex; align-items: center; color: #222; letter-spacing: 4px; }
+  .stage .sub { margin-top: 10px; color: #8a857f; font-size: 14px; min-height: 20px; }
+
+  .btn { padding: 13px 38px; border: none; border-radius: 999px; font-size: 16px; font-weight: 500; cursor: pointer; background: #2b2b2b; color: #fff; transition: all .2s; margin-top: 26px; }
+  .btn:hover { background: #4a4a4a; }
+  .btn.ghost { background: #fff; color: #2b2b2b; border: 1px solid #ddd; }
+  .btn.ghost:hover { background: #f2f0ed; }
+  .btn:disabled { opacity: .35; cursor: not-allowed; }
+
+  .top-actions { display: flex; gap: 12px; justify-content: center; margin-top: 18px; }
+
+  .groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .group { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
+  .group .g-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .group .g-title { font-size: 16px; font-weight: 600; }
+  .group .g-count { font-size: 12px; color: #9a958f; }
+  .group .members { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; min-height: 32px; }
+  .group .members span { padding: 5px 10px; background: #faf9f7; border-radius: 10px; font-size: 13px; }
+  .group .members span.picked { background: #f7ecea; color: #c07a72; font-weight: 600; }
+  .group .g-result { font-size: 26px; font-weight: 700; text-align: center; min-height: 36px; color: #5b83ad; letter-spacing: 2px; margin-bottom: 10px; }
+  .group .g-btn { padding: 9px 24px; border: none; border-radius: 999px; font-size: 14px; cursor: pointer; background: #2b2b2b; color: #fff; transition: all .2s; }
+  .group .g-btn:hover { background: #4a4a4a; }
+  .group .g-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .group .g-btn-row { text-align: center; }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .groups { grid-template-columns: 1fr 1fr; }
+    .stage .big { font-size: 44px; }
+  }
+  @media (max-width: 560px) {
+    .groups { grid-template-columns: 1fr; }
+    body { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>CI-241 课堂抽签</h1>
+    <p>第一步：随机分为六组　第二步：每组抽出一名代表</p>
+  </header>
+
+  <div class="main">
+    <div class="card roster">
+      <h3>全部名单（33 人）</h3>
+      <div class="grid" id="rosterBox"></div>
+    </div>
+
+    <div class="card stage">
+      <div class="big" id="stageName">准备分组</div>
+      <div class="sub" id="stageSub">点击下方按钮，开始随机分组</div>
+      <button class="btn" id="groupBtn">开始分组</button>
+      <div class="top-actions">
+        <button class="btn ghost" id="resetBtn" disabled>重新分组</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="groups" id="groupsBox"></div>
+</div>
+
+<script>
+const NAMES = [
+  "周苏为","娣娜拉","张美丽","潘吉悦","宋家贤","李米蒂","金晶","康乐",
+  "苏光明","阿丽莎","连丽","安迪南","孙田","江家燕","迪雄","唐楷辞",
+  "彭佩兰","杨依慈","李品玉","王杰","文思","王土星","乔旺","郑卿媛",
+  "宋沙文","林子湛","张文军","阳洋","李丽","陶晚","魏然","孔薇兰","苏婉"
+];
+
+// 33 人分 6 组：6,6,6,5,5,5
+const GROUP_SIZES = [6, 6, 6, 5, 5, 5];
+
+// 分组阶段状态：idle 待开始 / rolling 滚动中 / done 已完成
+let groupState = "idle";
+let groupTimer = null;
+let groups = [];
+
+const rosterBox = document.getElementById("rosterBox");
+const stageName = document.getElementById("stageName");
+const stageSub = document.getElementById("stageSub");
+const groupBtn = document.getElementById("groupBtn");
+const resetBtn = document.getElementById("resetBtn");
+const groupsBox = document.getElementById("groupsBox");
+
+function renderRoster() {
+  rosterBox.innerHTML = "";
+  NAMES.forEach(n => {
+    const el = document.createElement("div");
+    el.className = "item";
+    el.textContent = n;
+    el.dataset.name = n;
+    rosterBox.appendChild(el);
+  });
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function stopGroupTimer() {
+  if (groupTimer) { clearInterval(groupTimer); groupTimer = null; }
+}
+
+// 第一步：分组抽签
+groupBtn.addEventListener("click", () => {
+  if (groupState === "idle") {
+    // 开始滚动
+    groupState = "rolling";
+    groupBtn.textContent = "暂停";
+    stageSub.textContent = "正在随机分组……";
+    stopGroupTimer();
+    groupTimer = setInterval(() => {
+      stageName.textContent = NAMES[Math.floor(Math.random() * NAMES.length)];
+    }, 80);
+  } else if (groupState === "rolling") {
+    // 暂停并落定分组
+    stopGroupTimer();
+    finishGrouping();
+  }
+});
+
+function finishGrouping() {
+  const shuffled = shuffle(NAMES);
+  groups = [];
+  let idx = 0;
+  GROUP_SIZES.forEach(size => {
+    groups.push({
+      members: shuffled.slice(idx, idx + size),
+      picked: null,
+      rolling: false,
+      timer: null
+    });
+    idx += size;
+  });
+  groupState = "done";
+  stageName.textContent = "分组完成";
+  stageSub.textContent = "请在下方各组卡片中分别抽签";
+  groupBtn.textContent = "已分组";
+  groupBtn.disabled = true;
+  resetBtn.disabled = false;
+  renderGroups();
+}
+
+function renderGroups() {
+  groupsBox.innerHTML = "";
+  groups.forEach((g, gi) => {
+    const card = document.createElement("div");
+    card.className = "group";
+    card.innerHTML =
+      '<div class="g-head">' +
+        '<div class="g-title">第 ' + (gi + 1) + ' 组</div>' +
+        '<div class="g-count">' + g.members.length + ' 人</div>' +
+      '</div>' +
+      '<div class="members" id="members-' + gi + '"></div>' +
+      '<div class="g-result" id="result-' + gi + '">—</div>' +
+      '<div class="g-btn-row">' +
+        '<button class="g-btn" id="gbtn-' + gi + '">开始抽签</button>' +
+      '</div>';
+    groupsBox.appendChild(card);
+
+    const membersBox = card.querySelector("#members-" + gi);
+    g.members.forEach(n => {
+      const s = document.createElement("span");
+      s.textContent = n;
+      s.dataset.name = n;
+      membersBox.appendChild(s);
+    });
+
+    const btn = card.querySelector("#gbtn-" + gi);
+    btn.addEventListener("click", () => toggleGroupDraw(gi));
+  });
+}
+
+// 第二步：每组独立抽签
+function toggleGroupDraw(gi) {
+  const g = groups[gi];
+  const btn = document.getElementById("gbtn-" + gi);
+  const result = document.getElementById("result-" + gi);
+
+  if (g.rolling) {
+    // 暂停，落定结果
+    if (g.timer) { clearInterval(g.timer); g.timer = null; }
+    g.rolling = false;
+    const finalName = g.members[Math.floor(Math.random() * g.members.length)];
+    g.picked = finalName;
+    result.textContent = finalName;
+    btn.textContent = "重新抽签";
+    stageName.textContent = finalName;
+    stageSub.textContent = "第 " + (gi + 1) + " 组代表";
+    markPicked();
+    return;
+  }
+
+  // 开始滚动
+  g.rolling = true;
+  btn.textContent = "暂停";
+  result.textContent = "…";
+  if (g.timer) clearInterval(g.timer);
+  g.timer = setInterval(() => {
+    result.textContent = g.members[Math.floor(Math.random() * g.members.length)];
+  }, 80);
+}
+
+function markPicked() {
+  const pickedNames = groups.map(g => g.picked).filter(Boolean);
+  document.querySelectorAll("#rosterBox .item").forEach(el => {
+    el.classList.toggle("picked", pickedNames.includes(el.dataset.name));
+  });
+  groups.forEach((g, gi) => {
+    document.querySelectorAll("#members-" + gi + " span").forEach(s => {
+      s.classList.toggle("picked", s.dataset.name === g.picked);
+    });
+  });
+}
+
+// 重新分组
+resetBtn.addEventListener("click", () => {
+  groups.forEach(g => { if (g.timer) { clearInterval(g.timer); g.timer = null; } });
+  stopGroupTimer();
+  groups = [];
+  groupState = "idle";
+  stageName.textContent = "准备分组";
+  stageSub.textContent = "点击下方按钮，开始随机分组";
+  groupBtn.disabled = false;
+  groupBtn.textContent = "开始分组";
+  resetBtn.disabled = true;
+  groupsBox.innerHTML = "";
+  renderRoster();
+});
+
+renderRoster();
+</script>
+</body>
+</html>

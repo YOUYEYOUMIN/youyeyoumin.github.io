@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>微笑背后｜课文交互学习 ZZ204T</title>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"PingFang SC","Microsoft YaHei",sans-serif;}
+body{background:#f4f2ee;padding:16px;color:#444;}
+.container{max-width:1400px;margin:0 auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 14px rgba(0,0,0,0.07);}
+.tab-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;justify-content:center;}
+.tab-btn{padding:9px 15px;border:none;border-radius:8px;background:#d9d3cc;color:#333;font-size:15px;cursor:pointer;transition:0.25s;}
+.tab-btn.active{background:#8c9b94;color:#fff;}
+.tab-btn:hover{opacity:0.85;}
+.main-row{
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+.left-panel,
+.right-panel{
+    background:#ffffff;
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.left-panel{line-height:2.1;font-size:17px;}
+.right-panel{background:#f7f5f1;}
+.block-item{display:none;}
+.block-item.active{display:block;animation:fade 0.35s ease;}
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+.blank-input{width:110px;border:1px solid #b8b8b8;border-radius:4px;padding:2px 4px;font-size:17px;text-align:center;background:#fff;}
+.wrong{border:2px solid #e06c6c;background:#ffe9e9;color:#c82222;}
+.right{border:2px solid #72b884;background:#edf8f0;color:#1e7032;}
+.sort-wrap{margin:18px 0;padding:14px;background:#efede8;border-radius:10px;}
+.sort-title{font-weight:bold;margin-bottom:10px;font-size:17px;color:#555;}
+.sort-item{padding:9px 12px;background:#fff;border:1px solid #c8c2b8;border-radius:6px;margin:8px 0;cursor:grab;line-height:1.6;}
+.sort-item:active{cursor:grabbing;}
+.sort-btn{margin-top:10px;padding:7px 12px;border:none;border-radius:6px;background:#8c9b94;color:#fff;cursor:pointer;}
+.sort-result{margin-top:8px;padding:8px;display:none;border-radius:6px;}
+.sort-res-ok{background:#eaf4ec;color:#2b613a;display:block;}
+.sort-res-err{background:#f9e8e8;color:#882f2f;display:block;}
+.question-wrap{margin-top:20px;padding-top:14px;border-top:1px solid #ccc;}
+.q-item{margin:12px 0;}
+.q-text{font-weight:500;margin-bottom:6px;}
+.q-answer-input{width:100%;min-height:55px;border:1px solid #bbbbbb;border-radius:6px;padding:8px;font-size:16px;background:#fff;}
+.q-show-ans{margin-top:8px;padding:10px;background:#f0f2f1;border-radius:6px;display:none;white-space:pre-line;}
+.right-panel h3{margin-bottom:12px;color:#4a5f58;font-size:19px;border-left:4px solid #8c9b94;padding-left:8px;}
+.word-card{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #ddd;}
+.word-title{font-weight:bold;color:#546e7a;font-size:18px;margin-bottom:4px;}
+.grammar-card{margin:18px 0;padding:14px;background:#eef1f0;border-radius:10px;}
+.grammar-title{font-weight:bold;color:#4a5f58;margin-bottom:8px;font-size:17px;}
+.grammar-note{font-size:15px;color:#555;margin:6px 0;padding-left:4px;border-left:3px solid #8c9b94;}
+.complete-exercise{margin-top:12px;}
+.complete-q{margin-bottom:6px;}
+.complete-ta{width:100%;min-height:60px;border:1px solid #c2c9c6;border-radius:6px;padding:8px;font-size:16px;background:#fff;}
+.answer-btn{margin-top:10px;padding:8px 14px;border:none;border-radius:6px;background:#8c9b94;color:#fff;cursor:pointer;}
+.answer-btn:hover{opacity:0.85;}
+.show-answer{margin-top:8px;color:#333;font-weight:500;display:none;padding:6px 8px;background:#e8eceb;border-radius:4px;white-space:pre-line;}
+.reset-btn{margin-left:8px;padding:8px 14px;border:none;border-radius:6px;background:#c27c7c;color:#fff;cursor:pointer;}
+.reset-btn:hover{opacity:0.85;}
+.grammar-ex-item{margin:16px 0;padding-bottom:12px;border-bottom:1px solid #ddd;}
+.grammar-ex-q{margin-bottom:6px;font-size:17px;}
+.grammar-ex-input{width:100%;min-height:50px;border:1px solid #bbbbbb;border-radius:6px;padding:8px;font-size:16px;}
+@media(max-width:900px){
+  .main-row{
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="tab-buttons">
+    <button class="tab-btn" onclick="switchTab(-1)">语法综合练习</button>
+    <button class="tab-btn active" onclick="switchTab(0)">第1段</button>
+    <button class="tab-btn" onclick="switchTab(1)">第2段</button>
+    <button class="tab-btn" onclick="switchTab(2)">第3段</button>
+    <button class="tab-btn" onclick="switchTab(3)">第4段</button>
+    <button class="tab-btn" onclick="switchTab(4)">第5段</button>
+    <button class="tab-btn" onclick="switchTab(5)">第6段</button>
+  </div>
+  <div class="main-row">
+    <div class="left-panel">
+      <div class="block-item" id="Lminus1">
+        <h3 style="margin-bottom:14px;color:#4a5f58;">📖语法综合练习（本篇 HSK4‑HSK5 语法点）</h3>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">1.【补全句子】“虽然……但是……”：__________，但是桑兰从来没有叫疼。</div>
+          <textarea class="grammar-ex-input" id="gEx0"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(0)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns0">参考答案：虽然身上非常疼</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">2.【修改病句】改正下面句子：“桑兰受伤以后，她的全身80%地方没有感觉仍然。”</div>
+          <textarea class="grammar-ex-input" id="gEx1"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(1)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns1">参考答案：桑兰受伤以后，她的全身80%地方仍然没有感觉。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">3.【调整词语顺序】重新排列词语组成通顺句子：战胜 / 每天 / 各种各样的困难 / 桑兰 / 需要</div>
+          <textarea class="grammar-ex-input" id="gEx2"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(2)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns2">参考答案：桑兰每天需要战胜各种各样的困难。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">4.【补全句子】“正是由于……，……”：正是由于桑兰的坚强，__________。</div>
+          <textarea class="grammar-ex-input" id="gEx3"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(3)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns3">参考答案：她被评为“年度英雄”</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">5.【修改病句】改正：“成千上万人们关心着受伤的桑兰。”</div>
+          <textarea class="grammar-ex-input" id="gEx4"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(4)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns4">参考答案：成千上万的人们关心着受伤的桑兰。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">6.【调整语序】重组：回报 / 要 / 桑兰 / 社会 / 把得到的爱</div>
+          <textarea class="grammar-ex-input" id="gEx5"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(5)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns5">参考答案：桑兰要把得到的爱回报社会。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">7.【补全句子】“不曾”：受伤之后，桑兰__________真正放弃希望。</div>
+          <textarea class="grammar-ex-input" id="gEx6"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(6)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns6">参考答案：不曾</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">8.【修改病句】改正：“桑兰把仪器捐医院全部。”</div>
+          <textarea class="grammar-ex-input" id="gEx7"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(7)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns7">参考答案：桑兰把仪器全部捐给医院。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">9.【补全句子】“如同……一样”：时间__________，十一年很快过去了。</div>
+          <textarea class="grammar-ex-input" id="gEx8"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(8)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns8">参考答案：如流水一样</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">10.【调整语序】重组：应邀 / 桑兰 / 很多工作 / 为奥运会 / 做了</div>
+          <textarea class="grammar-ex-input" id="gEx9"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(9)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns9">参考答案：桑兰应邀为奥运会做了很多工作。</div>
+        </div>
+        <div class="grammar-ex-item">
+          <div class="grammar-ex-q">11.【补全句子】“无论……总……”：__________多么艰难，总有一种精神支持桑兰。</div>
+          <textarea class="grammar-ex-input" id="gEx10"></textarea>
+          <button class="answer-btn" onclick="showGrammarAns(10)">查看参考答案</button>
+          <div class="q-show-ans" id="gAns10">参考答案：无论</div>
+        </div>
+        <button class="answer-btn" onclick="resetGrammarAll()">🔄全部重置语法练习</button>
+      </div>
+
+      <div class="block-item active" id="L0">
+        <p>1998年7月，桑兰到美国参加第四届友好运动会。作为国家<input class="blank-input" data-ans="体操" type="text">队运动员，她已经多次获得过跳马冠军，因此，她对即将开始的比赛充满<input class="blank-input" data-ans="活力" type="text">。</p>
+        <br>
+        <p>谁也没想到，意外发生了：在赛前练习时，她头朝下，重重地摔到地上，伤得非常严重，双手、胸部以下什么感觉都没有了。只短短的几秒钟，一切都改变了。刚刚还是健康、充满活力的运动员，不幸却一下子落到她的头上。7月21日，成为桑兰<input class="blank-input" data-ans="一生" type="text">中永远不愿意再提起也永远不可能忘记的一天。</p>
+        <br>
+        <p>她立即被送到纽约一家医院。六天后，在<input class="blank-input" data-ans="治疗" type="text">中心接受了七个小时的手术。当桑兰重新出现在大家面前时，人们发现，虽然她的头被铁<input class="blank-input" data-ans="架子" type="text"><input class="blank-input" data-ans="固定" type="text">着，鼻子里、手上挂满了<input class="blank-input" data-ans="仪器" type="text">，但是她依然在笑，笑得那么甜，那么自然，那么灿烂！</p>
+        <br>
+        <p>遇到这样大的打击，难道她就没害怕过吗？桑兰后来告诉记者，刚刚从手术中醒过来的那一刻，她<input class="blank-input" data-ans="绝望" type="text">过，“我真的感觉很痛苦。想动也动不得，想翻身也翻不得，一夜一夜地睡不着。”然而，桑兰从来不叫疼，更不会<input class="blank-input" data-ans="当众" type="text">流眼泪。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(0)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox0"></div>
+          <button class="sort-btn" onclick="checkSort(0)">检查排序</button>
+          <div class="sort-result" id="sortRes0"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q1：意外发生在什么时候？什么地方？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">1998年7月，在美国第四届友好运动会赛前练习的时候。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q2：发生了什么样的意外？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">赛前练习时，她头朝下，重重地摔到地上，伤得非常严重，双手、胸部以下什么感觉都没有了。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q3：为什么桑兰不愿意再提起7月21日这一天？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">就在这一天，严重的意外发生在她身上，健康的她受了重伤。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q4：桑兰最初是在哪家医院治疗的？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">纽约一家医院。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q5：治疗时和治疗后的情况怎么样？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">六天后接受七个小时手术；头被铁架子固定，身上挂着仪器，但她依然笑得很甜很灿烂。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q6：桑兰刚从手术中醒来时告诉记者什么？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">她绝望过，感觉很痛苦，想动、想翻身都做不到，一夜一夜睡不着。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="L1">
+        <p>桑兰在不幸面前露出的<input class="blank-input" data-ans="笑容" type="text">，感动了所有看到她的人。为她治病的医生说：“从这个小姑娘身上，我看到了勇气。”很多人都相信：她一定会走出这场可怕的灾难！</p>
+        <br>
+        <p>十个月后，桑兰从美国回到中国继续进行<input class="blank-input" data-ans="康复" type="text">。时间如流水，十一年过去了。桑兰的微笑仍然挂在脸上，笑容仍然那么灿烂。人们也许会问，在她伤后这十年里，那微笑的背后究竟还藏着什么？</p>
+        <br>
+        <p>微笑背后当然有平常人不能了解的<input class="blank-input" data-ans="艰难" type="text">。桑兰从一个每天只参加训练的运动员，变成了随时都要考虑“自己未来怎么生活下去”的人。手术虽然让桑兰活了下来，但是到现在，她全身80%的地方仍然没有感觉，失去了大部分的活动能力。她的双手改变了形状，右手<input class="blank-input" data-ans="勉强" type="text">摸到头顶。</p>
+        <br>
+        <p>她想靠自己翻身，却翻不得；想靠自己的力气从<input class="blank-input" data-ans="轮椅" type="text">里移到床上，却移不得。她的手指还是不能动，<input class="blank-input" data-ans="甚至" type="text">手被热水烫坏了她都不知道。日常生活的小事随时跟她过不去。就拿在家来说吧，正常高矮的电灯开关，在桑兰看来<input class="blank-input" data-ans="简直" type="text">太高了，根本够不着。厨房的<input class="blank-input" data-ans="地面" type="text">比<input class="blank-input" data-ans="客厅" type="text">低，轮椅进去就出不来。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(1)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox1"></div>
+          <button class="sort-btn" onclick="checkSort(1)">检查排序</button>
+          <div class="sort-result" id="sortRes1"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q7：桑兰受伤后表现得怎么样？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">虽然经历巨大不幸，但她仍然露出微笑，不叫疼，不当众流眼泪。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q8：人们怎样评价桑兰的表现？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">医生说从小姑娘身上看到勇气；很多人相信她可以走出灾难。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q9：桑兰回国后一直到现在，她的情绪好吗？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">十一年过去，微笑仍然挂在脸上，笑容依旧灿烂。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q10：在桑兰微笑的背后，首先碰到什么问题？请举例说明。</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">有着平常人难以了解的艰难；例如身体大部分没有知觉，很多日常动作自己做不了。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q11.“翻不得”、“移不得”是什么意思？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">不能够翻身，不能够移动。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q12.“跟她过不去”是什么意思？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">很多生活小事为难她，给她带来麻烦。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="L2">
+        <p>用力过大，轮椅就有可能向后翻过去……在家如此，出门坐火车、乘飞机、住旅馆、上大学，要完成这些复杂的活动该有多么艰难就可想而知了。对于桑兰来说，她每天需要<input class="blank-input" data-ans="战胜" type="text">的困难，都是在平常人看来<input class="blank-input" data-ans="如此" type="text">再容易不过的小事情。</p>
+        <br>
+        <p>微笑背后肯定有勇气。回国后，桑兰不愿意像病人般地待在家里，一直坚持康复训练。现在，她手上戴上工具，可以自己吃饭、洗脸、刷牙、穿衣服，还学会了使用电脑。她选择到北京大学学习新闻，一学就是五年。她最喜欢的生日礼物是一位<input class="blank-input" data-ans="画家" type="text">送给她的一<input class="blank-input" data-ans="幅" type="text">画，那是一只很可爱的小<input class="blank-input" data-ans="毛驴" type="text">，脸上透着一<input class="blank-input" data-ans="股" type="text">倔劲。</p>
+        <br>
+        <p>她之所以喜欢这幅画，就因为喜欢小毛驴的性格。她说：“永不放弃是一种精神。我就不信我活不出个美丽的明天。”正是由于桑兰的坚强和勇气，就在她受伤的当年，被美国最有影响的《<input class="blank-input" data-ans="人物" type="text">》和《生活》<input class="blank-input" data-ans="杂志" type="text"><input class="blank-input" data-ans="评" type="text">为“<input class="blank-input" data-ans="年度" type="text"><input class="blank-input" data-ans="英雄" type="text">”，还接受过《妇女体育》杂志<input class="blank-input" data-ans="授予" type="text">她的“勇敢奖”。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(2)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox2"></div>
+          <button class="sort-btn" onclick="checkSort(2)">检查排序</button>
+          <div class="sort-result" id="sortRes2"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q13.桑兰在日常生活中到底遇到了什么样的困难？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">翻身、移动身体做不到；很多家里设施不适合；出门、上学等活动都十分艰难。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q14.桑兰坚持康复训练后，她能自己做什么？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">可以自己吃饭、洗脸、刷牙、穿衣服，还学会使用电脑，去北大读新闻。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q15.她最喜欢的生日礼物是什么？她为什么喜欢这个礼物？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">一幅画，画的是小毛驴；因为喜欢小毛驴倔强、永不放弃的性格。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q16.桑兰在受伤的当年获得过什么奖励？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">被评为“年度英雄”，还被授予“勇敢奖”。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="L3">
+        <p>微笑背后有大爱，也有责任。桑兰<input class="blank-input" data-ans="不曾" type="text">忘记过，在她受伤后，她得到过社会各界<input class="blank-input" data-ans="成千上万" type="text">人的关心和照顾。受伤以后，桑兰觉得给她支持最大的人是谢晓红女士。她不仅为桑兰<input class="blank-input" data-ans="支付" type="text">了在国内治疗和教育用的全部费用，而且当她最困难的时候，他们一家人<input class="blank-input" data-ans="日夜" type="text">照顾她。</p>
+        <br>
+        <p>桑兰觉得应该把自己得到的一切<input class="blank-input" data-ans="回报" type="text">给社会，尤其是要为8700万中国<input class="blank-input" data-ans="残疾" type="text">人多做一些事情。1999年回国时，桑兰把<input class="blank-input" data-ans="企业" type="text">送给她的价值100多万元的治疗仪器，全部<input class="blank-input" data-ans="捐" type="text">给了一家医院。</p>
+        <br>
+        <p>她每年都要跟着中国<input class="blank-input" data-ans="青少年" type="text">发展<input class="blank-input" data-ans="基金" type="text">会到<input class="blank-input" data-ans="贫穷" type="text">地区，去帮助那里的孩子们。她<input class="blank-input" data-ans="认养" type="text">了一只名叫“同同”的母熊猫，希望它<input class="blank-input" data-ans="早日" type="text">生出熊猫宝贝。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(3)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox3"></div>
+          <button class="sort-btn" onclick="checkSort(3)">检查排序</button>
+          <div class="sort-result" id="sortRes3"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q17.在桑兰的微笑背后还有什么？请举例说明。</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">还有大爱与责任；捐仪器给医院、帮助贫穷地区孩子、认养熊猫等。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q18.你听说过中国青少年发展基金会吗？你们国家有类似的组织吗？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">开放性问答题，无固定标准答案。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="L4">
+        <p>四川“5·12”大地震后，她马上去<input class="blank-input" data-ans="慰问" type="text">受灾的希望小学。她还<input class="blank-input" data-ans="应邀" type="text">为北京2008年<input class="blank-input" data-ans="奥运会" type="text">做了很多事情。桑兰是多家<input class="blank-input" data-ans="爱心" type="text">基金会的负责人，她把第一笔10万元钱寄给了刚成立不久的“桑兰基金会”。</p>
+        <br>
+        <p>28岁的桑兰仍然坐在轮椅中，她的微笑始终挂在脸上。当她回忆十年来走过的道路时，就像打翻了五味瓶一样，甜酸苦辣各种<input class="blank-input" data-ans="味" type="text">道都有。这个菜太<input class="blank-input" data-ans="辣" type="text">了，只是一个比喻。她觉得，无论多么艰难，总有一种精神在支持着她，“一直向前，永不疲倦”。正是这些，让她变得更加坚强。</p>
+        <br>
+        <p>在伤后又一个十年来到时，她想的是该用什么样的方式来超过从前，超过自己。她要回报国家、回报朋友，为体育事业、为残疾人的利益、为实现心中的理想继续作更多的贡献。（选自新浪网）</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(4)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox4"></div>
+          <button class="sort-btn" onclick="checkSort(4)">检查排序</button>
+          <div class="sort-result" id="sortRes4"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q19.你听说过四川“5·12”大地震吗？简单介绍一下你所了解的情况。</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">开放性问答题，无固定标准答案。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q20.你了解“希望小学”吗？请介绍一下你知道的情况。</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">开放性问答题，无固定标准答案。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q21.“好像打翻了五味瓶一样”这句话是什么意思？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">心里同时有甜、酸、苦、辣各种各样复杂的感受。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="L5">
+        <p>在伤后又一个十年来到时，她想的是该用什么样的方式来超过从前，超过自己。她要回报国家、回报朋友，为体育事业、为残疾人的利益、为实现心中的理想继续作更多的贡献。</p>
+        <br>
+        <p>走过漫长的道路，桑兰也常常感到<input class="blank-input" data-ans="疲倦" type="text">。但是无论遇到多少困难，“一直向前，永不疲倦”的信念始终支持着她。</p>
+        <br>
+        <button class="answer-btn" onclick="checkAllBlank(this)">检查本段课文填空</button>
+        <button class="reset-btn" onclick="resetSection(5)">🔄重置本段</button>
+        <div class="sort-wrap">
+          <div class="sort-title">📝句子排序：把本段句子调整为课文正确顺序</div>
+          <div id="sortBox5"></div>
+          <button class="sort-btn" onclick="checkSort(5)">检查排序</button>
+          <div class="sort-result" id="sortRes5"></div>
+        </div>
+        <div class="question-wrap">
+          <div class="q-item">
+            <div class="q-text">Q22.什么精神在支持着桑兰？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">一直向前，永不疲倦的精神。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q23.在桑兰受伤后第二个十年来到时，桑兰有哪些想法？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">想要超过过去的自己；回报国家、朋友；为体育、残疾人、理想继续多做贡献。</div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">Q24.你对桑兰有什么评价？</div>
+            <textarea class="q-answer-input"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">查看参考答案</button>
+            <div class="q-show-ans">开放性问答题，无固定标准答案。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="block-item active" id="R0">
+        <h3>生词（第1段）HSK4‑5</h3>
+        <div class="word-card">
+          <div class="word-title">体操 tǐcāo 名</div>
+          <div>锻炼身体的一套动作。例：体操运动员。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">活力 huólì 名</div>
+          <div>精神足，很有劲头。例：充满活力。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">一生 yìshēng 名</div>
+          <div>人活着的全部时间。例：一生难忘。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">治疗 zhìliáo 动</div>
+          <div>医生帮人把病变好。例：接受治疗。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">架子 jiàzi 名</div>
+          <div>放东西的台子、柜子。例：铁架子。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">固定 gùdìng 动</div>
+          <div>把东西钉住、放牢，不让动。例：固定头部。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">仪器 yíqì 名</div>
+          <div>做医疗、实验用的机器工具。例：医疗仪器。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">绝望 juéwàng 动</div>
+          <div>遇到难事，觉得一点希望都没有。例：感到绝望。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">当众 dāngzhòng 副</div>
+          <div>当着很多人的面。例：当众流泪。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 虽然……但是…… HSK4转折</div>
+          <p>承认前面事实，后面出现相反情况。</p>
+          <div class="grammar-note">“虽然”放前分句，“但是”放后分句。</div>
+          <p>例句：虽然身上十分痛苦，但是桑兰没有当众哭。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：虽然受了很重的伤，__________。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：但是桑兰仍然露出微笑。</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 成为 HSK4动词</div>
+          <p>变化之后变成某种身份、状态。</p>
+          <div class="grammar-note">成为 + 名词。</div>
+          <p>例句：7月21日成为桑兰一生难忘的日子。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：这次意外__________她很难忘记的经历。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：成为</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R1">
+        <h3>生词（第2段）HSK4‑5</h3>
+        <div class="word-card">
+          <div class="word-title">笑容 xiàoróng 名</div>
+          <div>脸上笑出来的样子。例：露出笑容。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">康复 kāngfù 动</div>
+          <div>生病之后身体慢慢变好。例：继续康复。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">艰难 jiānnán 形</div>
+          <div>做事情很辛苦，不容易。例：日子艰难。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">勉强 miǎnqiǎng 形</div>
+          <div>不太容易才能做到。例：勉强摸到。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">轮椅 lúnyǐ 名</div>
+          <div>给走路不方便的人坐的车子。例：坐在轮椅。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">甚至 shènzhì 连</div>
+          <div>说得更进一步，表示没想到的情况。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">简直 jiǎnzhí 副</div>
+          <div>用来强调，实在是。例：简直太高。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">地面 dìmiàn 名</div>
+          <div>脚下踩的地上。例：厨房的地面。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">客厅 kètīng 名</div>
+          <div>家里会客、看电视的大房间。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 甚至 HSK4连词</div>
+          <p>递进，程度进一步加深。</p>
+          <div class="grammar-note">放在分句开头，表示更进一步的情况。</div>
+          <p>例句：她手指不能动，甚至手烫坏了自己都不知道。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：他学习非常努力，__________节假日也不休息。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：甚至</div>
+          </div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">2. 简直 HSK4副词</div>
+          <p>强调程度很高，带有惊讶语气。</p>
+          <p>例句：开关太高，对桑兰来说简直够不着。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：这么重的箱子，我________拿不动。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：简直</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R2">
+        <h3>生词（第3段）HSK4‑5</h3>
+        <div class="word-card">
+          <div class="word-title">战胜 zhànshèng 动</div>
+          <div>打败困难或者对手。例：战胜困难。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">如此 rúcǐ 代</div>
+          <div>像这样，这么。例：如此艰难。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">画家 huàjiā 名</div>
+          <div>专门画画的人。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">幅 fú 量</div>
+          <div>量词，专门说画、照片。例：一幅画。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">毛驴 máolǘ 名</div>
+          <div>一种可以骑、可以干活的小动物。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">股 gǔ 量</div>
+          <div>量词，用来说风、气味、劲头。例：一股倔劲。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">人物 rénwù 名</div>
+          <div>书里、故事里面出现的人。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">杂志 zázhì 名</div>
+          <div>有图片文章的定期读物。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">评 píng 动</div>
+          <div>打分、选出好坏。例：评为英雄。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">年度 niándù 名</div>
+          <div>一整年的时间。例：年度英雄。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">英雄 yīngxióng 名</div>
+          <div>很勇敢，受人尊敬的人。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">授予 shòuyǔ 动</div>
+          <div>正式把称号、奖品送给别人。例：授予奖项。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 正是由于……，…… HSK5 原因强调</div>
+          <p>加强原因语气，“正是”用来突出原因。</p>
+          <div class="grammar-note">后面引出结果。</div>
+          <p>例句：正是由于桑兰的坚强，她被评为年度英雄。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：正是由于不断努力，__________。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：他取得了很好的成绩。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R3">
+        <h3>生词（第4段）HSK4‑5</h3>
+        <div class="word-card">
+          <div class="word-title">不曾 bùcéng 副</div>
+          <div>从来没有做过某件事。例：不曾忘记。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">成千上万 chéng qiān shàng wàn 成语</div>
+          <div>数量特别特别多。例：成千上万的人。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">支付 zhīfù 动</div>
+          <div>给钱，付钱。例：支付全部费用。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">日夜 rìyè 名</div>
+          <div>白天加上晚上，一直不停。例：日夜照顾。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">回报 huíbào 动</div>
+          <div>别人帮了你，你再去帮回去。例：回报社会。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">残疾 cánjí 名</div>
+          <div>身体部分地方不方便，有缺陷。例：残疾人。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">企业 qǐyè 名</div>
+          <div>公司，做生意的大单位。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">捐 juān 动</div>
+          <div>不要回报，拿出钱或者东西送给别人。例：捐仪器。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">青少年 qīngshàonián 名</div>
+          <div>十几岁，年轻的孩子。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">基金 jījīn 名</div>
+          <div>专门拿出来做好事用的一笔钱。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">贫穷 pínqióng 形</div>
+          <div>家里钱很少，生活很苦。例：贫穷地区。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">认养 rènyǎng 动</div>
+          <div>出钱照顾孩子或者动植物。例：认养熊猫。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">早日 zǎorì 副</div>
+          <div>希望快点，尽早。例：早日康复。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 把字句 HSK4</div>
+          <p>把 + 宾语 + 动作，强调对宾语做处置。</p>
+          <p>例句：桑兰把仪器捐给医院。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：桑兰把得到的爱__________社会。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：回报给</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R4">
+        <h3>生词（第5段）HSK4‑5</h3>
+        <div class="word-card">
+          <div class="word-title">慰问 wèiwèn 动</div>
+          <div>去关心、看望受苦的人。例：慰问灾区。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">应邀 yìngyāo 动</div>
+          <div>收到别人邀请，然后去参加。例：应邀参加。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">奥运会 Àoyùnhuì 名</div>
+          <div>全世界很大的体育比赛。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">爱心 àixīn 名</div>
+          <div>愿意关心帮助别人的好心。例：爱心基金会。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">味 wèi 名</div>
+          <div>嘴巴尝到、鼻子闻到的感觉。例：味道。</div>
+        </div>
+        <div class="word-card">
+          <div class="word-title">辣 là 形</div>
+          <div>吃起来刺激舌头的味道。例：很辣。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 应邀 HSK5动词</div>
+          <p>接受邀请去做某事。</p>
+          <p>例句：桑兰应邀为奥运会做很多工作。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：他__________参加这次活动。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：应邀</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-item" id="R5">
+        <h3>生词（第6段）HSK4‑5</h3>
+        <div class="word-card">
+          <div class="word-title">疲倦 píjuàn 形</div>
+          <div>干活走路多了，身体很累。例：感到疲倦。</div>
+        </div>
+        <div class="grammar-card">
+          <div class="grammar-title">1. 无论……总…… HSK5条件</div>
+          <p>不管什么条件，结果都不变。</p>
+          <div class="grammar-note">无论后面接多种情况，“总”引出不变结果。</div>
+          <p>例句：无论多么艰难，总有一种精神支持桑兰。</p>
+          <div class="complete-exercise">
+            <div class="complete-q">补全句子：__________遇到多少困难，我们总要坚持向前。</div>
+            <textarea class="complete-ta"></textarea>
+            <button class="answer-btn" onclick="this.nextElementSibling.style.display='block'">参考示例</button>
+            <div class="show-answer">示例：无论</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const sortSource = [
+  [
+    {id:1,txt:"1998年7月，桑兰到美国参加第四届友好运动会。作为国家体操队运动员，她已经多次获得过跳马冠军，因此，她对即将开始的比赛充满活力。"},
+    {id:2,txt:"谁也没想到，意外发生了：在赛前练习时，她头朝下，重重地摔到地上，伤得非常严重，双手、胸部以下什么感觉都没有了。"},
+    {id:3,txt:"只短短的几秒钟，一切都改变了。刚刚还是健康、充满活力的运动员，不幸却一下子落到她的头上。7月21日，成为桑兰一生中永远不愿意再提起也永远不可能忘记的一天。"},
+    {id:4,txt:"她立即被送到纽约一家医院。六天后，在治疗中心接受了七个小时的手术。"},
+    {id:5,txt:"当桑兰重新出现在大家面前时，人们发现，虽然她的头被铁架子固定着，鼻子里、手上挂满了仪器，但是她依然在笑，笑得那么甜，那么自然，那么灿烂！"},
+    {id:6,txt:"遇到这样大的打击，难道她就没害怕过吗？桑兰后来告诉记者，刚刚从手术中醒过来的那一刻，她绝望过，“我真的感觉很痛苦。想动也动不得，想翻身也翻不得，一夜一夜地睡不着。”"},
+    {id:7,txt:"然而，桑兰从来不叫疼，更不会当众流眼泪。"}
+  ],
+  [
+    {id:1,txt:"桑兰在不幸面前露出的笑容，感动了所有看到她的人。为她治病的医生说：“从这个小姑娘身上，我看到了勇气。”很多人都相信：她一定会走出这场可怕的灾难！"},
+    {id:2,txt:"十个月后，桑兰从美国回到中国继续进行康复。时间如流水，十一年过去了。桑兰的微笑仍然挂在脸上，笑容仍然那么灿烂。"},
+    {id:3,txt:"人们也许会问，在她伤后这十年里，那微笑的背后究竟还藏着什么？"},
+    {id:4,txt:"微笑背后当然有平常人不能了解的艰难。桑兰从一个每天只参加训练的运动员，变成了随时都要考虑“自己未来怎么生活下去”的人。"},
+    {id:5,txt:"手术虽然让桑兰活了下来，但是到现在，她全身80%的地方仍然没有感觉，失去了大部分的活动能力。她的双手改变了形状，右手勉强摸到头顶。"},
+    {id:6,txt:"她想靠自己翻身，却翻不得；想靠自己的力气从轮椅里移到床上，却移不得。她的手指还是不能动，甚至手被热水烫坏了她都不知道。"},
+    {id:7,txt:"日常生活的小事随时跟她过不去。就拿在家来说吧，正常高矮的电灯开关，在桑兰看来简直太高了，根本够不着。厨房的地面比客厅低，轮椅进去就出不来。"}
+  ],
+  [
+    {id:1,txt:"用力过大，轮椅就有可能向后翻过去……在家如此，出门坐火车、乘飞机、住旅馆、上大学，要完成这些复杂的活动该有多么艰难就可想而知了。"},
+    {id:2,txt:"对于桑兰来说，她每天需要战胜的困难，都是在平常人看来如此再容易不过的小事情。"},
+    {id:3,txt:"微笑背后肯定有勇气。回国后，桑兰不愿意像病人般地待在家里，一直坚持康复训练。"},
+    {id:4,txt:"现在，她手上戴上工具，可以自己吃饭、洗脸、刷牙、穿衣服，还学会了使用电脑。她选择到北京大学学习新闻，一学就是五年。"},
+    {id:5,txt:"她最喜欢的生日礼物是一位画家送给她的一幅画，那是一只很可爱的小毛驴，脸上透着一股倔劲。"},
+    {id:6,txt:"她之所以喜欢这幅画，就因为喜欢小毛驴的性格。她说：“永不放弃是一种精神。我就不信我活不出个美丽的明天。”"},
+    {id:7,txt:"正是由于桑兰的坚强和勇气，就在她受伤的当年，被美国最有影响的《人物》和《生活》杂志评为“年度英雄”，还接受过《妇女体育》杂志授予她的“勇敢奖”。"}
+  ],
+  [
+    {id:1,txt:"微笑背后有大爱，也有责任。桑兰不曾忘记过，在她受伤后，她得到过社会各界成千上万的人的关心和照顾。"},
+    {id:2,txt:"受伤以后，桑兰觉得给她支持最大的人是谢晓红女士。她不仅为桑兰支付了在国内治疗和教育用的全部费用，而且当她最困难的时候，他们一家人日夜照顾她。"},
+    {id:3,txt:"桑兰觉得应该把自己得到的一切回报给社会，尤其是要为8700万中国残疾人多做一些事情。"},
+    {id:4,txt:"1999年回国时，桑兰把企业送给她的价值100多万元的治疗仪器，全部捐给了一家医院。"},
+    {id:5,txt:"她每年都要跟着中国青少年发展基金会到贫穷地区，去帮助那里的孩子们。"},
+    {id:6,txt:"她认养了一只名叫“同同”的母熊猫，希望它早日生出熊猫宝贝。"}
+  ],
+  [
+    {id:1,txt:"四川“5·12”大地震后，她马上去慰问受灾的希望小学。"},
+    {id:2,txt:"她还应邀为北京2008年奥运会做了很多事情。桑兰是多家爱心基金会的负责人，她把第一笔10万元钱寄给了刚成立不久的“桑兰基金会”。"},
+    {id:3,txt:"28岁的桑兰仍然坐在轮椅中，她的微笑始终挂在脸上。"},
+    {id:4,txt:"当她回忆十年来走过的道路时，就像打翻了五味瓶一样，甜酸苦辣各种味道都有。这个菜太辣了，只是一个比喻。"},
+    {id:5,txt:"她觉得，无论多么艰难，总有一种精神在支持着她，“一直向前，永不疲倦”。正是这些，让她变得更加坚强。"},
+    {id:6,txt:"在伤后又一个十年来到时，她想的是该用什么样的方式来超过从前，超过自己。"},
+    {id:7,txt:"她要回报国家、回报朋友，为体育事业、为残疾人的利益、为实现心中的理想继续作更多的贡献。（选自新浪网）"}
+  ],
+  [
+    {id:1,txt:"在伤后又一个十年来到时，她想的是该用什么样的方式来超过从前，超过自己。"},
+    {id:2,txt:"她要回报国家、回报朋友，为体育事业、为残疾人的利益、为实现心中的理想继续作更多的贡献。"},
+    {id:3,txt:"走过漫长的道路，桑兰也常常感到疲倦。"},
+    {id:4,txt:"但是无论遇到多少困难，“一直向前，永不疲倦”的信念始终支持着她。"}
+  ]
+];
+
+function shuffle(arr){
+    let tmp = [...arr];
+    for(let i=tmp.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [tmp[i],tmp[j]] = [tmp[j],tmp[i]];
+    }
+    return tmp;
+}
+let sortableInstances = {};
+
+function renderSortBox(idx){
+    const box = document.getElementById("sortBox"+idx);
+    box.innerHTML = "";
+    if(sortableInstances[idx]){
+        sortableInstances[idx].destroy();
+        delete sortableInstances[idx];
+    }
+    const list = shuffle(sortSource[idx]);
+    list.forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.dataset.id = item.id;
+        div.innerText = item.txt;
+        box.appendChild(div);
+    });
+    sortableInstances[idx] = new Sortable(box,{
+        animation:150,
+        ghostClass:'sort-ghost'
+    });
+}
+
+// =========修复完成版切换函数=========
+function switchTab(index){
+    //清除所有active状态
+    document.querySelectorAll(".left-panel .block-item").forEach(el=>el.classList.remove("active"));
+    document.querySelectorAll(".right-panel .block-item").forEach(el=>el.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(btn=>btn.classList.remove('active'));
+
+    const btns = document.querySelectorAll(".tab-btn");
+    if(index === -1){
+        btns[0].classList.add("active");
+        document.getElementById("Lminus1").classList.add("active");
+    }else{
+        btns[index+1].classList.add("active");
+        document.getElementById("L"+index).classList.add("active");
+        document.getElementById("R"+index).classList.add("active");
+        renderSortBox(index);
+    }
+}
+
+function checkAllBlank(btn){
+  const parent = btn.parentElement;
+  const inputs = parent.querySelectorAll('.blank-input');
+  inputs.forEach(input=>{
+    const answer = input.dataset.ans;
+    if(input.value.trim() === answer){
+      input.classList.add("right");
+      input.classList.remove("wrong");
+    }else{
+      input.classList.add("wrong");
+      input.classList.remove("right");
+    }
+  });
+}
+
+function resetSection(idx){
+    const block = document.getElementById("L"+idx);
+    block.querySelectorAll(".blank-input").forEach(i=>{i.value="";i.classList.remove("right","wrong");});
+    block.querySelectorAll(".q-answer-input").forEach(t=>t.value="");
+    block.querySelectorAll(".q-show-ans").forEach(d=>d.style.display="none");
+    const resEl = document.getElementById("sortRes"+idx);
+    if(resEl) resEl.style.display="none";
+    renderSortBox(idx);
+}
+
+function checkSort(idx){
+  const box = document.getElementById("sortBox"+idx);
+  const resDom = document.getElementById("sortRes"+idx);
+  const items = box.querySelectorAll(".sort-item");
+  let arr = [];
+  items.forEach(it=>arr.push(it.dataset.id));
+  const correctIds = sortSource[idx].map(x=>String(x.id));
+  if(arr.join(",") === correctIds.join(",")){
+    resDom.className = "sort-result sort-res-ok";
+    resDom.style.display="block";
+    resDom.innerText = "✅排序完全正确！";
+  }else{
+    resDom.className = "sort-result sort-res-err";
+    resDom.style.display="block";
+    resDom.innerText = "❌顺序不对，请重新拖拽调整句子顺序。";
+  }
+}
+
+function showGrammarAns(num){
+    document.getElementById("gAns"+num).style.display="block";
+}
+function resetGrammarAll(){
+    for(let i=0;i<=10;i++){
+        document.getElementById("gEx"+i).value="";
+        document.getElementById("gAns"+i).style.display="none";
+    }
+}
+
+//页面初始化
+window.onload = function(){
+    renderSortBox(0);
+}
+</script>
+</body>
+</html>

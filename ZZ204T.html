@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZZ204‑EX</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, sans-serif;
+    }
+    body {
+        background-color: #f7f9fc;
+        padding: 24px 16px;
+    }
+    h1 {
+        text-align: center;
+        color: #002b5c;
+        margin-bottom: 28px;
+        font-size: clamp(22px, 4vw, 28px);
+    }
+    .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .flashcard {
+        background: #ffffff;
+        border-radius: 20px;
+        min-height: 540px;
+        padding: 32px 20px;
+        box-shadow: 0 4px 14px rgba(0, 43, 92, 0.12);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .flashcard:hover {
+        box-shadow: 0 6px 20px rgba(0, 43, 92, 0.18);
+    }
+    .front-text {
+        font-size: clamp(44px, 11vw, 64px);
+        font-weight: bold;
+        color: #002b5c;
+        text-align: center;
+        line-height: 1.9;
+    }
+    .back-text {
+        font-size: clamp(20px, 3.5vw, 24px);
+        color: #002b5c;
+        line-height: 2.0;
+        display: none;
+        width: 100%;
+        text-align: center;
+    }
+    .back-inner {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        text-align: left;
+    }
+    .back-row {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .card-img {
+        width: min(220px, 70vw);
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #eef2f7;
+    }
+    .text-part {
+        flex: 1;
+        min-width: 200px;
+    }
+    .text-part p {
+        margin: 4px 0;
+    }
+    .sentence-line {
+        width: 100%;
+        margin-top: 14px;
+        text-align: center;
+    }
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 26px;
+        flex-wrap: wrap;
+    }
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: #002b5c;
+        color: #ffffff;
+        font-size: clamp(16px, 3vw, 20px);
+        cursor: pointer;
+    }
+    button:hover {
+        opacity: 0.85;
+    }
+    .page-info {
+        text-align: center;
+        margin-top: 16px;
+        color: #002b5c;
+        font-size: clamp(16px, 3vw, 20px);
+    }
+</style>
+</head>
+<body>
+<h1>ZZ204‑EX 生词+填空练习</h1>
+<div class="wrap">
+    <div class="flashcard" id="card">
+        <div class="front-text" id="front">体操</div>
+        <div class="back-text" id="back"></div>
+    </div>
+    <div class="page-info">
+        <span id="current">1</span> / <span id="total">0</span>
+    </div>
+    <div class="btn-group">
+        <button id="prev">上一张</button>
+        <button id="next">下一张</button>
+        <button id="shuffle">随机洗牌</button>
+    </div>
+</div>
+<script>
+    const cardList = [
+        // ==========组1（1‑10）生词==========,
+        {
+            front: "体操",
+            img: "./ZZ204/ticao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/ticao.jpg" alt="体操" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>tǐcāo（名词）</p>
+                            <p>做体操</p>
+                            <p>体操运动员</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：每天早上他都在公园里做体操。</div>
+                </div>
+            `
+        },
+        {
+            front: "活力",
+            img: "./ZZ204/huoli.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/huoli.jpg" alt="活力" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>huólì（名词）</p>
+                            <p>充满活力</p>
+                            <p>活力十足</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：孩子们唱歌跳舞，看起来充满活力。</div>
+                </div>
+            `
+        },
+        {
+            front: "一生",
+            img: "./ZZ204/yisheng.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/yisheng.jpg" alt="一生" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yìshēng（名词）</p>
+                            <p>一生难忘</p>
+                            <p>一生做好事</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这位老人一生都在帮助别人。</div>
+                </div>
+            `
+        },
+        {
+            front: "治疗",
+            img: "./ZZ204/zhiliao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/zhiliao.jpg" alt="治疗" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhìliáo（动词）</p>
+                            <p>治疗病人</p>
+                            <p>接受治疗</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：医生正在给病人治疗。</div>
+                </div>
+            `
+        },
+        {
+            front: "架子",
+            img: "./ZZ204/jiazi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/jiazi.jpg" alt="架子" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiàzi（名词）</p>
+                            <p>书架</p>
+                            <p>放在架子上</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：书放在书架上。</div>
+                </div>
+            `
+        },
+        {
+            front: "固定",
+            img: "./ZZ204/guding.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/guding.jpg" alt="固定" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>gùdìng（动词）</p>
+                            <p>固定位置</p>
+                            <p>固定好</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：把画固定在墙上。</div>
+                </div>
+            `
+        },
+        {
+            front: "仪器",
+            img: "./ZZ204/yiqi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/yiqi.jpg" alt="仪器" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yíqì（名词）</p>
+                            <p>实验仪器</p>
+                            <p>精密仪器</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：实验室里有很多仪器。</div>
+                </div>
+            `
+        },
+        {
+            front: "绝望",
+            img: "./ZZ204/juewang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/juewang.jpg" alt="绝望" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>juéwàng（动词）</p>
+                            <p>感到绝望</p>
+                            <p>不要绝望</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：遇到困难不要绝望，要坚持下去。</div>
+                </div>
+            `
+        },
+        {
+            front: "当众",
+            img: "./ZZ204/dangzhong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/dangzhong.jpg" alt="当众" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dāngzhòng（副词）</p>
+                            <p>当众说话</p>
+                            <p>当众表演</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他当众表演了节目。</div>
+                </div>
+            `
+        },
+        {
+            front: "康复",
+            img: "./ZZ204/kangfu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/kangfu.jpg" alt="康复" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>kāngfù（动词）</p>
+                            <p>身体康复</p>
+                            <p>康复出院</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：经过治疗，他的身体慢慢康复了。</div>
+                </div>
+            `
+        },
+        {
+            front: `【练习1：1‑10】<br><br>①每天早上他在公园里做____。<br><br>②孩子们唱歌跳舞，看起来充满____。<br><br>③这位老人____都在帮助别人。<br><br>④医生正在给病人____。<br><br>⑤书放在书____上。<br><br>⑥把画____在墙上。<br><br>⑦实验室里有很多____。<br><br>⑧遇到困难不要____，要坚持下去。<br><br>⑨他____表演了节目。<br><br>⑩经过治疗，他的身体慢慢____了。`,
+            back: `【练习1答案】<br><br>①每天早上他在公园里做<strong>体操</strong>。<br><br>②孩子们唱歌跳舞，看起来充满<strong>活力</strong>。<br><br>③这位老人<strong>一生</strong>都在帮助别人。<br><br>④医生正在给病人<strong>治疗</strong>。<br><br>⑤书放在书<strong>架子</strong>上。<br><br>⑥把画<strong>固定</strong>在墙上。<br><br>⑦实验室里有很多<strong>仪器</strong>。<br><br>⑧遇到困难不要<strong>绝望</strong>，要坚持下去。<br><br>⑨他<strong>当众</strong>表演了节目。<br><br>⑩经过治疗，他的身体慢慢<strong>康复</strong>了。`
+        },
+        // ==========组2（11‑20）生词==========,
+        {
+            front: "笑容",
+            img: "./ZZ204/xiaorong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/xiaorong.jpg" alt="笑容" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>xiàoróng（名词）</p>
+                            <p>脸上的笑容</p>
+                            <p>露出笑容</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：她脸上露出了开心的笑容。</div>
+                </div>
+            `
+        },
+        {
+            front: "艰难",
+            img: "./ZZ204/jiannan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/jiannan.jpg" alt="艰难" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiānnán（形容词）</p>
+                            <p>艰难的路</p>
+                            <p>生活艰难</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他走过一段艰难的路。</div>
+                </div>
+            `
+        },
+        {
+            front: "勉强",
+            img: "./ZZ204/mianqiang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/mianqiang.jpg" alt="勉强" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>miǎnqiǎng（形容词）</p>
+                            <p>勉强同意</p>
+                            <p>勉强笑了笑</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他勉强同意了我的建议。</div>
+                </div>
+            `
+        },
+        {
+            front: "轮椅",
+            img: "./ZZ204/lunyi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/lunyi.jpg" alt="轮椅" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>lúnyǐ（名词）</p>
+                            <p>坐轮椅</p>
+                            <p>推轮椅</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他坐着轮椅参加活动。</div>
+                </div>
+            `
+        },
+        {
+            front: "甚至",
+            img: "./ZZ204/shenzhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/shenzhi.jpg" alt="甚至" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shènzhì（连词）</p>
+                            <p>甚至更高</p>
+                            <p>甚至忘了</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他甚至忘了自己的名字。</div>
+                </div>
+            `
+        },
+        {
+            front: "简直",
+            img: "./ZZ204/jianzhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/jianzhi.jpg" alt="简直" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiǎnzhí（副词）</p>
+                            <p>简直太好了</p>
+                            <p>简直不敢相信</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这简直是个奇迹。</div>
+                </div>
+            `
+        },
+        {
+            front: "地面",
+            img: "./ZZ204/dimian.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/dimian.jpg" alt="地面" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>dìmiàn（名词）</p>
+                            <p>地面上</p>
+                            <p>打扫地面</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：书掉在地面上。</div>
+                </div>
+            `
+        },
+        {
+            front: "客厅",
+            img: "./ZZ204/keting.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/keting.jpg" alt="客厅" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>kètīng（名词）</p>
+                            <p>客厅里</p>
+                            <p>打扫客厅</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们在客厅看电视。</div>
+                </div>
+            `
+        },
+        {
+            front: "如此",
+            img: "./ZZ204/ruci.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/ruci.jpg" alt="如此" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>rúcǐ（代词）</p>
+                            <p>如此美丽</p>
+                            <p>如此重要</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这里的风景如此美丽。</div>
+                </div>
+            `
+        },
+        {
+            front: "战胜",
+            img: "./ZZ204/zhansheng.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/zhansheng.jpg" alt="战胜" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhànshèng（动词）</p>
+                            <p>战胜困难</p>
+                            <p>战胜敌人</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们战胜了困难。</div>
+                </div>
+            `
+        },
+        {
+            front: `【练习2：11‑20】<br><br>①她脸上露出了开心的____。<br><br>②他走过一段____的路。<br><br>③他____同意了我的建议。<br><br>④他坐着____参加活动。<br><br>⑤他____忘了自己的名字。<br><br>⑥这____是个奇迹。<br><br>⑦书掉在____上。<br><br>⑧我们在____看电视。<br><br>⑨这里的风景____美丽。<br><br>⑩我们____了困难。`,
+            back: `【练习2答案】<br><br>①她脸上露出了开心的<strong>笑容</strong>。<br><br>②他走过一段<strong>艰难</strong>的路。<br><br>③他<strong>勉强</strong>同意了我的建议。<br><br>④他坐着<strong>轮椅</strong>参加活动。<br><br>⑤他<strong>甚至</strong>忘了自己的名字。<br><br>⑥这<strong>简直</strong>是个奇迹。<br><br>⑦书掉在<strong>地面</strong>上。<br><br>⑧我们在<strong>客厅</strong>看电视。<br><br>⑨这里的风景<strong>如此</strong>美丽。<br><br>⑩我们<strong>战胜</strong>了困难。`
+        },
+        // ==========组3（21‑30）生词==========,
+        {
+            front: "画家",
+            img: "./ZZ204/huajia.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/huajia.jpg" alt="画家" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>huàjiā（名词）</p>
+                            <p>一位画家</p>
+                            <p>著名画家</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这位画家画了很多好看的画。</div>
+                </div>
+            `
+        },
+        {
+            front: "毛驴",
+            img: "./ZZ204/maolv.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/maolv.jpg" alt="毛驴" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>máolǘ（名词）</p>
+                            <p>一头毛驴</p>
+                            <p>骑毛驴</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他骑着一头毛驴上山。</div>
+                </div>
+            `
+        },
+        {
+            front: "股",
+            img: "./ZZ204/gu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/gu.jpg" alt="股" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>gǔ（量词）</p>
+                            <p>一股香味</p>
+                            <p>一股风</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：吹来了一股风。</div>
+                </div>
+            `
+        },
+        {
+            front: "幅",
+            img: "./ZZ204/fu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/fu.jpg" alt="幅" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>fú（量词）</p>
+                            <p>一幅画</p>
+                            <p>一幅照片</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：墙上挂着一幅画。</div>
+                </div>
+            `
+        },
+        {
+            front: "人物",
+            img: "./ZZ204/renwu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/renwu.jpg" alt="人物" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>rénwù（名词）</p>
+                            <p>书中的人物</p>
+                            <p>历史人物</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这本书里的人物很有趣。</div>
+                </div>
+            `
+        },
+        {
+            front: "杂志",
+            img: "./ZZ204/zazhi.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/zazhi.jpg" alt="杂志" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zázhì（名词）</p>
+                            <p>一本杂志</p>
+                            <p>看杂志</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他在沙发上看杂志。</div>
+                </div>
+            `
+        },
+        {
+            front: "评",
+            img: "./ZZ204/ping.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/ping.jpg" alt="评" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>píng（动词）</p>
+                            <p>评分</p>
+                            <p>评为英雄</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：大家评他为英雄。</div>
+                </div>
+            `
+        },
+        {
+            front: "年度",
+            img: "./ZZ204/niandu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/niandu.jpg" alt="年度" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>niándù（名词）</p>
+                            <p>年度最佳</p>
+                            <p>本年度</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这是本年度最好的作品。</div>
+                </div>
+            `
+        },
+        {
+            front: "英雄",
+            img: "./ZZ204/yingxiong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/yingxiong.jpg" alt="英雄" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yīngxióng（名词）</p>
+                            <p>一位英雄</p>
+                            <p>英雄人物</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他是大家心中的英雄。</div>
+                </div>
+            `
+        },
+        {
+            front: "授予",
+            img: "./ZZ204/shouyu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/shouyu.jpg" alt="授予" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shòuyǔ（动词）</p>
+                            <p>授予奖章</p>
+                            <p>授予称号</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：学校授予他英雄称号。</div>
+                </div>
+            `
+        },
+        {
+            front: `【练习3：21‑30】<br><br>①这位____画了很多好看的画。<br><br>②他骑着一头____上山。<br><br>③吹来了一____风。<br><br>④墙上挂着一____画。<br><br>⑤这本书里的____很有趣。<br><br>⑥他在沙发上看____。<br><br>⑦大家____他为英雄。<br><br>⑧这是____最好的作品。<br><br>⑨他是大家心中的____。<br><br>⑩学校____他英雄称号。`,
+            back: `【练习3答案】<br><br>①这位<strong>画家</strong>画了很多好看的画。<br><br>②他骑着一头<strong>毛驴</strong>上山。<br><br>③吹来了一<strong>股</strong>风。<br><br>④墙上挂着一<strong>幅</strong>画。<br><br>⑤这本书里的<strong>人物</strong>很有趣。<br><br>⑥他在沙发上看<strong>杂志</strong>。<br><br>⑦大家<strong>评</strong>他为英雄。<br><br>⑧这是<strong>年度</strong>最好的作品。<br><br>⑨他是大家心中的<strong>英雄</strong>。<br><br>⑩学校<strong>授予</strong>他英雄称号。`
+        },
+        // ==========组4（31‑40）生词==========,
+        {
+            front: "不曾",
+            img: "./ZZ204/buceng.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/buceng.jpg" alt="不曾" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>bùcéng（副词）</p>
+                            <p>不曾见过</p>
+                            <p>不曾离开</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我不曾去过那里。</div>
+                </div>
+            `
+        },
+        {
+            front: "受伤",
+            img: "./ZZ204/shoushang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/shoushang.jpg" alt="受伤" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>shòushāng（动词）</p>
+                            <p>受伤了</p>
+                            <p>受伤的人</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他在比赛中受伤了。</div>
+                </div>
+            `
+        },
+        {
+            front: "界",
+            img: "./ZZ204/jie.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/jie.jpg" alt="界" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jiè（名词）</p>
+                            <p>体育界</p>
+                            <p>世界</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他在体育界很有名。</div>
+                </div>
+            `
+        },
+        {
+            front: "成千上万",
+            img: "./ZZ204/chengqianshangwan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/chengqianshangwan.jpg" alt="成千上万" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>chéng qiān shàng wàn（成语）</p>
+                            <p>成千上万的人</p>
+                            <p>成千上万棵树</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：成千上万的人来到广场。</div>
+                </div>
+            `
+        },
+        {
+            front: "支付",
+            img: "./ZZ204/zhifu.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/zhifu.jpg" alt="支付" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zhīfù（动词）</p>
+                            <p>支付钱</p>
+                            <p>支付费用</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他用手机支付了饭钱。</div>
+                </div>
+            `
+        },
+        {
+            front: "日夜",
+            img: "./ZZ204/riye.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/riye.jpg" alt="日夜" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>rìyè（名词）</p>
+                            <p>日夜工作</p>
+                            <p>日夜想念</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他日夜照顾病人。</div>
+                </div>
+            `
+        },
+        {
+            front: "回报",
+            img: "./ZZ204/huibao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/huibao.jpg" alt="回报" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>huíbào（动词）</p>
+                            <p>回报父母</p>
+                            <p>回报帮助</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他努力工作回报父母。</div>
+                </div>
+            `
+        },
+        {
+            front: "残疾",
+            img: "./ZZ204/canji.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/canji.jpg" alt="残疾" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>cánjí（名词）</p>
+                            <p>残疾人</p>
+                            <p>残疾朋友</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：我们要关心残疾人。</div>
+                </div>
+            `
+        },
+        {
+            front: "企业",
+            img: "./ZZ204/qiye.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/qiye.jpg" alt="企业" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qǐyè（名词）</p>
+                            <p>一家企业</p>
+                            <p>大企业</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这是一家有名的企业。</div>
+                </div>
+            `
+        },
+        {
+            front: "捐",
+            img: "./ZZ204/juan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/juan.jpg" alt="捐" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>juān（动词）</p>
+                            <p>捐钱</p>
+                            <p>捐给穷人</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他捐了很多钱帮助孩子。</div>
+                </div>
+            `
+        },
+        {
+            front: `【练习4：31‑40】<br><br>①我____去过那里。<br><br>②他在比赛中____了。<br><br>③他在体育____很有名。<br><br>④____的人来到广场。<br><br>⑤他用手机____了饭钱。<br><br>⑥他____照顾病人。<br><br>⑦他努力工作____父母。<br><br>⑧我们要关心____人。<br><br>⑨这是一家有名的____。<br><br>⑩他____了很多钱帮助孩子。`,
+            back: `【练习4答案】<br><br>①我<strong>不曾</strong>去过那里。<br><br>②他在比赛中<strong>受伤</strong>了。<br><br>③他在体育<strong>界</strong>很有名。<br><br>④<strong>成千上万</strong>的人来到广场。<br><br>⑤他用手机<strong>支付</strong>了饭钱。<br><br>⑥他<strong>日夜</strong>照顾病人。<br><br>⑦他努力工作<strong>回报</strong>父母。<br><br>⑧我们要关心<strong>残疾</strong>人。<br><br>⑨这是一家有名的<strong>企业</strong>。<br><br>⑩他<strong>捐</strong>了很多钱帮助孩子。`
+        },
+        // ==========组5（41‑52）生词==========,
+        {
+            front: "青少年",
+            img: "./ZZ204/qingshaonian.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/qingshaonian.jpg" alt="青少年" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>qīngshàonián（名词）</p>
+                            <p>青少年活动</p>
+                            <p>青少年朋友</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这是为青少年准备的活动。</div>
+                </div>
+            `
+        },
+        {
+            front: "基金",
+            img: "./ZZ204/jijin.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/jijin.jpg" alt="基金" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>jījīn（名词）</p>
+                            <p>教育基金</p>
+                            <p>成立基金</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他成立了一个教育基金。</div>
+                </div>
+            `
+        },
+        {
+            front: "贫穷",
+            img: "./ZZ204/pinqiong.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/pinqiong.jpg" alt="贫穷" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>pínqióng（形容词）</p>
+                            <p>贫穷的地方</p>
+                            <p>贫穷家庭</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他来自一个贫穷的家庭。</div>
+                </div>
+            `
+        },
+        {
+            front: "认养",
+            img: "./ZZ204/renyang.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/renyang.jpg" alt="认养" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>rènyǎng（动词）</p>
+                            <p>认养孩子</p>
+                            <p>认养一棵树</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他认养了一个贫穷的孩子。</div>
+                </div>
+            `
+        },
+        {
+            front: "早日",
+            img: "./ZZ204/zaori.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/zaori.jpg" alt="早日" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>zǎorì（副词）</p>
+                            <p>早日康复</p>
+                            <p>早日回来</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：祝你早日康复。</div>
+                </div>
+            `
+        },
+        {
+            front: "慰问",
+            img: "./ZZ204/weiwen.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/weiwen.jpg" alt="慰问" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>wèiwèn（动词）</p>
+                            <p>慰问病人</p>
+                            <p>慰问灾区</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：大家去慰问受伤的人。</div>
+                </div>
+            `
+        },
+        {
+            front: "应邀",
+            img: "./ZZ204/yingyao.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/yingyao.jpg" alt="应邀" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>yìngyāo（动词）</p>
+                            <p>应邀参加</p>
+                            <p>应邀发言</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他应邀参加奥运会。</div>
+                </div>
+            `
+        },
+        {
+            front: "奥运会",
+            img: "./ZZ204/aoyunhui.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/aoyunhui.jpg" alt="奥运会" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>Àoyùnhuì（名词）</p>
+                            <p>参加奥运会</p>
+                            <p>奥运会开幕式</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：他参加了奥运会比赛。</div>
+                </div>
+            `
+        },
+        {
+            front: "爱心",
+            img: "./ZZ204/aixin.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/aixin.jpg" alt="爱心" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>àixīn（名词）</p>
+                            <p>献出爱心</p>
+                            <p>爱心活动</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：大家献出爱心帮助孩子。</div>
+                </div>
+            `
+        },
+        {
+            front: "味",
+            img: "./ZZ204/wei.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/wei.jpg" alt="味" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>wèi（名词）</p>
+                            <p>味道</p>
+                            <p>香味</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这道菜有辣的味道。</div>
+                </div>
+            `
+        },
+        {
+            front: "辣",
+            img: "./ZZ204/la.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/la.jpg" alt="辣" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>là（形容词）</p>
+                            <p>很辣</p>
+                            <p>辣椒</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：这个菜太辣了。</div>
+                </div>
+            `
+        },
+        {
+            front: "疲倦",
+            img: "./ZZ204/pijuan.jpg",
+            back: `
+                <div class="back-inner">
+                    <div class="back-row">
+                        <img class="card-img" src="./ZZ204/pijuan.jpg" alt="疲倦" onerror="this.style.display='none'">
+                        <div class="text-part">
+                            <p>píjuàn（形容词）</p>
+                            <p>感到疲倦</p>
+                            <p>疲倦的身体</p>
+                        </div>
+                    </div>
+                    <div class="sentence-line">例句：走了一天，他很疲倦。</div>
+                </div>
+            `
+        },
+        {
+            front: `【练习5：41‑52】<br><br>①这是为____准备的活动。<br><br>②他成立了一个教育____。<br><br>③他来自一个____的家庭。<br><br>④他____了一个贫穷的孩子。<br><br>⑤祝你____康复。<br><br>⑥大家去____受伤的人。<br><br>⑦他____参加奥运会。<br><br>⑧他参加了____比赛。<br><br>⑨大家献出____帮助孩子。<br><br>⑩这道菜有辣的____道。<br><br>⑪这个菜太____了。<br><br>⑫走了一天，他很____。`,
+            back: `【练习5答案】<br><br>①这是为<strong>青少年</strong>准备的活动。<br><br>②他成立了一个教育<strong>基金</strong>。<br><br>③他来自一个<strong>贫穷</strong>的家庭。<br><br>④他<strong>认养</strong>了一个贫穷的孩子。<br><br>⑤祝你<strong>早日</strong>康复。<br><br>⑥大家去<strong>慰问</strong>受伤的人。<br><br>⑦他<strong>应邀</strong>参加奥运会。<br><br>⑧他参加了<strong>奥运会</strong>比赛。<br><br>⑨大家献出<strong>爱心</strong>帮助孩子。<br><br>⑩这道菜有辣的<strong>味</strong>道。<br><br>⑪这个菜太<strong>辣</strong>了。<br><br>⑫走了一天，他很<strong>疲倦</strong>。`
+        }
+    ];
+    let currentIndex = 0;
+    let isShowBack = false;
+    let cards = [...cardList];
+    const frontDom = document.getElementById("front");
+    const backDom = document.getElementById("back");
+    const cardDom = document.getElementById("card");
+    const currentPage = document.getElementById("current");
+    const totalPage = document.getElementById("total");
+    totalPage.innerText = cards.length;
+    function renderCard() {
+        const item = cards[currentIndex];
+        frontDom.innerHTML = item.front;
+        backDom.innerHTML = item.back;
+        // 判断是练习卡就切换小字号
+        if(String(item.front).includes("【练习")){
+            frontDom.style.fontSize = "clamp(20px,3.5vw,24px)";
+        }else{
+            frontDom.style.fontSize = "clamp(44px, 11vw, 64px)";
+        }
+        if (isShowBack) {
+            frontDom.style.display = "none";
+            backDom.style.display = "block";
+        } else {
+            frontDom.style.display = "block";
+            backDom.style.display = "none";
+        }
+        currentPage.innerText = currentIndex + 1;
+    }
+    cardDom.addEventListener("click", () => {
+        isShowBack = !isShowBack;
+        renderCard();
+    });
+    document.getElementById("prev").addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("next").addEventListener("click", () => {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            isShowBack = false;
+            renderCard();
+        }
+    });
+    document.getElementById("shuffle").addEventListener("click", () => {
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        currentIndex = 0;
+        isShowBack = false;
+        renderCard();
+    });
+    renderCard();
+</script>
+</body>
+</html>

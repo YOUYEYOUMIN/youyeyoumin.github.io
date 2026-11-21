@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语阅读｜老舍的名字 原文+简化对照</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #EAE7E2;
+            line-height: 1.7;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+        .box {
+            background: #F4F1ED;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(140,130,120,0.12);
+        }
+        h2 {
+            text-align: center;
+            color: #5C544F;
+            margin-bottom:18px;
+            border-bottom:1px solid #D9D2CB;
+            padding-bottom:10px;
+            font-size:20px;
+        }
+        .para-item {
+            margin-bottom: 24px;
+        }
+        .para-item p {
+            font-size:16px;
+            color:#4A4541;
+        }
+        .exercise-title{
+            font-size:19px;
+            font-weight:bold;
+            margin:22px 0 12px;
+            color:#5C544F;
+        }
+        .q-item{
+            margin:18px 0;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:8px;
+        }
+        .choice-item label{
+            display:block;
+            margin:6px 0;
+            cursor:pointer;
+        }
+        .answer-text{
+            margin-top:10px;
+            font-weight:bold;
+        }
+        .check-answer-btn{
+            margin:12px 0 20px;
+            padding:8px 16px;
+            background:#929AA3;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+        /* 生词蓝色悬浮 + 点击弹出tip */
+        .vocab-blue {
+            color: #0044bb;
+            font-weight:500;
+            position:relative;
+            cursor:help;
+        }
+        .vocab-blue .tip {
+            visibility:hidden;
+            position:absolute;
+            left:0;
+            bottom:125%;
+            z-index:99;
+            background:#222;
+            color:#fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space:nowrap;
+            font-size:13px;
+            opacity:0;
+            transition:opacity 0.2s;
+        }
+        /*电脑悬浮 */
+        .vocab-blue:hover .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        /*手机点击加上tip‑show显示弹窗 */
+        .vocab-blue.tip-show .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        /* 语法红色 */
+        .grammar-red{
+            color:#b82626;
+            font-weight:500;
+            position:relative;
+            cursor:help;
+        }
+        .grammar-red .tip {
+            visibility:hidden;
+            position:absolute;
+            left:0;
+            bottom:125%;
+            z-index:99;
+            background:#222;
+            color:#fff;
+            padding:6px 10px;
+            border-radius:6px;
+            white-space:nowrap;
+            font-size:13px;
+            opacity:0;
+            transition:opacity 0.2s;
+        }
+        .grammar-red:hover .tip{
+            visibility:visible;
+            opacity:1;
+        }
+        .vocab-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .vocab-word{
+            font-weight:bold;
+            color:#0044bb;
+        }
+        .grammar-item{
+            margin-bottom:14px;
+            color:#4A4541;
+        }
+        .grammar-title{
+            font-weight:bold;
+            color:#b82626;
+        }
+        /* 正确答案绿色样式 */
+        .correct-ans{
+            color:#009933;
+            font-weight:bold;
+        }
+        @media(max-width:920px){
+            .grid-container{
+                grid-template-columns:1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <!-- 左上：原文 -->
+        <div class="box">
+            <h2>课文原文｜老舍的名字</h2>
+            <div class="para-item">
+                <p>老舍先生是中国著名的作家，他一生写过很多有名的作品，如：《四世同堂》、《茶馆》、《骆驼祥子》、《离婚》等，被人们称为<span class="vocab-blue">语言大师<span class="tip">yǔ yán dà shī：在语言运用方面水平很高的人</span></span>。</p>
+            </div>
+            <div class="para-item">
+                <p>1949年10月1日中华人民共和国成立了。老舍先生<span class="vocab-blue">放弃<span class="tip">fàng qì：丢掉，不再要</span></span>了国外的一切，回到祖国。那时，他的心情十分激动，也非常<span class="vocab-blue">自豪<span class="tip">zì háo：为自己相关的人或事感到光荣</span></span>：中国人民从此站起来了，中华民族<span class="vocab-blue">屈辱<span class="tip">qū rǔ：受到欺负、不光彩</span></span>的历史已经成为过去。作为一名作家，老舍感觉到了肩上的重<span class="vocab-blue">肩<span class="tip">jiān：肩膀</span></span>任。他花了许多时间和精力创作<span class="vocab-blue">通俗<span class="tip">tōng sú：普通老百姓容易看懂听懂的</span></span>文艺作品，如相声、<span class="vocab-blue">评书<span class="tip">píng shū：一种讲故事的民间表演</span></span>、<span class="vocab-blue">对口词<span class="tip">duì kǒu cí：两个人表演的押韵说唱</span></span>等。有人希望他多写一些小说和<span class="vocab-blue">散文<span class="tip">sǎn wén：一种文学体裁</span></span>，因为大刊物不发表通俗文艺作品。他们说：“像您这样世界<span class="vocab-blue">知名<span class="tip">zhī míng：很有名，很多人知道</span></span>的作家，常写些<span class="vocab-blue">曲艺<span class="tip">qǔ yì：说唱类民间艺术</span></span><span class="vocab-blue">段子<span class="tip">duàn zi：曲艺的一个节目</span></span>，似乎给人才华已尽的感觉。人们会想，难道老舍再也写不出精彩的小说来了吗？”</p>
+            </div>
+            <div class="para-item">
+                <p>老舍面对这些观点和看法，坚定地说：“中国还有很多<span class="vocab-blue">文盲<span class="tip">wén máng：不认识字，不会读书写字的人</span></span>，他们不看报纸杂志，不看小说、散文，却听曲艺段子，听评书。老百姓爱听爱看通俗文艺作品，我们文人就应该帮助他们提高认识，以自己的知名度扩大作品的影响力。新中国的巨大变化要宣传，要让老百姓心里了解自己的国家，<span class="vocab-blue">万众一心<span class="tip">wàn zhòng yī xīn：千千万万的人一条心</span></span>建设新社会！”老舍不是从作家个人的成就考虑，而是从国家、人民出发，他认为：既要写大作品，也要写通俗文艺作品。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍不但自己积极创作通俗文艺作品，还和几个朋友一起创办了专门发表通俗文艺作品的刊物《说说唱唱》，发表了不少精彩作品。一些没有什么文化的人也寄稿来。有人在信封上写“说说笑笑社”收，老舍<span class="vocab-blue">幽默<span class="tip">yōu mò：说话有趣好笑</span></span>地在旁边圈了两句话：“不是说说笑笑社，真是马马虎虎人。”</p>
+            </div>
+            <div class="para-item">
+                <p>老舍先生还积极帮助出版社出版小唱本，几十页一册，几分钱一本，面向农村<span class="vocab-blue">发行<span class="tip">fā xíng：印刷之后向外传播销售</span></span>。他还支持创办了国画研究会，和赵树理等人创办了“大众文艺研究会”，组织了盲艺人学习班。老舍先生不仅亲自讲课，还亲自解决戏曲艺人、国画家、盲人的生活困难，帮他们找出路，安排工作，过年过节，让他们能吃上肉。他自己掏钱给一些穷人家的孩子交学费，买文具，还帮国画家卖画儿。一次老舍买了一双皮鞋要送给什么人，朋友说那鞋式样不好看。老舍说：“穷人，首先考虑的是<span class="vocab-blue">耐<span class="tip">nài：经得起，受得住</span></span>穿。真牛皮，可以多穿些时间。”</p>
+            </div>
+            <div class="para-item">
+                <p>老舍很关心穷苦人，理解他们，<span class="vocab-blue">尊重<span class="tip">zūn zhòng：看得起，认真对待别人</span></span>他们，爱他们。他把自己当做他们当中的一员，<span class="vocab-blue">情同手足<span class="tip">qíng tóng shǒu zú：感情好得就像亲兄弟姐妹</span></span>。他不是为了写作去接近那些普通人，从他们的生活中去寻找<span class="vocab-blue">素材<span class="tip">sù cái：写文章用的生活材料</span></span>，而是认为自己应该为他们尽心尽力，自己就是他们的亲人。他走到哪儿，都有人迎上来亲切地招呼他，<span class="vocab-blue">磨<span class="tip">mó：磨刀，打磨工具</span></span>刀的、修鞋的、理发的、卖肉的，餐馆、食品店，各行业的人都像邻居亲戚一样熟悉他，而他对待这些人，就跟对待大学教授、专家学者、外国的艺术大师一样，同样尊重，同样热情。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍曾在法国、英国、美国工作和创作，而且很有影响。有的记者曾问老舍：“您在国外已经非常有名，作品的影响越来越大，为什么要放弃这来之不易的基础回国呢？并不是每一位作家都能够在国外<span class="vocab-blue">立足<span class="tip">lì zú：站稳脚跟，安定生活发展</span></span>的呀！”</p>
+            </div>
+            <div class="para-item">
+                <p>老舍毫不犹豫地回答：“作家<span class="vocab-blue">切断<span class="tip">qiē duàn：割断，断开联系</span></span>了和祖国、人民的联系，就像空中的飞鸟被<span class="vocab-blue">斩断<span class="tip">zhǎn duàn：砍断</span></span>了双翅。真正的作家，不是以文<span class="vocab-blue">混<span class="tip">hùn：混日子，勉强谋生</span></span>饭吃，个人的前途是和祖国的命运血肉相连的。心中没有祖国，怎么能写出好作品来？”</p>
+            </div>
+            <div class="para-item">
+                <p>老舍不姓舍，他姓舒。对于自己的名字，老舍先生曾写过这样一段话：</p>
+                <p>我的名字就是我的姓。以姓作名，“舒”字拆开来，是“舍”、“予”，意思是“无我”。我很为自己的姓名骄傲。从姓到名，从头到脚，我把自己全贡献出去。<span class="vocab-blue">关键<span class="tip">guān jiàn：最重要的地方</span></span>是一个“舒”字，舍什么？舍的是“予”。我写书用的笔名老舍，也是保留一个“舍”字，不是老“予”。以姓为名，以名构成姓，都是<span class="vocab-blue">围绕<span class="tip">wéi rào：围着，以某个为中心</span></span>这个意思，这是我一辈子的<span class="vocab-blue">信念<span class="tip">xìn niàn：心里一直相信的道理</span></span>。可惜的是，我的姓名译成外文，只是译音，却译不出它的含义来！我不会起别的名字，永远不！我至死守着这个“舍”字，我的名字和我这个人，是不可<span class="vocab-blue">分割<span class="tip">fēn gē：拆开，分开</span></span>的整体！</p>
+            </div>
+            <div class="para-item">
+                <p>作家老舍，他的理想、他的追求、他的名字，融为一个整体，用“舍”字画了一个句号。</p>
+            </div>
+        </div>
+        <!-- 右上：简化版本 -->
+        <div class="box">
+            <h2>简化版本</h2>
+            <div class="para-item">
+                <p>老舍是中国很有名的作家，写了很多著名作品，人们叫他语言大师。</p>
+            </div>
+            <div class="para-item">
+                <p>1949新中国成立，老舍放弃国外的一切回到祖国。他心里很激动、很自豪。他写很多老百姓看得懂的通俗文艺，像相声、评书。有人劝他多写小说散文，不要总写曲艺小段子。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍认为国内还有很多不识字的普通人，他们听曲艺。作家要帮助老百姓提高认识，大家一心建设国家。大作品要写，通俗的作品也应该写。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍和朋友创办刊物《说说唱唱》，发表通俗作品。有些文化不高的普通人也给刊物投稿。</p>
+            </div>
+            <div class="para-item">
+                <p>他帮助出版便宜的农村小唱本，还办研究会、学习班。关心艺人、盲人，帮他们解决生活和工作。还给穷孩子出钱交学费买东西。送穷人皮鞋，优先考虑鞋子耐穿。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍同情、尊重普通穷苦老百姓，把他们当亲人。不是为了写文章才去接触普通人，而是真心为他们做事。各行各业普通人都熟悉老舍，老舍对待普通人和对待专家学者一样尊重热情。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍曾经在英、法、美国工作写作，在国外名气很大。记者问他为什么放弃国外已经打好的基础回国。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍回答：作家如果和祖国人民断开联系，就像鸟被砍断翅膀。不能靠写文章混生活。个人命运跟祖国连在一起，心里没有祖国写不出好作品。</p>
+            </div>
+            <div class="para-item">
+                <p>老舍本姓舒。“舒”拆开是“舍、予”，意思是无我，把自己奉献出去。笔名老舍保留“舍”。这是他一生的信念，名字和他本人不能分开。老舍的理想追求和他的名字合在一起。</p>
+            </div>
+        </div>
+        <!-- 左下：同义替换选择题（20题：前10词语，后10句子） -->
+        <div class="box">
+            <h2>同义替换选择题（20题）</h2>
+            <button class="check-answer-btn" onclick="checkAllSynonym()">✅ 核对全部答案</button>
+            <div id="synonymResult"></div>
+            <p style="margin-bottom:8px;font-weight:bold;">一、词语同义（1‑10）</p>
+            <div class="q-item" data-ans="B">
+                <p>1.老舍先生<span>放弃</span>了国外的一切，回到祖国。【放弃】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s1" value="A">A.一些</label>
+                    <label><input type="radio" name="s1" value="B">B.丢掉、不再保有</label>
+                    <label><input type="radio" name="s1" value="C">C.一部分</label>
+                    <label><input type="radio" name="s1" value="D">D.一块地方</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>2.中国人民<span>从此</span>站起来了。【从此】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s2" value="A">A.从这个时候</label>
+                    <label><input type="radio" name="s2" value="B">B.自从</label>
+                    <label><input type="radio" name="s2" value="C">C.从这个地方</label>
+                    <label><input type="radio" name="s2" value="D">D.从来</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>3.以自己的知名度扩大作品的影响力。【以】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s3" value="A">A.把</label>
+                    <label><input type="radio" name="s3" value="B">B.可以</label>
+                    <label><input type="radio" name="s3" value="C">C.用</label>
+                    <label><input type="radio" name="s3" value="D">D.跟</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="D">
+                <p>4.帮他们找<span>出路</span>。【出路】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s4" value="A">A.出门的路</label>
+                    <label><input type="radio" name="s4" value="B">B.小路</label>
+                    <label><input type="radio" name="s4" value="C">C.出来的路</label>
+                    <label><input type="radio" name="s4" value="D">D.解决困难的办法</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>5.他把自己当做他们<span>当中</span>的一员。【当中】意思是？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s5" value="A">A.中间</label>
+                    <label><input type="radio" name="s5" value="B">B.家里</label>
+                    <label><input type="radio" name="s5" value="C">C.家庭</label>
+                    <label><input type="radio" name="s5" value="D">D.里面</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>6.为什么要放弃这<span>来之不易</span>的基础回国呢？【来之不易】意思？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s6" value="A">A.不方便</label>
+                    <label><input type="radio" name="s6" value="B">B.不容易得到</label>
+                    <label><input type="radio" name="s6" value="C">C.复杂</label>
+                    <label><input type="radio" name="s6" value="D">D.不合适</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>7.作家切断了和祖国人民的联系。【切断】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s7" value="A">A.加强</label>
+                    <label><input type="radio" name="s7" value="B">B.断开</label>
+                    <label><input type="radio" name="s7" value="C">C.保护</label>
+                    <label><input type="radio" name="s7" value="D">D.恢复</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>8.个人的前途是和祖国的命运血肉相连。【命运】意思？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s8" value="A">A.名字</label>
+                    <label><input type="radio" name="s8" value="B">B.钱财</label>
+                    <label><input type="radio" name="s8" value="C">C.人生发展遭遇</label>
+                    <label><input type="radio" name="s8" value="D">D.土地</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="D">
+                <p>9.这是我一辈子的<span>信念</span>。【信念】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s9" value="A">A.梦想</label>
+                    <label><input type="radio" name="s9" value="B">B.回忆</label>
+                    <label><input type="radio" name="s9" value="C">C.计划</label>
+                    <label><input type="radio" name="s9" value="D">D.坚信的道理</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>10.我的名字和我这个人，是不可<span>分割</span>的整体。【分割】同义？ <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s10" value="A">A.拆开分开</label>
+                    <label><input type="radio" name="s10" value="B">B.合并</label>
+                    <label><input type="radio" name="s10" value="C">C.比较</label>
+                    <label><input type="radio" name="s10" value="D">D.忘记</label>
+                </div>
+            </div>
+            <p style="margin:20px 0 8px;font-weight:bold;">二、句子同义（11‑20）</p>
+            <div class="q-item" data-ans="B">
+                <p>11.他认为：既要写大作品，也要写通俗文艺作品。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s11" value="A">A.他认为：要是写大作品，也要写通俗文艺作品。</label>
+                    <label><input type="radio" name="s11" value="B">B.他认为：大作品、通俗文艺作品都要写。</label>
+                    <label><input type="radio" name="s11" value="C">C.他认为：应该先写大作品，以后再写通俗文艺作品。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>12.一些没有什么文化的人也寄稿来。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s12" value="A">A.有些文化水平很高的人也给他们寄稿。</label>
+                    <label><input type="radio" name="s12" value="B">B.一些基本没有文化的人也寄稿来。</label>
+                    <label><input type="radio" name="s12" value="C">C.寄稿来的人都没有文化。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>13.他走到哪儿，都有人迎上来亲切地招呼他。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s13" value="A">A.他在什么地方遇到了跟他打招呼的人？</label>
+                    <label><input type="radio" name="s13" value="B">B.不论在什么地方，都会有人跟他亲切地打招呼。</label>
+                    <label><input type="radio" name="s13" value="C">C.有人迎上来问他，你要到哪儿去？</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>14.心中没有祖国，怎么能写出好作品来？选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s14" value="A">A.心中没有祖国，不能写出好作品。</label>
+                    <label><input type="radio" name="s14" value="B">B.心中没有祖国，能不能写出好作品来？</label>
+                    <label><input type="radio" name="s14" value="C">C.心中没有祖国，为什么不能写出好作品来？</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>15.并不是每一位作家都能够在国外立足的呀！选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s15" value="A">A.每一个作家都可以在国外生活得很好。</label>
+                    <label><input type="radio" name="s15" value="B">B.没有一个作家可以在国外站住脚。</label>
+                    <label><input type="radio" name="s15" value="C">C.不是所有作家，都可以在国外站稳脚跟。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>16.个人的前途是和祖国的命运血肉相连的。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s16" value="A">A.个人前途跟祖国命运紧紧联系在一起。</label>
+                    <label><input type="radio" name="s16" value="B">B.个人前途跟祖国一点关系没有。</label>
+                    <label><input type="radio" name="s16" value="C">C.祖国的命运完全由作家个人决定。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>17.我把自己全贡献出去。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s17" value="A">A.我把我的钱财全部送出去。</label>
+                    <label><input type="radio" name="s17" value="B">B.我只把一部分拿出来。</label>
+                    <label><input type="radio" name="s17" value="C">C.我把自己全部奉献出来。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="B">
+                <p>18.我的名字和我这个人，是不可分割的整体。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s18" value="A">A.我的名字和我可以完全分开。</label>
+                    <label><input type="radio" name="s18" value="B">B.我的名字跟我本人，不能够拆开分开。</label>
+                    <label><input type="radio" name="s18" value="C">C.我的名字是名字，我是我，两者没关系。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="A">
+                <p>19.他不是为了写作去接近那些普通人。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s19" value="A">A.他接近普通人，目的不只是为了写作品。</label>
+                    <label><input type="radio" name="s19" value="B">B.他接触普通人完全就是为了写小说。</label>
+                    <label><input type="radio" name="s19" value="C">C.他从来不愿意接触普通老百姓。</label>
+                </div>
+            </div>
+            <div class="q-item" data-ans="C">
+                <p>20.穷苦人，首先考虑的是耐穿。选出意思一样的句子： <span class="ans-hint"></span></p>
+                <div class="choice-item">
+                    <label><input type="radio" name="s20" value="A">A.穷人买鞋子，首先要看好不好看。</label>
+                    <label><input type="radio" name="s20" value="B">B.穷人首先看鞋子贵不贵。</label>
+                    <label><input type="radio" name="s20" value="C">C.穷苦的人，最先考虑鞋子结实，穿得久。</label>
+                </div>
+            </div>
+        </div>
+        <!-- 右下：生词 + 语法 -->
+        <div class="box">
+            <h2>生词与语法</h2>
+            <div class="exercise-title">一、生词</div>
+            <div class="vocab-item">
+                <span class="vocab-word">放弃 fàng qì</span>：(动) 丢掉，不再要。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">自豪 zì háo</span>：(形) 为自己相关的人、事感到光荣。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">屈辱 qū rǔ</span>：(形) 受到欺负，不光彩。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">肩 jiān</span>：(名) 肩膀。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">通俗 tōng sú</span>：(形) 老百姓容易看懂听懂。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">评书 píng shū</span>：(名) 民间讲故事的说唱表演。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">对口词 duì kǒu cí</span>：(名) 两人表演的押韵说唱。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">散文 sǎn wén</span>：(名) 一种文学体裁。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">知名 zhī míng</span>：(形) 有名，很多人知道。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">曲艺 qǔ yì</span>：(名) 说唱类民间艺术。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">段子 duàn zi</span>：(名) 曲艺的一个节目。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">文盲 wén máng</span>：(名) 不识字，不会读写的人。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">万众一心 wàn zhòng yì xīn</span>：成语，千千万万人一条心。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">幽默 yōu mò</span>：(形) 说话有趣好笑。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">发行 fā xíng</span>：(动) 印刷之后传播销售。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">耐 nài</span>：(动) 经得起，受得住。例：耐穿。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">尊重 zūn zhòng</span>：(动) 看得起，认真对待他人。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">情同手足 qíng tóng shǒu zú</span>：成语，感情和亲兄弟姐妹一样。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">素材 sù cái</span>：(名) 写文章的生活材料。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">磨 mó</span>：(动) 打磨（刀具）。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">立足 lì zú</span>：(动) 站稳脚跟，安定发展。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">切断 qiē duàn</span>：(动) 割断，断开。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">斩断 zhǎn duàn</span>：(动) 砍断。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">混 hùn</span>：(动) 勉强过日子，混日子。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">关键 guān jiàn</span>：(名) 最重要之处。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">围绕 wéi rào</span>：(动) 以……为中心。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">信念 xìn niàn</span>：(名) 心里一直坚信的道理。
+            </div>
+            <div class="vocab-item">
+                <span class="vocab-word">分割 fēn gē</span>：(动) 拆开，分开。
+            </div>
+
+            <div class="exercise-title">二、语法</div>
+            <div class="grammar-item">
+                <span class="grammar-title">1. 不但……还……</span><br>表示递进，不仅，而且。<br>例句：他不但会唱歌，还会跳舞。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">2. 不是……而是……</span><br>否定前面，肯定后面。<br>原文：他不是为了写作去接近那些普通人，而是认为自己应该为他们尽心尽力。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">3. 并不是……</span><br>表示否定，并不。<br>例句：并不是所有人都喜欢这件事。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">4. 怎么能……？（反问句）</span><br>反问，实际表达否定。<br>原文：心中没有祖国，怎么能写出好作品来？=心中没有祖国，写不出好作品。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">5. 以……</span><br>介词，“用”。<br>原文：以自己的知名度扩大作品的影响力。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">6. 既要……也要……</span><br>两方面都需要。<br>原文：既要写大作品，也要写通俗文艺作品。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">7. 走到哪儿，都……</span><br>无论到什么地方，都……。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">8. 把……当做……</span><br>把A看作为B。<br>原文：他把自己当做他们当中的一员。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">9. ……为此，……</span><br>为了这件事。
+            </div>
+            <div class="grammar-item">
+                <span class="grammar-title">10. 不可……</span><br>不能够。例：不可分割。
+            </div>
+        </div>
+    </div>
+<script>
+    //生词点击事件：手机点击弹窗，电脑悬浮；点击空白关闭
+    document.querySelectorAll(".vocab-blue").forEach(el=>{
+        el.onclick = function(e){
+            e.stopPropagation();
+            //关闭其他已经打开的tip
+            document.querySelectorAll(".vocab-blue").forEach(other=>{
+                if(other !== this){
+                    other.classList.remove("tip-show");
+                }
+            })
+            this.classList.toggle("tip-show");
+        }
+    })
+    //页面任意空白点击，全部关闭生词弹窗
+    document.body.onclick = function(){
+        document.querySelectorAll(".vocab-blue").forEach(el=>{
+            el.classList.remove("tip-show");
+        })
+    }
+
+    //同义题答案字典
+    const synAns = {
+        s1:"B",s2:"A",s3:"C",s4:"D",s5:"A",
+        s6:"B",s7:"B",s8:"C",s9:"D",s10:"A",
+        s11:"B",s12:"B",s13:"B",s14:"A",s15:"C",
+        s16:"A",s17:"C",s18:"B",s19:"A",s20:"C"
+    }
+    function checkAllSynonym(){
+        let score=0;
+        let total=20;
+        // 清除上一轮答案
+        document.querySelectorAll(".ans-hint").forEach(el=>el.innerHTML="");
+        for(let key in synAns){
+            const qItem = document.querySelector(`input[name="${key}"]`).closest(".q-item");
+            const hintDom = qItem.querySelector(".ans-hint");
+            const selected = document.querySelector(`input[name="${key}"]:checked`);
+            if(selected && selected.value === synAns[key]){
+                score++;
+                hintDom.innerHTML = `<span class="correct-ans">✅正确</span>`;
+            }else{
+                hintDom.innerHTML = `<span class="correct-ans">✅正确答案：${synAns[key]}</span>`;
+            }
+        }
+        document.getElementById("synonymResult").innerText = `✅ 同义选择题结果：答对${score}/${total}题`;
+    }
+</script>
+</body>
+</html>
